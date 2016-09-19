@@ -1,15 +1,18 @@
 # Vagrant Personal Cookbook
 
-Collection of scripts (provision, etc.) and dotfiles for Vagrant for personal reference. The idea is to copy-paste them, pick the relevant parts, and NOT to clone the repository to execute them. The scripts are tested in Ubuntu boxes
+Points to consider before using any of the content:
 
-They scripts follow the next points:
+- The objective is to copy-paste what you need, picking the relevant parts, in opposition to cloning the repository in order to execute them. In this way they don't require backwards compatibility
 
-- Running the scripts multiple times should end in the same state as running them once (except when they don't end successfully)
-- They should favor performance over being up to date in external packages, the dotfiles are copied always
+- They are tested under Ubuntu boxes
 
 Some of the conventions they take into account are:
 
-- The shared directory is under `/project` and at least has the following structure
+- Running the scripts multiple times should result in the same state as running them once (except when they don't end successfully)
+
+- The scripts should favor performance over being up to date in external packages, the dotfiles are copied always. Only the very fast operations are run always without checks
+
+- The shared directory is `/project` in the guest machine, and it has the following structure
 
 ```
 /project
@@ -19,6 +22,8 @@ Some of the conventions they take into account are:
     .bashrc
     ...
   /scripts
+    ...
+  /src
     ...
   ...
 ```
