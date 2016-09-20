@@ -12,14 +12,18 @@ syntax on
 " support all hex colors (e.g. for syntastic)
   set  t_Co=256
 
+set autoindent
 set clipboard=unnamedplus
+set cursorline
+set expandtab
 set number
-set tabstop=2
 set shiftwidth=2
 set softtabstop=2
-set expandtab
-set cursorline
-set autoindent
+set tabstop=2
+
+" airline
+  set laststatus=2
+  let g:airline_theme='solarized'
 
 " remove autoindentation when pasting
   set pastetoggle=<F2>
@@ -57,11 +61,17 @@ let g:NERDSpaceDelims = 1
 
 map ,e :e <C-R>=expand("%:p:h") . "/" <CR>
 
+" move up/down from the beginning/end of lines 
+  set ww+=<,>
+
 " change to current file directory
   nnoremap ,cd :cd %:p:h<CR>:pwd<CR>
 
 " run macro on d
   nnoremap <Space> @d
+
+" sort lines
+  vmap <F5> :sort<CR>
 
 inoremap <C-e> <Esc>A
 inoremap <C-a> <Esc>I
@@ -77,3 +87,10 @@ inoremap <C-a> <Esc>I
 " check haskell on save and open (eagletmt/ghcmod-vim)
   " autocmd BufWritePost *.hs :GhcModCheckAsync
   " autocmd BufReadPost *.hs :GhcModCheckAsync
+
+" improve the 'preview window' behaviour
+  autocmd CompleteDone * pclose " close when done
+  set splitbelow " move to the bottom
+
+" flake8
+  let g:flake8_show_quickfix=0  " don't show quickfix
