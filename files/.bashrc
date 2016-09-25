@@ -32,4 +32,15 @@ export PATH=$PATH:~/.local/bin
 # wordpress
   source ~/wp-completion.bash
 
+# drush
+  if [ -f "~/.drush/drush.bashrc" ] ; then
+    source ~/.drush/drush.bashrc
+  fi
+  if [ -f "~/.drush/drush.complete.sh" ] ; then
+    source ~/.drush/drush.complete.sh
+  fi
+  if [ -f "/home/vagrant/.drush/drush.prompt.sh" ] ; then
+    source ~/.drush/drush.prompt.sh
+  fi
+
 if [ -d ~/src ]; then cd ~/src; fi

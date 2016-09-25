@@ -11,7 +11,7 @@ if ! type apache2 > /dev/null  ; then
   sudo apt-get update
 
   sudo apt-get remove -y php*
-  
+
   sudo debconf-set-selections <<< "mysql-server mysql-server/root_password password $DB_PASSWORD"
   sudo debconf-set-selections <<< "mysql-server mysql-server/root_password_again password $DB_PASSWORD"
 
@@ -25,6 +25,8 @@ if ! type apache2 > /dev/null  ; then
   sudo cp /project/provision/apache2.conf /etc/apache2/
 
   sudo a2enmod rewrite
+
+  sudo usermod -a -G www-data $USER
 
   sudo service apache2 restart
 fi
@@ -75,3 +77,64 @@ fi
 
     touch ~/wordpress-installation-finished
   fi
+
+# drupal
+  DB_NAME="name"
+  DB_PASSWORD="foo"
+  DB_USER="bar"
+  DB_USER_PASSWORD="baz"
+  THEME_NAME="theme"
+
+  if ! type drush > /dev/null 2>&1 ; then
+    cd ~
+    sudo apt-get install -y php5-gd
+    php -r "readfile('https://s3.amazonaws.com/files.drush.org/drush.phar');" > drush
+    chmod +x drush
+    sudo mv drush /usr/local/bin
+    drush init
+    sudo service apache2 restart
+  fi
+
+  if [ ! -d ~/drupal ]; then
+    echo "installing drupal"
+    mkdir ~/drupal
+    cd ~/drupal
+    drush dl drupal-8
+    DIR=$(find . -maxdepth 1 -type d)
+    mv $DIR/* . > /dev/null 2>&1
+    mv $DIR/.* . > /dev/null 2>&1
+    rm -rf $DIR  > /dev/null 2>&1
+    mkdir sites/default/files
+
+    sudo chmod -R 777 .
+
+    mysql -u root -p$DB_PASSWORD -e "DROP DATABASE IF EXISTS $DB_NAME;"
+    mysql -u root -p$DB_PASSWORD -e "CREATE DATABASE $DB_NAME DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;"
+    mysql -u root -p$DB_PASSWORD -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost' IDENTIFIED BY '$DB_USER_PASSWORD';"
+
+    drush site-install standard -y \
+      --db-url="mysql://$DB_USER:$DB_USER_PASSWORD@localhost/$DB_NAME" \
+      --site-name="Site Name" \
+      --account-pass="accountpassword"
+
+    sudo rm -rf ~/drupal/themes/$THEME_NAME
+    ln -s ~/src/$THEME_NAME ~/drupal/themes/$THEME_NAME
+
+    sudo chown -R vagrant:www-data .
+    sudo chown www-data:www-data sites/default/settings.php
+    sudo chown -R www-data:www-data sites/default/files
+
+    sudo chmod -R 750 .
+
+    sudo rm -rf /var/www/html
+    sudo ln -s /home/vagrant/drupal /var/www/html
+    sudo chown -R vagrant:www-data ~/src
+    sudo chmod -R 750 ~/src
+
+    # drush config-set -y system.theme default $THEME_NAME
+
+    sudo service apache2 restart
+  fi
+
+  sudo chown -R vagrant:www-data ~/src
+  sudo chmod -R 750 ~/src

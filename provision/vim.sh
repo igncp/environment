@@ -31,8 +31,11 @@ install_vim_package shougo/vimproc.vim "cd ~/.vim/bundle/vimproc.vim && make; cd
 install_vim_package vim-airline/vim-airline
 install_vim_package vim-airline/vim-airline-themes
 install_vim_package vim-scripts/cream-showinvisibles
+install_vim_package evidens/vim-twig
 # haskell
   install_vim_package eagletmt/ghcmod-vim "stack install ghc-mod"
   install_vim_package €neovimhaskell/haskell-vim
 # python
   install_vim_package nvie/vim-flake8
+# coffescript
+  install_vim_package kchmck/vim-coffee-script
