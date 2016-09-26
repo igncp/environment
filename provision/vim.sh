@@ -39,3 +39,5 @@ install_vim_package evidens/vim-twig
   install_vim_package nvie/vim-flake8
 # coffescript
   install_vim_package kchmck/vim-coffee-script
+# java
+  install_vim_package tfnico/vim-gradle

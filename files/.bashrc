@@ -4,7 +4,12 @@
 
 stty -ixon # prevent the terminal from hanging on ctrl+s
 
-if [ -f ~/.bash_aliases ]; then source ~/.bash_aliases; fi
+function source_if_exists() {
+  FILE_PATH=$1
+  if [ -f $FILE_PATH ]; then source $FILE_PATH; fi
+}
+
+source_if_exists ~/.bash_aliases
 
 if [[ -z $TMUX ]]; then TMUX_PREFIX="·"; else TMUX_PREFIX="£"; fi
 PS1='${debian_chroot:+($debian_chroot)}\n\u@\h: \W$(__git_ps1) $TMUX_PREFIX '
@@ -33,14 +38,13 @@ export PATH=$PATH:~/.local/bin
   source ~/wp-completion.bash
 
 # drush
-  if [ -f "~/.drush/drush.bashrc" ] ; then
-    source ~/.drush/drush.bashrc
-  fi
-  if [ -f "~/.drush/drush.complete.sh" ] ; then
-    source ~/.drush/drush.complete.sh
-  fi
-  if [ -f "/home/vagrant/.drush/drush.prompt.sh" ] ; then
-    source ~/.drush/drush.prompt.sh
-  fi
+  source_if_exists ~/.drush/drush.bashrc
+  source_if_exists ~/.drush/drush.complete.sh
+  source_if_exists ~/.drush/drush.prompt.sh
 
 if [ -d ~/src ]; then cd ~/src; fi
+
+# java
+  export GRADLE_HOME=/usr/local/lib/gradle
+  export PATH=$PATH:"$GRADLE_HOME"/bin
+  source_if_exists ~/gradle-tab-completion.bash
