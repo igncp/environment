@@ -23,6 +23,6 @@
     sudo apt-get update
     sudo apt-get install -y neo4j
     sudo sed -i 's/#dbms\.connector\.http\.address=0\.0\.0\.0:7474/dbms.connector.http.address=0.0.0.0:7474/' \
-      /etc/neo4j/neo4j.con
+      /etc/neo4j/neo4j.conf
     sudo service neo4j restart
   fi
