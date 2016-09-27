@@ -12,6 +12,14 @@ syntax on
 " support all hex colors (e.g. for syntastic)
   set  t_Co=256
 
+" move lines up and down
+  nnoremap <C-j> :m .+1<CR>==
+  nnoremap <C-k> :m .-2<CR>==
+  inoremap <C-j> <Esc>:m .+1<CR>==gi
+  inoremap <C-k> <Esc>:m .-2<CR>==gi
+  vnoremap <C-j> :m '>+1<CR>gv=gv
+  vnoremap <C-k> :m '<-2<CR>gv=gv
+
 set autoindent
 set clipboard=unnamedplus
 set cursorline

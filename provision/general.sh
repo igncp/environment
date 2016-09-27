@@ -10,7 +10,7 @@ cp_file_from_provision .vimrc ~
 
 mkdir -p ~/logs
 
-if ! type jq > /dev/null  ; then
+if ! type jq > /dev/null 2>&1  ; then
   echo "installing basic packages"
   sudo apt-get update
   sudo apt-get install -y curl git unzip ack-grep git-extras \
@@ -18,5 +18,13 @@ if ! type jq > /dev/null  ; then
 
   git config --global user.email "foo@bar.com" && git config --global user.name "Foo Bar"
 fi
+
+# shellcheck (without using stack)
+  if ! type shellcheck > /dev/null 2>&1  ; then
+    echo "installing shellcheck without using stack"
+    sudo apt-get install -y cabal-install
+    cabal update
+    cabal install shellcheck
+  fi
 
 # if [ ! -d ~/src ]; then cp -r /project/src ~; fi
