@@ -9,7 +9,7 @@ Vagrant.configure(2) do |config|
 
   config.vm.synced_folder ".", "/project"
 
-  config.vm.provision "shell", inline: ". /project/provision/main.sh", privileged: false
+  config.vm.provision "shell", inline: ". /project/provision/provision.sh", privileged: false
 
   config.vm.provider "virtualbox" do |v|
     v.memory = 2024

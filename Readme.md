@@ -18,8 +18,7 @@ Some of the conventions they take into account are:
 /project
   Vagrantfile
   /provision
-    main.sh
-    .bashrc
+    provision.sh
     ...
   /scripts
     ...
