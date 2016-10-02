@@ -7,7 +7,7 @@ mkdir -p ~/logs
 if ! type jq > /dev/null 2>&1 ; then
   echo "installing basic packages"
   sudo apt-get update
-  sudo apt-get install -y curl git unzip ack-grep git-extras \
+  sudo apt-get install -y curl git unzip git-extras \
     build-essential python-software-properties tree jq
 
   git config --global user.email "foo@bar.com" && git config --global user.name "Foo Bar"
@@ -30,6 +30,8 @@ cat > ~/.bashrc <<"EOF"
 
 stty -ixon # prevent the terminal from hanging on ctrl+s
 
+export HISTCONTROL=ignoreboth:erasedups
+
 source_if_exists() {
   FILE_PATH=$1
   if [ -f $FILE_PATH ]; then source $FILE_PATH; fi
@@ -45,6 +47,7 @@ alias rm="rm -rf"
 alias mkdir="mkdir -p"
 alias cp="cp -r"
 alias tmux="tmux; exit"
+alias Exit="killall tmux"
 
 Update_src() {
   rm -rf /project/src

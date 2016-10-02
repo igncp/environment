@@ -19,6 +19,8 @@ fi
 install_vim_package airblade/vim-gitgutter
 install_vim_package ctrlpvim/ctrlp.vim
 install_vim_package elzr/vim-json
+install_vim_package evidens/vim-twig
+install_vim_package honza/vim-snippets
 install_vim_package jiangmiao/auto-pairs
 install_vim_package milkypostman/vim-togglelist
 install_vim_package nathanaelkane/vim-indent-guides
@@ -27,11 +29,11 @@ install_vim_package plasticboy/vim-markdown
 install_vim_package scrooloose/nerdcommenter
 install_vim_package scrooloose/syntastic
 install_vim_package shougo/neocomplete.vim "sudo apt-get install -y vim-nox"
+install_vim_package shougo/neosnippet.vim
 install_vim_package shougo/vimproc.vim "cd ~/.vim/bundle/vimproc.vim && make; cd -"
 install_vim_package vim-airline/vim-airline
 install_vim_package vim-airline/vim-airline-themes
 install_vim_package vim-scripts/cream-showinvisibles
-install_vim_package evidens/vim-twig
 # go
   install_vim_package fatih/vim-go
 # haskell
@@ -43,11 +45,15 @@ install_vim_package evidens/vim-twig
   install_vim_package kchmck/vim-coffee-script
 # java
   install_vim_package tfnico/vim-gradle
+# typescript
+  install_vim_package leafgarland/typescript-vim
+  install_vim_package quramy/tsuquyomi
 
 cat > ~/.vimrc <<"EOF"
 execute pathogen#infect()
 filetype plugin indent on
 syntax on
+set background=dark
 
 " fix control + arrows
   set term=xterm
@@ -81,7 +87,6 @@ set tabstop=2
 
 " airline
   set laststatus=2
-  let g:airline_theme='solarized'
 
 " remove autoindentation when pasting
   set pastetoggle=<F2>
@@ -90,10 +95,12 @@ set tabstop=2
   let g:neocomplete#enable_at_startup = 1
 
 let g:vim_markdown_folding_disabled = 1
-let g:ctrlp_map = '<c-p>'
-let g:ctrlp_cmd = 'CtrlP'
 let g:NERDSpaceDelims = 1
 
+" ctrlp
+  let g:ctrlp_map = '<c-p>'
+  let g:ctrlp_cmd = 'CtrlP'
+  let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist)|(\.(swp|ico|git|svn))$'
 
 " syntastic
   let g:syntastic_mode_map = { 'mode': 'active',
@@ -107,6 +114,7 @@ let g:NERDSpaceDelims = 1
   let g:syntastic_check_on_open = 1
   let g:syntastic_check_on_wq = 0
   let g:syntastic_javascript_checkers = ['eslint']
+  let g:syntastic_typescript_checkers = ['tsc', 'tslint']
   let g:syntastic_json_checkers=[]
   highlight link SyntasticErrorSign SignColumn
   highlight link SyntasticWarningSign SignColumn
@@ -134,6 +142,21 @@ map ,e :e <C-R>=expand("%:p:h") . "/" <CR>
 inoremap <C-e> <Esc>A
 inoremap <C-a> <Esc>I
 
+" neosnippet
+  imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+  smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+  xmap <C-k>     <Plug>(neosnippet_expand_target)
+  imap <expr><TAB>
+   \ pumvisible() ? "\<C-n>" :
+   \ neosnippet#expandable_or_jumpable() ?
+   \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+  smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+   \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+  if has('conceal')
+    set conceallevel=2 concealcursor=niv
+  endif
+  let g:neosnippet#snippets_directory='~/.vim/bundle/vim-snippets/snippets'
+
 " save file shortcuts
   nmap <C-s> :update<Esc>
   inoremap <C-s> <Esc>:update<Esc>i<right>
@@ -155,5 +178,4 @@ inoremap <C-a> <Esc>I
 
 " go
   let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
-  
 EOF
