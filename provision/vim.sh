@@ -95,6 +95,7 @@ set tabstop=2
   let g:neocomplete#enable_at_startup = 1
 
 let g:vim_markdown_folding_disabled = 1
+let g:vim_markdown_conceal = 0
 let g:NERDSpaceDelims = 1
 
 " ctrlp
@@ -143,9 +144,9 @@ inoremap <C-e> <Esc>A
 inoremap <C-a> <Esc>I
 
 " neosnippet
-  imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-  smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-  xmap <C-k>     <Plug>(neosnippet_expand_target)
+  imap <C-l>     <Plug>(neosnippet_expand_or_jump)
+  smap <C-l>     <Plug>(neosnippet_expand_or_jump)
+  xmap <C-l>     <Plug>(neosnippet_expand_target)
   imap <expr><TAB>
    \ pumvisible() ? "\<C-n>" :
    \ neosnippet#expandable_or_jumpable() ?
@@ -156,6 +157,7 @@ inoremap <C-a> <Esc>I
     set conceallevel=2 concealcursor=niv
   endif
   let g:neosnippet#snippets_directory='~/.vim/bundle/vim-snippets/snippets'
+  let g:neosnippet#disable_runtime_snippets={'c' : 1, 'cpp' : 1,}
 
 " save file shortcuts
   nmap <C-s> :update<Esc>
