@@ -102,6 +102,7 @@ let g:NERDSpaceDelims = 1
   let g:ctrlp_map = '<c-p>'
   let g:ctrlp_cmd = 'CtrlP'
   let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist)|(\.(swp|ico|git|svn))$'
+  nnoremap <leader>p :CtrlP %:p:h<CR> " CtrlP in file's dir
 
 " syntastic
   let g:syntastic_mode_map = { 'mode': 'active',
@@ -164,8 +165,8 @@ inoremap <C-a> <Esc>I
   inoremap <C-s> <Esc>:update<Esc>i<right>
 
 " copy - paste between files
-  vmap <leader>y :w! /tmp/vitmp<CR>
-  nmap <leader>p :r! cat /tmp/vitmp<CR>
+  vmap <leader>ky :w! /tmp/vitmp<CR>
+  nmap <leader>kp :r! cat /tmp/vitmp<CR>
 
 " improve the 'preview window' behaviour
   autocmd CompleteDone * pclose " close when done
