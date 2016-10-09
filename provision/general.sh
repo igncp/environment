@@ -39,14 +39,20 @@ source_if_exists() {
 
 source_if_exists ~/.bash_aliases
 
-if [[ -z $TMUX ]]; then TMUX_PREFIX="·"; else TMUX_PREFIX="£"; fi
-PS1='${debian_chroot:+($debian_chroot)}\n\u@\h: \W$(__git_ps1) $TMUX_PREFIX '
+if [[ -z $TMUX ]]; then TMUX_PREFIX="·"; else TMUX_PREFIX="{$(tmux display-message -p '#I')} £"; fi
+get_jobs_prefix() {
+  JOBS=$(jobs | wc -l)
+  if [ "$JOBS" -eq "0" ]; then echo ""; else echo "[$JOBS] "; fi
+}
+PS1='${debian_chroot:+($debian_chroot)}\n\u@\h: \W$(__git_ps1) $(get_jobs_prefix)$TMUX_PREFIX '
 
 alias ll="ls -lah"
 alias rm="rm -rf"
 alias mkdir="mkdir -p"
 alias cp="cp -r"
-alias tmux="tmux; exit"
+
+alias Tmux="tmux; exit"
+alias EditProvision="vim /project/provision/provision.sh && provision.sh"
 alias Exit="killall tmux"
 
 Update_src() {
