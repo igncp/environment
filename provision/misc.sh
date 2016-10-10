@@ -19,3 +19,10 @@ clone_example_from_gh() {
     cd - > /dev/null 2>&1
   fi
 }
+
+# github issues
+  if ! type ghi > /dev/null 2>&1; then
+    curl -sL https://raw.githubusercontent.com/stephencelis/ghi/master/ghi > ghi && \
+      chmod 755 ghi && \
+      sudo mv ghi /usr/local/bin
+  fi
