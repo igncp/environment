@@ -31,6 +31,7 @@ install_vim_package scrooloose/syntastic
 install_vim_package shougo/neocomplete.vim "sudo apt-get install -y vim-nox"
 install_vim_package shougo/neosnippet.vim
 install_vim_package shougo/vimproc.vim "cd ~/.vim/bundle/vimproc.vim && make; cd -"
+install_vim_package terryma/vim-multiple-cursors
 install_vim_package vim-airline/vim-airline
 install_vim_package vim-airline/vim-airline-themes
 install_vim_package vim-scripts/cream-showinvisibles
@@ -164,6 +165,10 @@ inoremap <C-a> <Esc>I
   nmap <C-s> :update<Esc>
   inoremap <C-s> <Esc>:update<Esc>i<right>
 
+" multiple-cursors
+  let g:multi_cursor_quit_key='<C-c>'
+  nnoremap <C-c> :call multiple_cursors#quit()<CR>
+
 " copy - paste between files
   vmap <leader>ky :w! /tmp/vitmp<CR>
   nmap <leader>kp :r! cat /tmp/vitmp<CR>
@@ -181,4 +186,10 @@ inoremap <C-a> <Esc>I
 
 " go
   let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
+
+" js
+  " quick console.log , once it finishes: <C-n> s
+    let ConsoleMapping="nnoremap <leader>k iconsole.log('a', a);<C-c>hhhhhhh :call multiple_cursors#new('n', 0)<CR>"
+    autocmd FileType javascript :exe ConsoleMapping
+    autocmd FileType typescript :exe ConsoleMapping
 EOF

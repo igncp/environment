@@ -8,6 +8,13 @@
     sudo apt-get install -y oracle-java8-installer
   fi
 
+  if [ ! -f ~/selenium-server.jar ]; then
+    SELENIUM_FILE_NAME=selenium-server-standalone-2.39.0.jar
+    cd ~
+    curl -O http://selenium-release.storage.googleapis.com/2.39/"$SELENIUM_FILE_NAME"
+    mv "$SELENIUM_FILE_NAME" selenium-server.jar # java -jar ~/selenium-server.jar
+  fi
+
   if ! type gradle > /dev/null 2>&1 ; then
     wget https://services.gradle.org/distributions/gradle-3.1-bin.zip
     unzip gradle-3.1-bin.zip
