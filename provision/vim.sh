@@ -18,13 +18,15 @@ fi
 
 install_vim_package airblade/vim-gitgutter
 install_vim_package ctrlpvim/ctrlp.vim
+install_vim_package easymotion/vim-easymotion
 install_vim_package elzr/vim-json
 install_vim_package evidens/vim-twig
+install_vim_package haya14busa/incsearch.vim
 install_vim_package honza/vim-snippets
 install_vim_package jiangmiao/auto-pairs
 install_vim_package milkypostman/vim-togglelist
-install_vim_package nathanaelkane/vim-indent-guides
 install_vim_package ntpeters/vim-better-whitespace
+install_vim_package pangloss/vim-javascript
 install_vim_package plasticboy/vim-markdown
 install_vim_package scrooloose/nerdcommenter
 install_vim_package scrooloose/syntastic
@@ -40,6 +42,7 @@ install_vim_package vim-scripts/cream-showinvisibles
 # haskell
   install_vim_package eagletmt/ghcmod-vim "stack install ghc-mod"
   install_vim_package neovimhaskell/haskell-vim
+  install_vim_package nbouscal/vim-stylish-haskell "stylish-haskell --defaults > ~/.stylish-haskell.yaml"
 # python
   install_vim_package nvie/vim-flake8
 # coffescript
@@ -65,6 +68,11 @@ set background=dark
 
 " support all hex colors (e.g. for syntastic)
   set  t_Co=256
+
+" incsearch.vim
+  map /  <Plug>(incsearch-forward)
+  map ?  <Plug>(incsearch-backward)
+  map g/ <Plug>(incsearch-stay)
 
 " move lines up and down
   nnoremap <C-j> :m .+1<CR>==

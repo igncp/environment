@@ -6,5 +6,6 @@ if ! type stack > /dev/null 2>&1 ; then
     echo 'deb http://download.fpcomplete.com/ubuntu trusty main'|sudo tee /etc/apt/sources.list.d/fpco.list && \
     sudo apt-get update && sudo apt-get install stack -y && \
     stack setup && \
-    stack upgrade --git
+    stack upgrade --git && \
+    stack install stylish-haskell
 fi
