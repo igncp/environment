@@ -53,7 +53,7 @@ alias cp="cp -r"
 
 alias Tmux="tmux; exit"
 alias EditProvision="vim /project/provision/provision.sh && provision.sh"
-alias Exit="killall tmux"
+alias Exit="killall tmux > /dev/null 2>&1 || exit"
 
 Update_src() {
   rm -rf /project/src
