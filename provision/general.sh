@@ -82,13 +82,6 @@ UpdateSrc() {
 EOF
 
 cat > ~/.tmux.conf <<"EOF"
-unbind C-b
-set -g prefix C-Space
-bind Space send-prefix
-
-bind Space copy-mode
-bind C-Space copy-mode
-
 set -g status off
 set-window-option -g xterm-keys on
 
