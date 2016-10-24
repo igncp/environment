@@ -161,6 +161,17 @@ map ,e :e <C-R>=expand("%:p:h") . "/" <CR>
 inoremap <C-e> <Esc>A
 inoremap <C-a> <Esc>I
 
+" vp doesn't replace paste buffer
+  function! RestoreRegister()
+    let @" = s:restore_reg
+    return ''
+  endfunction
+  function! s:Repl()
+    let s:restore_reg = @"
+    return "p@=RestoreRegister()\<cr>"
+  endfunction
+  vmap <silent> <expr> p <sid>Repl()
+
 " neosnippet
   imap <C-l>     <Plug>(neosnippet_expand_or_jump)
   smap <C-l>     <Plug>(neosnippet_expand_or_jump)
