@@ -9,3 +9,10 @@ if ! type stack > /dev/null 2>&1 ; then
     stack upgrade --git && \
     stack install stylish-haskell
 fi
+
+cat >> ~/.bashrc <<"EOF"
+
+# haskell
+  alias runghc="stack exec runghc --silent -- -w -ihs"
+  alias vim="stack exec vim"
+EOF

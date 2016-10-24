@@ -78,6 +78,12 @@ fi
     touch ~/wordpress-installation-finished
   fi
 
+cat >> ~/.bashrc <<"EOF"
+
+# wordpress
+  source_if_exists ~/wp-completion.bash
+EOF
+
 # drupal
   DB_NAME="name"
   DB_PASSWORD="foo"
@@ -138,3 +144,11 @@ fi
 
   sudo chown -R vagrant:www-data ~/src
   sudo chmod -R 750 ~/src
+
+cat >> ~/.bashrc <<"EOF"
+
+# drush
+  source_if_exists ~/.drush/drush.bashrc
+  source_if_exists ~/.drush/drush.complete.sh
+  source_if_exists ~/.drush/drush.prompt.sh
+EOF

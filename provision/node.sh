@@ -24,3 +24,12 @@ for MODULE_NAME in "${GLOBAL_NPM_MODULES[@]}"; do
     npm i -g $MODULE_NAME
   fi
 done
+
+cat >> ~/.bashrc <<"EOF"
+
+# nodenv
+  export PATH=$PATH:/home/$USER/.nodenv/bin
+  export PATH=$PATH:/home/$USER/.nodenv/versions/6.3.0/bin/
+  eval "$(nodenv init -)"
+  source <(npm completion)
+EOF

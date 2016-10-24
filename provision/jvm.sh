@@ -33,3 +33,11 @@
       /etc/neo4j/neo4j.conf
     sudo service neo4j restart
   fi
+
+cat >> ~/.bashrc <<"EOF"
+
+# java
+  export GRADLE_HOME=/usr/local/lib/gradle
+  export PATH=$PATH:"$GRADLE_HOME"/bin
+  source_if_exists ~/gradle-tab-completion.bash
+EOF

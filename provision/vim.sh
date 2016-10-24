@@ -33,6 +33,7 @@ install_vim_package scrooloose/syntastic
 install_vim_package shougo/neocomplete.vim "sudo apt-get install -y vim-nox"
 install_vim_package shougo/neosnippet.vim
 install_vim_package shougo/vimproc.vim "cd ~/.vim/bundle/vimproc.vim && make; cd -"
+install_vim_package terryma/vim-expand-region
 install_vim_package terryma/vim-multiple-cursors
 install_vim_package vim-airline/vim-airline
 install_vim_package vim-airline/vim-airline-themes
@@ -52,6 +53,10 @@ install_vim_package vim-scripts/cream-showinvisibles
 # typescript
   install_vim_package leafgarland/typescript-vim
   install_vim_package quramy/tsuquyomi
+# brightscript
+  install_vim_package chooh/brightscript.vim
+
+echo 'Control-x: "fg\n"' > ~/.inputrc
 
 cat > ~/.vimrc <<"EOF"
 execute pathogen#infect()
@@ -96,6 +101,9 @@ set tabstop=2
 
 " airline
   set laststatus=2
+  let g:airline_left_sep=''
+  let g:airline_right_sep=''
+  let g:airline_section_z=''
 
 " remove autoindentation when pasting
   set pastetoggle=<F2>
@@ -184,6 +192,19 @@ inoremap <C-a> <Esc>I
 " improve the 'preview window' behaviour
   autocmd CompleteDone * pclose " close when done
   set splitbelow " move to the bottom
+
+" vim-expand-region
+  vmap v <Plug>(expand_region_expand)
+  vmap <C-v> <Plug>(expand_region_shrink)
+
+" search and replace (using cs on first match and n.n.n.)
+  vnoremap <silent> s //e<C-r>=&selection=='exclusive'?'+1':''<CR><CR>
+      \:<C-u>call histdel('search',-1)<Bar>let @/=histget('search',-1)<CR>gv
+  omap s :normal vs<CR>
+
+" quickly move to lines
+  nnoremap <CR> G
+  nnoremap <BS> gg
 
 " haskell
   autocmd BufWritePost *.hs :GhcModCheckAsync
