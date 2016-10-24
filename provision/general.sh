@@ -10,7 +10,9 @@ if ! type jq > /dev/null 2>&1 ; then
   sudo apt-get install -y curl git unzip git-extras \
     build-essential python-software-properties tree entr jq
 
-  git config --global user.email "foo@bar.com" && git config --global user.name "Foo Bar"
+  git config --global user.email "foo@bar.com" && \
+    git config --global user.name "Foo Bar" && \
+    git config --global core.editor "vim"
 fi
 
 # shellcheck (without using stack, it takes a while to install)
@@ -67,8 +69,8 @@ alias Exit="killall tmux > /dev/null 2>&1 || exit"
 Find() { find $@ ! -path "*node_modules*" ! -path "*.git*"; }
 
 alias GitStatus='git status -u'
-GitAdd() { git add $@; GitStatus; }
-alias GitAddAll='GitAdd . -A'
+GitAdd() { git add -A $@; GitStatus; }
+alias GitAddAll='GitAdd .'
 alias GitCommit='git commit -m'
 
 UpdateSrc() {
