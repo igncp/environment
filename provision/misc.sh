@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+# misc START
 
 if [ ! -d ~/english-words ]; then
   git clone https://github.com/dwyl/english-words ~/english-words
@@ -26,3 +26,5 @@ clone_example_from_gh() {
       chmod 755 ghi && \
       sudo mv ghi /usr/local/bin
   fi
+
+# misc END

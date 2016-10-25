@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+# lamp START
 
 DB_PASSWORD="foo"
 DB_USER="bar"
@@ -80,8 +80,7 @@ fi
 
 cat >> ~/.bashrc <<"EOF"
 
-# wordpress
-  source_if_exists ~/wp-completion.bash
+source_if_exists ~/wp-completion.bash
 EOF
 
 # drupal
@@ -145,10 +144,11 @@ EOF
   sudo chown -R vagrant:www-data ~/src
   sudo chmod -R 750 ~/src
 
-cat >> ~/.bashrc <<"EOF"
+  cat >> ~/.bashrc <<"EOF"
 
-# drush
-  source_if_exists ~/.drush/drush.bashrc
-  source_if_exists ~/.drush/drush.complete.sh
-  source_if_exists ~/.drush/drush.prompt.sh
+source_if_exists ~/.drush/drush.bashrc
+source_if_exists ~/.drush/drush.complete.sh
+source_if_exists ~/.drush/drush.prompt.sh
 EOF
+
+# lamp END

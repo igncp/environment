@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# general START
+
 if [ -d /project/scripts ]; then chmod -R +x /project/scripts; fi
 
 mkdir -p ~/logs
@@ -23,7 +25,9 @@ fi
   #   cabal install shellcheck
   # fi
 
-if [ ! -d ~/src ]; then cp -r /project/src ~; fi
+if [ ! -d ~/src ]; then
+  if [ -d /project/src ]; then cp -r /project/src ~; fi
+fi
 
 cat > ~/.bashrc <<"EOF"
 # move from word to word. avoid ctrl+b to use in tmux
@@ -57,7 +61,6 @@ if [ -d ~/src ]; then cd ~/src; fi
 EOF
 
 cat >> ~/.bashrc <<"EOF"
-
 alias ll="ls -lah"
 alias rm="rm -rf"
 alias mkdir="mkdir -p"
@@ -88,3 +91,5 @@ set-window-option -g xterm-keys on
 bind-key S-Left swap-window -t -1
 bind-key S-Right swap-window -t +1
 EOF
+
+# general END

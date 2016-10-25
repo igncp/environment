@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+# vim START
 
 install_vim_package() {
   REPO=$1
@@ -37,24 +37,7 @@ install_vim_package terryma/vim-expand-region
 install_vim_package terryma/vim-multiple-cursors
 install_vim_package vim-airline/vim-airline
 install_vim_package vim-airline/vim-airline-themes
-install_vim_package vim-scripts/cream-showinvisibles
-# go
-  install_vim_package fatih/vim-go
-# haskell
-  install_vim_package eagletmt/ghcmod-vim "stack install ghc-mod"
-  install_vim_package neovimhaskell/haskell-vim
-  install_vim_package nbouscal/vim-stylish-haskell "stylish-haskell --defaults > ~/.stylish-haskell.yaml"
-# python
-  install_vim_package nvie/vim-flake8
-# coffescript
-  install_vim_package kchmck/vim-coffee-script
-# java
-  install_vim_package tfnico/vim-gradle
-# typescript
-  install_vim_package leafgarland/typescript-vim
-  install_vim_package quramy/tsuquyomi
-# brightscript
-  install_vim_package chooh/brightscript.vim
+install_vim_package vim-scripts/cream-showinvisibles 
 
 echo 'Control-x: "fg\n"' > ~/.inputrc
 
@@ -216,20 +199,6 @@ inoremap <C-a> <Esc>I
 " quickly move to lines
   nnoremap <CR> G
   nnoremap <BS> gg
-
-" haskell
-  autocmd BufWritePost *.hs :GhcModCheckAsync
-  autocmd BufReadPost *.hs :GhcModCheckAsync
-
-" python (flake8)
-  let g:flake8_show_quickfix=0  " don't show quickfix
-
-" go
-  let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
-
-" js
-  " quick console.log , once it finishes: <C-n> s
-    let ConsoleMapping="nnoremap <leader>k iconsole.log('a', a);<C-c>hhhhhhh :call multiple_cursors#new('n', 0)<CR>"
-    autocmd FileType javascript :exe ConsoleMapping
-    autocmd FileType typescript :exe ConsoleMapping
 EOF
+
+# vim END

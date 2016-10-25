@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+# go START
 
 if ! type go > /dev/null 2>&1 ; then
   echo "installing go"
@@ -14,3 +14,12 @@ if ! type go > /dev/null 2>&1 ; then
 
   go get -u github.com/golang/lint/golint
 fi
+
+install_vim_package fatih/vim-go
+
+cat >> ~/.vimrc <<"EOF"
+
+let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
+EOF
+
+# go END

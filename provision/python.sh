@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+# python START
 
 if ! type pip > /dev/null  ; then
   echo "installing python tools"
@@ -16,6 +16,14 @@ for MODULE_NAME in "${GLOBAL_PIP_MODULES[@]}"; do
 done
 
 cat >> ~/.bashrc <<"EOF"
-
 Grip() { grip $@ 0.0.0.0:6419; }
 EOF
+
+install_vim_package nvie/vim-flake8
+
+cat >> ~/.vimrc <<"EOF"
+
+let g:flake8_show_quickfix=0 " don't show quickfix
+EOF
+
+# python END

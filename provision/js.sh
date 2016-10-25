@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+# js START
 
 NODE_VERSION=6.3.0
 
@@ -27,9 +27,23 @@ done
 
 cat >> ~/.bashrc <<"EOF"
 
-# nodenv
-  export PATH=$PATH:/home/$USER/.nodenv/bin
-  export PATH=$PATH:/home/$USER/.nodenv/versions/6.3.0/bin/
-  eval "$(nodenv init -)"
-  source <(npm completion)
+export PATH=$PATH:/home/$USER/.nodenv/bin
+export PATH=$PATH:/home/$USER/.nodenv/versions/6.3.0/bin/
+eval "$(nodenv init -)"
+source <(npm completion)
+GitDiff() { git diff --color $@ | diff-so-fancy | less -R; }
 EOF
+
+install_vim_package kchmck/vim-coffee-script
+install_vim_package leafgarland/typescript-vim
+install_vim_package quramy/tsuquyomi
+
+cat >> ~/.vimrc <<"EOF"
+
+" quick console.log , once it finishes: <C-n> s
+  let ConsoleMapping="nnoremap <leader>k iconsole.log('a', a);<C-c>hhhhhhh :call multiple_cursors#new('n', 0)<CR>"
+  autocmd FileType javascript :exe ConsoleMapping
+  autocmd FileType typescript :exe ConsoleMapping
+EOF
+
+# js END

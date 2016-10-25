@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+# ruby START
 
 GEM_NAMES=(bundler)
 
@@ -9,3 +9,5 @@ for GEM_NAME in "${GEM_NAMES[@]}"; do
     sudo gem install "$GEM_NAME" --no-ri --no-rdoc
   fi
 done
+
+# ruby END

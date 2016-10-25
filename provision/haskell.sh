@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+# haskell START
 
 if ! type stack > /dev/null 2>&1 ; then
   echo "installing haskell"
@@ -12,7 +12,18 @@ fi
 
 cat >> ~/.bashrc <<"EOF"
 
-# haskell
-  alias runghc="stack exec runghc --silent -- -w -ihs"
-  alias vim="stack exec vim"
+alias runghc="stack exec runghc --silent -- -w -ihs"
+alias vim="stack exec vim"
 EOF
+
+install_vim_package eagletmt/ghcmod-vim "stack install ghc-mod"
+install_vim_package neovimhaskell/haskell-vim
+install_vim_package nbouscal/vim-stylish-haskell "stylish-haskell --defaults > ~/.stylish-haskell.yaml"
+
+cat >> ~/.vimrc <<"EOF"
+
+autocmd BufWritePost *.hs :GhcModCheckAsync
+autocmd BufReadPost *.hs :GhcModCheckAsync
+EOF
+
+# haskell END
