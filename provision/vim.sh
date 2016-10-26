@@ -105,9 +105,6 @@ let g:NERDSpaceDelims = 1
   nnoremap <leader>p :CtrlP %:p:h<CR> " CtrlP in file's dir
 
 " syntastic
-  let g:syntastic_mode_map = { 'mode': 'active',
-                            \ 'active_filetypes': ['python', 'javascript'],
-                            \ 'passive_filetypes': [] }
   set statusline+=%#warningmsg#
   set statusline+=%{SyntasticStatuslineFlag()}
   set statusline+=%*
@@ -126,6 +123,7 @@ let g:NERDSpaceDelims = 1
   let g:syntastic_style_error_symbol = '⁉️'
   hi Error ctermbg=lightred ctermfg=black
   hi SpellBad ctermbg=lightred ctermfg=black
+  nnoremap <leader>o :SyntasticToggleMode<CR>
 
 map ,e :e <C-R>=expand("%:p:h") . "/" <CR>
 

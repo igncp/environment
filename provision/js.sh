@@ -16,7 +16,7 @@ if [ ! -f ~/node-installation-finished ]; then
     touch ~/node-installation-finished
 fi
 
-GLOBAL_NPM_MODULES=(http-server diff-so-fancy eslint babel-eslint)
+GLOBAL_NPM_MODULES=(http-server diff-so-fancy)
 
 for MODULE_NAME in "${GLOBAL_NPM_MODULES[@]}"; do
   if [ ! -d ~/.nodenv/versions/$NODE_VERSION/lib/node_modules/$MODULE_NAME ]; then
@@ -31,6 +31,7 @@ export PATH=$PATH:/home/$USER/.nodenv/bin
 export PATH=$PATH:/home/$USER/.nodenv/versions/6.3.0/bin/
 eval "$(nodenv init -)"
 source <(npm completion)
+alias Serve="http-server -c-1 -p 9000"
 GitDiff() { git diff --color $@ | diff-so-fancy | less -R; }
 EOF
 
