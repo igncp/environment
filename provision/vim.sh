@@ -81,6 +81,9 @@ set number
 set shiftwidth=2
 set softtabstop=2
 set tabstop=2
+" ignore case in searches
+  set ic
+nnoremap <C-w>v :vsplit<CR><C-w><right>
 
 " airline
   set laststatus=2
