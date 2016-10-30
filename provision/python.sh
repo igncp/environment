@@ -15,7 +15,7 @@ for MODULE_NAME in "${GLOBAL_PIP_MODULES[@]}"; do
   fi
 done
 
-cat >> ~/.bashrc <<"EOF"
+cat >> ~/.bash_aliases <<"EOF"
 Grip() { grip $@ 0.0.0.0:6419; }
 EOF
 

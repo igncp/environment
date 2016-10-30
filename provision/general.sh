@@ -3,6 +3,7 @@
 # general START
 
 if [ -d /project/scripts ]; then chmod -R +x /project/scripts; fi
+if [ -f /project/provision/provision.sh ]; then chmod +x /project/provision/provision.sh; fi
 
 mkdir -p ~/logs
 
@@ -15,6 +16,11 @@ if ! type jq > /dev/null 2>&1 ; then
   git config --global user.email "foo@bar.com" && \
     git config --global user.name "Foo Bar" && \
     git config --global core.editor "vim"
+fi
+
+if [ ! -f ~/.acd_func ]; then
+  curl -o ~/.acd_func \
+    https://raw.githubusercontent.com/djoot/all-bash-history/master/acd_func.sh
 fi
 
 # shellcheck (without using stack, it takes a while to install)
@@ -37,6 +43,7 @@ cat > ~/.bashrc <<"EOF"
 stty -ixon # prevent the terminal from hanging on ctrl+s
 
 export HISTCONTROL=ignoreboth:erasedups
+export EDITOR=vim
 
 source_if_exists() {
   FILE_PATH=$1
@@ -45,31 +52,42 @@ source_if_exists() {
 
 source_if_exists ~/.bash_aliases
 
-if [[ -z $TMUX ]]; then TMUX_PREFIX="·"; else TMUX_PREFIX="{$(tmux display-message -p '#I')} £"; fi
+if [[ -z $TMUX ]]; then
+  TMUX_PREFIX_A="" && TMUX_PREFIX_B="·"
+else
+  TMUX_PREFIX_A="{$(tmux display-message -p '#I')} " && TMUX_PREFIX_B="£"
+fi
 get_jobs_prefix() {
   JOBS=$(jobs | wc -l)
   if [ "$JOBS" -eq "0" ]; then echo ""; else echo "[$JOBS] "; fi
 }
-PS1='${debian_chroot:+($debian_chroot)}\n\u@\h: \W$(__git_ps1) $(get_jobs_prefix)$TMUX_PREFIX '
+PS1_BEGINNING="\n\[\e[34m\]\u\[\e[m\].\[\e[34m\]\h\[\e[m\]:\[\e[36m\] \W\[\e[m\]"
+PS1_MIDDLE="\[\e[32m\]\$(__git_ps1)\[\e[m\]\[\e[33m\] $(get_jobs_prefix)$TMUX_PREFIX_A\[\e[m\]"
+PS1_END="\[\e[32m\]$TMUX_PREFIX_B\[\e[m\] "
+export PS1="$PS1_BEGINNING""$PS1_MIDDLE""$PS1_END"
 
 export PATH=$PATH:/project/scripts
 export PATH=$PATH:/project/provision
 export PATH=$PATH:~/.local/bin
 export PATH=$PATH:~/.cabal/bin
 
+source_if_exists ~/.acd_func
+
 if [ -d ~/src ]; then cd ~/src; fi
 EOF
 
-cat >> ~/.bashrc <<"EOF"
+cat > ~/.bash_aliases <<"EOF"
 alias ll="ls -lah"
 alias rm="rm -rf"
 alias mkdir="mkdir -p"
 alias cp="cp -r"
 
+Popd(){ popd -n +"$1" > /dev/null; cd --; }
+alias ConfigureTimezone='sudo dpkg-reconfigure tzdata'
 alias Tmux="tmux; exit"
 alias EditProvision="vim /project/provision/provision.sh && provision.sh"
 alias Exit="killall tmux > /dev/null 2>&1 || exit"
-Find() { find $@ ! -path "*node_modules*" ! -path "*.git*"; }
+Find() { find "$@" ! -path "*node_modules*" ! -path "*.git*"; }
 
 alias GitStatus='git status -u'
 GitAdd() { git add -A $@; GitStatus; }

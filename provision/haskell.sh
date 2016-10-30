@@ -10,7 +10,7 @@ if ! type stack > /dev/null 2>&1 ; then
     stack install stylish-haskell
 fi
 
-cat >> ~/.bashrc <<"EOF"
+cat >> ~/.bash_aliases <<"EOF"
 
 alias runghc="stack exec runghc --silent -- -w -ihs"
 alias vim="stack exec vim"

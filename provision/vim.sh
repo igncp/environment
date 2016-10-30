@@ -24,6 +24,8 @@ install_vim_package evidens/vim-twig
 install_vim_package haya14busa/incsearch.vim
 install_vim_package honza/vim-snippets
 install_vim_package jiangmiao/auto-pairs
+install_vim_package luochen1990/rainbow
+install_vim_package mbbill/undotree
 install_vim_package milkypostman/vim-togglelist
 install_vim_package ntpeters/vim-better-whitespace
 install_vim_package pangloss/vim-javascript
@@ -35,9 +37,11 @@ install_vim_package shougo/neosnippet.vim
 install_vim_package shougo/vimproc.vim "cd ~/.vim/bundle/vimproc.vim && make; cd -"
 install_vim_package terryma/vim-expand-region
 install_vim_package terryma/vim-multiple-cursors
+install_vim_package tpope/vim-repeat
 install_vim_package vim-airline/vim-airline
 install_vim_package vim-airline/vim-airline-themes
-install_vim_package vim-scripts/cream-showinvisibles 
+install_vim_package vim-ruby/vim-ruby
+install_vim_package vim-scripts/cream-showinvisibles
 
 echo 'Control-x: "fg\n"' > ~/.inputrc
 
@@ -46,6 +50,8 @@ execute pathogen#infect()
 filetype plugin indent on
 syntax on
 set background=dark
+
+let mapleader = "\<Space>"
 
 " fix control + arrows
   set term=xterm
@@ -89,7 +95,6 @@ nnoremap <C-w>v :vsplit<CR><C-w><right>
   set laststatus=2
   let g:airline_left_sep=''
   let g:airline_right_sep=''
-  let g:airline_section_z=''
 
 " remove autoindentation when pasting
   set pastetoggle=<F2>
@@ -100,6 +105,7 @@ nnoremap <C-w>v :vsplit<CR><C-w><right>
 let g:vim_markdown_folding_disabled = 1
 let g:vim_markdown_conceal = 0
 let g:NERDSpaceDelims = 1
+let g:rainbow_active = 1
 
 " ctrlp
   let g:ctrlp_map = '<c-p>'
@@ -180,9 +186,9 @@ inoremap <C-a> <Esc>I
   let g:multi_cursor_quit_key='<C-c>'
   nnoremap <C-c> :call multiple_cursors#quit()<CR>
 
-" copy - paste between files
-  vmap <leader>ky :w! /tmp/vitmp<CR>
-  nmap <leader>kp :r! cat /tmp/vitmp<CR>
+" copy - paste between files and vms
+  vmap <leader>fy :w! /shared/_vitmp<CR>
+  nmap <leader>fp :r! cat /shared/_vitmp<CR>
 
 " improve the 'preview window' behaviour
   autocmd CompleteDone * pclose " close when done
@@ -200,6 +206,8 @@ inoremap <C-a> <Esc>I
 " quickly move to lines
   nnoremap <CR> G
   nnoremap <BS> gg
+" undo tree
+  nnoremap <leader>m :UndotreeShow<CR><C-w><left>
 EOF
 
 # vim END

@@ -15,10 +15,12 @@ if [ ! -f ~/selenium-server.jar ]; then
 fi
 
 if ! type gradle > /dev/null 2>&1 ; then
-  wget https://services.gradle.org/distributions/gradle-3.1-bin.zip
-  unzip gradle-3.1-bin.zip
-  rm gradle-3.1-bin.zip
-  sudo mv gradle-3.1 /usr/local/lib/gradle
+  cd ~
+  GRADLE_VERSION=2.6
+  wget "https://services.gradle.org/distributions/gradle-$GRADLE_VERSION-bin.zip"
+  unzip "gradle-$GRADLE_VERSION-bin.zip"
+  rm "gradle-$GRADLE_VERSION-bin.zip"
+  sudo mv "gradle-$GRADLE_VERSION" /usr/local/lib/gradle
   curl -L -s https://gist.github.com/nolanlawson/8694399/raw/gradle-tab-completion.bash \
     -o ~/gradle-tab-completion.bash
 fi

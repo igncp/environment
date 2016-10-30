@@ -10,6 +10,7 @@ Vagrant.configure(2) do |config|
   # config.vm.network :forwarded_port, guest: 1337, host: 1337 # sailsjs
 
   config.vm.synced_folder ".", "/project"
+  config.vm.synced_folder "~/vm-shared", "/shared"
 
   config.vm.provision "shell", inline: ". /project/provision/provision.sh", privileged: false
 
@@ -17,5 +18,6 @@ Vagrant.configure(2) do |config|
     v.memory = 2024
     v.cpus = 2
     v.customize ['modifyvm', :id, '--clipboard', 'bidirectional']
+    # v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"] # fix for windows host when restarting from sleep
   end
 end

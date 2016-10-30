@@ -27,4 +27,9 @@ clone_example_from_gh() {
       sudo mv ghi /usr/local/bin
   fi
 
+# cron job
+crontab <<"EOF"
+*/15 * * * * /project/scripts/MyScript.sh
+EOF
+
 # misc END

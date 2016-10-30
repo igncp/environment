@@ -31,6 +31,10 @@ export PATH=$PATH:/home/$USER/.nodenv/bin
 export PATH=$PATH:/home/$USER/.nodenv/versions/6.3.0/bin/
 eval "$(nodenv init -)"
 source <(npm completion)
+EOF
+
+cat >> ~/.bash_aliases <<"EOF"
+
 alias Serve="http-server -c-1 -p 9000"
 GitDiff() { git diff --color $@ | diff-so-fancy | less -R; }
 EOF
