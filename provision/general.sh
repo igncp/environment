@@ -62,7 +62,7 @@ get_jobs_prefix() {
   if [ "$JOBS" -eq "0" ]; then echo ""; else echo "[$JOBS] "; fi
 }
 PS1_BEGINNING="\n\[\e[34m\]\u\[\e[m\].\[\e[34m\]\h\[\e[m\]:\[\e[36m\] \W\[\e[m\]"
-PS1_MIDDLE="\[\e[32m\]\$(__git_ps1)\[\e[m\]\[\e[33m\] $(get_jobs_prefix)$TMUX_PREFIX_A\[\e[m\]"
+PS1_MIDDLE="\[\e[32m\]\$(__git_ps1)\[\e[m\]\[\e[33m\] \$(get_jobs_prefix)$TMUX_PREFIX_A\[\e[m\]"
 PS1_END="\[\e[32m\]$TMUX_PREFIX_B\[\e[m\] "
 export PS1="$PS1_BEGINNING""$PS1_MIDDLE""$PS1_END"
 
