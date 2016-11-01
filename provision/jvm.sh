@@ -29,8 +29,8 @@ cat >> ~/.bashrc <<"EOF"
 
 export GRADLE_HOME=/usr/local/lib/gradle
 export PATH=$PATH:"$GRADLE_HOME"/bin
-source_if_exists ~/gradle-tab-completion.bash
 EOF
+echo "source_if_exists ~/gradle-tab-completion.bash" >> ~/.bash_sources
 
 install_vim_package tfnico/vim-gradle
 

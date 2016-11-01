@@ -28,7 +28,6 @@ install_vim_package luochen1990/rainbow
 install_vim_package mbbill/undotree
 install_vim_package milkypostman/vim-togglelist
 install_vim_package ntpeters/vim-better-whitespace
-install_vim_package pangloss/vim-javascript
 install_vim_package plasticboy/vim-markdown
 install_vim_package scrooloose/nerdcommenter
 install_vim_package scrooloose/syntastic
@@ -37,6 +36,7 @@ install_vim_package shougo/neosnippet.vim
 install_vim_package shougo/vimproc.vim "cd ~/.vim/bundle/vimproc.vim && make; cd -"
 install_vim_package terryma/vim-expand-region
 install_vim_package terryma/vim-multiple-cursors
+install_vim_package tpope/vim-fugitive
 install_vim_package tpope/vim-repeat
 install_vim_package vim-airline/vim-airline
 install_vim_package vim-airline/vim-airline-themes
@@ -87,6 +87,8 @@ set number
 set shiftwidth=2
 set softtabstop=2
 set tabstop=2
+set smartcase
+set wildmenu
 " ignore case in searches
   set ic
 nnoremap <C-w>v :vsplit<CR><C-w><right>
@@ -110,6 +112,7 @@ let g:rainbow_active = 1
 " ctrlp
   let g:ctrlp_map = '<c-p>'
   let g:ctrlp_cmd = 'CtrlP'
+  let g:ctrlp_show_hidden = 1
   let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist)|(\.(swp|ico|git|svn))$'
   nnoremap <leader>p :CtrlP %:p:h<CR> " CtrlP in file's dir
 
@@ -146,7 +149,7 @@ map ,e :e <C-R>=expand("%:p:h") . "/" <CR>
   nnoremap <Space> @d
 
 " sort lines
-  vmap <F5> :sort<CR>
+  vmap <F3> :sort<CR>
 
 inoremap <C-e> <Esc>A
 inoremap <C-a> <Esc>I

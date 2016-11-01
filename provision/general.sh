@@ -35,6 +35,16 @@ if [ ! -d ~/src ]; then
   if [ -d /project/src ]; then cp -r /project/src ~; fi
 fi
 
+cat > ~/.bash_sources <<"EOF"
+source_if_exists() {
+  FILE_PATH=$1
+  if [ -f $FILE_PATH ]; then source $FILE_PATH; fi
+}
+
+source_if_exists ~/.acd_func
+source_if_exists ~/.bash_aliases
+EOF
+
 cat > ~/.bashrc <<"EOF"
 # move from word to word. avoid ctrl+b to use in tmux
   bind '"\C-g":vi-fWord' > /dev/null 2>&1
@@ -44,13 +54,6 @@ stty -ixon # prevent the terminal from hanging on ctrl+s
 
 export HISTCONTROL=ignoreboth:erasedups
 export EDITOR=vim
-
-source_if_exists() {
-  FILE_PATH=$1
-  if [ -f $FILE_PATH ]; then source $FILE_PATH; fi
-}
-
-source_if_exists ~/.bash_aliases
 
 if [[ -z $TMUX ]]; then
   TMUX_PREFIX_A="" && TMUX_PREFIX_B="·"
@@ -71,9 +74,9 @@ export PATH=$PATH:/project/provision
 export PATH=$PATH:~/.local/bin
 export PATH=$PATH:~/.cabal/bin
 
-source_if_exists ~/.acd_func
-
 if [ -d ~/src ]; then cd ~/src; fi
+
+source ~/.bash_sources
 EOF
 
 cat > ~/.bash_aliases <<"EOF"

@@ -1,6 +1,6 @@
 # python START
 
-if ! type pip > /dev/null  ; then
+if ! type pip > /dev/null 2>&1; then
   echo "installing python tools"
 
   sudo apt-get install -y python-pip

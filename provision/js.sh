@@ -24,7 +24,7 @@ install_node_modules() {
   done
 }
 
-install_node_modules http-server diff-so-fancy
+install_node_modules http-server diff-so-fancy yarn
 
 cat >> ~/.bashrc <<"EOF"
 
@@ -40,6 +40,7 @@ alias Serve="http-server -c-1 -p 9000"
 GitDiff() { git diff --color $@ | diff-so-fancy | less -R; }
 EOF
 
+# not installing vim-javascript as it doesn't work with rainbow
 install_vim_package kchmck/vim-coffee-script
 install_vim_package leafgarland/typescript-vim
 install_vim_package quramy/tsuquyomi

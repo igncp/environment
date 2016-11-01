@@ -3,13 +3,12 @@
 DB_PASSWORD="foo"
 DB_USER="bar"
 DB_USER_PASSWORD="baz"
-if ! type apache2 > /dev/null  ; then
+if ! type apache2 > /dev/null 2>&1 ; then
   echo "installing lamp tools"
 
   # wp-cli has some issues if the ondrej/php repo is used
 
   sudo apt-get update
-
   sudo apt-get remove -y php*
 
   sudo debconf-set-selections <<< "mysql-server mysql-server/root_password password $DB_PASSWORD"
@@ -21,20 +20,16 @@ if ! type apache2 > /dev/null  ; then
 
   sudo sed -i "s/index.php //; s/index.html /index.php index.html /" /etc/apache2/mods-enabled/dir.conf
   sudo sh -c "echo '<?php phpinfo(); ?>' > /var/www/html/index.php"
-
   sudo cp /project/provision/apache2.conf /etc/apache2/
-
   sudo a2enmod rewrite
-
   sudo usermod -a -G www-data $USER
-
   sudo service apache2 restart
 fi
 
 # composer
-  if ! type composer > /dev/null  ; then
+  if ! type composer > /dev/null 2>&1 ; then
     sudo apt-get install -y php5-cli
-    
+
     curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
   fi
 
@@ -78,10 +73,7 @@ fi
     touch ~/wordpress-installation-finished
   fi
 
-cat >> ~/.bashrc <<"EOF"
-
-source_if_exists ~/wp-completion.bash
-EOF
+  echo "source_if_exists ~/wp-completion.bash" >> ~/.bash_sources
 
 # drupal
   DB_NAME="name"
@@ -144,8 +136,7 @@ EOF
   sudo chown -R vagrant:www-data ~/src
   sudo chmod -R 750 ~/src
 
-  cat >> ~/.bashrc <<"EOF"
-
+  cat >> ~/.bash_sources <<"EOF"
 source_if_exists ~/.drush/drush.bashrc
 source_if_exists ~/.drush/drush.complete.sh
 source_if_exists ~/.drush/drush.prompt.sh
