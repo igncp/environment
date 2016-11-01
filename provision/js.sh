@@ -3,6 +3,7 @@
 NODE_VERSION=6.3.0
 if [ ! -f ~/.node-installation-finished ]; then
   echo "setup node with nodenv"
+  cd ~
   sudo add-apt-repository -y ppa:chris-lea/node.js && \
     sudo apt-get update && \
     sudo curl -O -L https://npmjs.org/install.sh | sh && \
@@ -13,6 +14,7 @@ if [ ! -f ~/.node-installation-finished ]; then
     if [ ! -d .nodenv/versions/$NODE_VERSION ]; then nodenv install $NODE_VERSION; fi && \
     nodenv global $NODE_VERSION && \
     touch ~/.node-installation-finished
+  rm -f ~/install.sh
 fi
 
 install_node_modules() {

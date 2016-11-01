@@ -17,15 +17,21 @@ Some of the conventions they take into account are:
 ```
 /project
   Vagrantfile
-  /provision
+  provision/
     provision.sh
     ...
-  /scripts
+  scripts/
     ...
-  /src
+  src/
     ...
   ...
 ```
+
+- Normally `provision.sh` is the only file under the `provision` directory, and contains all the provisions in a single file, so it is easier to reason about. The reason to be a directory is to place configuration files that can be copy-pasted directly (e.g. `apache.conf`).
+
+- The order of the provisioners inside `provision.sh` is `general.sh` as first, then `vim.sh`, and then the rest, being `custom.sh` the last one, to separate custom tweaks so it is easier to update the rest of the provisioners by replacing them.
+
+- The `/shared` directory in the guest points to `~/vm-shared` in the host, and it is shared between all the VMs.
 
 ## License
 
