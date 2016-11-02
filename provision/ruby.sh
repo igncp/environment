@@ -10,7 +10,6 @@ if [ ! -f ~/.ruby-installation-finished ]; then
   touch ~/.ruby-installation-finished
 fi
 
-echo "source_if_exists ~/.acd_func" >> ~/.bash_sources
 cat >> ~/.bashrc <<"EOF"
 export PATH="$PATH:~/.rvm/bin"
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"

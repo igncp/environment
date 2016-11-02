@@ -77,6 +77,10 @@ export PATH=$PATH:~/.cabal/bin
 if [ -d ~/src ]; then cd ~/src; fi
 
 source ~/.bash_sources
+
+if [ "$(pwd)" = "/home/$USER" ]; then
+  if [ -d ~/src ]; then cd ~/src; fi
+fi
 EOF
 
 cat > ~/.bash_aliases <<"EOF"

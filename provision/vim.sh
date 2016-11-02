@@ -79,6 +79,14 @@ let mapleader = "\<Space>"
 " remove trailing spaces
   nmap <leader>t :%s/\s\+$<CR><C-o>
 
+" folding
+  set foldmethod=indent
+  set nofoldenable
+  set fml=0
+  set nowrap
+  nnoremap <leader>w :set wrap!<CR>
+  hi Folded ctermbg=236
+
 set autoindent
 set clipboard=unnamedplus
 set cursorline
@@ -205,6 +213,8 @@ inoremap <C-a> <Esc>I
   vnoremap <silent> s //e<C-r>=&selection=='exclusive'?'+1':''<CR><CR>
       \:<C-u>call histdel('search',-1)<Bar>let @/=histget('search',-1)<CR>gv
   omap s :normal vs<CR>
+
+" autocmd Filetype sh setlocal softtabstop=2 tabstop=2 shiftwidth=2
 
 " quickly move to lines
   nnoremap <CR> G
