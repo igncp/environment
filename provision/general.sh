@@ -10,7 +10,7 @@ mkdir -p ~/logs
 if ! type jq > /dev/null 2>&1 ; then
   echo "installing basic packages"
   sudo apt-get update
-  sudo apt-get install -y curl git unzip git-extras \
+  sudo apt-get install -y curl git unzip git-extras exuberant-ctags\
     build-essential python-software-properties tree entr jq
 
   git config --global user.email "foo@bar.com" && \
