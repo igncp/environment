@@ -16,6 +16,16 @@ if [ ! -f ~/.vim/autoload/pathogen.vim ]; then
     > ~/.vim/autoload/pathogen.vim
 fi
 
+# not functional yet
+if ! type nvim > /dev/null 2>&1 ; then
+  sudo add-apt-repository -y ppa:neovim-ppa/unstable
+  sudo apt-get update && sudo apt-get install -y neovim
+  mkdir -p ~/.config
+  rm -rf ~/.config/nvim
+  ln -s ~/.vim ~/.config/nvim
+  ln -s ~/.vimrc ~/.config/nvim/init.vim
+fi
+
 install_vim_package airblade/vim-gitgutter
 install_vim_package ctrlpvim/ctrlp.vim
 install_vim_package easymotion/vim-easymotion
@@ -43,7 +53,10 @@ install_vim_package vim-airline/vim-airline-themes
 install_vim_package vim-ruby/vim-ruby
 install_vim_package vim-scripts/cream-showinvisibles
 
-echo 'Control-x: "fg\n"' > ~/.inputrc
+cat > ~/.inputrc <<"EOF"
+set show-all-if-ambiguous on
+Control-x: "fg\n"
+EOF
 
 cat > ~/.vimrc <<"EOF"
 execute pathogen#infect()
@@ -55,6 +68,15 @@ let mapleader = "\<Space>"
 
 " fix control + arrows
   set term=xterm
+
+" buffers
+  nnoremap <F10> :buffers<CR>:buffer<Space>
+  nnoremap <silent> <F12> :bn<CR>
+  nnoremap <silent> <S-F12> :bp<CR>
+
+" don't copy when using del
+  vnoremap <Del> "_d
+  nnoremap <Del> "_d
 
 " prevent saving backup files
   set nobackup
@@ -84,8 +106,14 @@ let mapleader = "\<Space>"
   set nofoldenable
   set fml=0
   set nowrap
-  nnoremap <leader>w :set wrap!<CR>
   hi Folded ctermbg=236
+
+" improve indentation
+  xnoremap <Tab> >gv
+  xnoremap <S-Tab> <gv
+
+" to easily copy with the mouse
+  nnoremap <leader>n :set number!<CR>:GitGutterToggle<CR>
 
 set autoindent
 set clipboard=unnamedplus
@@ -97,9 +125,16 @@ set softtabstop=2
 set tabstop=2
 set smartcase
 set wildmenu
+
+" better completion menu colors
+  highlight Pmenu ctermfg=white ctermbg=17
+  highlight PmenuSel ctermfg=white ctermbg=29
+
 " ignore case in searches
   set ic
+
 nnoremap <C-w>v :vsplit<CR><C-w><right>
+nnoremap <leader>w :set wrap!<CR>
 
 " airline
   set laststatus=2
