@@ -129,6 +129,9 @@ let g:hardtime_default_on = 1
 " to easily copy with the mouse
   nnoremap <leader>n :set number!<CR>:GitGutterToggle<CR>
 
+" fix c-b mapping to use with tmux (one page up)
+  nnoremap <C-d> <c-b>
+
 set autoindent
 set clipboard=unnamedplus
 set cursorline
