@@ -33,6 +33,7 @@ install_vim_package elzr/vim-json
 install_vim_package evidens/vim-twig
 install_vim_package haya14busa/incsearch.vim
 install_vim_package honza/vim-snippets
+install_vim_package jelera/vim-javascript-syntax
 install_vim_package jiangmiao/auto-pairs
 install_vim_package luochen1990/rainbow
 install_vim_package mbbill/undotree
@@ -44,6 +45,7 @@ install_vim_package scrooloose/syntastic
 install_vim_package shougo/neocomplete.vim "sudo apt-get install -y vim-nox"
 install_vim_package shougo/neosnippet.vim
 install_vim_package shougo/vimproc.vim "cd ~/.vim/bundle/vimproc.vim && make; cd -"
+install_vim_package takac/vim-hardtime
 install_vim_package terryma/vim-expand-region
 install_vim_package terryma/vim-multiple-cursors
 install_vim_package tpope/vim-fugitive
@@ -52,6 +54,7 @@ install_vim_package vim-airline/vim-airline
 install_vim_package vim-airline/vim-airline-themes
 install_vim_package vim-ruby/vim-ruby
 install_vim_package vim-scripts/cream-showinvisibles
+install_vim_package yggdroot/indentLine
 
 cat > ~/.inputrc <<"EOF"
 set show-all-if-ambiguous on
@@ -65,6 +68,7 @@ syntax on
 set background=dark
 
 let mapleader = "\<Space>"
+let g:hardtime_default_on = 1
 
 " fix control + arrows
   set term=xterm
@@ -77,6 +81,16 @@ let mapleader = "\<Space>"
 " don't copy when using del
   vnoremap <Del> "_d
   nnoremap <Del> "_d
+
+" numbers maps
+  set relativenumber
+  nnoremap <leader>h :set relativenumber!<CR>
+
+" open file in same dir
+  map ,e :e <C-R>=expand("%:p:h") . "/" <CR>
+
+" replace selection
+  vmap <leader>g y:%s/<C-r>"//g<left><left>
 
 " prevent saving backup files
   set nobackup
@@ -189,7 +203,7 @@ map ,e :e <C-R>=expand("%:p:h") . "/" <CR>
   nnoremap ,cd :cd %:p:h<CR>:pwd<CR>
 
 " run macro on d
-  nnoremap <Space> @d
+  nnoremap <leader>d @d
 
 " sort lines
   vmap <F3> :sort<CR>
@@ -226,7 +240,7 @@ inoremap <C-a> <Esc>I
 
 " save file shortcuts
   nmap <C-s> :update<Esc>
-  inoremap <C-s> <Esc>:update<Esc>i<right>
+  inoremap <C-s> <Esc>:update<CR>
 
 " multiple-cursors
   let g:multi_cursor_quit_key='<C-c>'
