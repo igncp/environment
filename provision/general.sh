@@ -89,15 +89,20 @@ alias rm="rm -rf"
 alias mkdir="mkdir -p"
 alias cp="cp -r"
 
+Find() { find "$@" ! -path "*node_modules*" ! -path "*.git*"; }
+GetProcessUsingPort(){ fuser $1/tcp; }
+MkdirCd(){ mkdir -p $1; cd $1; }
 Popd(){ popd -n +"$1" > /dev/null; cd --; }
+alias AliasesReload='source ~/.bash_aliases'
 alias ConfigureTimezone='sudo dpkg-reconfigure tzdata'
-alias Tmux="tmux; exit"
 alias EditProvision="vim /project/provision/provision.sh && provision.sh"
 alias Exit="killall tmux > /dev/null 2>&1 || exit"
-Find() { find "$@" ! -path "*node_modules*" ! -path "*.git*"; }
+alias Tmux="tmux; exit"
 
 alias GitStatus='git status -u'
 GitAdd() { git add -A $@; GitStatus; }
+GitResetLastCommit() { LAST_COMMIT_MESSAGE=$(git log -1 --pretty=%B); \
+  git reset --soft HEAD^; git add -A .; git commit -m "$LAST_COMMIT_MESSAGE"; }
 alias GitAddAll='GitAdd .'
 alias GitCommit='git commit -m'
 
