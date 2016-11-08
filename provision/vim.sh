@@ -50,6 +50,7 @@ install_vim_package terryma/vim-expand-region
 install_vim_package terryma/vim-multiple-cursors
 install_vim_package tpope/vim-fugitive
 install_vim_package tpope/vim-repeat
+install_vim_package tpope/vim-surround
 install_vim_package vim-airline/vim-airline
 install_vim_package vim-airline/vim-airline-themes
 install_vim_package vim-ruby/vim-ruby

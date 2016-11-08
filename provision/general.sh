@@ -11,7 +11,7 @@ if ! type jq > /dev/null 2>&1 ; then
   echo "installing basic packages"
   sudo apt-get update
   sudo apt-get install -y curl git unzip git-extras exuberant-ctags\
-    build-essential python-software-properties tree entr jq
+    build-essential python-software-properties tree entr htop jq
 
   git config --global user.email "foo@bar.com" && \
     git config --global user.name "Foo Bar" && \
@@ -73,8 +73,6 @@ export PATH=$PATH:/project/scripts
 export PATH=$PATH:/project/provision
 export PATH=$PATH:~/.local/bin
 export PATH=$PATH:~/.cabal/bin
-
-if [ -d ~/src ]; then cd ~/src; fi
 
 source ~/.bash_sources
 
