@@ -1,5 +1,9 @@
 # lamp START
 
+# * config files
+# - apache: apache2.conf
+# - wordpress: wp-config.php
+
 DB_PASSWORD="foo"
 DB_USER="bar"
 DB_USER_PASSWORD="baz"
@@ -19,12 +23,15 @@ if ! type apache2 > /dev/null 2>&1 ; then
   sudo apt-get install -y apache2
 
   sudo sed -i "s/index.php //; s/index.html /index.php index.html /" /etc/apache2/mods-enabled/dir.conf
-  sudo sh -c "echo '<?php phpinfo(); ?>' > /var/www/html/index.php"
+  sudo sh -c "echo '<?php phpinfo(); ?>' > /var/www/html/php.php"
+  sudo mv /var/www/html/index.html /var/www/html/apache.html
   sudo cp /project/provision/apache2.conf /etc/apache2/
   sudo a2enmod rewrite
   sudo usermod -a -G www-data $USER
   sudo service apache2 restart
 fi
+
+echo 'TailApacheLog() { sudo tail -f /var/log/apache2/error.log; }' >> ~/.bash_aliases
 
 # composer
   if ! type composer > /dev/null 2>&1 ; then

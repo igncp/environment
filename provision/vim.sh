@@ -47,7 +47,6 @@ install_vim_package shougo/neosnippet.vim
 install_vim_package shougo/vimproc.vim "cd ~/.vim/bundle/vimproc.vim && make; cd -"
 install_vim_package takac/vim-hardtime
 install_vim_package terryma/vim-expand-region
-install_vim_package terryma/vim-multiple-cursors
 install_vim_package tpope/vim-fugitive
 install_vim_package tpope/vim-repeat
 install_vim_package tpope/vim-surround
@@ -245,10 +244,6 @@ inoremap <C-a> <Esc>I
 " save file shortcuts
   nmap <C-s> :update<Esc>
   inoremap <C-s> <Esc>:update<CR>
-
-" multiple-cursors
-  let g:multi_cursor_quit_key='<C-c>'
-  nnoremap <C-c> :call multiple_cursors#quit()<CR>
 
 " copy - paste between files and vms
   vmap <leader>fy :w! /shared/_vitmp<CR>

@@ -87,6 +87,7 @@ alias rm="rm -rf"
 alias mkdir="mkdir -p"
 alias cp="cp -r"
 
+DisplayFilesConcatenated(){ xargs tail -n +1 | sed "s|==>|\n\n\n\n\n$1==>|; s|<==|<==\n|" | vim -; }
 Find() { find "$@" ! -path "*node_modules*" ! -path "*.git*"; }
 GetProcessUsingPort(){ fuser $1/tcp; }
 MkdirCd(){ mkdir -p $1; cd $1; }
@@ -103,6 +104,7 @@ GitResetLastCommit() { LAST_COMMIT_MESSAGE=$(git log -1 --pretty=%B); \
   git reset --soft HEAD^; git add -A .; git commit -m "$LAST_COMMIT_MESSAGE"; }
 alias GitAddAll='GitAdd .'
 alias GitCommit='git commit -m'
+alias GitEditorCommit='git commit -v'
 
 UpdateSrc() {
   rm -rf /project/src
