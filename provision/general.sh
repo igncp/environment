@@ -7,16 +7,37 @@ if [ -f /project/provision/provision.sh ]; then chmod +x /project/provision/prov
 
 mkdir -p ~/logs
 
-if ! type jq > /dev/null 2>&1 ; then
+if [ ! -f ~/.check-files/basic-packages ]; then
   echo "installing basic packages"
   sudo apt-get update
-  sudo apt-get install -y curl git unzip git-extras exuberant-ctags\
-    build-essential python-software-properties tree entr htop jq
+  sudo apt-get install -y build-essential python-software-properties
+  mkdir -p ~/.check-files && touch ~/.check-files/basic-packages
+fi
 
+if ! type git > /dev/null 2>&1 ; then
+  sudo apt-get install -y git git-extras
   git config --global user.email "foo@bar.com" && \
     git config --global user.name "Foo Bar" && \
     git config --global core.editor "vim"
 fi
+
+install_apt_package() {
+  PACKAGE="$1"
+  if [[ ! -z "$2" ]]; then CMD_CHECK="$2"; else CMD_CHECK="$1"; fi
+  if ! type "$CMD_CHECK" > /dev/null 2>&1 ; then
+    echo "doing: sudo apt-get install -y $PACKAGE"
+    sudo apt-get install -y "$PACKAGE"
+  fi
+}
+
+install_apt_package moreutils vidir
+install_apt_package exuberant-ctags ctags
+install_apt_package unzip
+install_apt_package curl
+install_apt_package tree
+install_apt_package entr
+install_apt_package htop
+install_apt_package jq
 
 if [ ! -f ~/.acd_func ]; then
   curl -o ~/.acd_func \
@@ -112,6 +133,11 @@ UpdateSrc() {
     --exclude='*node_modules*' \
     ~/src /project
 }
+EOF
+
+cat > ~/.inputrc <<"EOF"
+set show-all-if-ambiguous on # fast autocompletion
+C-h:unix-filename-rubout # remove till slash
 EOF
 
 cat > ~/.tmux.conf <<"EOF"

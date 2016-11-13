@@ -1,7 +1,7 @@
 # js START
 
 NODE_VERSION=6.3.0
-if [ ! -f ~/.node-installation-finished ]; then
+if [ ! -f ~/.check-files/node ]; then
   echo "setup node with nodenv"
   cd ~
   sudo add-apt-repository -y ppa:chris-lea/node.js && \
@@ -13,7 +13,7 @@ if [ ! -f ~/.node-installation-finished ]; then
     if [ ! -d ~/.nodenv/plugins/node-build ]; then git clone https://github.com/nodenv/node-build.git $(nodenv root)/plugins/node-build; fi && \
     if [ ! -d .nodenv/versions/$NODE_VERSION ]; then nodenv install $NODE_VERSION; fi && \
     nodenv global $NODE_VERSION && \
-    touch ~/.node-installation-finished
+    mkdir -p ~/.check-files && touch ~/.check-files/node
   rm -f ~/install.sh
 fi
 
@@ -49,7 +49,7 @@ install_vim_package quramy/tsuquyomi
 
 cat >> ~/.vimrc <<"EOF"
 
-" quick console.log , once it finishes: <C-n> s
+" quick console.log
   let ConsoleMapping="nnoremap <leader>k iconsole.log('a', a);<C-c>hhhhhhh"
   autocmd FileType javascript :exe ConsoleMapping
   autocmd FileType typescript :exe ConsoleMapping

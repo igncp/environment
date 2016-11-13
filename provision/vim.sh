@@ -18,6 +18,7 @@ fi
 
 # not functional yet
 if ! type nvim > /dev/null 2>&1 ; then
+  echo "installing neovim"
   sudo add-apt-repository -y ppa:neovim-ppa/unstable
   sudo apt-get update && sudo apt-get install -y neovim
   mkdir -p ~/.config
@@ -56,10 +57,7 @@ install_vim_package vim-ruby/vim-ruby
 install_vim_package vim-scripts/cream-showinvisibles
 install_vim_package yggdroot/indentLine
 
-cat > ~/.inputrc <<"EOF"
-set show-all-if-ambiguous on
-Control-x: "fg\n"
-EOF
+echo 'Control-x: " fg\n"' >> ~/.inputrc
 
 cat > ~/.vimrc <<"EOF"
 execute pathogen#infect()
@@ -198,6 +196,7 @@ let g:rainbow_active = 1
   nnoremap <leader>o :SyntasticToggleMode<CR>
 
 map ,e :e <C-R>=expand("%:p:h") . "/" <CR>
+au BufNewFile,BufRead *.ejs set filetype=html
 
 " move up/down from the beginning/end of lines
   set ww+=<,>
@@ -246,8 +245,14 @@ inoremap <C-a> <Esc>I
   inoremap <C-s> <Esc>:update<CR>
 
 " copy - paste between files and vms
-  vmap <leader>fy :w! /shared/_vitmp<CR>
-  nmap <leader>fp :r! cat /shared/_vitmp<CR>
+  vmap <leader>fy :w! /vm-shared/_vitmp<CR>
+  nmap <leader>fp :r! cat /vm-shared/_vitmp<CR>
+  vmap <leader>fp d:r! cat /vm-shared/_vitmp<CR>
+
+" fast grep
+  vnoremap <leader>b y:!clear;
+  \ Grep() { grep -rin --color "$@"; printf "\n\n\n----\n\n\n"; grep --color -ril "$@"; }
+  \ && Grep "" <left><left><C-r>"<right><right>
 
 " improve the 'preview window' behaviour
   autocmd CompleteDone * pclose " close when done

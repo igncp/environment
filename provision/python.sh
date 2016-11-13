@@ -15,7 +15,7 @@ install_pip_modules() {
   done
 }
 
-install_pip_modules flake8 plotly grip
+install_pip_modules flake8 plotly grip httpie
 
 cat >> ~/.bash_aliases <<"EOF"
 Grip() { grip $@ 0.0.0.0:6419; }
