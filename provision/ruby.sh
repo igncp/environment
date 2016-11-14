@@ -1,13 +1,13 @@
 # ruby START
 
 RUBY_VERSION=2.2.4
-if [ ! -f ~/.ruby-installation-finished ]; then
+if [ ! -f ~/.check-files/ruby ]; then
   gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
   curl -sSL https://get.rvm.io | bash -s stable
   [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
   ~/.rvm/bin/rvm install "$RUBY_VERSION"
   ~/.rvm/bin/rvm use --default "$RUBY_VERSION"
-  touch ~/.ruby-installation-finished
+  mkdir -p ~/.check-files; touch ~/.check-files/ruby
 fi
 
 cat >> ~/.bashrc <<"EOF"
@@ -16,7 +16,7 @@ export PATH="$PATH:~/.rvm/bin"
 source ~/.bash_sources # after sourcing rvm, some features like acd_func are lost if not resourced
 EOF
 cat >> ~/.bashrc <<EOF
-if [ "\$(ruby --version | grep -o "^ruby .\..\..")" != "ruby $RUBY_VERSION" ]; then
+if [ "\$(ruby --version 2> /dev/null | grep -o "^ruby .\..\..")" != "ruby $RUBY_VERSION" ]; then
   rvm use $RUBY_VERSION > /dev/null 2>&1
 fi
 EOF

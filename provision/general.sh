@@ -38,6 +38,7 @@ install_apt_package tree
 install_apt_package entr
 install_apt_package htop
 install_apt_package jq
+install_apt_package ncdu
 
 if [ ! -f ~/.acd_func ]; then
   curl -o ~/.acd_func \
@@ -136,8 +137,8 @@ UpdateSrc() {
 EOF
 
 cat > ~/.inputrc <<"EOF"
-set show-all-if-ambiguous on # fast autocompletion
-C-h:unix-filename-rubout # remove till slash
+set show-all-if-ambiguous on
+C-h:unix-filename-rubout
 EOF
 
 cat > ~/.tmux.conf <<"EOF"
