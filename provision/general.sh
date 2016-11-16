@@ -18,7 +18,7 @@ if ! type git > /dev/null 2>&1 ; then
   sudo apt-get install -y git git-extras
   git config --global user.email "foo@bar.com" && \
     git config --global user.name "Foo Bar" && \
-    git config --global core.editor "vim"
+    git config --global core.editor "nvim"
 fi
 
 install_apt_package() {
@@ -75,7 +75,8 @@ cat > ~/.bashrc <<"EOF"
 stty -ixon # prevent the terminal from hanging on ctrl+s
 
 export HISTCONTROL=ignoreboth:erasedups
-export EDITOR=vim
+export TERM=xterm # neovim
+export EDITOR=nvim
 
 if [[ -z $TMUX ]]; then
   TMUX_PREFIX_A="" && TMUX_PREFIX_B="·"
@@ -104,10 +105,11 @@ fi
 EOF
 
 cat > ~/.bash_aliases <<"EOF"
-alias ll="ls -lah"
-alias rm="rm -rf"
-alias mkdir="mkdir -p"
 alias cp="cp -r"
+alias ll="ls -lah"
+alias mkdir="mkdir -p"
+alias rm="rm -rf"
+alias vim="nvim"
 
 DisplayFilesConcatenated(){ xargs tail -n +1 | sed "s|==>|\n\n\n\n\n$1==>|; s|<==|<==\n|" | vim -; }
 Find() { find "$@" ! -path "*node_modules*" ! -path "*.git*"; }

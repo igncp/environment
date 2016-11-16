@@ -16,11 +16,12 @@ if [ ! -f ~/.vim/autoload/pathogen.vim ]; then
     > ~/.vim/autoload/pathogen.vim
 fi
 
-# not functional yet
 if ! type nvim > /dev/null 2>&1 ; then
   echo "installing neovim"
   sudo add-apt-repository -y ppa:neovim-ppa/unstable
   sudo apt-get update && sudo apt-get install -y neovim
+  sudo apt-get install -y python3-pip
+  sudo pip3 install neovim
   mkdir -p ~/.config
   rm -rf ~/.config/nvim
   ln -s ~/.vim ~/.config/nvim
@@ -43,7 +44,7 @@ install_vim_package ntpeters/vim-better-whitespace
 install_vim_package plasticboy/vim-markdown
 install_vim_package scrooloose/nerdcommenter
 install_vim_package scrooloose/syntastic
-install_vim_package shougo/neocomplete.vim "sudo apt-get install -y vim-nox"
+install_vim_package shougo/deoplete.nvim # :UpdateRemotePlugins
 install_vim_package shougo/neosnippet.vim
 install_vim_package shougo/vimproc.vim "cd ~/.vim/bundle/vimproc.vim && make; cd -"
 install_vim_package takac/vim-hardtime
@@ -68,8 +69,8 @@ set background=dark
 let mapleader = "\<Space>"
 let g:hardtime_default_on = 1
 
-" fix control + arrows
-  set term=xterm
+" disable mouse to be able to select + copy
+  set mouse-=a
 
 " buffers
   nnoremap <F10> :buffers<CR>:buffer<Space>
@@ -130,6 +131,7 @@ let g:hardtime_default_on = 1
 " fix c-b mapping to use with tmux (one page up)
   nnoremap <C-d> <c-b>
 
+set nohlsearch
 set autoindent
 set clipboard=unnamedplus
 set cursorline
@@ -159,13 +161,14 @@ nnoremap <leader>w :set wrap!<CR>
 " remove autoindentation when pasting
   set pastetoggle=<F2>
 
-" neocomplete
-  let g:neocomplete#enable_at_startup = 1
+" deoplete
+  let g:deoplete#enable_at_startup = 1
 
-let g:vim_markdown_folding_disabled = 1
-let g:vim_markdown_conceal = 0
 let g:NERDSpaceDelims = 1
 let g:rainbow_active = 1
+let g:vim_json_syntax_conceal = 0
+let g:vim_markdown_conceal = 0
+let g:vim_markdown_folding_disabled = 1
 
 " ctrlp
   let g:ctrlp_map = '<c-p>'
@@ -184,6 +187,7 @@ let g:rainbow_active = 1
   let g:syntastic_check_on_wq = 0
   let g:syntastic_javascript_checkers = ['eslint']
   let g:syntastic_typescript_checkers = ['tsc', 'tslint']
+  let g:syntastic_scss_checkers = ['stylelint']
   let g:syntastic_json_checkers=[]
   highlight link SyntasticErrorSign SignColumn
   highlight link SyntasticWarningSign SignColumn
