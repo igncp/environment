@@ -26,6 +26,7 @@ if ! type nvim > /dev/null 2>&1 ; then
   rm -rf ~/.config/nvim
   ln -s ~/.vim ~/.config/nvim
   ln -s ~/.vimrc ~/.config/nvim/init.vim
+  git config --global core.editor "nvim"
 fi
 
 install_vim_package airblade/vim-gitgutter
@@ -254,9 +255,9 @@ inoremap <C-a> <Esc>I
   vmap <leader>fp d:r! cat /vm-shared/_vitmp<CR>
 
 " fast grep
-  vnoremap <leader>b y:!clear;
-  \ Grep() { grep -rin --color "$@"; printf "\n\n\n----\n\n\n"; grep --color -ril "$@"; }
-  \ && Grep "" <left><left><C-r>"<right><right>
+  vnoremap <leader>b y:tabnew\|te clear;
+  \ Grep() { grep -rin --color=always "$@"; printf "\n\n\n----\n\n\n"; grep --color=always -ril "$@"; }
+  \ && Grep "" \| less -R<left><left><left><left><left><left><left><left><left><left><left><C-r>"<right><right>
 
 " improve the 'preview window' behaviour
   autocmd CompleteDone * pclose " close when done
@@ -278,6 +279,16 @@ inoremap <C-a> <Esc>I
   nnoremap <BS> gg
 " undo tree
   nnoremap <leader>m :UndotreeShow<CR><C-w><left>
+EOF
+
+cat >> ~/.bashrc <<"EOF"
+export EDITOR=nvim
+export TERM=xterm-256color
+source ~/.bash_aliases # some aliases depend on $EDITOR
+EOF
+
+cat >> ~/.bash_aliases <<"EOF"
+alias nv='nvim'
 EOF
 
 # vim END

@@ -18,7 +18,7 @@ if ! type git > /dev/null 2>&1 ; then
   sudo apt-get install -y git git-extras
   git config --global user.email "foo@bar.com" && \
     git config --global user.name "Foo Bar" && \
-    git config --global core.editor "nvim"
+    git config --global core.editor "vim"
 fi
 
 install_apt_package() {
@@ -75,8 +75,7 @@ cat > ~/.bashrc <<"EOF"
 stty -ixon # prevent the terminal from hanging on ctrl+s
 
 export HISTCONTROL=ignoreboth:erasedups
-export TERM=xterm # neovim
-export EDITOR=nvim
+export EDITOR=vim
 
 if [[ -z $TMUX ]]; then
   TMUX_PREFIX_A="" && TMUX_PREFIX_B="·"
@@ -109,16 +108,15 @@ alias cp="cp -r"
 alias ll="ls -lah"
 alias mkdir="mkdir -p"
 alias rm="rm -rf"
-alias vim="nvim"
 
-DisplayFilesConcatenated(){ xargs tail -n +1 | sed "s|==>|\n\n\n\n\n$1==>|; s|<==|<==\n|" | vim -; }
+DisplayFilesConcatenated(){ xargs tail -n +1 | sed "s|==>|\n\n\n\n\n$1==>|; s|<==|<==\n|" | $EDITOR -; }
 Find() { find "$@" ! -path "*node_modules*" ! -path "*.git*"; }
 GetProcessUsingPort(){ fuser $1/tcp; }
 MkdirCd(){ mkdir -p $1; cd $1; }
 Popd(){ popd -n +"$1" > /dev/null; cd --; }
 alias AliasesReload='source ~/.bash_aliases'
 alias ConfigureTimezone='sudo dpkg-reconfigure tzdata'
-alias EditProvision="vim /project/provision/provision.sh && provision.sh"
+alias EditProvision="$EDITOR /project/provision/provision.sh && provision.sh"
 alias Exit="killall tmux > /dev/null 2>&1 || exit"
 alias Tmux="tmux; exit"
 
