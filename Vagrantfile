@@ -18,6 +18,7 @@ Vagrant.configure(2) do |config|
   config.vm.provider "virtualbox" do |v|
     v.memory = 2024
     v.cpus = 2
+    # v.gui = true
     v.customize ['modifyvm', :id, '--clipboard', 'bidirectional']
     # v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"] # fix for windows host when restarting from sleep
   end

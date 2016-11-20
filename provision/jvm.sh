@@ -14,9 +14,10 @@ if [ ! -f ~/selenium-server.jar ]; then
   mv "$SELENIUM_FILE_NAME" selenium-server.jar # java -jar ~/selenium-server.jar
 fi
 
-if ! type gradle > /dev/null 2>&1 ; then
+if [ ! -d /usr/local/lib/gradle ] > /dev/null 2>&1 ; then
   cd ~
-  GRADLE_VERSION=2.6
+  GRADLE_VERSION=3.2
+  rm -r gradle-*
   wget "https://services.gradle.org/distributions/gradle-$GRADLE_VERSION-bin.zip"
   unzip "gradle-$GRADLE_VERSION-bin.zip"
   rm "gradle-$GRADLE_VERSION-bin.zip"

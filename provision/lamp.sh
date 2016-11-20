@@ -1,10 +1,12 @@
 # lamp START
 
+# * requires
+# - mysql database
+
 # * config files
 # - apache: apache2.conf
 # - wordpress: wp-config.php
 
-DB_PASSWORD="foo"
 DB_USER="bar"
 DB_USER_PASSWORD="baz"
 if ! type apache2 > /dev/null 2>&1 ; then
@@ -15,10 +17,7 @@ if ! type apache2 > /dev/null 2>&1 ; then
   sudo apt-get update
   sudo apt-get remove -y php*
 
-  sudo debconf-set-selections <<< "mysql-server mysql-server/root_password password $DB_PASSWORD"
-  sudo debconf-set-selections <<< "mysql-server mysql-server/root_password_again password $DB_PASSWORD"
-
-  sudo apt-get install -y mysql-server php5-mysql
+  sudo apt-get install -y php5-mysql
   sudo apt-get install -y php5 libapache2-mod-php5 php5-mcrypt
   sudo apt-get install -y apache2
 
@@ -44,9 +43,9 @@ echo 'TailApacheLog() { sudo tail -f /var/log/apache2/error.log; }' >> ~/.bash_a
   if [ ! -f ~/wordpress-installation-finished ]; then
     sudo apt-get install -y php5-curl php5-gd php-mbstring php5-mcrypt php-xml php5-xmlrpc php5-mysqlnd-ms
 
-    mysql -u root -p$DB_PASSWORD -e "DROP DATABASE IF EXISTS wordpress;"
-    mysql -u root -p$DB_PASSWORD -e "CREATE DATABASE wordpress DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;"
-    mysql -u root -p$DB_PASSWORD -e "GRANT ALL ON wordpress.* TO '$DB_USER'@'localhost' IDENTIFIED BY '$DB_USER_PASSWORD';"
+    mysql -u root -p$MYSQL_DB_PASSWORD -e "DROP DATABASE IF EXISTS wordpress;"
+    mysql -u root -p$MYSQL_DB_PASSWORD -e "CREATE DATABASE wordpress DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;"
+    mysql -u root -p$MYSQL_DB_PASSWORD -e "GRANT ALL ON wordpress.* TO '$DB_USER'@'localhost' IDENTIFIED BY '$DB_USER_PASSWORD';"
 
     cd ~
 
@@ -84,9 +83,6 @@ echo 'TailApacheLog() { sudo tail -f /var/log/apache2/error.log; }' >> ~/.bash_a
 
 # drupal
   DB_NAME="name"
-  DB_PASSWORD="foo"
-  DB_USER="bar"
-  DB_USER_PASSWORD="baz"
   THEME_NAME="theme"
 
   if ! type drush > /dev/null 2>&1 ; then
@@ -112,9 +108,9 @@ echo 'TailApacheLog() { sudo tail -f /var/log/apache2/error.log; }' >> ~/.bash_a
 
     sudo chmod -R 777 .
 
-    mysql -u root -p$DB_PASSWORD -e "DROP DATABASE IF EXISTS $DB_NAME;"
-    mysql -u root -p$DB_PASSWORD -e "CREATE DATABASE $DB_NAME DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;"
-    mysql -u root -p$DB_PASSWORD -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost' IDENTIFIED BY '$DB_USER_PASSWORD';"
+    mysql -u root -p$MYSQL_DB_PASSWORD -e "DROP DATABASE IF EXISTS $DB_NAME;"
+    mysql -u root -p$MYSQL_DB_PASSWORD -e "CREATE DATABASE $DB_NAME DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;"
+    mysql -u root -p$MYSQL_DB_PASSWORD -e "GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost' IDENTIFIED BY '$DB_USER_PASSWORD';"
 
     drush site-install standard -y \
       --db-url="mysql://$DB_USER:$DB_USER_PASSWORD@localhost/$DB_NAME" \

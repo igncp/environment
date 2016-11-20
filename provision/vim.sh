@@ -90,7 +90,7 @@ let g:hardtime_default_on = 1
   map ,e :e <C-R>=expand("%:p:h") . "/" <CR>
 
 " replace selection
-  vmap <leader>g y:%s/<C-r>"//g<left><left>
+  vmap <leader>g y:%s/\C<C-r>"//g<left><left>
 
 " prevent saving backup files
   set nobackup
@@ -147,6 +147,9 @@ set wildmenu
 " better completion menu colors
   highlight Pmenu ctermfg=white ctermbg=17
   highlight PmenuSel ctermfg=white ctermbg=29
+
+" better matching color
+  hi MatchParen ctermfg=black
 
 " ignore case in searches
   set ic
@@ -279,6 +282,67 @@ inoremap <C-a> <Esc>I
   nnoremap <BS> gg
 " undo tree
   nnoremap <leader>m :UndotreeShow<CR><C-w><left>
+
+" tabs
+  nnoremap <leader>1 1gt
+  nnoremap <leader>2 2gt
+  nnoremap <leader>3 3gt
+  nnoremap <leader>4 4gt
+  nnoremap <leader>5 5gt
+  nnoremap <leader>6 6gt
+  nnoremap <leader>7 7gt
+  nnoremap <leader>8 8gt
+  nnoremap <leader>9 9gt
+  nnoremap <C-h> :execute "tabmove" tabpagenr() - 2 <CR>
+  nnoremap <C-l> :execute "tabmove" tabpagenr() + 1 <CR>
+  nnoremap <C-t> :tabnew<CR>
+  nnoremap <C-d> :tabclose<CR>
+  hi TabLine ctermfg=gray ctermbg=black
+  hi TabLineFill ctermfg=black ctermbg=black
+  " Rename tabs to show tab number.
+  if exists("+showtabline")
+      function! MyTabLine()
+          let s = ''
+          let wn = ''
+          let t = tabpagenr()
+          let i = 1
+          while i <= tabpagenr('$')
+              let buflist = tabpagebuflist(i)
+              let winnr = tabpagewinnr(i)
+              let s .= '%' . i . 'T'
+              let s .= (i == t ? '%1*' : '%2*')
+              let s .= ' '
+              let wn = tabpagewinnr(i,'$')
+
+              let s .= '%#TabNum#'
+              let s .= i
+              " let s .= '%*'
+              let s .= (i == t ? '%#TabLineSel#' : '%#TabLine#')
+              let bufnr = buflist[winnr - 1]
+              let file = bufname(bufnr)
+              let buftype = getbufvar(bufnr, 'buftype')
+              if buftype == 'nofile'
+                  if file =~ '\/.'
+                      let file = substitute(file, '.*\/\ze.', '', '')
+                  endif
+              else
+                  let file = fnamemodify(file, ':p:t')
+              endif
+              if file == ''
+                  let file = '[No Name]'
+              endif
+              let s .= ' ' . file . ' '
+              let i = i + 1
+          endwhile
+          let s .= '%T%#TabLineFill#%='
+          let s .= (tabpagenr('$') > 1 ? '%999XX' : 'X')
+          return s
+      endfunction
+      set stal=2
+      set tabline=%!MyTabLine()
+      set showtabline=1
+      highlight link TabNum Special
+  endif
 EOF
 
 cat >> ~/.bashrc <<"EOF"

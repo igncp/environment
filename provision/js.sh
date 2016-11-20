@@ -49,8 +49,8 @@ install_vim_package quramy/tsuquyomi
 
 cat >> ~/.vimrc <<"EOF"
 
-" quick console.log
-  let ConsoleMapping="nnoremap <leader>k iconsole.log('a', a);<C-c>hhhhhhh"
+" quick console.log (use s to replace and the . to repeat)
+  let ConsoleMapping="nnoremap <leader>k iconsole.log('a', a);<C-c>hhhhhh"
   autocmd FileType javascript :exe ConsoleMapping
   autocmd FileType typescript :exe ConsoleMapping
 EOF
