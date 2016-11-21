@@ -15,17 +15,15 @@ cat >> ~/.bash_aliases <<"EOF"
 alias StartXFCE4='startxfce4&'
 EOF
 
-if [ ! -d /opt/eclipse ]; then
-  cd ~
-  wget http://www.eclipse.org/downloads/download.php?file=/eclipse/downloads/drops4/R-4.2.1-201209141800/eclipse-SDK-4.2.1-linux-gtk-x86_64.tar.gz
-  mv down* eclipse.tar.gz
-  cp eclipse.tar.gz eclipse-copy.tar.gz
-  tar -zxvf eclipse.tar.gz
-  sudo mv eclipse /opt
-fi
-
 cat >> ~/.bash_aliases <<"EOF"
 alias StartEclipse='nohup /opt/eclipse/eclipse > /dev/null 2>&1&'
 EOF
+
+if [ ! -f ~/.check-files/eclim ]; then
+  cd ~
+  wget https://github.com/ervandew/eclim/releases/download/2.6.0/eclim_2.6.0.jar
+  java -Dvim.files=$HOME/.vim -Declipse.home=/opt/eclipse -jar eclim_2.6.0.jar install
+  touch ~/.check-files/eclim
+fi
 
 # gui END

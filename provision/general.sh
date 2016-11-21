@@ -147,6 +147,9 @@ set-window-option -g xterm-keys on
 
 bind-key S-Left swap-window -t -1
 bind-key S-Right swap-window -t +1
+
+# keep your finger on ctrl, or don't
+bind-key ^D detach-client
 EOF
 
 # general END

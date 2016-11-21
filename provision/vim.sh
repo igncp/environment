@@ -144,6 +144,8 @@ set tabstop=2
 set smartcase
 set wildmenu
 
+nnoremap <leader>i :set list!<CR>
+
 " better completion menu colors
   highlight Pmenu ctermfg=white ctermbg=17
   highlight PmenuSel ctermfg=white ctermbg=29
