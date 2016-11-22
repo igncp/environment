@@ -9,6 +9,7 @@ Vagrant.configure(2) do |config|
   # config.vm.network :forwarded_port, guest: 7474, host: 7474 # neo4j
   # config.vm.network :forwarded_port, guest: 1337, host: 1337 # sailsjs
   # config.vm.network :forwarded_port, guest: 27017, host: 27017 # mongodb
+  # config.vm.network :forwarded_port, guest: 5601, host: 5601 # kibana
 
   config.vm.synced_folder ".", "/project"
   config.vm.synced_folder "~/vm-shared", "/vm-shared"

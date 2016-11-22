@@ -144,8 +144,6 @@ set tabstop=2
 set smartcase
 set wildmenu
 
-nnoremap <leader>i :set list!<CR>
-
 " better completion menu colors
   highlight Pmenu ctermfg=white ctermbg=17
   highlight PmenuSel ctermfg=white ctermbg=29
@@ -158,6 +156,8 @@ nnoremap <leader>i :set list!<CR>
 
 nnoremap <C-w>v :vsplit<CR><C-w><right>
 nnoremap <leader>w :set wrap!<CR>
+nnoremap <leader>a ggvG$
+nnoremap <leader>i :set list!<CR>
 
 " airline
   set laststatus=2
