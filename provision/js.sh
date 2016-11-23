@@ -29,7 +29,6 @@ install_node_modules() {
 install_node_modules http-server diff-so-fancy yarn
 
 cat >> ~/.bashrc <<"EOF"
-
 export PATH=$PATH:/home/$USER/.nodenv/bin
 export PATH=$PATH:/home/$USER/.nodenv/versions/6.3.0/bin/
 eval "$(nodenv init -)"
@@ -37,7 +36,6 @@ source <(npm completion)
 EOF
 
 cat >> ~/.bash_aliases <<"EOF"
-
 alias Serve="http-server -c-1 -p 9000"
 GitDiff() { git diff --color $@ | diff-so-fancy | less -R; }
 EOF
@@ -48,11 +46,13 @@ install_vim_package leafgarland/typescript-vim
 install_vim_package quramy/tsuquyomi
 
 cat >> ~/.vimrc <<"EOF"
-
-" quick console.log (use s to replace and the . to repeat)
-  let ConsoleMapping="nnoremap <leader>k iconsole.log('a', a);<C-c>hhhhhh"
-  autocmd FileType javascript :exe ConsoleMapping
-  autocmd FileType typescript :exe ConsoleMapping
+" quick console.log
+  let ConsoleMappingA="nnoremap <leader>k iconsole.log('a', a);<C-c>hhhhhhvs"
+  let ConsoleMappingB="vnoremap <leader>k yOconsole.log('a', a);<C-c>hhhhhhvpvi'yf'lllvp"
+  autocmd FileType javascript :exe ConsoleMappingA
+  autocmd FileType javascript :exe ConsoleMappingB
+  autocmd FileType typescript :exe ConsoleMappingA
+  autocmd FileType typescript :exe ConsoleMappingB
 EOF
 
 # js END

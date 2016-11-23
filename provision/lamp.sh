@@ -29,8 +29,11 @@ if ! type apache2 > /dev/null 2>&1 ; then
   sudo usermod -a -G www-data $USER
   sudo service apache2 restart
 fi
-
-echo 'TailApacheLog() { sudo tail -f /var/log/apache2/error.log; }' >> ~/.bash_aliases
+cat >> ~/.bash_aliases <<"EOF"
+  alias ApacheRestart='sudo service apache2 restart'
+  alias ModifyApacheDefaultConf='sudo $EDITOR /etc/apache2/sites-available/000-default.conf'
+  TailApacheLog() { sudo tail -f /var/log/apache2/error.log; }
+EOF
 
 # composer
   if ! type composer > /dev/null 2>&1 ; then
