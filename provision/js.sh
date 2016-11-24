@@ -47,12 +47,15 @@ install_vim_package quramy/tsuquyomi
 
 cat >> ~/.vimrc <<"EOF"
 " quick console.log
-  let ConsoleMappingA="nnoremap <leader>k iconsole.log('a', a);<C-c>hhhhhhvs"
-  let ConsoleMappingB="vnoremap <leader>k yOconsole.log('a', a);<C-c>hhhhhhvpvi'yf'lllvp"
+  let ConsoleMappingA="nnoremap <leader>kk iconsole.log('a', a);<C-c>6hvs"
+  let ConsoleMappingB="vnoremap <leader>kk yOconsole.log('a', a);<C-c>6hvpvi'yf'lllvp"
+  let ConsoleMappingC=':map <leader>kj iconsole.log("LOG POINT - <C-r>=fake#gen("country")<CR><C-c>2la;<CR><C-c>'
   autocmd FileType javascript :exe ConsoleMappingA
-  autocmd FileType javascript :exe ConsoleMappingB
+  autocmd filetype javascript :exe ConsoleMappingB
+  autocmd filetype javascript :exe ConsoleMappingC
   autocmd FileType typescript :exe ConsoleMappingA
   autocmd FileType typescript :exe ConsoleMappingB
+  autocmd FileType typescript :exe ConsoleMappingC
 EOF
 
 # js END

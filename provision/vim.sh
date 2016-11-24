@@ -50,6 +50,7 @@ install_vim_package shougo/neosnippet.vim
 install_vim_package shougo/vimproc.vim "cd ~/.vim/bundle/vimproc.vim && make; cd -"
 install_vim_package takac/vim-hardtime
 install_vim_package terryma/vim-expand-region
+install_vim_package tkhren/vim-fake
 install_vim_package tpope/vim-fugitive
 install_vim_package tpope/vim-repeat
 install_vim_package tpope/vim-surround
@@ -259,10 +260,21 @@ inoremap <C-a> <Esc>I
   nmap <leader>fp :r! cat /vm-shared/_vitmp<CR>
   vmap <leader>fp d:r! cat /vm-shared/_vitmp<CR>
 
+" lines in files
+  nnoremap <leader>kr :tabnew\|te ( F(){ find $1 -type f \| xargs wc -l \| sort -rn \|
+  \ sed "s\|$1\|\|" \| sed "1i _" \| sed "1i $1" \| sed "1i _" \| sed '4d' \| less; }
+  \ && F <C-R>=expand("%:p:h")<CR>/ )<left><left>
+
+" color tree
+  nnoremap <leader>kt :tabnew\|te tree -a -C <C-R>=expand("%:p:h")<CR> \|
+  \ less -R<c-left><c-left><c-left><left>
+
 " fast grep
-  vnoremap <leader>b y:tabnew\|te clear;
+  let g:fast_grep=''
+  nnoremap <leader>B :let g:fast_grep=''<left>
+  vnoremap <leader>b y:tabnew\|te
   \ Grep() { grep -rin --color=always "$@"; printf "\n\n\n----\n\n\n"; grep --color=always -ril "$@"; }
-  \ && Grep "" \| less -R<left><left><left><left><left><left><left><left><left><left><left><C-r>"<right><right>
+  \ && Grep "" \| less -R<c-left><c-left><c-left><left><left><C-r>"<right><right><c-r>=g:fast_grep<CR>
 
 " improve the 'preview window' behaviour
   autocmd CompleteDone * pclose " close when done
