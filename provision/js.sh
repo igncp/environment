@@ -49,7 +49,7 @@ cat >> ~/.vimrc <<"EOF"
 " quick console.log
   let ConsoleMappingA="nnoremap <leader>kk iconsole.log('a', a);<C-c>6hvs"
   let ConsoleMappingB="vnoremap <leader>kk yOconsole.log('a', a);<C-c>6hvpvi'yf'lllvp"
-  let ConsoleMappingC=':map <leader>kj iconsole.log("LOG POINT - <C-r>=fake#gen("country")<CR><C-c>2la;<CR><C-c>'
+  let ConsoleMappingC='nnoremap <leader>kj iconsole.log("LOG POINT - <C-r>=fake#gen("country")<CR><C-c>2la;<CR><C-c>'
   autocmd FileType javascript :exe ConsoleMappingA
   autocmd filetype javascript :exe ConsoleMappingB
   autocmd filetype javascript :exe ConsoleMappingC

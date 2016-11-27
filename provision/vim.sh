@@ -67,6 +67,7 @@ execute pathogen#infect()
 filetype plugin indent on
 syntax on
 set background=dark
+set sessionoptions+=globals
 
 let mapleader = "\<Space>"
 let g:hardtime_default_on = 1
@@ -207,6 +208,10 @@ let g:vim_markdown_folding_disabled = 1
   nnoremap <leader>o :SyntasticToggleMode<CR>
 
 map ,e :e <C-R>=expand("%:p:h") . "/" <CR>
+vnoremap <leader>ku y:%s/\C<C-r>"//gn<CR>
+nnoremap <leader>ku viwy:%s/\C<C-r>"//gn<CR>
+nnoremap <leader>; :
+nnoremap <leader>ko :mksession! ~/mysession.vim<CR>:qa<CR>
 au BufNewFile,BufRead *.ejs set filetype=html
 
 " move up/down from the beginning/end of lines
@@ -269,12 +274,15 @@ inoremap <C-a> <Esc>I
   nnoremap <leader>kt :tabnew\|te tree -a -C <C-R>=expand("%:p:h")<CR> \|
   \ less -R<c-left><c-left><c-left><left>
 
+" grep current file
+  nnoremap <leader>ky :grep -oh "" %<left><left><left>
+
 " fast grep
-  let g:fast_grep=''
-  nnoremap <leader>B :let g:fast_grep=''<left>
+  let g:Fast_grep=''
+  nnoremap <leader>B :let g:Fast_grep=''<left>
   vnoremap <leader>b y:tabnew\|te
   \ Grep() { grep -rin --color=always "$@"; printf "\n\n\n----\n\n\n"; grep --color=always -ril "$@"; }
-  \ && Grep "" \| less -R<c-left><c-left><c-left><left><left><C-r>"<right><right><c-r>=g:fast_grep<CR>
+  \ && Grep "" \| less -R<c-left><c-left><c-left><left><left><C-r>"<right><right><c-r>=g:Fast_grep<CR>
 
 " improve the 'preview window' behaviour
   autocmd CompleteDone * pclose " close when done
@@ -367,6 +375,7 @@ EOF
 
 cat >> ~/.bash_aliases <<"EOF"
 alias nv='nvim'
+alias NVimSession='nvim -S ~/mysession.vim'
 EOF
 
 # vim END
