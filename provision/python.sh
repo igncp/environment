@@ -1,9 +1,10 @@
 # python START
 
-if ! type pip > /dev/null 2>&1; then
-  echo "installing python tools"
+install_apt_package python-pip pip
 
-  sudo apt-get install -y python-pip
+if [ ! -f ~/.check-files/python ]; then
+  sudo apt-get install -y python-dev
+  touch ~/.check-files/python
 fi
 
 install_pip_modules() {
@@ -27,5 +28,13 @@ cat >> ~/.vimrc <<"EOF"
 
 let g:flake8_show_quickfix=0 " don't show quickfix
 EOF
+
+# tensorflow
+  install_pip_modules numpy pbr funcsigs
+  if ! type tensorboard > /dev/null 2>&1 ; then
+    echo "installing tensorflow"
+    export TF_BINARY_URL=https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-0.11.0-cp27-none-linux_x86_64.whl
+    sudo pip install --upgrade $TF_BINARY_URL
+  fi
 
 # python END
