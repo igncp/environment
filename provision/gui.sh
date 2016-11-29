@@ -20,8 +20,12 @@ alias XFCE4SettingsEditor='xfce4-settings-editor'
 EOF
 echo "source_if_exists ~/.git-prompt.sh" >> ~/.bash_sources
 
-install_apt_package terminator
-cat > ~/.config/terminator/config <<"EOF"
+# terminator
+  install_apt_package terminator
+
+  mkdir -p ~/.config/terminator
+
+  cat > ~/.config/terminator/config <<"EOF"
 [global_config]
   title_transmit_bg_color = "#82a7b2"
 [keybindings]
@@ -37,11 +41,12 @@ cat > ~/.config/terminator/config <<"EOF"
 [plugins]
 EOF
 
-if [ ! -f ~/.check-files/eclim ]; then
-  cd ~
-  wget https://github.com/ervandew/eclim/releases/download/2.6.0/eclim_2.6.0.jar
-  java -Dvim.files=$HOME/.vim -Declipse.home=/opt/eclipse -jar eclim_2.6.0.jar install
-  touch ~/.check-files/eclim
-fi
+# eclim
+  if [ ! -f ~/.check-files/eclim ]; then
+    cd ~
+    wget https://github.com/ervandew/eclim/releases/download/2.6.0/eclim_2.6.0.jar
+    java -Dvim.files=$HOME/.vim -Declipse.home=/opt/eclipse -jar eclim_2.6.0.jar install
+    touch ~/.check-files/eclim
+  fi
 
 # gui END
