@@ -160,6 +160,9 @@ nnoremap <C-w>v :vsplit<CR><C-w><right>
 nnoremap <leader>w :set wrap!<CR>
 nnoremap <leader>a ggvG$
 nnoremap <leader>i :set list!<CR>
+cnoremap <C-A> <Home>
+cnoremap <C-E> <End>
+cnoremap <C-K> <C-U>
 
 " airline
   set laststatus=2
