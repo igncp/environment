@@ -231,6 +231,8 @@ au BufNewFile,BufRead *.ejs set filetype=html
 
 inoremap <C-e> <Esc>A
 inoremap <C-a> <Esc>I
+vnoremap <silent> y y`]
+nnoremap <silent> p p`]
 
 " vp doesn't replace paste buffer
   function! RestoreRegister()
@@ -239,7 +241,7 @@ inoremap <C-a> <Esc>I
   endfunction
   function! s:Repl()
     let s:restore_reg = @"
-    return "p@=RestoreRegister()\<cr>"
+    return "p@=RestoreRegister()\<cr>`]"
   endfunction
   vmap <silent> <expr> p <sid>Repl()
 
