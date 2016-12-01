@@ -156,6 +156,9 @@ set wildmenu
 " ignore case in searches
   set ic
 
+nnoremap <silent> <leader>kdF :call delete(expand('%')) \| bdelete!<CR>:echo "FILE DELETED"<CR>
+nnoremap <leader>kn *
+nnoremap <leader>kx :tabnew <c-r>=system('mktemp')<CR><CR>
 nnoremap <C-w>v :vsplit<CR><C-w><right>
 nnoremap <leader>w :set wrap!<CR>
 nnoremap <leader>a ggvG$
@@ -370,6 +373,9 @@ nnoremap <silent> p p`]
       set showtabline=1
       highlight link TabNum Special
   endif
+
+" easymotion
+  nmap <Leader>j <Plug>(easymotion-overwin-f)
 EOF
 
 cat >> ~/.bashrc <<"EOF"

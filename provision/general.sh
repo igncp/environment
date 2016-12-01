@@ -115,9 +115,11 @@ GetProcessUsingPort(){ fuser $1/tcp; }
 MkdirCd(){ mkdir -p $1; cd $1; }
 Popd(){ popd -n +"$1" > /dev/null; cd --; }
 alias AliasesReload='source ~/.bash_aliases'
-alias ConfigureTimezone='sudo dpkg-reconfigure tzdata'
+alias ConfigureTimezone='sudo dpkg-reconfigure tzdata; sudo ntpdate ntp.ubuntu.com'
 alias EditProvision="$EDITOR /project/provision/provision.sh && provision.sh"
 alias Exit="killall tmux > /dev/null 2>&1 || exit"
+alias LsTmpFiles='ls -laht /tmp | tac'
+alias SynchronizeTime='sudo ntpdate ntp.ubuntu.com'
 alias Tmux="tmux; exit"
 
 alias GitStatus='git status -u'
