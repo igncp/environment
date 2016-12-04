@@ -2,29 +2,22 @@
 
 if [ ! -f ~/.check-files/gui ]; then
   echo "installing gui"
-  sudo apt-get update
-  sudo apt-get install -y xfce4
-  sudo sed -i "s|allowed_users=.*$|allowed_users=anybody|" /etc/X11/Xwrapper.config
-  sudo apt-get install -y xfce4 virtualbox-guest-dkms virtualbox-guest-utils virtualbox-guest-x11
-  sudo /usr/share/debconf/fix_db.pl
-  startxfce4&
-  curl -o ~/.git-prompt.sh \
-    https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh
-  xfconf-query -c xfce4-panel -p /panels/panel-1/size -s 20
+  sudo pacman -S --noconfirm xfce4 xfce4-goodies
   mkdir -p ~/.check-files && touch ~/.check-files/gui
 fi
-
+sudo bash -c 'echo "allowed_users=anybody" > /etc/X11/Xwrapper.config'
+sudo bash -c 'echo "needs_root_rights=yes" >> /etc/X11/Xwrapper.config'
 cat >> ~/.bash_aliases <<"EOF"
 alias StartXFCE4='startxfce4&'
 alias XFCE4SettingsEditor='xfce4-settings-editor'
+SetupXFCE4() {
+  xfconf-query -c xfce4-panel -p /panels/panel-1/size -s 25
+}
 EOF
-echo "source_if_exists ~/.git-prompt.sh" >> ~/.bash_sources
 
 # terminator
   install_apt_package terminator
-
   mkdir -p ~/.config/terminator
-
   cat > ~/.config/terminator/config <<"EOF"
 [global_config]
   title_transmit_bg_color = "#82a7b2"

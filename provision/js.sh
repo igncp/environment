@@ -4,10 +4,7 @@ NODE_VERSION=6.3.0
 if [ ! -f ~/.check-files/node ]; then
   echo "setup node with nodenv"
   cd ~
-  sudo add-apt-repository -y ppa:chris-lea/node.js && \
-    sudo apt-get update && \
-    sudo curl -O -L https://npmjs.org/install.sh | sh && \
-    if [ ! -d ~/.nodenv ]; then git clone https://github.com/nodenv/nodenv.git ~/.nodenv && cd ~/.nodenv && src/configure && make -C src; fi && \
+  if [ ! -d ~/.nodenv ]; then git clone https://github.com/nodenv/nodenv.git ~/.nodenv && cd ~/.nodenv && src/configure && make -C src; fi && \
     export PATH=$PATH:/home/$USER/.nodenv/bin && \
     eval "$(nodenv init -)" && \
     if [ ! -d ~/.nodenv/plugins/node-build ]; then git clone https://github.com/nodenv/node-build.git $(nodenv root)/plugins/node-build; fi && \
@@ -56,6 +53,9 @@ cat >> ~/.vimrc <<"EOF"
   autocmd FileType typescript :exe ConsoleMappingA
   autocmd FileType typescript :exe ConsoleMappingB
   autocmd FileType typescript :exe ConsoleMappingC
+
+" grep same indent props
+  execute 'nnoremap <leader>ki ^hv0y' . g:GrepCF_fn . ' -o "^<c-r>"\w*:"<left>'
 EOF
 
 # js END

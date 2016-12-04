@@ -14,12 +14,13 @@ if ! type go > /dev/null 2>&1 ; then
   echo "installing go"
   cd ~
   mkdir -p ~/.go-workspace
-  curl -O https://storage.googleapis.com/golang/go1.7.3.linux-amd64.tar.gz && \
-  sudo tar -zxf go1* && \
-  sudo chown -R $USER:$USER go && \
-  mv go ~/.go && \
-  rm go1* && \
-  sudo wget https://raw.github.com/kura/go-bash-completion/master/etc/bash_completion.d/go -O /etc/bash_completion.d/go
+  curl -O https://storage.googleapis.com/golang/go1.7.3.linux-amd64.tar.gz
+  sudo tar -zxf go1*
+  sudo chown -R $USER ~/go
+  mv ~/go ~/.go
+  rm -rf ~/go1*
+  sudo wget https://raw.github.com/kura/go-bash-completion/master/etc/bash_completion.d/go \
+    -O /usr/share/bash-completion/completions/go
   . ~/.bashrc > /dev/null 2>&1
 fi
 
@@ -40,13 +41,5 @@ let g:syntastic_go_checkers = ['go', 'golint', 'govet']
 set rtp+=$GOPATH/src/github.com/golang/lint/misc/vim
 let g:go_list_type = "quickfix"
 EOF
-
-if ! type wego > /dev/null 2>&1 ; then
-  rm -rf ~/.wegorc
-  install_go_package github.com/schachmat/wego
-  wego > /dev/null 2>&1 # generate the config file
-  sed -i "s|^location=.*$|location=22.326,114.205|" ~/.wegorc
-  sed -i "s|^forecast-api-key=|forecast-api-key=2c9fbc94ae159eef225f3d00da071013|" ~/.wegorc
-fi
 
 # go END

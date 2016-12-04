@@ -1,32 +1,25 @@
 # ruby START
 
 RUBY_VERSION=2.2.4
-if [ ! -f ~/.check-files/ruby ]; then
-  gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
-  curl -sSL https://get.rvm.io | bash -s stable
-  [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
-  ~/.rvm/bin/rvm install "$RUBY_VERSION"
-  ~/.rvm/bin/rvm use --default "$RUBY_VERSION"
-  mkdir -p ~/.check-files; touch ~/.check-files/ruby
+if [ ! -d ~/.rbenv ]; then
+  git clone https://github.com/rbenv/rbenv.git ~/.rbenv
+  cd ~/.rbenv && src/configure && make -C src
+  git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
+  ~/.rbenv/bin/rbenv install "$RUBY_VERSION"
+  ~/.rbenv/bin/rbenv init - > ~/.rbenv-init
+  eval "$(~/.rbenv/bin/rbenv init -)"
+  ~/.rbenv/bin/rbenv global "$RUBY_VERSION"
 fi
 
-cat >> ~/.bashrc <<"EOF"
-export PATH="$PATH:~/.rvm/bin"
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
-source ~/.bash_sources # after sourcing rvm, some features like acd_func are lost if not resourced
-EOF
-cat >> ~/.bashrc <<EOF
-if [ "\$(ruby --version 2> /dev/null | grep -o "^ruby .\..\..")" != "ruby $RUBY_VERSION" ]; then
-  rvm use $RUBY_VERSION > /dev/null 2>&1
-fi
-EOF
+echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
+echo 'source_if_exists ~/.rbenv-init' >> ~/.bash_sources
 
 install_gems() {
-  GEMS_LIST=$(~/.rvm/gems/ruby-"$RUBY_VERSION"/wrappers/gem list)
+  GEMS_LIST=$(~/.rbenv/shims/gem list)
   for GEM_NAME in "$@"; do
     if [ $(echo "$GEMS_LIST" | grep "^$GEM_NAME " | wc -l) -eq "0" ]; then
       echo "doing: gem install $GEM_NAME --no-ri --no-rdoc"
-      ~/.rvm/gems/ruby-"$RUBY_VERSION"/wrappers/gem install "$GEM_NAME" --no-ri --no-rdoc
+      ~/.rbenv/shims/gem install "$GEM_NAME" --no-ri --no-rdoc
     fi
   done
 }

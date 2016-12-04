@@ -1,10 +1,28 @@
 # Vagrant Personal Cookbook
 
+*NOTE*: The provisioners are being ported to Arch Linux:
+
+- [ ] databases.sh
+- [ ] docker.sh
+- [ ] haskell.sh
+- [ ] lamp.sh
+- [x] brightscript.sh
+- [x] custom.sh
+- [x] general.sh
+- [x] go.sh
+- [x] gui.sh
+- [x] js.sh
+- [x] jvm.sh
+- [x] misc.sh
+- [x] python.sh
+- [x] ruby.sh
+- [x] vim.sh
+
 Points to consider before using any of the content:
 
 - The objective is to copy-paste what you need, picking the relevant parts, in opposition to cloning the repository in order to execute them. In this way they don't require backwards compatibility
 
-- They are tested under Ubuntu boxes
+- They are tested under [Arch Linux](https://www.archlinux.org/)
 
 Some of the conventions they take into account are:
 

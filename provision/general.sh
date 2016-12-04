@@ -9,13 +9,19 @@ mkdir -p ~/logs
 
 if [ ! -f ~/.check-files/basic-packages ]; then
   echo "installing basic packages"
-  sudo apt-get update
-  sudo apt-get install -y build-essential python-software-properties
+  sudo pacman -Syu --noconfirm
+  sudo pacman -S archlinux-keyring --noconfirm
+  sudo pacman -Su --noconfirm
+  sudo pacman-db-upgrade
+  sudo pacman -S --noconfirm ca-certificates-mozilla bash-completion
+  # http://superuser.com/a/788480
+  sudo sed -ir 's|^HOOKS=".*"$|HOOKS="base udev block autodetect modconf filesystems keyboard fsck"|' /etc/mkinitcpio.conf
+  sudo mkinitcpio -p linux
   mkdir -p ~/.check-files && touch ~/.check-files/basic-packages
 fi
 
 if ! type git > /dev/null 2>&1 ; then
-  sudo apt-get install -y git git-extras
+  sudo pacman -S --noconfirm git
   git config --global user.email "foo@bar.com" && \
     git config --global user.name "Foo Bar" && \
     git config --global core.editor "vim"
@@ -25,30 +31,34 @@ install_apt_package() {
   PACKAGE="$1"
   if [[ ! -z "$2" ]]; then CMD_CHECK="$2"; else CMD_CHECK="$1"; fi
   if ! type "$CMD_CHECK" > /dev/null 2>&1 ; then
-    echo "doing: sudo apt-get install -y $PACKAGE"
-    sudo apt-get install -y "$PACKAGE"
+    echo "doing: sudo pacman -S --noconfirm $PACKAGE"
+    sudo pacman -S --noconfirm "$PACKAGE"
   fi
 }
 
 install_apt_package moreutils vidir
-install_apt_package exuberant-ctags ctags
+install_apt_package ctags
 install_apt_package unzip
 install_apt_package curl
 install_apt_package tree
-install_apt_package entr
 install_apt_package htop
 install_apt_package jq
 install_apt_package ncdu
 
 if [ ! -f ~/.acd_func ]; then
-  curl -o ~/.acd_func \
+  sudo curl -o ~/.acd_func \
     https://raw.githubusercontent.com/djoot/all-bash-history/master/acd_func.sh
+fi
+
+if [ ! -f ~/.git-prompt ]; then
+  sudo curl -o ~/.git-prompt \
+    https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh
 fi
 
 # shellcheck (without using stack, it takes a while to install)
   # if [ ! -f ~/.cabal/bin/shellcheck ]; then
   #   echo "installing shellcheck without using stack"
-  #   sudo apt-get install -y cabal-install
+  #   sudo pacman -S --noconfirm cabal-install
   #   cabal update
   #   cabal install shellcheck
   # fi
@@ -65,6 +75,7 @@ source_if_exists() {
 
 source_if_exists ~/.acd_func
 source_if_exists ~/.bash_aliases
+source_if_exists ~/.git-prompt
 EOF
 
 cat > ~/.bashrc <<"EOF"
@@ -108,6 +119,7 @@ alias cp="cp -r"
 alias ll="ls -lah"
 alias mkdir="mkdir -p"
 alias rm="rm -rf"
+alias tree="tree -a"
 
 DisplayFilesConcatenated(){ xargs tail -n +1 | sed "s|==>|\n\n\n\n\n$1==>|; s|<==|<==\n|" | $EDITOR -; }
 Find() { find "$@" ! -path "*node_modules*" ! -path "*.git*"; }
@@ -117,7 +129,7 @@ Popd(){ popd -n +"$1" > /dev/null; cd --; }
 alias AliasesReload='source ~/.bash_aliases'
 alias ConfigureTimezone='sudo dpkg-reconfigure tzdata; sudo ntpdate ntp.ubuntu.com'
 alias EditProvision="$EDITOR /project/provision/provision.sh && provision.sh"
-alias Exit="killall tmux > /dev/null 2>&1 || exit"
+alias Exit="\$(ps aux | grep tmux | grep -v grep | awk '{print $2}' | xargs kill) || exit"
 alias LsTmpFiles='ls -laht /tmp | tac'
 alias SynchronizeTime='sudo ntpdate ntp.ubuntu.com'
 alias Tmux="tmux; exit"
@@ -153,5 +165,16 @@ bind-key S-Right swap-window -t +1
 # keep your finger on ctrl, or don't
 bind-key ^D detach-client
 EOF
+
+if ! type packer > /dev/null 2>&1 ; then
+  rm -rf ~/packer
+  mkdir ~/packer && cd ~/packer
+  sudo pacman -S --noconfirm wget git expac jshon
+  sudo wget https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=packer
+  mv PKGBUILD?h=packer PKGBUILD
+  makepkg
+  sudo pacman --noconfirm -U packer-*
+  cd ~ && rm -rf ~/packer
+fi
 
 # general END

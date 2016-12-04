@@ -1,6 +1,6 @@
 Vagrant.configure(2) do |config|
-  config.vm.box = "ubuntu14"
-  config.vm.box_url = 'https://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-amd64-vagrant-disk1.box'
+  config.vm.box = "arch14"
+  config.vm.box_url = 'http://vagrant.srijn.net/archlinux-x64-2014-01-07.box'
   config.vm.hostname = 'PROJECT_HOSTNAME'
 
   # config.vm.network :forwarded_port, guest: 80, host: 9080

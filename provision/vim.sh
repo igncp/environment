@@ -16,17 +16,18 @@ if [ ! -f ~/.vim/autoload/pathogen.vim ]; then
     > ~/.vim/autoload/pathogen.vim
 fi
 
-if ! type nvim > /dev/null 2>&1 ; then
-  echo "installing neovim"
-  sudo add-apt-repository -y ppa:neovim-ppa/unstable
-  sudo apt-get update && sudo apt-get install -y neovim
-  sudo apt-get install -y python3-pip
+install_apt_package neovim nvim
+install_apt_package python3
+install_apt_package python-pip pip3
+
+if [ ! -f ~/.check-files/neovim ] ; then
   sudo pip3 install neovim
   mkdir -p ~/.config
   rm -rf ~/.config/nvim
   ln -s ~/.vim ~/.config/nvim
   ln -s ~/.vimrc ~/.config/nvim/init.vim
   git config --global core.editor "nvim"
+  mkdir -p ~/.check-files && touch ~/.check-files/neovim
 fi
 
 install_vim_package airblade/vim-gitgutter
@@ -283,14 +284,23 @@ nnoremap <silent> p p`]
   \ less -R<c-left><c-left><c-left><left>
 
 " grep current file
-  nnoremap <leader>ky :grep -oh "" %<left><left><left>
+  let g:GrepCF_fn = ':w! /tmp/current_vim<CR>:tabnew\|te
+    \ Grep() { printf "<c-r>=expand("%")<CR>\n\n"; grep --color=always "$@" /tmp/current_vim;
+    \ printf "\n----\n\nlines: "; grep -in "$@" /tmp/current_vim \| wc -l; echo ""; }
+    \ && GrepAndLess() { Grep "$@" \| less -R; } && GrepAndLess '
+  execute 'nnoremap <leader>ky ' . g:GrepCF_fn . ' -i ""<left>'
+  execute 'vnoremap <leader>ky y' . g:GrepCF_fn . ' -i "<c-r>""<left>'
 
 " fast grep
+  let g:FastGrep_fn = 'tabnew\|te
+    \ Grep() { grep -rin --color=always "$@"; printf "\n\n\n----\n\n\n"; grep --color=always -ril "$@"; }
+    \ && Grep "<c-r>"" <c-r>=g:Fast_grep<CR>\| less -R<c-left><c-left><left><left>'
   let g:Fast_grep=''
   nnoremap <leader>B :let g:Fast_grep=''<left>
-  vnoremap <leader>b y:tabnew\|te
-  \ Grep() { grep -rin --color=always "$@"; printf "\n\n\n----\n\n\n"; grep --color=always -ril "$@"; }
-  \ && Grep "" \| less -R<c-left><c-left><c-left><left><left><C-r>"<right><right><c-r>=g:Fast_grep<CR>
+  execute 'vnoremap <leader>b y:' . g:FastGrep_fn
+  execute 'nnoremap <leader>b" vi"y:' . g:FastGrep_fn
+  execute 'nnoremap <leader>bw viwy:' . g:FastGrep_fn
+  execute 'nnoremap <leader>bb vy:' . g:FastGrep_fn
 
 " improve the 'preview window' behaviour
   autocmd CompleteDone * pclose " close when done
