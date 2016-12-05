@@ -37,9 +37,7 @@ install_pacman_package() {
 }
 
 download_cached() {
-  URL=$1
-  FILE_NAME=$2
-  LOCATION=$3
+  URL=$1; FILE_NAME=$2; LOCATION=$3
   if [ ! -f /vm-shared/installs/"$FILE_NAME" ]; then
     mkdir -p ~/cached-download
     wget -O ~/cached-download/"$FILE_NAME" "$URL"
@@ -48,7 +46,6 @@ download_cached() {
     rm -rf ~/cached-download
   fi
   sudo cp /vm-shared/installs/"$FILE_NAME" "$LOCATION"
-
   sudo chown $USER "$LOCATION/$FILE_NAME"
 }
 
