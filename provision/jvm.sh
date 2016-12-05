@@ -1,6 +1,6 @@
 # jvm START
 
-install_apt_package jre8-openjdk-headless java
+install_pacman_package jdk8-openjdk java
 
 if [ ! -f ~/selenium-server.jar ]; then
   SELENIUM_FILE_NAME=selenium-server-standalone-2.39.0.jar

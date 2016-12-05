@@ -6,6 +6,7 @@ Vagrant.configure(2) do |config|
   # config.vm.network :forwarded_port, guest: 80, host: 9080
   # config.vm.network :forwarded_port, guest: 9000, host: 9000
   # for i in 9000..9050; config.vm.network :forwarded_port, guest: i, host: i; end
+  # config.vm.network :forwarded_port, guest: 19999, host: 19999 # netdata
   # config.vm.network :forwarded_port, guest: 7474, host: 7474 # neo4j
   # config.vm.network :forwarded_port, guest: 1337, host: 1337 # sailsjs
   # config.vm.network :forwarded_port, guest: 27017, host: 27017 # mongodb

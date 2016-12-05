@@ -18,12 +18,6 @@ if ! type redis-server > /dev/null 2>&1 ; then
   sudo sh -c 'sed -e "s/^daemonize no$/daemonize yes/" -e "s/^# bind 127.0.0.1$/bind 127.0.0.1/" -e "s/^dir \.\//dir \/var\/lib\/redis\//" -e "s/^loglevel verbose$/loglevel notice/" -e "s/^logfile stdout$/logfile \/var\/log\/redis.log/" redis.conf > /etc/redis/redis.conf'
 fi
 
-MYSQL_DB_PASSWORD="foo"
-if ! type mysql > /dev/null 2>&1; then
-  echo "mysql-server mysql-server/root_password password $MYSQL_DB_PASSWORD" | sudo debconf-set-selections
-  echo "mysql-server mysql-server/root_password_again password $MYSQL_DB_PASSWORD" | sudo debconf-set-selections
-
-  sudo apt-get install -y mysql-server
-fi
+install_pacman_package mariadb
 
 # databases END

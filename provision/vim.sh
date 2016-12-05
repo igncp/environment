@@ -16,9 +16,9 @@ if [ ! -f ~/.vim/autoload/pathogen.vim ]; then
     > ~/.vim/autoload/pathogen.vim
 fi
 
-install_apt_package neovim nvim
-install_apt_package python3
-install_apt_package python-pip pip3
+install_pacman_package neovim nvim
+install_pacman_package python3
+install_pacman_package python-pip pip3
 
 if [ ! -f ~/.check-files/neovim ] ; then
   sudo pip3 install neovim
@@ -40,6 +40,7 @@ install_vim_package honza/vim-snippets
 install_vim_package jelera/vim-javascript-syntax
 install_vim_package jiangmiao/auto-pairs
 install_vim_package luochen1990/rainbow
+install_vim_package majutsushi/tagbar
 install_vim_package mbbill/undotree
 install_vim_package milkypostman/vim-togglelist
 install_vim_package ntpeters/vim-better-whitespace
@@ -386,6 +387,11 @@ nnoremap <silent> p p`]
 
 " easymotion
   nmap <Leader>j <Plug>(easymotion-overwin-f)
+
+" tagbar
+  nmap <leader>v :TagbarToggle<CR>
+  let g:tagbar_type_make = {'kinds':['m:macros', 't:targets']}
+  let g:tagbar_type_markdown = {'ctagstype':'markdown','kinds':['h:Heading_L1','i:Heading_L2','k:Heading_L3']}
 EOF
 
 cat >> ~/.bashrc <<"EOF"

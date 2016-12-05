@@ -33,7 +33,7 @@ clone_example_from_gh() {
 EOF
 
 # ufw
-  install_apt_package ufw
+  install_pacman_package ufw
   if [[ ! -z $(sudo ufw status | grep inactive) ]]; then
     sudo ufw enable
     sudo ufw allow ssh

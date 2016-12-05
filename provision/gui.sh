@@ -12,11 +12,12 @@ alias StartXFCE4='startxfce4&'
 alias XFCE4SettingsEditor='xfce4-settings-editor'
 SetupXFCE4() {
   xfconf-query -c xfce4-panel -p /panels/panel-1/size -s 25
+  xfconf-query -c xfce4-desktop -np '/desktop-icons/style' -t 'int' -s '0'
 }
 EOF
 
 # terminator
-  install_apt_package terminator
+  install_pacman_package terminator
   mkdir -p ~/.config/terminator
   cat > ~/.config/terminator/config <<"EOF"
 [global_config]
@@ -33,6 +34,8 @@ EOF
 [layouts]
 [plugins]
 EOF
+
+install_pacman_package chromium
 
 # eclim
   if [ ! -f ~/.check-files/eclim ]; then

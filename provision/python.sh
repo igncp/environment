@@ -1,7 +1,7 @@
 # python START
 
-install_apt_package python2
-install_apt_package python2-pip pip2
+install_pacman_package python2
+install_pacman_package python2-pip pip2
 
 install_pip_modules() {
   for MODULE_NAME in "$@"; do

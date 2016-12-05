@@ -1,19 +1,15 @@
 # docker START
 
 if ! type docker > /dev/null 2>&1 ; then
-  sudo apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
-  echo "deb https://apt.dockerproject.org/repo ubuntu-trusty main" | sudo tee /etc/apt/sources.list.d/docker.list
-  sudo apt-get update
-  sudo apt-get install -y linux-image-extra-$(uname -r) linux-image-extra-virtual
-  sudo apt-get install -y docker-engine
-  # use docker without sudo
-    sudo groupadd docker > /dev/null 2>&1
-    sudo gpasswd -a ${USER} docker
-    sudo service docker restart
+  mkdir -p ~/docker && cd ~/docker
+  download_cached https://www.archlinux.org/packages/community/x86_64/docker/download/ docker.tar.xz ~/docker
+  tar -xJf docker.tar.xz
+  sudo rm -rf /usr/local/lib/docker; sudo mv usr /usr/local/lib/docker
+  cd ~; rm -rf ~/docker
+  wget https://raw.githubusercontent.com/docker/docker/master/contrib/completion/bash/docker -O ~/.docker-completion.sh
 fi
-
-cat >> ~/.bash_aliases <<"EOF"
-alias DockerRmAll='docker stop $(docker ps -aq); docker rm $(docker ps -aq)'
-EOF
+echo 'export PATH=$PATH:/usr/local/lib/docker/bin' >> ~/.bashrc
+echo 'source_if_exists ~/.docker-completion.sh' >> ~/.bash_sources
+echo 'alias docker="sudo docker"' >> ~/.bash_aliases
 
 # docker END

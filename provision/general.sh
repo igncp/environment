@@ -27,7 +27,7 @@ if ! type git > /dev/null 2>&1 ; then
     git config --global core.editor "vim"
 fi
 
-install_apt_package() {
+install_pacman_package() {
   PACKAGE="$1"
   if [[ ! -z "$2" ]]; then CMD_CHECK="$2"; else CMD_CHECK="$1"; fi
   if ! type "$CMD_CHECK" > /dev/null 2>&1 ; then
@@ -36,14 +36,35 @@ install_apt_package() {
   fi
 }
 
-install_apt_package moreutils vidir
-install_apt_package ctags
-install_apt_package unzip
-install_apt_package curl
-install_apt_package tree
-install_apt_package htop
-install_apt_package jq
-install_apt_package ncdu
+download_cached() {
+  URL=$1
+  FILE_NAME=$2
+  LOCATION=$3
+  if [ ! -f /vm-shared/installs/"$FILE_NAME" ]; then
+    mkdir -p ~/cached-download
+    wget -O ~/cached-download/"$FILE_NAME" "$URL"
+    mkdir -p /vm-shared/installs
+    sudo mv ~/cached-download/"$FILE_NAME" /vm-shared/installs
+    rm -rf ~/cached-download
+  fi
+  sudo cp /vm-shared/installs/"$FILE_NAME" "$LOCATION"
+
+  sudo chown $USER "$LOCATION/$FILE_NAME"
+}
+
+install_pacman_package moreutils vidir
+install_pacman_package ctags
+install_pacman_package unzip
+install_pacman_package curl
+install_pacman_package tree
+install_pacman_package htop
+install_pacman_package jq
+install_pacman_package ncdu
+
+install_pacman_package netdata
+if [[ ! -z $(sudo systemctl status netdata.service | grep inactive) ]]; then
+  sudo systemctl restart netdata.service
+fi
 
 if [ ! -f ~/.acd_func ]; then
   sudo curl -o ~/.acd_func \
@@ -127,11 +148,11 @@ GetProcessUsingPort(){ fuser $1/tcp; }
 MkdirCd(){ mkdir -p $1; cd $1; }
 Popd(){ popd -n +"$1" > /dev/null; cd --; }
 alias AliasesReload='source ~/.bash_aliases'
-alias ConfigureTimezone='sudo dpkg-reconfigure tzdata; sudo ntpdate ntp.ubuntu.com'
+alias ConfigureTimezone='sudo timedatectl set-timezone Asia/Hong_Kong'
 alias EditProvision="$EDITOR /project/provision/provision.sh && provision.sh"
 alias Exit="\$(ps aux | grep tmux | grep -v grep | awk '{print $2}' | xargs kill) || exit"
 alias LsTmpFiles='ls -laht /tmp | tac'
-alias SynchronizeTime='sudo ntpdate ntp.ubuntu.com'
+alias Sudo='sudo -E ' # this preserves aliases and environment in root
 alias Tmux="tmux; exit"
 
 alias GitStatus='git status -u'
@@ -164,6 +185,15 @@ bind-key S-Right swap-window -t +1
 
 # keep your finger on ctrl, or don't
 bind-key ^D detach-client
+EOF
+
+cat > ~/.ctags <<"EOF"
+--regex-make=/^([^# \t]*):/\1/t,target/
+--langdef=markdown
+--langmap=markdown:.mkd
+--regex-markdown=/^#[ \t]+(.*)/\1/h,Heading_L1/
+--regex-markdown=/^##[ \t]+(.*)/\1/i,Heading_L2/
+--regex-markdown=/^###[ \t]+(.*)/\1/k,Heading_L3/
 EOF
 
 if ! type packer > /dev/null 2>&1 ; then
