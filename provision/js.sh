@@ -41,6 +41,7 @@ EOF
 install_vim_package kchmck/vim-coffee-script
 install_vim_package leafgarland/typescript-vim
 install_vim_package quramy/tsuquyomi
+install_vim_package ternjs/tern_for_vim "cd ~/.vim/bundle/tern_for_vim; npm i"
 
 cat >> ~/.vimrc <<"EOF"
 " quick console.log
@@ -56,6 +57,12 @@ cat >> ~/.vimrc <<"EOF"
 
 " grep same indent props
   execute 'nnoremap <leader>ki ^hv0y' . g:GrepCF_fn . ' -o "^<c-r>"\w*:"<left>'
+
+" term
+  let g:tern_show_argument_hints = 'on_hold'
+  let g:tern_show_signature_in_pum = 1
+  autocmd FileType javascript setlocal omnifunc=tern#Complete
+  autocmd FileType javascript nnoremap <silent> <buffer> gb :TernDef<CR><Paste>
 EOF
 
 # js END

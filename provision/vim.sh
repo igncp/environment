@@ -179,6 +179,8 @@ cnoremap <C-K> <C-U>
 
 " deoplete
   let g:deoplete#enable_at_startup = 1
+  inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
+  inoremap <expr><s-tab> pumvisible() ? "\<c-p>" : "\<tab>"
 
 let g:NERDSpaceDelims = 1
 let g:rainbow_active = 1
@@ -219,6 +221,7 @@ map ,e :e <C-R>=expand("%:p:h") . "/" <CR>
 vnoremap <leader>ku y:%s/\C<C-r>"//gn<CR>
 nnoremap <leader>ku viwy:%s/\C<C-r>"//gn<CR>
 nnoremap <leader>; :
+nnoremap <leader>x :set noeol<CR>:set binary<CR>:w<CR>:set nobinary<CR>
 nnoremap <leader>ko :mksession! ~/mysession.vim<CR>:qa<CR>
 au BufNewFile,BufRead *.ejs set filetype=html
 
@@ -251,20 +254,15 @@ nnoremap <silent> p p`]
   vmap <silent> <expr> p <sid>Repl()
 
 " neosnippet
+	" Enter in select mode: gh
   imap <C-l>     <Plug>(neosnippet_expand_or_jump)
-  smap <C-l>     <Plug>(neosnippet_expand_or_jump)
-  xmap <C-l>     <Plug>(neosnippet_expand_target)
-  imap <expr><TAB>
-   \ pumvisible() ? "\<C-n>" :
-   \ neosnippet#expandable_or_jumpable() ?
-   \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
   smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
    \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
   if has('conceal')
     set conceallevel=2 concealcursor=niv
   endif
   let g:neosnippet#snippets_directory='~/.vim/bundle/vim-snippets/snippets'
-  let g:neosnippet#disable_runtime_snippets={'c' : 1, 'cpp' : 1,}
+  let g:neosnippet#disable_runtime_snippets={'c' : 1, 'cpp' : 1}
 
 " save file shortcuts
   nmap <C-s> :update<Esc>
@@ -401,8 +399,9 @@ source ~/.bash_aliases # some aliases depend on $EDITOR
 EOF
 
 cat >> ~/.bash_aliases <<"EOF"
-alias nv='nvim'
+alias n='nvim'
 alias NVimSession='nvim -S ~/mysession.vim'
+alias CheckVimSnippets='nvim ~/.vim/bundle/vim-snippets/snippets'
 EOF
 
 # vim END
