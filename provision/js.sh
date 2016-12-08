@@ -23,7 +23,7 @@ install_node_modules() {
   done
 }
 
-install_node_modules http-server diff-so-fancy yarn
+install_node_modules http-server diff-so-fancy yarn eslint babel-eslint
 
 cat >> ~/.bashrc <<"EOF"
 export PATH=$PATH:/home/$USER/.nodenv/bin
@@ -47,7 +47,7 @@ cat >> ~/.vimrc <<"EOF"
 " quick console.log
   let ConsoleMappingA="nnoremap <leader>kk iconsole.log('a', a);<C-c>6hvs"
   let ConsoleMappingB="vnoremap <leader>kk yOconsole.log('a', a);<C-c>6hvpvi'yf'lllvp"
-  let ConsoleMappingC='nnoremap <leader>kj iconsole.log("LOG POINT - <C-r>=fake#gen("country")<CR><C-c>2la;<CR><C-c>'
+  let ConsoleMappingC='nnoremap <leader>kj iconsole.log("LOG POINT - <C-r>=fake#gen("nonsense")<CR>");<cr><c-c>'
   autocmd FileType javascript :exe ConsoleMappingA
   autocmd filetype javascript :exe ConsoleMappingB
   autocmd filetype javascript :exe ConsoleMappingC
@@ -61,8 +61,10 @@ cat >> ~/.vimrc <<"EOF"
 " term
   let g:tern_show_argument_hints = 'on_hold'
   let g:tern_show_signature_in_pum = 1
-  autocmd FileType javascript setlocal omnifunc=tern#Complete
   autocmd FileType javascript nnoremap <silent> <buffer> gb :TernDef<CR><Paste>
+
+" run eslint over file
+  nnoremap <silent> <leader>kb :!eslint --fix %<cr>:e<cr>
 EOF
 
 # js END

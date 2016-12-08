@@ -108,6 +108,15 @@ let g:hardtime_default_on = 1
   map ?  <Plug>(incsearch-backward)
   map g/ <Plug>(incsearch-stay)
 
+" run saved command over file and reopen
+  nnoremap <leader>kA :let g:File_cmd=''<left>
+  nnoremap <leader>ka :!<c-r>=g:File_cmd<cr> %<cr>:e<cr>
+
+" format json
+  command! -range -nargs=0 -bar JsonTool <line1>,<line2>!python -m json.tool
+  nnoremap <leader>kz :JsonTool<CR>
+  vnoremap <leader>kz :'<,'>JsonTool<CR>
+
 " move lines up and down
   nnoremap <C-j> :m .+1<CR>==
   nnoremap <C-k> :m .-2<CR>==
@@ -211,8 +220,8 @@ let g:vim_markdown_folding_disabled = 1
   highlight link SyntasticWarningSign SignColumn
   highlight link SyntasticStyleErrorSign SignColumn
   highlight link SyntasticStyleWarningSign SignColumn
-  let g:syntastic_error_symbol = '❌'
-  let g:syntastic_style_error_symbol = '⁉️'
+  let g:syntastic_error_symbol = 'X'
+  let g:syntastic_style_error_symbol = '!?'
   hi Error ctermbg=lightred ctermfg=black
   hi SpellBad ctermbg=lightred ctermfg=black
   nnoremap <leader>o :SyntasticToggleMode<CR>
@@ -254,7 +263,7 @@ nnoremap <silent> p p`]
   vmap <silent> <expr> p <sid>Repl()
 
 " neosnippet
-	" Enter in select mode: gh
+  " Enter in select mode: gh
   imap <C-l>     <Plug>(neosnippet_expand_or_jump)
   smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
    \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
@@ -263,6 +272,7 @@ nnoremap <silent> p p`]
   endif
   let g:neosnippet#snippets_directory='~/.vim/bundle/vim-snippets/snippets'
   let g:neosnippet#disable_runtime_snippets={'c' : 1, 'cpp' : 1}
+  let g:neosnippet#expand_word_boundary=1
 
 " save file shortcuts
   nmap <C-s> :update<Esc>
