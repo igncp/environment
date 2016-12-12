@@ -39,6 +39,7 @@ install_vim_package haya14busa/incsearch.vim
 install_vim_package honza/vim-snippets
 install_vim_package jelera/vim-javascript-syntax
 install_vim_package jiangmiao/auto-pairs
+install_vim_package kshenoy/vim-signature
 install_vim_package luochen1990/rainbow
 install_vim_package majutsushi/tagbar
 install_vim_package mbbill/undotree
@@ -156,6 +157,7 @@ set softtabstop=2
 set tabstop=2
 set smartcase
 set wildmenu
+set textwidth=80 " gq, gq}
 
 " better completion menu colors
   highlight Pmenu ctermfg=white ctermbg=17
@@ -232,6 +234,7 @@ nnoremap <leader>ku viwy:%s/\C<C-r>"//gn<CR>
 nnoremap <leader>; :
 nnoremap <leader>x :set noeol<CR>:set binary<CR>:w<CR>:set nobinary<CR>
 nnoremap <leader>ko :mksession! ~/mysession.vim<CR>:qa<CR>
+nnoremap <leader>km :SignatureToggleSigns<cr>
 au BufNewFile,BufRead *.ejs set filetype=html
 
 " move up/down from the beginning/end of lines
@@ -302,8 +305,8 @@ nnoremap <silent> p p`]
 
 " fast grep
   let g:FastGrep_fn = 'tabnew\|te
-    \ Grep() { grep -rin --color=always "$@"; printf "\n\n\n----\n\n\n"; grep --color=always -ril "$@"; }
-    \ && Grep "<c-r>"" <c-r>=g:Fast_grep<CR>\| less -R<c-left><c-left><left><left>'
+    \ Grep() { grep -rn --color=always "$@"; printf "\n\n\n----\n\n\n"; grep --color=always -rl "$@"; }
+    \ && Grep -i "<c-r>"" <c-r>=g:Fast_grep<CR>\| less -R<c-left><c-left><left><left>'
   let g:Fast_grep=''
   nnoremap <leader>B :let g:Fast_grep=''<left>
   execute 'vnoremap <leader>b y:' . g:FastGrep_fn

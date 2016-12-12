@@ -171,6 +171,7 @@ EOF
 cat > ~/.inputrc <<"EOF"
 set show-all-if-ambiguous on
 C-h:unix-filename-rubout
+C-k:edit-and-execute-command
 EOF
 
 cat > ~/.tmux.conf <<"EOF"

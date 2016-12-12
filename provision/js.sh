@@ -48,12 +48,15 @@ cat >> ~/.vimrc <<"EOF"
   let ConsoleMappingA="nnoremap <leader>kk iconsole.log('a', a);<C-c>6hvs"
   let ConsoleMappingB="vnoremap <leader>kk yOconsole.log('a', a);<C-c>6hvpvi'yf'lllvp"
   let ConsoleMappingC='nnoremap <leader>kj iconsole.log("LOG POINT - <C-r>=fake#gen("nonsense")<CR>");<cr><c-c>'
+  let ConsoleMappingD='nnoremap <leader>kg iif () {<cr>debugger;<cr>}<cr><esc>kkkwli'
   autocmd FileType javascript :exe ConsoleMappingA
   autocmd filetype javascript :exe ConsoleMappingB
   autocmd filetype javascript :exe ConsoleMappingC
+  autocmd filetype javascript :exe ConsoleMappingD
   autocmd FileType typescript :exe ConsoleMappingA
   autocmd FileType typescript :exe ConsoleMappingB
   autocmd FileType typescript :exe ConsoleMappingC
+  autocmd FileType typescript :exe ConsoleMappingD
 
 " grep same indent props
   execute 'nnoremap <leader>ki ^hv0y' . g:GrepCF_fn . ' -o "^<c-r>"\w*:"<left>'
