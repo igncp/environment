@@ -153,6 +153,7 @@ alias Sudo='sudo -E ' # this preserves aliases and environment in root
 alias Tmux="tmux; exit"
 
 alias GitStatus='git status -u'
+GitOpenStatusFiles() { $EDITOR -p $(git status --porcelain $1 | grep -vE "^ D" | sed s/^...//); }
 GitAdd() { git add -A $@; GitStatus; }
 GitResetLastCommit() { LAST_COMMIT_MESSAGE=$(git log -1 --pretty=%B); \
   git reset --soft HEAD^; git add -A .; git commit -m "$LAST_COMMIT_MESSAGE"; }

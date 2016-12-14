@@ -157,7 +157,9 @@ set softtabstop=2
 set tabstop=2
 set smartcase
 set wildmenu
-set textwidth=80 " gq, gq}
+
+" wrap lines physically: gq, gq}
+  nnoremap <leader>kc :set textwidth=0<left>
 
 " better completion menu colors
   highlight Pmenu ctermfg=white ctermbg=17
@@ -171,7 +173,7 @@ set textwidth=80 " gq, gq}
 
 nnoremap <silent> <leader>kdF :call delete(expand('%')) \| bdelete!<CR>:echo "FILE DELETED"<CR>
 nnoremap <leader>kn *
-nnoremap <leader>kx :tabnew <c-r>=system('mktemp')<CR><CR>
+nnoremap <leader>kx :let g:mft=&ft<cr>:tabnew <c-r>=system('mktemp')<cr><cr>:set syntax=<c-r>=g:mft<cr><cr>
 nnoremap <C-w>v :vsplit<CR><C-w><right>
 nnoremap <leader>w :set wrap!<CR>
 nnoremap <leader>a ggvG$
@@ -179,6 +181,9 @@ nnoremap <leader>i :set list!<CR>
 cnoremap <C-A> <Home>
 cnoremap <C-E> <End>
 cnoremap <C-K> <C-U>
+
+" to go to "selection" mode, e.g. with snippets
+  inoremap <c-d> <c-c>gh
 
 " airline
   set laststatus=2

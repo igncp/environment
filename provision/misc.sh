@@ -54,4 +54,11 @@ EOF
   }
   # add_ssh foo
 
+# convenient alias to expand (ctrl-alt-e)
+  mkdir -p ~/diffs
+  cat >> ~/.bash_aliases <<"EOF"
+alias GD='git diff > ~/diffs/'
+alias GA='git apply ~/diffs/'
+EOF
+
 # misc END
