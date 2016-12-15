@@ -1,20 +1,28 @@
 # lamp START
 
-# * requires
-# - mysql database
-
 # * config files
 # - apache: httpd.conf
 # - wordpress: wp-config.php
 
-DB_USER="bar"
-DB_USER_PASSWORD="baz"
+# * requires
+# - mysql database (for the cms)
+
 if ! type apachectl > /dev/null 2>&1 ; then
   echo "installing apache"
   sudo pacman -S --noconfirm apache
   sudo cp /project/provision/httpd.conf /etc/httpd/conf/
   chmod o+x /home/$USER # necessary to follow symlinks: https://bbs.archlinux.org/viewtopic.php?id=77791
 fi
+cat >> ~/.bash_aliases <<"EOF"
+  alias ApacheRestart='sudo systemctl restart httpd.service'
+  alias ModifyApacheConf='$EDITOR /project/provision/httpd.conf; sudo cp /project/provision/httpd.conf /etc/httpd/conf/'
+  ModifyApacheLog() { Sudo $EDITOR /var/log/httpd/error_log; }
+EOF
+cat >> ~/.vimrc <<"EOF"
+au BufRead,BufNewFile error_log setfiletype httpd
+" quick error_log
+  autocmd FileType php vnoremap <leader>kk yoerror_log('a' . print_r(a, true));<c-c>FaFavpT'i$<c-c>vi'yf'i: <c-c>llfavp
+EOF
 
 if [ ! -f ~/.check-files/php ]; then
   echo "installing php"
@@ -23,11 +31,6 @@ if [ ! -f ~/.check-files/php ]; then
   sudo systemctl restart httpd.service
   mkdir -p ~/.check-files && touch ~/.check-files/php
 fi
-cat >> ~/.bash_aliases <<"EOF"
-  alias ApacheRestart='sudo systemctl restart httpd.service'
-  alias ModifyApacheConf='$EDITOR /project/provision/httpd.conf; sudo cp /project/provision/httpd.conf /etc/httpd/conf/'
-  TailApacheLog() { sudo tail -f /var/log/httpd/error_log; }
-EOF
 
 # composer
   if ! type composer > /dev/null 2>&1 ; then
@@ -37,6 +40,8 @@ EOF
 # NOTES:
 # - WordPress and Drupal have to be ported from Ubuntu Linux to Arch Linux
 
+DB_USER="bar"
+DB_USER_PASSWORD="baz"
 # wordpress
   # if [ ! -f ~/wordpress-installation-finished ]; then
     # sudo apt-get install -y php5-curl php5-gd php-mbstring php5-mcrypt php-xml php5-xmlrpc php5-mysqlnd-ms

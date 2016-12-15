@@ -173,7 +173,9 @@ set wildmenu
 
 nnoremap <silent> <leader>kdF :call delete(expand('%')) \| bdelete!<CR>:echo "FILE DELETED"<CR>
 nnoremap <leader>kn *
-nnoremap <leader>kx :let g:mft=&ft<cr>:tabnew <c-r>=system('mktemp')<cr><cr>:set syntax=<c-r>=g:mft<cr><cr>
+nnoremap <leader>kx :let g:CurrentFileType=&ft<cr>:tabnew
+  \ <c-r>=system('mktemp')<cr><cr>:set syntax=<c-r>=g:CurrentFileType<cr><cr>
+  \:set ft=<c-r>=g:CurrentFileType<cr><cr>
 nnoremap <C-w>v :vsplit<CR><C-w><right>
 nnoremap <leader>w :set wrap!<CR>
 nnoremap <leader>a ggvG$
@@ -421,5 +423,7 @@ alias n='nvim'
 alias NVimSession='nvim -S ~/mysession.vim'
 alias CheckVimSnippets='nvim ~/.vim/bundle/vim-snippets/snippets'
 EOF
+
+mkdir -p ~/.vim-snippets
 
 # vim END

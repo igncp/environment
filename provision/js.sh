@@ -45,18 +45,12 @@ install_vim_package ternjs/tern_for_vim "cd ~/.vim/bundle/tern_for_vim; npm i"
 
 cat >> ~/.vimrc <<"EOF"
 " quick console.log
-  let ConsoleMappingA="nnoremap <leader>kk iconsole.log('a', a);<C-c>6hvs"
-  let ConsoleMappingB="vnoremap <leader>kk yOconsole.log('a', a);<C-c>6hvpvi'yf'lllvp"
-  let ConsoleMappingC='nnoremap <leader>kj iconsole.log("LOG POINT - <C-r>=fake#gen("nonsense")<CR>");<cr><c-c>'
-  let ConsoleMappingD='nnoremap <leader>kg iif () {<cr>debugger;<cr>}<cr><esc>kkkwli'
-  autocmd FileType javascript :exe ConsoleMappingA
+  let ConsoleMappingA="vnoremap <leader>kk yOconsole.log('a', a);<C-c>6hvpvi'yf'lllvp"
+  let ConsoleMappingB='nnoremap <leader>kj iconsole.log("LOG POINT - <C-r>=fake#gen("nonsense")<CR>");<cr><c-c>'
+  autocmd filetype javascript :exe ConsoleMappingA
   autocmd filetype javascript :exe ConsoleMappingB
-  autocmd filetype javascript :exe ConsoleMappingC
-  autocmd filetype javascript :exe ConsoleMappingD
   autocmd FileType typescript :exe ConsoleMappingA
   autocmd FileType typescript :exe ConsoleMappingB
-  autocmd FileType typescript :exe ConsoleMappingC
-  autocmd FileType typescript :exe ConsoleMappingD
 
 " grep same indent props
   execute 'nnoremap <leader>ki ^hv0y' . g:GrepCF_fn . ' -o "^<c-r>"\w*:"<left>'
@@ -69,5 +63,18 @@ cat >> ~/.vimrc <<"EOF"
 " run eslint over file
   nnoremap <silent> <leader>kb :!eslint --fix %<cr>:e<cr>
 EOF
+
+cat > /tmp/js-and-ts-snippets <<"EOF"
+snippet ide
+  if (${0}) {
+    debugger;
+  }
+snippet ck
+  console.log("${0:}", $0);
+snippet cj
+  console.log("LOG POINT - ${0:}");
+EOF
+cat /tmp/js-and-ts-snippets > ~/.vim-snippets/javascript.snippets
+cat /tmp/js-and-ts-snippets > ~/.vim-snippets/typescript.snippets
 
 # js END
