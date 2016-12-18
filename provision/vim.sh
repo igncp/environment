@@ -26,9 +26,9 @@ if [ ! -f ~/.check-files/neovim ] ; then
   rm -rf ~/.config/nvim
   ln -s ~/.vim ~/.config/nvim
   ln -s ~/.vimrc ~/.config/nvim/init.vim
-  git config --global core.editor "nvim"
   mkdir -p ~/.check-files && touch ~/.check-files/neovim
 fi
+git config --global core.editor nvim # faster than sed
 
 install_vim_package airblade/vim-gitgutter
 install_vim_package ctrlpvim/ctrlp.vim
@@ -135,6 +135,8 @@ let g:hardtime_default_on = 1
   set fml=0
   set nowrap
   hi Folded ctermbg=236
+
+autocmd Filetype markdown setlocal wrap
 
 " improve indentation
   xnoremap <Tab> >gv

@@ -20,4 +20,43 @@ fi
 
 install_pacman_package mariadb
 
+install_pacman_package postgresql postgres
+if [ ! -f ~/.check-files/postgresql ]; then
+  sudo mkdir -p /var/lib/postgres/data
+  sudo chown -c -R postgres:postgres /var/lib/postgres
+  sudo systemctl enable postgresql
+  sudo -H -u postgres bash -c "initdb -D '/var/lib/postgres/data'"
+  sudo -u postgres createuser vagrant
+  sudo -u postgres createdb vagrant
+  sudo -u postgres psql -c 'ALTER USER vagrant WITH SUPERUSER;'
+  sudo systemctl restart postgresql
+  mkdir -p ~/.check-files && touch ~/.check-files/postgresql
+fi
+cat >> ~/.bash_aliases <<"EOF"
+alias PostgresSQLRestart='sudo systemctl restart postgresql.service'
+alias PostgresSQLStatus='sudo systemctl status postgresql.service'
+EOF
+
+if [ ! -f ~/.check-files/pgadmin ]; then
+  PGADMIN_FILE=pgadmin4-1.1-py3-none-any.whl
+  download_cached https://ftp.postgresql.org/pub/pgadmin3/pgadmin4/v1.1/pip/$PGADMIN_FILE $PGADMIN_FILE ~
+  sudo pip install ~/$PGADMIN_FILE
+  rm ~/$PGADMIN_FILE
+  sudo chown -R vagrant /usr/lib/python3.5/site-packages/pgadmin4/
+  sudo mkdir -p /var/log/pgadmin4
+  sudo chown -R vagrant /var/log/pgadmin4
+  mkdir -p ~/.check-files && touch ~/.check-files/pgadmin
+fi
+cat > /usr/lib/python3.5/site-packages/pgadmin4/config_local.py <<"EOF"
+SERVER_MODE = True
+LOG_FILE = '/var/log/pgadmin4/pgadmin4.log'
+SQLITE_PATH = '/usr/lib/python3.5/site-packages/pgadmin4/pgadmin4.db'
+SESSION_DB_PATH = '/usr/lib/python3.5/site-packages/pgadmin4/sessions'
+STORAGE_DIR = '/usr/lib/python3.5/site-packages/pgadmin4/storage'
+DEFAULT_SERVER='0.0.0.0'
+EOF
+cat >> ~/.bash_aliases <<"EOF"
+alias PGAdminStart='python /usr/lib/python3.5/site-packages/pgadmin4/pgAdmin4.py'
+EOF
+
 # databases END

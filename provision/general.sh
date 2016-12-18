@@ -20,13 +20,6 @@ if [ ! -f ~/.check-files/basic-packages ]; then
   mkdir -p ~/.check-files && touch ~/.check-files/basic-packages
 fi
 
-if ! type git > /dev/null 2>&1 ; then
-  sudo pacman -S --noconfirm git
-  git config --global user.email "foo@bar.com" && \
-    git config --global user.name "Foo Bar" && \
-    git config --global core.editor "vim"
-fi
-
 install_pacman_package() {
   PACKAGE="$1"
   if [[ ! -z "$2" ]]; then CMD_CHECK="$2"; else CMD_CHECK="$1"; fi
@@ -49,14 +42,27 @@ download_cached() {
   sudo chown $USER "$LOCATION/$FILE_NAME"
 }
 
-install_pacman_package moreutils vidir
+install_pacman_package git
+cat > ~/.gitconfig <<"EOF"
+[user]
+  email = foo@bar.com
+  name = Foo Bar
+[core]
+  editor = vim
+[alias]
+  l = log --pretty=format:'%Cred%h%Creset%C(yellow)%d%Creset %s %C(bold blue)%an %Cgreen%cd%Creset' --date=short
+EOF
+
 install_pacman_package ctags
-install_pacman_package unzip
 install_pacman_package curl
-install_pacman_package tree
 install_pacman_package htop
 install_pacman_package jq
+install_pacman_package moreutils vidir
 install_pacman_package ncdu
+install_pacman_package strace
+install_pacman_package task
+install_pacman_package tree
+install_pacman_package unzip
 
 install_pacman_package netdata
 if [[ ! -z $(sudo systemctl status netdata.service | grep inactive) ]]; then
@@ -109,7 +115,7 @@ export EDITOR=vim
 if [[ -z $TMUX ]]; then
   TMUX_PREFIX_A="" && TMUX_PREFIX_B="·"
 else
-  TMUX_PREFIX_A="{$(tmux display-message -p '#I')} " && TMUX_PREFIX_B="£"
+  TMUX_PREFIX_A="{\$(tmux display-message -p '#I')} " && TMUX_PREFIX_B="£"
 fi
 get_jobs_prefix() {
   JOBS=$(jobs | wc -l)
@@ -134,7 +140,7 @@ EOF
 
 cat > ~/.bash_aliases <<"EOF"
 alias cp="cp -r"
-alias ll="ls -lah"
+alias ll="ls -lah --color=always"
 alias mkdir="mkdir -p"
 alias rm="rm -rf"
 alias tree="tree -a"
@@ -182,9 +188,31 @@ set-window-option -g xterm-keys on
 bind-key S-Left swap-window -t -1
 bind-key S-Right swap-window -t +1
 
+bind '"' split-window -c "#{pane_current_path}"
+bind % split-window -h -c "#{pane_current_path}"
+bind c new-window -c "#{pane_current_path}"
+
 # keep your finger on ctrl, or don't
 bind-key ^D detach-client
+
 EOF
+
+install_tmux_plugin() {
+  REPO=$1; DIR=$(echo $REPO | sed -r "s|.+/(.+)|\1|") # foo/bar => bar
+  if [ ! -d ~/.tmux/plugins/"$DIR" ]; then
+    mkdir -p ~/.tmux/plugins
+    git clone https://github.com/$REPO.git ~/.tmux/plugins/"$DIR"
+  fi
+
+  echo "set -g @plugin '$REPO'" >> ~/.tmux.conf
+  # this line must be at the end of the config file
+  sed -i "/run '~\/.tmux\/plugins\/tpm\/tpm'/ d" ~/.tmux.conf
+  echo "run '~/.tmux/plugins/tpm/tpm'" >> ~/.tmux.conf
+}
+
+install_tmux_plugin tmux-plugins/tpm
+install_tmux_plugin tmux-plugins/tmux-resurrect
+install_tmux_plugin tmux-plugins/tmux-sessionist
 
 cat > ~/.ctags <<"EOF"
 --regex-make=/^([^# \t]*):/\1/t,target/
@@ -205,5 +233,25 @@ if ! type packer > /dev/null 2>&1 ; then
   sudo pacman --noconfirm -U packer-*
   cd ~ && rm -rf ~/packer
 fi
+
+if [ ! -d ~/.fzf ]; then
+  git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+  ~/.fzf/install --all
+fi
+install_pacman_package the_silver_searcher ag
+cat >> ~/.bashrc <<"EOF"
+export FZF_CTRL_T_COMMAND='ag -u --hidden --ignore .git -g ""'
+AG_DIRS() { ag -u --hidden --ignore .git -g "" "$@" | xargs dirname | sort | uniq; }
+export FZF_ALT_C_COMMAND="AG_DIRS"
+EOF
+cat >> ~/.bash_sources <<"EOF"
+source_if_exists ~/.fzf.bash
+EOF
+grep -i "s|nvim n |nvim |; s|nvim |nvim n |" /home/vagrant/.fzf/shell/completion.bash
+
+if [ ! -f ~/.config/up/up.sh ]; then
+  curl --create-dirs -o ~/.config/up/up.sh https://raw.githubusercontent.com/shannonmoeller/up/master/up.sh
+fi
+echo 'source_if_exists ~/.config/up/up.sh' >> ~/.bash_sources
 
 # general END

@@ -10,11 +10,12 @@
 if ! type apachectl > /dev/null 2>&1 ; then
   echo "installing apache"
   sudo pacman -S --noconfirm apache
-  sudo cp /project/provision/httpd.conf /etc/httpd/conf/
   chmod o+x /home/$USER # necessary to follow symlinks: https://bbs.archlinux.org/viewtopic.php?id=77791
 fi
+sudo cp /project/provision/httpd.conf /etc/httpd/conf/httpd.conf
 cat >> ~/.bash_aliases <<"EOF"
   alias ApacheRestart='sudo systemctl restart httpd.service'
+  alias ApacheStatus='sudo systemctl status httpd.service'
   alias ModifyApacheConf='$EDITOR /project/provision/httpd.conf; sudo cp /project/provision/httpd.conf /etc/httpd/conf/'
   ModifyApacheLog() { Sudo $EDITOR /var/log/httpd/error_log; }
 EOF
