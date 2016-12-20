@@ -220,6 +220,7 @@ let g:vim_markdown_folding_disabled = 1
   let g:ctrlp_show_hidden = 1
   let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist)|(\.(swp|ico|git|svn))$'
   nnoremap <leader>p :CtrlP %:p:h<CR> " CtrlP in file's dir
+  nnoremap <leader>kp :CtrlP ~/
 
 " syntastic
   set statusline+=%#warningmsg#
