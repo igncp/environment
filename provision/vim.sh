@@ -31,6 +31,7 @@ fi
 git config --global core.editor nvim # faster than sed
 
 install_vim_package airblade/vim-gitgutter
+install_vim_package andrewRadev/splitjoin.vim # gS, gJ
 install_vim_package ctrlpvim/ctrlp.vim
 install_vim_package easymotion/vim-easymotion
 install_vim_package elzr/vim-json
@@ -61,6 +62,7 @@ install_vim_package vim-airline/vim-airline
 install_vim_package vim-airline/vim-airline-themes
 install_vim_package vim-ruby/vim-ruby
 install_vim_package vim-scripts/cream-showinvisibles
+install_vim_package vim-scripts/mru.vim
 install_vim_package yggdroot/indentLine
 
 echo 'Control-x: " fg\n"' >> ~/.inputrc
@@ -136,6 +138,9 @@ let g:hardtime_default_on = 1
   set nowrap
   hi Folded ctermbg=236
 
+" mru.vim
+  nnoremap <silent> <leader>kh :MRU<cr>
+
 autocmd Filetype markdown setlocal wrap
 
 " improve indentation
@@ -143,7 +148,8 @@ autocmd Filetype markdown setlocal wrap
   xnoremap <S-Tab> <gv
 
 " to easily copy with the mouse
-  nnoremap <leader>n :set number!<CR>:GitGutterToggle<CR>
+  nnoremap <silent> <leader>n :set nonumber<cr>:GitGutterDisable<cr>:IndentLinesDisable<cr>:set norelativenumber<cr>
+  nnoremap <silent> <leader>N :set number<cr>:GitGutterEnable<cr>:IndentLinesEnable<cr>:set relativenumber<cr>
 
 " fix c-b mapping to use with tmux (one page up)
   nnoremap <C-d> <c-b>
@@ -249,19 +255,15 @@ au BufNewFile,BufRead *.ejs set filetype=html
 " move up/down from the beginning/end of lines
   set ww+=<,>
 
-" change to current file directory
-  nnoremap ,cd :cd %:p:h<CR>:pwd<CR>
-
-" run macro on d
-  nnoremap <leader>d @d
-
-" sort lines
-  vmap <F3> :sort<CR>
-
+nnoremap <leader>d @d
+vnoremap <F3> :sort<CR>
 inoremap <C-e> <Esc>A
 inoremap <C-a> <Esc>I
 vnoremap <silent> y y`]
 nnoremap <silent> p p`]
+
+" change to current file directory
+  nnoremap ,cd :cd %:p:h<CR>:pwd<CR>
 
 " vp doesn't replace paste buffer
   function! RestoreRegister()
@@ -290,7 +292,7 @@ nnoremap <silent> p p`]
   nmap <C-s> :update<Esc>
   inoremap <C-s> <Esc>:update<CR>
 
-" copy - paste between files and vms
+" copy - paste between files and VMs
   vmap <leader>fy :w! /vm-shared/_vitmp<CR>
   nmap <leader>fp :r! cat /vm-shared/_vitmp<CR>
   vmap <leader>fp d:r! cat /vm-shared/_vitmp<CR>
@@ -341,6 +343,7 @@ nnoremap <silent> p p`]
 " quickly move to lines
   nnoremap <CR> G
   nnoremap <BS> gg
+
 " undo tree
   nnoremap <leader>m :UndotreeShow<CR><C-w><left>
 
