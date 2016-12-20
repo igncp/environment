@@ -240,12 +240,12 @@ if [ ! -d ~/.fzf ]; then
 fi
 install_pacman_package the_silver_searcher ag
 cat >> ~/.bashrc <<"EOF"
-# this key binding + tmux + nvim + ctrl-z: hidden input
-export FZF_CTRL_T_COMMAND='ag -u --hidden --ignore .git -g ""'
 export FZF_COMPLETION_TRIGGER='['
 AG_DIRS() { ag -u --hidden --ignore .git -g "" "$@" | xargs dirname | sort | uniq; }
 export FZF_ALT_C_COMMAND="AG_DIRS"
 EOF
+# Ctrl+t binding breaks window when tmux + (n)vim + ctrl-z: no visible input. Disable it
+sed -i "s|C-t|C-$|" ~/.fzf/shell/key-bindings.bash
 sed -i "s|nvim n |nvim |; s|nvim |nvim n |" /home/vagrant/.fzf/shell/completion.bash
 cat >> ~/.bash_sources <<"EOF"
 source_if_exists ~/.fzf.bash
