@@ -285,7 +285,7 @@ nnoremap <silent> p p`]
   if has('conceal')
     set conceallevel=2 concealcursor=niv
   endif
-  let g:neosnippet#snippets_directory='~/.vim/bundle/vim-snippets/snippets'
+  let g:neosnippet#snippets_directory='~/.vim/bundle/vim-snippets/snippets,~/.vim-snippets'
   let g:neosnippet#disable_runtime_snippets={'c' : 1, 'cpp' : 1}
   let g:neosnippet#expand_word_boundary=1
 
