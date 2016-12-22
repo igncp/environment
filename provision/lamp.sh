@@ -11,6 +11,16 @@ if ! type apachectl > /dev/null 2>&1 ; then
   echo "installing apache"
   sudo pacman -S --noconfirm apache
   chmod o+x /home/$USER # necessary to follow symlinks: https://bbs.archlinux.org/viewtopic.php?id=77791
+  sudo cp /project/provision/httpd.conf /etc/httpd/conf/httpd.conf
+
+  # ssl: https://localhost:8443 from the host. http://stackoverflow.com/a/18602774
+    cd /etc/httpd/conf
+    sudo rm -rf server.key server.crt
+    sudo openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:4096 -out server.key
+    sudo chmod 400 server.key
+    sudo openssl req -new -sha256 -key server.key -out server.csr -subj "/C=GB/ST=London/L=London/O=Global Security/OU=IT Department/CN=localhost"
+    sudo openssl x509 -req -days 1095 -in server.csr -signkey server.key -out server.crt
+    sudo systemctl restart httpd.service
 fi
 sudo cp /project/provision/httpd.conf /etc/httpd/conf/httpd.conf
 cat >> ~/.bash_aliases <<"EOF"
@@ -37,6 +47,10 @@ fi
   if ! type composer > /dev/null 2>&1 ; then
     curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
   fi
+
+# lamp END
+
+# lamp-extras START
 
 # NOTES:
 # - WordPress and Drupal have to be ported from Ubuntu Linux to Arch Linux
@@ -149,4 +163,4 @@ DB_USER_PASSWORD="baz"
 # source_if_exists ~/.drush/drush.prompt.sh
 # EOF
 
-# lamp END
+# lamp-extras END

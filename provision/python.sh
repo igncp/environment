@@ -25,6 +25,10 @@ cat >> ~/.vimrc <<"EOF"
 let g:flake8_show_quickfix=0 " don't show quickfix
 EOF
 
+# python END
+
+# python-extras START
+
 # tensorflow
   install_pip_modules numpy pbr funcsigs
   if ! type tensorboard > /dev/null 2>&1 ; then
@@ -34,4 +38,4 @@ EOF
     sudo pip2 install --upgrade $TF_BINARY_URL
   fi
 
-# python END
+# python-extras END

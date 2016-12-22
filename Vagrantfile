@@ -4,6 +4,7 @@ Vagrant.configure(2) do |config|
   config.vm.hostname = 'PROJECT_HOSTNAME'
 
   # config.vm.network :forwarded_port, guest: 80, host: 9080
+  # config.vm.network :forwarded_port, guest: 443, host: 8443 # https
   # config.vm.network :forwarded_port, guest: 9000, host: 9000
   # for i in 9000..9050; config.vm.network :forwarded_port, guest: i, host: i; end
   # config.vm.network :forwarded_port, guest: 6419, host: 6419 # grip

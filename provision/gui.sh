@@ -37,6 +37,12 @@ EOF
 
 install_pacman_package chromium
 
+sudo pacman -S ttf-freefont ttf-arphic-uming ttf-baekmuk # fonts for chromium
+
+# gui END
+
+# gui-extras START
+
 # eclim
   if [ ! -f ~/.check-files/eclim ]; then
     cd ~
@@ -45,4 +51,4 @@ install_pacman_package chromium
     touch ~/.check-files/eclim
   fi
 
-# gui END
+# gui-extras END

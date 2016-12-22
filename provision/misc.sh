@@ -61,4 +61,25 @@ alias GD='git diff > ~/diffs/'
 alias GA='git apply ~/diffs/'
 EOF
 
+# ssh greeting and session message
+  cat >> ~/.bash_aliases <<"EOF"
+alias SSHRestart='sudo systemctl restart sshd.service'
+EOF
+  cat > /tmp/greeting.txt <<"EOF"
+
+  你好!
+
+EOF
+  sudo cp /tmp/greeting.txt /etc/motd
+  sudo sed -i "s|#PrintLastLog no|PrintLastLog no|" /etc/ssh/sshd_config
+  if [ ! -f ~/.check-files/ssh ]; then
+    sudo systemctl restart sshd.service
+    mkdir -p ~/.check-files && touch ~/.check-files/ssh
+  fi
+  cat >> ~/.bash_sources <<"EOF"
+echo ""
+echo "  -> task list"
+task list
+EOF
+
 # misc END

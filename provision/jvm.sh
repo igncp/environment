@@ -2,6 +2,10 @@
 
 install_pacman_package jdk8-openjdk java
 
+# jvm END
+
+# jvm-extras START
+
 if [ ! -f ~/selenium-server.jar ]; then
   SELENIUM_FILE_NAME=selenium-server-standalone-2.39.0.jar
   cd ~
@@ -77,4 +81,4 @@ cat >> ~/.bash_aliases <<"EOF"
 alias Kibana='kibana -H 0.0.0.0'
 EOF
 
-# jvm END
+# jvm-extras END
