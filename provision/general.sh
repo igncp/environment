@@ -52,6 +52,13 @@ cat > ~/.gitconfig <<"EOF"
 [alias]
   l = log --pretty=format:'%Cred%h%Creset%C(yellow)%d%Creset %s %C(bold blue)%an %Cgreen%cd%Creset' --date=short
 EOF
+if [ ! -f /usr/local/bin/git-extras ]; then
+  git clone https://github.com/tj/git-extras.git ~/.git-extras
+  cd ~/.git-extras
+  git checkout $(git describe --tags $(git rev-list --tags --max-count=1))
+  sudo make install
+  cd ~ && rm -rf ~/.git-extras
+fi
 
 install_pacman_package ctags
 install_pacman_package curl
@@ -60,7 +67,6 @@ install_pacman_package jq
 install_pacman_package moreutils vidir
 install_pacman_package ncdu
 install_pacman_package strace
-install_pacman_package task
 install_pacman_package tree
 install_pacman_package unzip
 
@@ -255,5 +261,14 @@ if [ ! -f ~/.config/up/up.sh ]; then
   curl --create-dirs -o ~/.config/up/up.sh https://raw.githubusercontent.com/shannonmoeller/up/master/up.sh
 fi
 echo 'source_if_exists ~/.config/up/up.sh' >> ~/.bash_sources
+
+install_pacman_package task
+cat >> ~/.bash_aliases <<"EOF"
+alias t='task'
+EOF
+cat >> ~/.bash_sources <<"EOF"
+source_if_exists /usr/share/doc/task/scripts/bash/task.sh # to have _task available
+complete -o nospace -F _task t
+EOF
 
 # general END

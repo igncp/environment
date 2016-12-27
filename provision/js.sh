@@ -23,7 +23,7 @@ install_node_modules() {
   done
 }
 
-install_node_modules http-server diff-so-fancy yarn eslint babel-eslint cloc
+install_node_modules http-server diff-so-fancy yarn eslint babel-eslint cloc yo
 
 cat >> ~/.bashrc <<"EOF"
 export PATH=$PATH:/home/$USER/.nodenv/bin
@@ -35,6 +35,8 @@ EOF
 cat >> ~/.bash_aliases <<"EOF"
 alias Serve="http-server -c-1 -p 9000"
 GitDiff() { git diff --color $@ | diff-so-fancy | less -R; }
+# Fix coloring of mocha in some windows terminals
+alias Mocha="./node_modules/.bin/mocha -c $@ > >(perl -pe 's/\x1b\[90m/\x1b[92m/g') 2> >(perl -pe 's/\x1b\[90m/\x1b[92m/g' 1>&2)"
 EOF
 
 # not installing vim-javascript as it doesn't work with rainbow
@@ -73,8 +75,35 @@ snippet ck
   console.log("${0:}", $0);
 snippet cj
   console.log("LOG POINT - ${0:}");
+snippet des
+  describe("${1:}", () => {
+    ${0}
+  });
+snippet desf
+  describe("${1:}", function() {
+    ${0}
+  });
+snippet bef
+  beforeEach(() => {
+    ${0}
+  });
+snippet it
+  it("${1:}", () => {
+    ${0}
+  });
+snippet exp
+  expect(${1:}).to.${0};
 EOF
 cat /tmp/js-and-ts-snippets > ~/.vim-snippets/javascript.snippets
 cat /tmp/js-and-ts-snippets > ~/.vim-snippets/typescript.snippets
+
+install_node_modules markdown-toc
+cat >> ~/.bash_aliases <<"EOF"
+alias MarkdownTocRecursive='find . ! -path "*.git*" -name "*.md" | xargs -I {} markdown-toc -i {}'
+EOF
+cat > ~/.vim-snippets/markdown.snippets <<"EOF"
+snippet toc
+  <!-- toc -->
+EOF
 
 # js END

@@ -55,6 +55,7 @@ install_vim_package shougo/vimproc.vim "cd ~/.vim/bundle/vimproc.vim && make; cd
 install_vim_package takac/vim-hardtime
 install_vim_package terryma/vim-expand-region
 install_vim_package tkhren/vim-fake
+install_vim_package tpope/vim-eunuch
 install_vim_package tpope/vim-fugitive
 install_vim_package tpope/vim-repeat
 install_vim_package tpope/vim-surround
@@ -98,6 +99,10 @@ let g:hardtime_default_on = 1
 
 " replace selection
   vmap <leader>g y:%s/\C<C-r>"//g<left><left>
+
+" fill the search bar with current text and allow to edit it
+  vnoremap <leader>G y/<C-r>"
+  nnoremap <leader>G viwy/<C-r>"
 
 " prevent saving backup files
   set nobackup
@@ -192,9 +197,6 @@ cnoremap <C-A> <Home>
 cnoremap <C-E> <End>
 cnoremap <C-K> <C-U>
 
-" to go to "selection" mode, e.g. with snippets
-  inoremap <c-d> <c-c>gh
-
 " airline
   set laststatus=2
   let g:airline_left_sep=''
@@ -288,6 +290,8 @@ nnoremap <silent> p p`]
   let g:neosnippet#snippets_directory='~/.vim/bundle/vim-snippets/snippets,~/.vim-snippets'
   let g:neosnippet#disable_runtime_snippets={'c' : 1, 'cpp' : 1}
   let g:neosnippet#expand_word_boundary=1
+  imap <C-d>     <Plug>(neosnippet_jump)
+  smap <C-d>     <Plug>(neosnippet_jump)
 
 " save file shortcuts
   nmap <C-s> :update<Esc>
@@ -362,6 +366,7 @@ nnoremap <silent> p p`]
   nnoremap <C-l> :execute "tabmove" tabpagenr() + 1 <CR>
   nnoremap <C-t> :tabnew<CR>
   nnoremap <C-d> :tabclose<CR>
+  nnorema <leader>z :tab split<cr>
   hi TabLine ctermfg=gray ctermbg=black
   hi TabLineFill ctermfg=black ctermbg=black
   " Rename tabs to show tab number.
