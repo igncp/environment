@@ -97,8 +97,8 @@ let g:hardtime_default_on = 1
 " open file in same dir
   map ,e :e <C-R>=expand("%:p:h") . "/" <CR>
 
-" replace selection
-  vmap <leader>g y:%s/\C<C-r>"//g<left><left>
+" replace selection. To replace by current register, use <c-r>0 to paste it
+  vmap <leader>g "ay:%s/\C<C-r>a//g<left><left>
 
 " fill the search bar with current text and allow to edit it
   vnoremap <leader>G y/<C-r>"
@@ -115,6 +115,11 @@ let g:hardtime_default_on = 1
   map /  <Plug>(incsearch-forward)
   map ?  <Plug>(incsearch-backward)
   map g/ <Plug>(incsearch-stay)
+
+" list mapped keys sorted. The asterisk means that the map is non recursive
+  nnoremap <leader>M :redir! > /tmp/vim_keys.txt<cr>:silent verbose map<cr>:redir END<cr>
+    \:tabnew\|te cat /tmp/vim_keys.txt \| grep -v "Last set" \| grep -v "<Plug>"
+    \ \| sort -k 1.4 \| less<cr>
 
 " run saved command over file and reopen
   nnoremap <leader>kA :let g:File_cmd=''<left>
@@ -138,13 +143,14 @@ let g:hardtime_default_on = 1
 
 " folding
   set foldmethod=indent
-  set nofoldenable
   set fml=0
-  set nowrap
   hi Folded ctermbg=236
 
+set nowrap
+
 " mru.vim
-  nnoremap <silent> <leader>kh :MRU<cr>
+  nnoremap <silent> <leader>kh :tabnew<CR>:MRU<cr>
+  nnoremap <silent> <leader>kH :MRU<cr>
 
 autocmd Filetype markdown setlocal wrap
 
@@ -344,7 +350,9 @@ nnoremap <silent> p p`]
       \:<C-u>call histdel('search',-1)<Bar>let @/=histget('search',-1)<CR>gv
   omap s :normal vs<CR>
 
-" autocmd Filetype sh setlocal softtabstop=2 tabstop=2 shiftwidth=2
+" convenience indentation for copy-paste
+  " autocmd Filetype EXTENSION setlocal softtabstop=2 tabstop=2 shiftwidth=2
+  " autocmd Filetype EXTENSION setlocal softtabstop=4 tabstop=4 shiftwidth=4
 
 " quickly move to lines
   nnoremap <CR> G
@@ -367,7 +375,7 @@ nnoremap <silent> p p`]
   nnoremap <C-l> :execute "tabmove" tabpagenr() + 1 <CR>
   nnoremap <C-t> :tabnew<CR>
   nnoremap <C-d> :tabclose<CR>
-  nnorema <leader>z :tab split<cr>
+  nnoremap <leader>z :tab split<cr>
   hi TabLine ctermfg=gray ctermbg=black
   hi TabLineFill ctermfg=black ctermbg=black
   " Rename tabs to show tab number.
@@ -432,6 +440,7 @@ EOF
 
 cat >> ~/.bash_aliases <<"EOF"
 alias n='nvim'
+alias nn='nvim -n -u NONE -i NONE -N' # nvim without vimrc, plugins, syntax, etc
 alias NVimSession='nvim -S ~/mysession.vim'
 alias CheckVimSnippets='nvim ~/.vim/bundle/vim-snippets/snippets'
 EOF
