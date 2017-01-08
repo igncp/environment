@@ -161,6 +161,7 @@ alias ConfigureTimezone='sudo timedatectl set-timezone Asia/Hong_Kong'
 alias EditProvision="$EDITOR /project/provision/provision.sh && provision.sh"
 alias Exit="\$(ps aux | grep tmux | grep -v grep | awk '{print $2}' | xargs kill) || exit"
 alias LsTmpFiles='ls -laht /tmp | tac'
+alias SR="find . -name \'*\' -type f | xargs sed -i \'s|||\'" # search and replace for expanding
 alias Sudo='sudo -E ' # this preserves aliases and environment in root
 alias Tmux="tmux; exit"
 

@@ -36,8 +36,9 @@ EOF
 EOF
 
 install_pacman_package chromium
+install_pacman_package gimp
 
-sudo pacman -S ttf-freefont ttf-arphic-uming ttf-baekmuk # fonts for chromium
+sudo pacman -S --noconfirm ttf-freefont ttf-arphic-uming ttf-baekmuk # fonts for chromium
 
 # gui END
 

@@ -243,6 +243,7 @@ let g:vim_markdown_folding_disabled = 1
   let g:syntastic_typescript_checkers = ['tsc', 'tslint']
   let g:syntastic_scss_checkers = ['stylelint']
   let g:syntastic_json_checkers=[]
+  let g:syntastic_loc_list_height=3
   highlight link SyntasticErrorSign SignColumn
   highlight link SyntasticWarningSign SignColumn
   highlight link SyntasticStyleErrorSign SignColumn
@@ -266,6 +267,7 @@ au BufNewFile,BufRead *.ejs set filetype=html
   set ww+=<,>
 
 nnoremap <leader>d @d
+nnoremap <leader>kv :%s/\t/  /g<cr>
 vnoremap <F3> :sort<CR>
 inoremap <C-e> <Esc>A
 inoremap <C-a> <Esc>I
