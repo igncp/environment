@@ -97,7 +97,21 @@ let g:hardtime_default_on = 1
 " open file in same dir
   map ,e :e <C-R>=expand("%:p:h") . "/" <CR>
 
-" replace selection. To replace by current register, use <c-r>0 to paste it
+" search visually selected text
+  vmap * :<C-u>call <SID>VSetSearch()<CR>/<CR>
+  vmap # :<C-u>call <SID>VSetSearch()<CR>?<CR>
+
+  func! s:VSetSearch()
+    let temp = @@
+    norm! gvy
+    let @/ = '\V' . substitute(escape(@@, '\'), '\n', '\\n', 'g')
+    let @@ = temp
+  endf
+
+" replace in selection
+  vnoremap <leader>r :<bs><bs><bs><bs><bs>%s/\%V\C//g<left><left><left>
+
+" replace with selection. To replace by current register, use <c-r>0 to paste it
   vmap <leader>g "ay:%s/\C<C-r>a//g<left><left>
 
 " fill the search bar with current text and allow to edit it
