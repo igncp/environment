@@ -100,7 +100,6 @@ let g:hardtime_default_on = 1
 " search visually selected text
   vmap * :<C-u>call <SID>VSetSearch()<CR>/<CR>
   vmap # :<C-u>call <SID>VSetSearch()<CR>?<CR>
-
   func! s:VSetSearch()
     let temp = @@
     norm! gvy
@@ -361,10 +360,7 @@ nnoremap <silent> p p`]
   vmap v <Plug>(expand_region_expand)
   vmap <C-v> <Plug>(expand_region_shrink)
 
-" search and replace (using cs on first match and n.n.n.)
-  vnoremap <silent> s //e<C-r>=&selection=='exclusive'?'+1':''<CR><CR>
-      \:<C-u>call histdel('search',-1)<Bar>let @/=histget('search',-1)<CR>gv
-  omap s :normal vs<CR>
+" replace current searched pattern: cgn then . can be used
 
 " convenience indentation for copy-paste
   " autocmd Filetype EXTENSION setlocal softtabstop=2 tabstop=2 shiftwidth=2
