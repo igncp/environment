@@ -203,8 +203,10 @@ set wildmenu
 " ignore case in searches
   set ic
 
+" cut line without break line (but delete it)
+  nnoremap <leader>V _v$<left>dV"_d
+
 nnoremap <silent> <leader>kdF :call delete(expand('%')) \| bdelete!<CR>:echo "FILE DELETED"<CR>
-nnoremap <leader>kn *
 nnoremap <leader>kx :let g:CurrentFileType=&ft<cr>:tabnew
   \ <c-r>=system('mktemp')<cr><cr>:set syntax=<c-r>=g:CurrentFileType<cr><cr>
   \:set ft=<c-r>=g:CurrentFileType<cr><cr>
