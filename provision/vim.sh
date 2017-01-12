@@ -158,6 +158,7 @@ let g:hardtime_default_on = 1
   set foldmethod=indent
   set fml=0
   hi Folded ctermbg=236
+  nnoremap <leader>r zR
 
 set nowrap
 
