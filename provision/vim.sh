@@ -454,7 +454,17 @@ source ~/.bash_aliases # some aliases depend on $EDITOR
 EOF
 
 cat >> ~/.bash_aliases <<"EOF"
-alias n='nvim'
+n() {
+  if [[ -z "$1" ]]; then DIRECTORY=.; else DIRECTORY="$1"; fi
+  if [ -d "$DIRECTORY" ]; then
+    DEPTH=1; FILE="";
+    while [ $DEPTH -lt 100 ]; do
+      FILE=$(find $DIRECTORY -mindepth $DEPTH -maxdepth $DEPTH -type f | head -n 1)
+      if [[ ! -z $FILE ]]; then break; else DEPTH=$((DEPTH + 1)); fi
+    done
+  else FILE="$DIRECTORY"; fi
+  nvim "$FILE"
+}
 alias nn='nvim -n -u NONE -i NONE -N' # nvim without vimrc, plugins, syntax, etc
 alias NVimSession='nvim -S ~/mysession.vim'
 alias CheckVimSnippets='nvim ~/.vim/bundle/vim-snippets/snippets'
