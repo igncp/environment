@@ -161,7 +161,6 @@ alias ConfigureTimezone='sudo timedatectl set-timezone Asia/Hong_Kong'
 alias EditProvision="$EDITOR /project/provision/provision.sh && provision.sh"
 alias Exit="\$(ps aux | grep tmux | grep -v grep | awk '{print $2}' | xargs kill) || exit"
 alias LsTmpFiles='ls -laht /tmp | tac'
-alias SR="find . -name \'*\' -type f | xargs sed -i \'s|||\'" # search and replace for expanding
 alias Sudo='sudo -E ' # this preserves aliases and environment in root
 alias Tmux="tmux; exit"
 
@@ -270,6 +269,38 @@ EOF
 cat >> ~/.bash_sources <<"EOF"
 source_if_exists /usr/share/doc/task/scripts/bash/task.sh # to have _task available
 complete -o nospace -F _task t
+EOF
+
+# Search and Replace utility
+  cat >> ~/.bash_aliases <<"EOF"
+SR() { _CustomSR $1 && history -s $(cat /tmp/sr_replace) && history -s $(cat /tmp/sr_search); }
+_CustomSR() {
+  ask_with_default() {
+    NAME="$1"; DEFAULT="$2"
+    printf "$NAME [$DEFAULT]: " > /dev/stderr
+    read VAR
+    if [[ -z $VAR ]]; then VAR=$DEFAULT; fi
+    echo "$VAR"
+  }
+
+  DIR_TO_FIND=${1:-.}
+  echo "src: $DIR_TO_FIND"
+  EXTRA_FIND_ARGS=$(ask_with_default "extra find arguments" "-name '*'")
+  SEARCH_REGEX=$(ask_with_default "search regexp" "foo")
+  REPLACEMENT_STR=$(ask_with_default "replacement str" "")
+  CASE_SENSITIVE=$(ask_with_default "case sensitive" "yes")
+
+  GREP_OPTS=""; SED_OPTS=""
+  if [ "$CASE_SENSITIVE" != "yes" ]; then GREP_OPTS=" -i "; fi
+  if [ "$CASE_SENSITIVE" != "yes" ]; then SED_OPTS="I"; fi
+
+  CMD_SEARCH="find $DIR_TO_FIND -type f $EXTRA_FIND_ARGS | xargs grep --color=always $GREP_OPTS -E "'"'"$SEARCH_REGEX"'" | less -R'
+  CMD_REPLACE="find $DIR_TO_FIND -type f $EXTRA_FIND_ARGS | xargs grep $GREP_OPTS -El "'"'"$SEARCH_REGEX"'"'
+  CMD_REPLACE="$CMD_REPLACE | xargs -I {} sed -i 's|$SEARCH_REGEX|$REPLACEMENT_STR|$SED_OPTS' {}"
+
+  echo "$CMD_SEARCH" > /tmp/sr_search
+  echo "$CMD_REPLACE" > /tmp/sr_replace
+}
 EOF
 
 # general END

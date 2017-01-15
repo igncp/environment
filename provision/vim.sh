@@ -63,7 +63,6 @@ install_vim_package vim-airline/vim-airline
 install_vim_package vim-airline/vim-airline-themes
 install_vim_package vim-ruby/vim-ruby
 install_vim_package vim-scripts/cream-showinvisibles
-install_vim_package vim-scripts/mru.vim
 install_vim_package yggdroot/indentLine
 
 echo 'Control-x: " fg\n"' >> ~/.inputrc
@@ -108,7 +107,7 @@ let g:hardtime_default_on = 1
   endf
 
 " replace in selection
-  vnoremap <leader>r :<bs><bs><bs><bs><bs>%s/\%V\C//g<left><left><left>
+  vnoremap <leader>r :<bs><bs><bs><bs><bs>%s/\%V\C<Cc-r>"//g<left><left>
 
 " replace with selection. To replace by current register, use <c-r>0 to paste it
   vmap <leader>g "ay:%s/\C<C-r>a//g<left><left>
@@ -160,11 +159,11 @@ let g:hardtime_default_on = 1
   hi Folded ctermbg=236
   nnoremap <leader>r zR
 
-set nowrap
+" reload all saved files without warnings
+  set autoread
+  autocmd FocusGained * checktime
 
-" mru.vim
-  nnoremap <silent> <leader>kh :tabnew<CR>:MRU<cr>
-  nnoremap <silent> <leader>kH :MRU<cr>
+set nowrap
 
 autocmd Filetype markdown setlocal wrap
 
@@ -245,7 +244,14 @@ let g:vim_markdown_folding_disabled = 1
   let g:ctrlp_show_hidden = 1
   let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist)|(\.(swp|ico|git|svn))$'
   nnoremap <leader>p :CtrlP %:p:h<CR> " CtrlP in file's dir
-  nnoremap <leader>kp :CtrlP ~/
+  nnoremap <leader>P :CtrlPMRUFiles<cr>
+  nnoremap <leader>kpp :CtrlP /project<cr>
+  nnoremap <leader>kpd :CtrlP ~/dev<cr>
+  nnoremap <leader>kph :CtrlP ~<cr>
+  let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
+  if executable('ag')
+    let g:ctrlp_user_command = 'ag %s -l --hidden --nocolor -g ""'
+  endif
 
 " syntastic
   set statusline+=%#warningmsg#
@@ -292,6 +298,12 @@ nnoremap <silent> p p`]
 
 " change to current file directory
   nnoremap ,cd :cd %:p:h<CR>:pwd<CR>
+
+" don't have to press the extra key when exiting the terminal
+  augroup terminal
+    autocmd!
+    autocmd TermClose * close
+  augroup end
 
 " vp doesn't replace paste buffer
   function! RestoreRegister()
