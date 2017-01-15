@@ -291,8 +291,9 @@ _CustomSR() {
   CASE_SENSITIVE=$(ask_with_default "case sensitive" "yes")
 
   GREP_OPTS=""; SED_OPTS=""
-  if [ "$CASE_SENSITIVE" != "yes" ]; then GREP_OPTS=" -i "; fi
-  if [ "$CASE_SENSITIVE" != "yes" ]; then SED_OPTS="I"; fi
+  if [ "$CASE_SENSITIVE" != "yes" ]; then
+    GREP_OPTS=" -i "; SED_OPTS="I"
+  fi
 
   CMD_SEARCH="find $DIR_TO_FIND -type f $EXTRA_FIND_ARGS | xargs grep --color=always $GREP_OPTS -E "'"'"$SEARCH_REGEX"'" | less -R'
   CMD_REPLACE="find $DIR_TO_FIND -type f $EXTRA_FIND_ARGS | xargs grep $GREP_OPTS -El "'"'"$SEARCH_REGEX"'"'
