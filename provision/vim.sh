@@ -107,7 +107,7 @@ let g:hardtime_default_on = 1
   endf
 
 " replace in selection
-  vnoremap <leader>r :<bs><bs><bs><bs><bs>%s/\%V\C<Cc-r>"//g<left><left>
+  vnoremap <leader>r :<bs><bs><bs><bs><bs>%s/\%V\C<c-r>"//g<left><left>
 
 " replace with selection. To replace by current register, use <c-r>0 to paste it
   vmap <leader>g "ay:%s/\C<C-r>a//g<left><left>
