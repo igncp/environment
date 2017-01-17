@@ -23,7 +23,7 @@ install_node_modules() {
   done
 }
 
-install_node_modules http-server diff-so-fancy yarn eslint babel-eslint cloc yo
+install_node_modules http-server diff-so-fancy yarn eslint babel-eslint cloc yo eslint_d
 
 cat >> ~/.bashrc <<"EOF"
 export PATH=$PATH:/home/$USER/.nodenv/bin
@@ -63,7 +63,12 @@ cat >> ~/.vimrc <<"EOF"
   autocmd FileType javascript nnoremap <silent> <buffer> gb :TernDef<CR><Paste>
 
 " run eslint over file
-  nnoremap <silent> <leader>kb :!eslint --fix %<cr>:e<cr>
+  nnoremap <silent> <leader>kb :!eslint_d --fix %<cr>:e<cr>
+
+" eslint linters
+  let g:syntastic_javascript_checkers = ['eslint']
+  let g:syntastic_javascript_eslint_exec = 'eslint_d'
+  let g:syntastic_typescript_checkers = ['tsc', 'tslint']
 EOF
 
 cat > /tmp/js-and-ts-snippets <<"EOF"
