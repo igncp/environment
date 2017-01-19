@@ -32,6 +32,7 @@ git config --global core.editor nvim # faster than sed
 
 install_vim_package airblade/vim-gitgutter
 install_vim_package andrewRadev/splitjoin.vim # gS, gJ
+install_vim_package bogado/file-line
 install_vim_package ctrlpvim/ctrlp.vim
 install_vim_package easymotion/vim-easymotion
 install_vim_package elzr/vim-json
@@ -378,6 +379,7 @@ nnoremap <silent> p p`]
 " convenience indentation for copy-paste
   " autocmd Filetype EXTENSION setlocal softtabstop=2 tabstop=2 shiftwidth=2
   " autocmd Filetype EXTENSION setlocal softtabstop=4 tabstop=4 shiftwidth=4
+  " autocmd BufRead,BufEnter /path/to/project/*.{js} setlocal softtabstop=4 tabstop=4 shiftwidth=4
 
 " quickly move to lines
   nnoremap <CR> G
@@ -398,7 +400,8 @@ nnoremap <silent> p p`]
   nnoremap <leader>9 9gt
   nnoremap <C-h> :execute "tabmove" tabpagenr() - 2 <CR>
   nnoremap <C-l> :execute "tabmove" tabpagenr() + 1 <CR>
-  nnoremap <C-t> :tabnew<CR>
+  " add ':e' to paste a PATH_TO_FILE:LINE_NUMBER from fast grep
+  nnoremap <C-t> :tabnew<CR>:e <left><right>
   nnoremap <C-d> :tabclose<CR>
   nnoremap <leader>z :tab split<cr>
   hi TabLine ctermfg=gray ctermbg=black
