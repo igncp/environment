@@ -23,7 +23,7 @@ install_node_modules() {
   done
 }
 
-install_node_modules http-server diff-so-fancy yarn eslint babel-eslint cloc yo eslint_d
+install_node_modules http-server diff-so-fancy yarn eslint babel-eslint cloc yo eslint_d flow flow-cli
 
 cat >> ~/.bashrc <<"EOF"
 export PATH=$PATH:/home/$USER/.nodenv/bin
@@ -66,7 +66,8 @@ cat >> ~/.vimrc <<"EOF"
   nnoremap <silent> <leader>kb :!eslint_d --fix %<cr>:e<cr>
 
 " eslint linters
-  let g:syntastic_javascript_checkers = ['eslint']
+  let g:syntastic_javascript_checkers = ['flow', 'eslint']
+  let g:syntastic_javascript_flow_exe = 'flow'
   let g:syntastic_javascript_eslint_exec = 'eslint_d'
   let g:syntastic_typescript_checkers = ['tsc', 'tslint']
 EOF
