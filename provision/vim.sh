@@ -276,7 +276,7 @@ let g:vim_markdown_folding_disabled = 1
   nnoremap <leader>o :SyntasticToggleMode<CR>
 
 " improve quickfix list selected row color
-  hi Search cterm=NONE ctermfg=white ctermbg=black
+  hi Search cterm=NONE ctermfg=black ctermbg=white
 
 map ,e :e <C-R>=expand("%:p:h") . "/" <CR>
 vnoremap <leader>ku y:%s/\C<C-r>"//gn<CR>
