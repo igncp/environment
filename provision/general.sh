@@ -69,6 +69,7 @@ install_pacman_package ncdu
 install_pacman_package strace
 install_pacman_package tree
 install_pacman_package unzip
+install_pacman_package lsof
 
 install_pacman_package netdata
 if [[ ! -z $(sudo systemctl status netdata.service | grep inactive) ]]; then
@@ -156,6 +157,8 @@ Find() { find "$@" ! -path "*node_modules*" ! -path "*.git*"; }
 GetProcessUsingPort(){ fuser $1/tcp; }
 MkdirCd(){ mkdir -p $1; cd $1; }
 Popd(){ popd -n +"$1" > /dev/null; cd --; }
+KillProcessUsingPort() { PID=$(lsof -i "tcp:$1" | awk 'NR!=1 {print $2}'); \
+  if [[ ! -z $PID ]]; then echo "killing $PID"; sudo kill -9 $PID; fi; }
 alias AliasesReload='source ~/.bash_aliases'
 alias ConfigureTimezone='sudo timedatectl set-timezone Asia/Hong_Kong'
 alias EditProvision="$EDITOR /project/provision/provision.sh && provision.sh"
