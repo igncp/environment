@@ -249,6 +249,7 @@ let g:vim_markdown_folding_disabled = 1
   nnoremap <leader>kpp :CtrlP /project<cr>
   nnoremap <leader>kpd :CtrlP ~/dev<cr>
   nnoremap <leader>kph :CtrlP ~<cr>
+  nnoremap <leader>kpk :CtrlPClearAllCaches<cr>
   let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
   if executable('ag')
     let g:ctrlp_user_command = 'ag %s -l --hidden --nocolor -g "" --ignore .git'
