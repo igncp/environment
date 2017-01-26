@@ -82,9 +82,9 @@ let g:hardtime_default_on = 1
   set mouse-=a
 
 " buffers
-  nnoremap <F10> :buffers<CR>:buffer<Space>
-  nnoremap <silent> <F12> :bn<CR>
-  nnoremap <silent> <S-F12> :bp<CR>
+  nnoremap <F10> :buffers<cr>:buffer<Space>
+  nnoremap <silent> <F12> :bn<cr>
+  nnoremap <silent> <S-F12> :bp<cr>
 
 " don't copy when using del
   vnoremap <Del> "_d
@@ -92,14 +92,14 @@ let g:hardtime_default_on = 1
 
 " numbers maps
   set relativenumber
-  nnoremap <leader>h :set relativenumber!<CR>
+  nnoremap <leader>h :set relativenumber!<cr>
 
 " open file in same dir
-  map ,e :e <C-R>=expand("%:p:h") . "/" <CR>
+  map ,e :e <c-R>=expand("%:p:h") . "/" <cr>
 
 " search visually selected text
-  vmap * :<C-u>call <SID>VSetSearch()<CR>/<CR>
-  vmap # :<C-u>call <SID>VSetSearch()<CR>?<CR>
+  vmap * :<c-u>call <SID>VSetSearch()<cr>/<cr>
+  vmap # :<c-u>call <SID>VSetSearch()<cr>?<cr>
   func! s:VSetSearch()
     let temp = @@
     norm! gvy
@@ -111,11 +111,11 @@ let g:hardtime_default_on = 1
   vnoremap <leader>r :<bs><bs><bs><bs><bs>%s/\%V\C<c-r>"//g<left><left>
 
 " replace with selection. To replace by current register, use <c-r>0 to paste it
-  vmap <leader>g "ay:%s/\C<C-r>a//g<left><left>
+  vmap <leader>g "ay:%s/\C<c-r>a//g<left><left>
 
 " fill the search bar with current text and allow to edit it
-  vnoremap <leader>G y/<C-r>"
-  nnoremap <leader>G viwy/<C-r>"
+  vnoremap <leader>G y/<c-r>"
+  nnoremap <leader>G viwy/<c-r>"
 
 " prevent saving backup files
   set nobackup
@@ -140,19 +140,19 @@ let g:hardtime_default_on = 1
 
 " format json
   command! -range -nargs=0 -bar JsonTool <line1>,<line2>!python -m json.tool
-  nnoremap <leader>kz :JsonTool<CR>
-  vnoremap <leader>kz :'<,'>JsonTool<CR>
+  nnoremap <leader>kz :JsonTool<cr>
+  vnoremap <leader>kz :'<,'>JsonTool<cr>
 
 " move lines up and down
-  nnoremap <C-j> :m .+1<CR>==
-  nnoremap <C-k> :m .-2<CR>==
-  inoremap <C-j> <Esc>:m .+1<CR>==gi
-  inoremap <C-k> <Esc>:m .-2<CR>==gi
-  vnoremap <C-j> :m '>+1<CR>gv=gv
-  vnoremap <C-k> :m '<-2<CR>gv=gv
+  nnoremap <c-j> :m .+1<cr>==
+  nnoremap <c-k> :m .-2<cr>==
+  inoremap <c-j> <esc>:m .+1<cr>==gi
+  inoremap <c-k> <esc>:m .-2<cr>==gi
+  vnoremap <c-j> :m '>+1<cr>gv=gv
+  vnoremap <c-k> :m '<-2<cr>gv=gv
 
 " remove trailing spaces
-  nmap <leader>t :%s/\s\+$<CR><C-o>
+  nmap <leader>t :%s/\s\+$<cr><c-o>
 
 " folding
   set foldmethod=indent
@@ -177,7 +177,7 @@ autocmd Filetype markdown setlocal wrap
   nnoremap <silent> <leader>N :set number<cr>:GitGutterEnable<cr>:IndentLinesEnable<cr>:set relativenumber<cr>
 
 " fix c-b mapping to use with tmux (one page up)
-  nnoremap <C-d> <c-b>
+  nnoremap <c-d> <c-b>
 
 set nohlsearch
 set autoindent
@@ -208,17 +208,17 @@ set wildmenu
   nnoremap <leader>V _v$<left>dV"_d
 
 nnoremap <leader>y :reg<cr>
-nnoremap <silent> <leader>kdF :call delete(expand('%')) \| bdelete!<CR>:echo "FILE DELETED"<CR>
+nnoremap <silent> <leader>kdF :call delete(expand('%')) \| bdelete!<cr>:echo "FILE DELETED"<cr>
 nnoremap <leader>kx :let g:CurrentFileType=&ft<cr>:tabnew
   \ <c-r>=system('mktemp')<cr><cr>:set syntax=<c-r>=g:CurrentFileType<cr><cr>
   \:set ft=<c-r>=g:CurrentFileType<cr><cr>
-nnoremap <C-w>v :vsplit<CR><C-w><right>
-nnoremap <leader>w :set wrap!<CR>
+nnoremap <c-w>v :vsplit<cr><c-w><right>
+nnoremap <leader>w :set wrap!<cr>
 nnoremap <leader>a ggvG$
-nnoremap <leader>i :set list!<CR>
-cnoremap <C-A> <Home>
-cnoremap <C-E> <End>
-cnoremap <C-K> <C-U>
+nnoremap <leader>i :set list!<cr>
+cnoremap <c-A> <Home>
+cnoremap <c-E> <End>
+cnoremap <c-K> <c-U>
 
 " airline
   set laststatus=2
@@ -245,7 +245,7 @@ let g:vim_markdown_folding_disabled = 1
   let g:ctrlp_cmd = 'CtrlP'
   let g:ctrlp_show_hidden = 1
   let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist)|(\.(swp|ico|git|svn))$'
-  nnoremap <leader>p :CtrlP %:p:h<CR> " CtrlP in file's dir
+  nnoremap <leader>p :CtrlP %:p:h<cr> " CtrlP in file's dir
   nnoremap <leader>P :CtrlPMRUFiles<cr>
   nnoremap <leader>kpp :CtrlP /project<cr>
   nnoremap <leader>kpd :CtrlP ~/dev<cr>
@@ -275,17 +275,17 @@ let g:vim_markdown_folding_disabled = 1
   let g:syntastic_style_error_symbol = '!?'
   hi Error ctermbg=lightred ctermfg=black
   hi SpellBad ctermbg=lightred ctermfg=black
-  nnoremap <leader>o :SyntasticToggleMode<CR>
+  nnoremap <leader>o :SyntasticToggleMode<cr>
 
 " improve quickfix list selected row color
   hi Search cterm=NONE ctermfg=black ctermbg=white
 
-map ,e :e <C-R>=expand("%:p:h") . "/" <CR>
-vnoremap <leader>ku y:%s/\C<C-r>"//gn<CR>
-nnoremap <leader>ku viwy:%s/\C<C-r>"//gn<CR>
+map ,e :e <c-R>=expand("%:p:h") . "/" <cr>
+vnoremap <leader>ku y:%s/\C<c-r>"//gn<cr>
+nnoremap <leader>ku viwy:%s/\C<c-r>"//gn<cr>
 nnoremap <leader>; :
-nnoremap <leader>x :set noeol<CR>:set binary<CR>:w<CR>:set nobinary<CR>
-nnoremap <leader>ko :mksession! ~/mysession.vim<CR>:qa<CR>
+nnoremap <leader>x :set noeol<cr>:set binary<cr>:w<cr>:set nobinary<cr>
+nnoremap <leader>ko :mksession! ~/mysession.vim<cr>:qa<cr>
 nnoremap <leader>km :SignatureToggleSigns<cr>
 au BufNewFile,BufRead *.ejs set filetype=html
 
@@ -294,14 +294,14 @@ au BufNewFile,BufRead *.ejs set filetype=html
 
 nnoremap <leader>d @d
 nnoremap <leader>kv :%s/\t/  /g<cr>
-vnoremap <F3> :sort<CR>
-inoremap <C-e> <Esc>A
-inoremap <C-a> <Esc>I
+vnoremap <F3> :sort<cr>
+inoremap <c-e> <esc>A
+inoremap <c-a> <esc>I
 vnoremap <silent> y y`]
 nnoremap <silent> p p`]
 
 " change to current file directory
-  nnoremap ,cd :cd %:p:h<CR>:pwd<CR>
+  nnoremap ,cd :cd %:p:h<cr>:pwd<cr>
 
 " don't have to press the extra key when exiting the terminal
   augroup terminal
@@ -322,7 +322,7 @@ nnoremap <silent> p p`]
 
 " neosnippet
   " Enter in select mode: gh
-  imap <C-l>     <Plug>(neosnippet_expand_or_jump)
+  imap <c-l>     <Plug>(neosnippet_expand_or_jump)
   smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
    \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
   if has('conceal')
@@ -331,30 +331,30 @@ nnoremap <silent> p p`]
   let g:neosnippet#snippets_directory='~/.vim/bundle/vim-snippets/snippets,~/.vim-snippets'
   let g:neosnippet#disable_runtime_snippets={'c' : 1, 'cpp' : 1}
   let g:neosnippet#expand_word_boundary=1
-  imap <C-d>     <Plug>(neosnippet_jump)
-  smap <C-d>     <Plug>(neosnippet_jump)
+  imap <c-d>     <Plug>(neosnippet_jump)
+  smap <c-d>     <Plug>(neosnippet_jump)
 
 " save file shortcuts
-  nmap <C-s> :update<Esc>
-  inoremap <C-s> <Esc>:update<CR>
+  nmap <c-s> :update<esc>
+  inoremap <c-s> <esc>:update<cr>
 
 " copy - paste between files and VMs
-  vmap <leader>fy :w! /vm-shared/_vitmp<CR>
-  nmap <leader>fp :r! cat /vm-shared/_vitmp<CR>
-  vmap <leader>fp d:r! cat /vm-shared/_vitmp<CR>
+  vmap <leader>fy :w! /vm-shared/_vitmp<cr>
+  nmap <leader>fp :r! cat /vm-shared/_vitmp<cr>
+  vmap <leader>fp d:r! cat /vm-shared/_vitmp<cr>
 
 " lines in files
   nnoremap <leader>kr :tabnew\|te ( F(){ find $1 -type f \| xargs wc -l \| sort -rn \|
   \ sed "s\|$1\|\|" \| sed "1i _" \| sed "1i $1" \| sed "1i _" \| sed '4d' \| less; }
-  \ && F <C-R>=expand("%:p:h")<CR>/ )<left><left>
+  \ && F <c-R>=expand("%:p:h")<cr>/ )<left><left>
 
 " color tree
-  nnoremap <leader>kt :tabnew\|te tree -a -C <C-R>=expand("%:p:h")<CR> \|
+  nnoremap <leader>kt :tabnew\|te tree -a -C <c-R>=expand("%:p:h")<cr> \|
   \ less -R<c-left><c-left><c-left><left>
 
 " grep current file
-  let g:GrepCF_fn = ':w! /tmp/current_vim<CR>:tabnew\|te
-    \ Grep() { printf "<c-r>=expand("%")<CR>\n\n"; grep --color=always "$@" /tmp/current_vim;
+  let g:GrepCF_fn = ':w! /tmp/current_vim<cr>:tabnew\|te
+    \ Grep() { printf "<c-r>=expand("%")<cr>\n\n"; grep --color=always "$@" /tmp/current_vim;
     \ printf "\n----\n\nlines: "; grep -in "$@" /tmp/current_vim \| wc -l; echo ""; }
     \ && GrepAndLess() { Grep "$@" \| less -R; } && GrepAndLess '
   execute 'nnoremap <leader>ky ' . g:GrepCF_fn . ' -i ""<left>'
@@ -363,7 +363,7 @@ nnoremap <silent> p p`]
 " fast grep
   let g:FastGrep_fn = 'tabnew\|te
     \ Grep() { grep -rn --color=always "$@"; printf "\n\n\n----\n\n\n"; grep --color=always -rl "$@"; }
-    \ && Grep -i "<c-r>"" <c-r>=g:Fast_grep<CR>\| less -R<c-left><c-left><left><left>'
+    \ && Grep -i "<c-r>"" <c-r>=g:Fast_grep<cr>\| less -R<c-left><c-left><left><left>'
   let g:Fast_grep=''
   nnoremap <leader>B :let g:Fast_grep=''<left>
   execute 'vnoremap <leader>b y:' . g:FastGrep_fn
@@ -375,9 +375,14 @@ nnoremap <silent> p p`]
   autocmd CompleteDone * pclose " close when done
   set splitbelow " move to the bottom
 
+" add and remove variable at the end of line, this value would be overriden in the custom section
+  let g:Custom_flag='FOO'
+  nnoremap <leader>kh A<c-r>=g:Custom_flag<cr>
+  nnoremap <leader>kH V:s/<c-r>=g:Custom_flag<cr>//g<cr>
+
 " vim-expand-region
   vmap v <Plug>(expand_region_expand)
-  vmap <C-v> <Plug>(expand_region_shrink)
+  vmap <c-v> <Plug>(expand_region_shrink)
 
 " replace current searched pattern: cgn then . can be used
 
@@ -387,11 +392,11 @@ nnoremap <silent> p p`]
   " autocmd BufRead,BufEnter /path/to/project/*.{js} setlocal softtabstop=4 tabstop=4 shiftwidth=4
 
 " quickly move to lines
-  nnoremap <CR> G
+  nnoremap <cr> G
   nnoremap <BS> gg
 
 " undo tree
-  nnoremap <leader>m :UndotreeShow<CR><C-w><left>
+  nnoremap <leader>m :UndotreeShow<cr><c-w><left>
 
 " tabs
   nnoremap <leader>1 1gt
@@ -403,11 +408,11 @@ nnoremap <silent> p p`]
   nnoremap <leader>7 7gt
   nnoremap <leader>8 8gt
   nnoremap <leader>9 9gt
-  nnoremap <C-h> :execute "tabmove" tabpagenr() - 2 <CR>
-  nnoremap <C-l> :execute "tabmove" tabpagenr() + 1 <CR>
+  nnoremap <c-h> :execute "tabmove" tabpagenr() - 2 <cr>
+  nnoremap <c-l> :execute "tabmove" tabpagenr() + 1 <cr>
   " add ':e' to paste a PATH_TO_FILE:LINE_NUMBER from fast grep
-  nnoremap <C-t> :tabnew<CR>:e <left><right>
-  nnoremap <C-d> :tabclose<CR>
+  nnoremap <c-t> :tabnew<cr>:e <left><right>
+  nnoremap <c-d> :tabclose<cr>
   nnoremap <leader>z :tab split<cr>
   hi TabLine ctermfg=gray ctermbg=black
   hi TabLineFill ctermfg=black ctermbg=black
@@ -460,7 +465,7 @@ nnoremap <silent> p p`]
   nmap <Leader>j <Plug>(easymotion-overwin-f)
 
 " tagbar
-  nmap <leader>v :TagbarToggle<CR>
+  nmap <leader>v :TagbarToggle<cr>
   let g:tagbar_type_make = {'kinds':['m:macros', 't:targets']}
   let g:tagbar_type_markdown = {'ctagstype':'markdown','kinds':['h:Heading_L1','i:Heading_L2','k:Heading_L3']}
 EOF
