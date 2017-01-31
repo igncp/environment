@@ -157,12 +157,13 @@ let g:hardtime_default_on = 1
 " folding
   set foldmethod=indent
   set fml=0
-  hi Folded ctermbg=236
+  hi Folded ctermbg=236 ctermfg=236
   nnoremap <leader>r zR
 
 " reload all saved files without warnings
   set autoread
   autocmd FocusGained * checktime
+  nnoremap <leader>e :checktime<cr>
 
 set nowrap
 
@@ -172,9 +173,11 @@ autocmd Filetype markdown setlocal wrap
   xnoremap <Tab> >gv
   xnoremap <S-Tab> <gv
 
-" to easily copy with the mouse
-  nnoremap <silent> <leader>n :set nonumber<cr>:GitGutterDisable<cr>:IndentLinesDisable<cr>:set norelativenumber<cr>
-  nnoremap <silent> <leader>N :set number<cr>:GitGutterEnable<cr>:IndentLinesEnable<cr>:set relativenumber<cr>
+" toggle distraction free mode
+  nnoremap <silent> <leader>n :set nonumber<cr>:GitGutterDisable<cr>:set norelativenumber<cr>:set laststatus=0<cr>:IndentLinesDisable<cr>
+    \ :hi NonText ctermfg=black<cr>:syntax off<cr>:let g:syntastic_auto_loc_list = 0<cr>:hi Folded ctermbg=black ctermfg=black<cr>
+  nnoremap <silent> <leader>N :set number<cr>:GitGutterEnable<cr>:set relativenumber<cr>:set laststatus=2<cr>
+    \ :hi NonText ctermfg=grey<cr>:syntax on<cr>:let g:syntastic_auto_loc_list = 2<cr>:hi Folded ctermbg=236 ctermfg=236<cr>
 
 " fix c-b mapping to use with tmux (one page up)
   nnoremap <c-d> <c-b>
@@ -182,7 +185,6 @@ autocmd Filetype markdown setlocal wrap
 set nohlsearch
 set autoindent
 set clipboard=unnamedplus
-set cursorline
 set expandtab
 set number
 set shiftwidth=2
@@ -276,11 +278,42 @@ let g:vim_markdown_folding_disabled = 1
   hi Error ctermbg=lightred ctermfg=black
   hi SpellBad ctermbg=lightred ctermfg=black
   nnoremap <leader>o :SyntasticToggleMode<cr>
+  " Allow :lprev to work with empty location list, or at first location
+  function! <SID>LocationPrevious()
+    try
+      lprev
+    catch /:E553:/
+      lfirst
+    catch /:E\%(42\|776\):/
+      echo "Location list empty"
+    catch /.*/
+      echo v:exception
+    endtry
+  endfunction
+
+  " Allow :lnext to work with empty location list, or at last location
+  function! <SID>LocationNext()
+    try
+      lnext
+    catch /:E553:/
+      lfirst
+    catch /:E\%(42\|776\):/
+      echo "Location list empty"
+    catch /.*/
+      echo v:exception
+    endtry
+  endfunction
+  nnoremap <silent> <Plug>LocationPrevious :<C-u>exe 'call <SID>LocationPrevious()'<CR>
+  nnoremap <silent> <Plug>LocationNext :<C-u>exe 'call <SID>LocationNext()'<CR>
+  nmap <silent> e[  <Plug>LocationPrevious
+  nmap <silent> e]  <Plug>LocationNext
 
 " improve quickfix list selected row color
   hi Search cterm=NONE ctermfg=black ctermbg=white
 
-map ,e :e <c-R>=expand("%:p:h") . "/" <cr>
+map ,e :tabnew <c-R>=expand("%:p:h") . "/" <cr>
+map ,E :e <c-R>=expand("%:p:h") . "/" <cr>
+
 vnoremap <leader>ku y:%s/\C<c-r>"//gn<cr>
 nnoremap <leader>ku viwy:%s/\C<c-r>"//gn<cr>
 nnoremap <leader>; :
