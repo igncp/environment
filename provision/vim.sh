@@ -411,7 +411,7 @@ nnoremap <silent> p p`]
 " add and remove variable at the end of line, this value would be overriden in the custom section
   let g:Custom_flag='FOO'
   nnoremap <leader>kh A<c-r>=g:Custom_flag<cr>
-  nnoremap <leader>kH V:s/<c-r>=g:Custom_flag<cr>//g<cr>
+  nnoremap <leader>kH V:s`<c-r>=g:Custom_flag<cr>``g<cr>
 
 " vim-expand-region
   vmap v <Plug>(expand_region_expand)
