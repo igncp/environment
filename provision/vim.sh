@@ -181,8 +181,7 @@ autocmd Filetype markdown setlocal wrap
 " fix c-b mapping to use with tmux (one page up)
   nnoremap <c-d> <c-b>
 
-nnoremap <silent> <leader>s :syntax off<cr>
-nnoremap <silent> <leader>S :syntax on<cr>
+nnoremap <silent> <leader>s :if exists("g:syntax_on") \| syntax off \| else \| syntax enable \| endif<cr>
 
 set nohlsearch
 set autoindent
@@ -292,7 +291,6 @@ let g:vim_markdown_folding_disabled = 1
       echo v:exception
     endtry
   endfunction
-
   " Allow :lnext to work with empty location list, or at last location
   function! <SID>LocationNext()
     try
@@ -409,8 +407,6 @@ vnoremap <silent> p p`]
   vmap v <Plug>(expand_region_expand)
   vmap <c-v> <Plug>(expand_region_shrink)
 
-" replace current searched pattern: cgn then . can be used
-
 " convenience indentation for copy-paste
   " autocmd Filetype EXTENSION setlocal softtabstop=2 tabstop=2 shiftwidth=2
   " autocmd Filetype EXTENSION setlocal softtabstop=4 tabstop=4 shiftwidth=4
@@ -418,7 +414,7 @@ vnoremap <silent> p p`]
 
 " quickly move to lines
   nnoremap <cr> G
-  nnoremap <BS> gg
+  nnoremap <bs> gg
 
 " undo tree
   nnoremap <leader>m :UndotreeShow<cr><c-w><left>
