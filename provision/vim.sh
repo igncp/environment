@@ -64,7 +64,6 @@ install_vim_package vim-airline/vim-airline
 install_vim_package vim-airline/vim-airline-themes
 install_vim_package vim-ruby/vim-ruby
 install_vim_package vim-scripts/cream-showinvisibles
-install_vim_package yggdroot/indentLine
 
 echo 'Control-x: " fg\n"' >> ~/.inputrc
 
@@ -131,7 +130,7 @@ let g:hardtime_default_on = 1
 
 " list mapped keys sorted. The asterisk means that the map is non recursive
   nnoremap <leader>M :redir! > /tmp/vim_keys.txt<cr>:silent verbose map<cr>:redir END<cr>
-    \:tabnew\|te cat /tmp/vim_keys.txt \| grep -v "Last set" \| grep -v "<Plug>"
+    \:-tabnew\|te cat /tmp/vim_keys.txt \| grep -v "Last set" \| grep -v "<Plug>"
     \ \| sort -k 1.4 \| less<cr>
 
 " run saved command over file and reopen
@@ -174,13 +173,16 @@ autocmd Filetype markdown setlocal wrap
   xnoremap <S-Tab> <gv
 
 " toggle distraction free mode
-  nnoremap <silent> <leader>n :set nonumber<cr>:GitGutterDisable<cr>:set norelativenumber<cr>:set laststatus=0<cr>:IndentLinesDisable<cr>
-    \ :hi NonText ctermfg=black<cr>:syntax off<cr>:let g:syntastic_auto_loc_list = 0<cr>:hi Folded ctermbg=black ctermfg=black<cr>
+  nnoremap <silent> <leader>n :set nonumber<cr>:GitGutterDisable<cr>:set norelativenumber<cr>:set laststatus=0<cr>
+    \ :hi NonText ctermfg=black<cr>:let g:syntastic_auto_loc_list = 0<cr>:hi Folded ctermbg=black ctermfg=black<cr>
   nnoremap <silent> <leader>N :set number<cr>:GitGutterEnable<cr>:set relativenumber<cr>:set laststatus=2<cr>
-    \ :hi NonText ctermfg=grey<cr>:syntax on<cr>:let g:syntastic_auto_loc_list = 2<cr>:hi Folded ctermbg=236 ctermfg=236<cr>
+    \ :hi NonText ctermfg=grey<cr>:let g:syntastic_auto_loc_list = 2<cr>:hi Folded ctermbg=236 ctermfg=236<cr>
 
 " fix c-b mapping to use with tmux (one page up)
   nnoremap <c-d> <c-b>
+
+nnoremap <silent> <leader>s :syntax off<cr>
+nnoremap <silent> <leader>S :syntax on<cr>
 
 set nohlsearch
 set autoindent
@@ -332,6 +334,7 @@ inoremap <c-e> <esc>A
 inoremap <c-a> <esc>I
 vnoremap <silent> y y`]
 nnoremap <silent> p p`]
+vnoremap <silent> p p`]
 
 " change to current file directory
   nnoremap ,cd :cd %:p:h<cr>:pwd<cr>
@@ -341,17 +344,6 @@ nnoremap <silent> p p`]
     autocmd!
     autocmd TermClose * close
   augroup end
-
-" vp doesn't replace paste buffer
-  function! RestoreRegister()
-    let @" = s:restore_reg
-    return ''
-  endfunction
-  function! s:Repl()
-    let s:restore_reg = @"
-    return "p@=RestoreRegister()\<cr>`]"
-  endfunction
-  vmap <silent> <expr> p <sid>Repl()
 
 " neosnippet
   " Enter in select mode: gh
@@ -377,16 +369,16 @@ nnoremap <silent> p p`]
   vmap <leader>fp d:r! cat /vm-shared/_vitmp<cr>
 
 " lines in files
-  nnoremap <leader>kr :tabnew\|te ( F(){ find $1 -type f \| xargs wc -l \| sort -rn \|
+  nnoremap <leader>kr :-tabnew\|te ( F(){ find $1 -type f \| xargs wc -l \| sort -rn \|
   \ sed "s\|$1\|\|" \| sed "1i _" \| sed "1i $1" \| sed "1i _" \| sed '4d' \| less; }
   \ && F <c-R>=expand("%:p:h")<cr>/ )<left><left>
 
 " color tree
-  nnoremap <leader>kt :tabnew\|te tree -a -C <c-R>=expand("%:p:h")<cr> \|
+  nnoremap <leader>kt :-tabnew\|te tree -a -C <c-R>=expand("%:p:h")<cr> \|
   \ less -R<c-left><c-left><c-left><left>
 
 " grep current file
-  let g:GrepCF_fn = ':w! /tmp/current_vim<cr>:tabnew\|te
+  let g:GrepCF_fn = ':w! /tmp/current_vim<cr>:-tabnew\|te
     \ Grep() { printf "<c-r>=expand("%")<cr>\n\n"; grep --color=always "$@" /tmp/current_vim;
     \ printf "\n----\n\nlines: "; grep -in "$@" /tmp/current_vim \| wc -l; echo ""; }
     \ && GrepAndLess() { Grep "$@" \| less -R; } && GrepAndLess '
@@ -394,15 +386,15 @@ nnoremap <silent> p p`]
   execute 'vnoremap <leader>ky y' . g:GrepCF_fn . ' -i "<c-r>""<left>'
 
 " fast grep
-  let g:FastGrep_fn = 'tabnew\|te
+  let g:FastGrep_fn = ':-tabnew\|te
     \ Grep() { grep -rn --color=always "$@"; printf "\n\n\n----\n\n\n"; grep --color=always -rl "$@"; }
     \ && Grep -i "<c-r>"" <c-r>=g:Fast_grep<cr>\| less -R<c-left><c-left><left><left>'
   let g:Fast_grep=''
   nnoremap <leader>B :let g:Fast_grep=''<left>
-  execute 'vnoremap <leader>b y:' . g:FastGrep_fn
-  execute 'nnoremap <leader>b" vi"y:' . g:FastGrep_fn
-  execute 'nnoremap <leader>bw viwy:' . g:FastGrep_fn
-  execute 'nnoremap <leader>bb vy:' . g:FastGrep_fn
+  execute 'vnoremap <leader>b y' . g:FastGrep_fn
+  execute 'nnoremap <leader>b" vi"y' . g:FastGrep_fn
+  execute 'nnoremap <leader>bw viwy' . g:FastGrep_fn
+  execute 'nnoremap <leader>bb vy' . g:FastGrep_fn
 
 " improve the 'preview window' behaviour
   autocmd CompleteDone * pclose " close when done
