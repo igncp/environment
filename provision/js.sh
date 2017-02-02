@@ -99,6 +99,10 @@ snippet it
   });
 snippet exp
   expect(${1:}).to.${0};
+snippet ii
+  import {
+    ${1},
+  } from "${2}";
 EOF
 cat /tmp/js-and-ts-snippets > ~/.vim-snippets/javascript.snippets
 cat /tmp/js-and-ts-snippets > ~/.vim-snippets/typescript.snippets
