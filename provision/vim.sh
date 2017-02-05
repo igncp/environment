@@ -315,6 +315,7 @@ map ,e :tabnew <c-R>=expand("%:p:h") . "/" <cr>
 map ,E :e <c-R>=expand("%:p:h") . "/" <cr>
 
 vnoremap <leader>ku y:%s/\C<c-r>"//gn<cr>
+nnoremap <leader>kl vi{:sort<cr>
 nnoremap <leader>ku viwy:%s/\C<c-r>"//gn<cr>
 nnoremap <leader>; :
 nnoremap <leader>x :set noeol<cr>:set binary<cr>:w<cr>:set nobinary<cr>
