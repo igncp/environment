@@ -430,7 +430,7 @@ vnoremap <silent> p p`]
   nnoremap <leader>7 7gt
   nnoremap <leader>8 8gt
   nnoremap <leader>9 9gt
-  nnoremap <c-h> :execute "tabmove" tabpagenr() - 2 <cr>
+  nnoremap <c-g> :execute "tabmove" tabpagenr() - 2 <cr>
   nnoremap <c-l> :execute "tabmove" tabpagenr() + 1 <cr>
   " add ':e' to paste a PATH_TO_FILE:LINE_NUMBER from fast grep
   nnoremap <c-t> :tabnew<cr>:e <left><right>
