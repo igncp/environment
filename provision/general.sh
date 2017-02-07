@@ -86,14 +86,6 @@ if [ ! -f ~/.git-prompt ]; then
     https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh
 fi
 
-# shellcheck (without using stack, it takes a while to install)
-  # if [ ! -f ~/.cabal/bin/shellcheck ]; then
-  #   echo "installing shellcheck without using stack"
-  #   sudo pacman -S --noconfirm cabal-install
-  #   cabal update
-  #   cabal install shellcheck
-  # fi
-
 if [ ! -d ~/src ]; then
   if [ -d /project/src ]; then cp -r /project/src ~; fi
 fi
@@ -306,5 +298,15 @@ _CustomSR() {
   echo "$CMD_REPLACE" > /tmp/sr_replace
 }
 EOF
+
+install_pacman_package shellcheck
+echo 'SHELLCHECK_IGNORES="SC1090"' >> ~/.bashrc
+add_shellcheck_ignores() {
+  for DIRECTIVE in "$@"; do
+    echo 'SHELLCHECK_IGNORES="$SHELLCHECK_IGNORES,SC'"$DIRECTIVE"'"' >> ~/.bashrc
+  done
+}
+add_shellcheck_ignores 2016 2028 2046 2086 2143 2164
+echo 'export SHELLCHECK_OPTS="-e $SHELLCHECK_IGNORES"' >> ~/.bashrc
 
 # general END

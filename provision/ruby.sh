@@ -17,7 +17,7 @@ echo 'source_if_exists ~/.rbenv-init' >> ~/.bash_sources
 install_gems() {
   GEMS_LIST=$(~/.rbenv/shims/gem list)
   for GEM_NAME in "$@"; do
-    if [ $(echo "$GEMS_LIST" | grep "^$GEM_NAME " | wc -l) -eq "0" ]; then
+    if [ $(echo "$GEMS_LIST" | grep -c "^$GEM_NAME ") -eq "0" ]; then
       echo "doing: gem install $GEM_NAME --no-ri --no-rdoc"
       ~/.rbenv/shims/gem install "$GEM_NAME" --no-ri --no-rdoc
     fi
