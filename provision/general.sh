@@ -70,6 +70,7 @@ install_pacman_package strace
 install_pacman_package tree
 install_pacman_package unzip
 install_pacman_package lsof
+install_pacman_package graphviz dot
 
 install_pacman_package netdata
 if [[ ! -z $(sudo systemctl status netdata.service | grep inactive) ]]; then
