@@ -70,7 +70,6 @@ install_pacman_package strace
 install_pacman_package tree
 install_pacman_package unzip
 install_pacman_package lsof
-install_pacman_package graphviz dot
 
 install_pacman_package netdata
 if [[ ! -z $(sudo systemctl status netdata.service | grep inactive) ]]; then
@@ -309,5 +308,18 @@ add_shellcheck_ignores() {
 }
 add_shellcheck_ignores 2016 2028 2046 2086 2143 2164
 echo 'export SHELLCHECK_OPTS="-e $SHELLCHECK_IGNORES"' >> ~/.bashrc
+
+install_pacman_package graphviz dot
+cat >> ~/.bash_aliases <<"EOF"
+DotPNGRecursive() {
+  USED_DIR=${1:-.}
+  echo "looking recursively in: $USED_DIR"
+  find "$USED_DIR" -type f -name "*.dot" | while read FILE_PATH; do
+    FNAME="${FILE_PATH::-4}" # remove extension
+    dot "$FILE_PATH" -Tpng > "$FNAME".png
+    echo "created $FNAME.png"
+  done
+}
+EOF
 
 # general END
