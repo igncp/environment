@@ -106,6 +106,10 @@ cat > ~/.bashrc <<"EOF"
   bind '"\C-g":vi-fWord' > /dev/null 2>&1
   bind '"\C-f":vi-bWord' > /dev/null 2>&1
 
+export GREEN='\033[0;32m'
+export BLUE='\033[0;34m'
+export NC='\033[0m'
+
 stty -ixon # prevent the terminal from hanging on ctrl+s
 
 export HISTCONTROL=ignoreboth:erasedups
@@ -310,16 +314,32 @@ add_shellcheck_ignores 2016 2028 2046 2086 2143 2164
 echo 'export SHELLCHECK_OPTS="-e $SHELLCHECK_IGNORES"' >> ~/.bashrc
 
 install_pacman_package graphviz dot
+cat > ~/.dot-script.sh <<"EOF2"
+  FILE_PATH=$1
+  FNAME="${FILE_PATH::-4}" # remove extension
+  RELATIVE=$(python -c "import os.path; print(os.path.relpath('$FNAME', '$PWD'))")
+  dot "$FILE_PATH" -Tpng > "$FNAME".png && \
+  printf "created ${GREEN}$RELATIVE.png${NC}\n"
+EOF2
+chmod +x ~/.dot-script.sh
 cat >> ~/.bash_aliases <<"EOF"
-DotPNGRecursive() {
+DotPNGRecursiveWatch() {
   USED_DIR=${1:-.}
-  echo "looking recursively in: $USED_DIR"
-  find "$USED_DIR" -type f -name "*.dot" | while read FILE_PATH; do
-    FNAME="${FILE_PATH::-4}" # remove extension
-    dot "$FILE_PATH" -Tpng > "$FNAME".png
-    echo "created $FNAME.png"
+  printf "looking recursively in: ${BLUE}$USED_DIR${NC}\n"
+  while true; do # when a file is created, entr will exit
+    find "$USED_DIR" -type f -name "*.dot" | entr -d ~/.dot-script.sh /_
   done
 }
 EOF
+
+if ! type entr > /dev/null 2>&1 ; then
+  sudo rm -rf ~/_entr-tmp
+  cd ~ && mkdir ~/_entr-tmp && cd ~/_entr-tmp
+  curl -O https://bitbucket.org/eradman/entr/get/entr-3.6.tar.gz
+  tar -zxvf ./*.tar.gz
+  ENTR_DIR=$(find . -maxdepth 1 -mindepth 1 -type d) && cd $ENTR_DIR
+  ./configure && make test && sudo make install
+  cd ~ && sudo rm -rf ~/_entr-tmp
+fi
 
 # general END
