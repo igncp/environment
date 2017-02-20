@@ -363,9 +363,9 @@ vnoremap <silent> p p`]
   inoremap <c-s> <esc>:update<cr>
 
 " copy - paste between files and VMs
-  vmap <leader>fy :w! /vm-shared/_vitmp<cr>
-  nmap <leader>fp :r! cat /vm-shared/_vitmp<cr>
-  vmap <leader>fp d:r! cat /vm-shared/_vitmp<cr>
+  vmap <leader>fy "uy:-tabnew /vm-shared/_vitmp<cr>ggVG"up:x<cr>
+  nmap <leader>fp :-tabnew /vm-shared/_vitmp<cr>gg_vG$<left>"uy:q!<cr>"up
+  vmap <leader>fp <c-c>:-tabnew /vm-shared/_vitmp<cr>ggvG$<left>"uy:q!<cr>gv"up
 
 " lines in files
   nnoremap <leader>kr :-tabnew\|te ( F(){ find $1 -type f \| xargs wc -l \| sort -rn \|
