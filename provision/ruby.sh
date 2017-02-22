@@ -24,6 +24,6 @@ install_gems() {
   done
 }
 
-install_gems bundler
+install_gems bundler lolcat
 
 # ruby END

@@ -41,6 +41,8 @@ install_vim_package haya14busa/incsearch.vim
 install_vim_package honza/vim-snippets
 install_vim_package jelera/vim-javascript-syntax
 install_vim_package jiangmiao/auto-pairs
+install_vim_package kana/vim-textobj-indent
+install_vim_package kana/vim-textobj-user
 install_vim_package kshenoy/vim-signature
 install_vim_package luochen1990/rainbow
 install_vim_package majutsushi/tagbar
@@ -310,12 +312,16 @@ let g:vim_markdown_folding_disabled = 1
 
 " improve quickfix list selected row color
   hi Search cterm=NONE ctermfg=black ctermbg=white
+  hi IncSearch gui=NONE ctermfg=black ctermfg=blue
 
 map ,e :tabnew <c-R>=expand("%:p:h") . "/" <cr>
 map ,E :e <c-R>=expand("%:p:h") . "/" <cr>
 
 vnoremap <leader>ku y:%s/\C<c-r>"//gn<cr>
-nnoremap <leader>kl vi{:sort<cr>
+
+" sort indent block. requires nmap. requires 2 plugins.
+  nmap <leader>kl vii:sort<cr>
+
 nnoremap <leader>ku viwy:%s/\C<c-r>"//gn<cr>
 nnoremap <leader>; :
 nnoremap <leader>x :set noeol<cr>:set binary<cr>:w<cr>:set nobinary<cr>
@@ -419,6 +425,12 @@ vnoremap <silent> p p`]
 
 " undo tree
   nnoremap <leader>m :UndotreeShow<cr><c-w><left>
+
+" wrap quickfix window
+  augroup quickfix
+    autocmd!
+    autocmd FileType qf setlocal wrap
+  augroup END
 
 " tabs
   nnoremap <leader>1 1gt

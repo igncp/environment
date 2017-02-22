@@ -289,9 +289,9 @@ _CustomSR() {
   REPLACEMENT_STR=$(ask_with_default "replacement str" "")
   CASE_SENSITIVE=$(ask_with_default "case sensitive" "yes")
 
-  GREP_OPTS=""; SED_OPTS=""
+  GREP_OPTS=""; SED_OPTS="g"
   if [ "$CASE_SENSITIVE" != "yes" ]; then
-    GREP_OPTS=" -i "; SED_OPTS="I"
+    GREP_OPTS=" -i "; SED_OPTS="gI"
   fi
 
   CMD_SEARCH="find $DIR_TO_FIND -type f $EXTRA_FIND_ARGS | xargs grep --color=always $GREP_OPTS -E "'"'"$SEARCH_REGEX"'" | less -R'
