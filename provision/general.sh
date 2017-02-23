@@ -327,6 +327,7 @@ DotPNGRecursiveWatch() {
   USED_DIR=${1:-.}
   printf "looking recursively in: ${BLUE}$USED_DIR${NC}\n"
   while true; do # when a file is created, entr will exit
+    sleep 1 # wait so on no files it won't be a fast loop
     find "$USED_DIR" -type f -name "*.dot" | entr -d ~/.dot-script.sh /_
   done
 }
