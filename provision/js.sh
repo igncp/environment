@@ -23,7 +23,7 @@ install_node_modules() {
   done
 }
 
-install_node_modules http-server diff-so-fancy yarn eslint babel-eslint cloc yo eslint_d flow flow-cli
+install_node_modules http-server diff-so-fancy eslint babel-eslint cloc yo eslint_d flow flow-cli
 
 cat >> ~/.bashrc <<"EOF"
 export PATH=$PATH:/home/$USER/.nodenv/bin
@@ -114,6 +114,11 @@ EOF
 cat > ~/.vim-snippets/markdown.snippets <<"EOF"
 snippet toc
   <!-- toc -->
+EOF
+
+install_node_modules yarn yarn-completions
+cat >> ~/.bash_sources <<"EOF"
+source_if_exists ~/.nodenv/versions/6.3.0/lib/node_modules/yarn-completions/node_modules/tabtab/.completions/yarn.bash
 EOF
 
 # js END

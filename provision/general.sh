@@ -69,6 +69,7 @@ install_pacman_package ncdu
 install_pacman_package strace
 install_pacman_package tree
 install_pacman_package unzip
+install_pacman_package zip
 install_pacman_package lsof
 
 install_pacman_package netdata
