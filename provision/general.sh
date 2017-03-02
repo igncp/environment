@@ -317,20 +317,31 @@ echo 'export SHELLCHECK_OPTS="-e $SHELLCHECK_IGNORES"' >> ~/.bashrc
 install_pacman_package graphviz dot
 cat > ~/.dot-script.sh <<"EOF2"
   FILE_PATH=$1
+  EXTENSION=$2
   FNAME="${FILE_PATH::-4}" # remove extension
   RELATIVE=$(python -c "import os.path; print(os.path.relpath('$FNAME', '$PWD'))")
-  dot "$FILE_PATH" -Tpng > "$FNAME".png && \
-  printf "created ${GREEN}$RELATIVE.png${NC}\n"
+  dot "$FILE_PATH" -T"$EXTENSION" > "$FNAME"."$EXTENSION" && \
+  printf "created ${GREEN}$RELATIVE."$EXTENSION"${NC}\n"
 EOF2
 chmod +x ~/.dot-script.sh
 cat >> ~/.bash_aliases <<"EOF"
-DotPNGRecursiveWatch() {
-  USED_DIR=${1:-.}
+_DotRecursiveWatch() {
+  EXTENSION=$1
+  USED_DIR=${2:-.}
   printf "looking recursively in: ${BLUE}$USED_DIR${NC}\n"
-  while true; do # when a file is created, entr will exit
-    sleep 1 # wait so on no files it won't be a fast loop
-    find "$USED_DIR" -type f -name "*.dot" | entr -d ~/.dot-script.sh /_
+  while true; do # when a file is added, entr will exit
+    sleep 1
+    find "$USED_DIR" -type f -name "*.dot" | entr -d ~/.dot-script.sh /_ "$EXTENSION"
   done
+}
+DotPNGRecursiveWatch() {
+  _DotRecursiveWatch png $@
+}
+DotSVGRecursiveWatch() {
+  _DotRecursiveWatch svg $@
+}
+DotJPGRecursiveWatch() {
+  _DotRecursiveWatch jpg $@
 }
 EOF
 
