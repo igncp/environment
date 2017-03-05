@@ -39,7 +39,17 @@ GitDiff() { git diff --color $@ | diff-so-fancy | less -R; }
 alias Mocha="./node_modules/.bin/mocha -c $@ > >(perl -pe 's/\x1b\[90m/\x1b[92m/g') 2> >(perl -pe 's/\x1b\[90m/\x1b[92m/g' 1>&2)"
 EOF
 
+cat > /tmp/clean-vim-js-syntax.sh <<"EOF"
+sed -i 's|const |async await |' ~/.vim/bundle/vim-javascript-syntax/syntax/javascript.vim
+sed -i 's|let var |let var const |' ~/.vim/bundle/vim-javascript-syntax/syntax/javascript.vim
+sed -i 's|export from|export|' ~/.vim/bundle/vim-javascript-syntax/syntax/javascript.vim
+sed -i 's|import public|import from public|' ~/.vim/bundle/vim-javascript-syntax/syntax/javascript.vim
+echo "Changed vim javascript syntax"
+EOF
+
 # not installing vim-javascript as it doesn't work with rainbow
+install_vim_package flowtype/vim-flow
+install_vim_package jelera/vim-javascript-syntax "sh /tmp/clean-vim-js-syntax.sh"
 install_vim_package kchmck/vim-coffee-script
 install_vim_package leafgarland/typescript-vim
 install_vim_package quramy/tsuquyomi
@@ -65,11 +75,11 @@ cat >> ~/.vimrc <<"EOF"
 " run eslint over file
   nnoremap <silent> <leader>kb :!eslint_d --fix %<cr>:e<cr>
 
-" eslint linters
+" js linters
   let g:syntastic_javascript_checkers = ['flow', 'eslint']
-  let g:syntastic_javascript_flow_exe = 'flow'
   let g:syntastic_javascript_eslint_exec = 'eslint_d'
   let g:syntastic_typescript_checkers = ['tsc', 'tslint']
+  let g:flow#enable = 0
 EOF
 
 cat > /tmp/js-and-ts-snippets <<"EOF"

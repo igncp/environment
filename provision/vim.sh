@@ -37,6 +37,7 @@ install_vim_package ctrlpvim/ctrlp.vim
 install_vim_package easymotion/vim-easymotion
 install_vim_package elzr/vim-json
 install_vim_package evidens/vim-twig
+install_vim_package flazz/vim-colorschemes
 install_vim_package haya14busa/incsearch.vim
 install_vim_package honza/vim-snippets
 install_vim_package jelera/vim-javascript-syntax
@@ -66,6 +67,8 @@ install_vim_package vim-airline/vim-airline
 install_vim_package vim-airline/vim-airline-themes
 install_vim_package vim-ruby/vim-ruby
 install_vim_package vim-scripts/cream-showinvisibles
+install_vim_package xolox/vim-colorscheme-switcher
+install_vim_package xolox/vim-misc
 
 echo 'Control-x: " fg\n"' >> ~/.inputrc
 
@@ -158,7 +161,6 @@ let g:hardtime_default_on = 1
 " folding
   set foldmethod=indent
   set fml=0
-  hi Folded ctermbg=236 ctermfg=236
   nnoremap <leader>r zR
 
 " reload all saved files without warnings
@@ -196,15 +198,7 @@ set tabstop=2
 set smartcase
 set wildmenu
 
-" wrap lines physically: gq, gq}
-  nnoremap <leader>kc :set textwidth=0<left>
-
-" better completion menu colors
-  highlight Pmenu ctermfg=white ctermbg=17
-  highlight PmenuSel ctermfg=white ctermbg=29
-
-" better matching color
-  hi MatchParen ctermfg=black
+nnoremap <leader>kc :RandomColorScheme<cr>:call SetColors()<cr>:colorscheme<cr>
 
 " ignore case in searches
   set ic
@@ -272,14 +266,8 @@ let g:vim_markdown_folding_disabled = 1
   let g:syntastic_scss_checkers = ['stylelint']
   let g:syntastic_json_checkers=[]
   let g:syntastic_loc_list_height=3
-  highlight link SyntasticErrorSign SignColumn
-  highlight link SyntasticWarningSign SignColumn
-  highlight link SyntasticStyleErrorSign SignColumn
-  highlight link SyntasticStyleWarningSign SignColumn
-  let g:syntastic_error_symbol = 'X'
+  let g:syntastic_error_symbol = '•'
   let g:syntastic_style_error_symbol = '!?'
-  hi Error ctermbg=lightred ctermfg=black
-  hi SpellBad ctermbg=lightred ctermfg=black
   nnoremap <leader>o :SyntasticToggleMode<cr>
   " Allow :lprev to work with empty location list, or at first location
   function! <SID>LocationPrevious()
@@ -310,12 +298,8 @@ let g:vim_markdown_folding_disabled = 1
   nmap <silent> e[  <Plug>LocationPrevious
   nmap <silent> e]  <Plug>LocationNext
 
-" improve quickfix list selected row color
-  hi Search cterm=NONE ctermfg=black ctermbg=white
-  hi IncSearch gui=NONE ctermfg=black ctermfg=blue
-
-map ,e :tabnew <c-R>=expand("%:p:h") . "/" <cr>
-map ,E :e <c-R>=expand("%:p:h") . "/" <cr>
+map <leader>kw :tabnew <c-R>=expand("%:p:h") . "/" <cr>
+map <leader>kW :e <c-R>=expand("%:p:h") . "/" <cr>
 
 vnoremap <leader>ku y:%s/\C<c-r>"//gn<cr>
 
@@ -342,7 +326,7 @@ nnoremap <silent> p p`]
 vnoremap <silent> p p`]
 
 " change to current file directory
-  nnoremap ,cd :cd %:p:h<cr>:pwd<cr>
+  nnoremap <leader>kg :cd %:p:h<cr>:pwd<cr>
 
 " don't have to press the extra key when exiting the terminal
   augroup terminal
@@ -448,8 +432,6 @@ vnoremap <silent> p p`]
   nnoremap <c-t> :tabnew<cr>:e <left><right>
   nnoremap <c-d> :tabclose<cr>
   nnoremap <leader>z :tab split<cr>
-  hi TabLine ctermfg=gray ctermbg=black
-  hi TabLineFill ctermfg=black ctermbg=black
   " Rename tabs to show tab number.
   if exists("+showtabline")
       function! MyTabLine()
@@ -492,16 +474,37 @@ vnoremap <silent> p p`]
       set stal=2
       set tabline=%!MyTabLine()
       set showtabline=1
-      highlight link TabNum Special
   endif
 
 " easymotion
-  nmap <Leader>j <Plug>(easymotion-overwin-f)
+  nmap , <Plug>(easymotion-overwin-f)
 
 " tagbar
   nmap <leader>v :TagbarToggle<cr>
   let g:tagbar_type_make = {'kinds':['m:macros', 't:targets']}
   let g:tagbar_type_markdown = {'ctagstype':'markdown','kinds':['h:Heading_L1','i:Heading_L2','k:Heading_L3']}
+
+function! SetColors()
+  hi Error ctermbg=lightred ctermfg=black
+  hi Folded ctermbg=236 ctermfg=236
+  hi IncSearch gui=NONE ctermfg=black ctermfg=blue
+  hi MatchParen ctermfg=black
+  hi Search cterm=NONE ctermfg=black ctermbg=white
+  hi SpellBad ctermbg=lightred ctermfg=black
+  hi TabLine ctermfg=gray ctermbg=black
+  hi TabLineFill ctermfg=black ctermbg=black
+  " better completion menu colors
+    hi Pmenu ctermfg=white ctermbg=17
+    hi PmenuSel ctermfg=white ctermbg=29
+  hi link TabNum Special
+  hi link SyntasticErrorSign SignColumn
+  hi link SyntasticWarningSign SignColumn
+  hi link SyntasticStyleErrorSign SignColumn
+  hi link SyntasticStyleWarningSign SignColumn
+  hi Visual ctermfg=white ctermbg=17
+endfunction
+
+call SetColors()
 EOF
 
 cat >> ~/.bashrc <<"EOF"
