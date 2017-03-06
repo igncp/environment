@@ -40,7 +40,6 @@ install_vim_package evidens/vim-twig
 install_vim_package flazz/vim-colorschemes
 install_vim_package haya14busa/incsearch.vim
 install_vim_package honza/vim-snippets
-install_vim_package jelera/vim-javascript-syntax
 install_vim_package jiangmiao/auto-pairs
 install_vim_package kana/vim-textobj-indent
 install_vim_package kana/vim-textobj-user
@@ -208,9 +207,10 @@ nnoremap <leader>kc :RandomColorScheme<cr>:call SetColors()<cr>:colorscheme<cr>
 
 nnoremap <leader>y :reg<cr>
 nnoremap <silent> <leader>kdF :call delete(expand('%')) \| bdelete!<cr>:echo "FILE DELETED"<cr>
-nnoremap <leader>kx :let g:CurrentFileType=&ft<cr>:tabnew
-  \ <c-r>=system('mktemp')<cr><cr>:set syntax=<c-r>=g:CurrentFileType<cr><cr>
-  \:set ft=<c-r>=g:CurrentFileType<cr><cr>
+let g:Kx_map = ':let g:CurrentFileType=&ft<cr>:tabnew<c-r>=system("mktemp")<cr>
+    \<cr>:set syntax=<c-r>=g:CurrentFileType<cr><cr>:set ft=<c-r>=g:CurrentFileType<cr><cr>'
+execute 'nnoremap <leader>kx :' . g:Kx_map
+execute 'vmap <leader>kx y' . g:Kx_map . 'Vp:w<cr>zR'
 nnoremap <c-w>v :vsplit<cr><c-w><right>
 nnoremap <leader>w :set wrap!<cr>
 nnoremap <leader>a ggvG$
@@ -531,5 +531,7 @@ alias CheckVimSnippets='nvim ~/.vim/bundle/vim-snippets/snippets'
 EOF
 
 mkdir -p ~/.vim-snippets
+
+rm -rf /tmp/tmp.*
 
 # vim END
