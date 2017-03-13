@@ -66,6 +66,7 @@ install_vim_package vim-airline/vim-airline
 install_vim_package vim-airline/vim-airline-themes
 install_vim_package vim-ruby/vim-ruby
 install_vim_package vim-scripts/cream-showinvisibles
+install_vim_package vim-scripts/marvim
 install_vim_package xolox/vim-colorscheme-switcher
 install_vim_package xolox/vim-misc
 
@@ -96,9 +97,6 @@ let g:hardtime_default_on = 1
 " numbers maps
   set relativenumber
   nnoremap <leader>h :set relativenumber!<cr>
-
-" open file in same dir
-  map ,e :e <c-R>=expand("%:p:h") . "/" <cr>
 
 " search visually selected text
   vmap * :<c-u>call <SID>VSetSearch()<cr>/<cr>
@@ -317,8 +315,10 @@ au BufNewFile,BufRead *.ejs set filetype=html
   set ww+=<,>
 
 nnoremap <leader>d @d
+nnoremap W @q
+nnoremap <leader>W :let @='<c-r>q'<home><right><right><right><right><right>
 nnoremap <leader>kv :%s/\t/  /g<cr>
-vnoremap <F3> :sort<cr>
+vnoremap <F4> :sort<cr>
 inoremap <c-e> <esc>A
 inoremap <c-a> <esc>I
 vnoremap <silent> y y`]

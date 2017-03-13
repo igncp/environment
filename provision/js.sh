@@ -131,4 +131,7 @@ cat >> ~/.bash_sources <<"EOF"
 source_if_exists ~/.nodenv/versions/6.3.0/lib/node_modules/yarn-completions/node_modules/tabtab/.completions/yarn.bash
 EOF
 
+install_node_modules gnomon
+echo 'C-j: "\C-atime \C-e | gnomon \C-m"' >> ~/.inputrc
+
 # js END

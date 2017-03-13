@@ -116,29 +116,27 @@ stty -ixon # prevent the terminal from hanging on ctrl+s
 export HISTCONTROL=ignoreboth:erasedups
 export EDITOR=vim
 
-CHI_NUMBERS_TENS=("" 十 二十 三十 四十 五十)
-CHI_NUMBERS_SINGLES=(零 一 二 三 四 五 六 七 八 九 十 十一)
-getCMinutes() {
-  MINUTES=$(date +"%M"); F=${MINUTES:0:1}; S=${MINUTES:1:1}
-  MINUTES_STR="${CHI_NUMBERS_TENS[$F]}${CHI_NUMBERS_SINGLES[$S]}"
-  echo $(echo $MINUTES_STR | sed -r 's|(..?)零|\1|')
+CHI_NUMBERS=(零 一 二 三 四 五 六 七 八 九 十 十一)
+getTime() {
+  MINUTES=$(date +"%M"); HOURS=$(date +"%H")
+  echo $HOURS":"$MINUTES
 }
 getCNumberWithTmux() {
-  IDX=$(tmux display-message -p '#I'); echo "${CHI_NUMBERS_SINGLES[$IDX]}"
+  IDX=$(tmux display-message -p '#I'); echo "${CHI_NUMBERS[$IDX]}"
 }
 
 if [[ -z $TMUX ]]; then
   TMUX_PREFIX_A="" && TMUX_PREFIX_B="·"
 else
-  TMUX_PREFIX_A="\$(getCNumberWithTmux) " && TMUX_PREFIX_B="£"
+  TMUX_PREFIX_A="\$(getCNumberWithTmux) " && TMUX_PREFIX_B=""
 fi
 get_jobs_prefix() {
   JOBS=$(jobs | wc -l)
-  if [ "$JOBS" -eq "0" ]; then echo ""; else echo "${CHI_NUMBERS_SINGLES[$JOBS]} | "; fi
+  if [ "$JOBS" -eq "0" ]; then echo ""; else echo "${CHI_NUMBERS[$JOBS]} "; fi
 }
-PS1_BEGINNING="\n\[\e[34m\]\u\[\e[m\].\[\e[34m\]\h\[\e[m\]:\[\e[36m\] \W\[\e[m\]"
-PS1_MIDDLE="\[\e[32m\]\$(__git_ps1)\[\e[m\]\[\e[33m\] \$(get_jobs_prefix)$TMUX_PREFIX_A\[\e[m\]"
-PS1_END="\[\e[34m\]\[\e[34m\]\$(getCMinutes) \[\e[32m\]$TMUX_PREFIX_B\[\e[m\] "
+PS1_BEGINNING="\n\n\[\e[33m\]$TMUX_PREFIX_A\[\e[36m\]\W\[\e[m\]"
+PS1_MIDDLE="\[\e[32m\]\$(__git_ps1)\[\e[m\]\[\e[33m\] \$(get_jobs_prefix)\[\e[m\]"
+PS1_END="\[\e[34m\]\$(getTime)\[\e[32m\]$TMUX_PREFIX_B\[\e[m\] "
 export PS1="$PS1_BEGINNING""$PS1_MIDDLE""$PS1_END"
 
 export PATH=$PATH:/project/scripts
@@ -202,6 +200,7 @@ cat > ~/.inputrc <<"EOF"
 set show-all-if-ambiguous on
 C-h:unix-filename-rubout
 C-k:edit-and-execute-command
+C-j: "\C-atime \C-m"
 EOF
 
 cat > ~/.tmux.conf <<"EOF"
