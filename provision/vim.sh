@@ -484,6 +484,13 @@ vnoremap <silent> p p`]
   let g:tagbar_type_make = {'kinds':['m:macros', 't:targets']}
   let g:tagbar_type_markdown = {'ctagstype':'markdown','kinds':['h:Heading_L1','i:Heading_L2','k:Heading_L3']}
 
+" move by visual lines (for wrapped lines)
+  map <down> gj
+  map <up> gk
+
+" highlight last inserted text
+  nnoremap gV `[v`]
+
 function! SetColors()
   hi Error ctermbg=lightred ctermfg=black
   hi Folded ctermbg=236 ctermfg=236
