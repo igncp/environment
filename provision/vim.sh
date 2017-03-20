@@ -384,6 +384,7 @@ vnoremap <silent> p p`]
   execute 'nnoremap <leader>b" vi"y' . g:FastGrep_fn
   execute 'nnoremap <leader>bw viwy' . g:FastGrep_fn
   execute 'nnoremap <leader>bb vy' . g:FastGrep_fn
+  execute 'nnoremap <leader>bf vy' . g:FastGrep_fn . '<c-left><left><left><bs>/<c-R>=expand("%:t")<cr>'
 
 " improve the 'preview window' behaviour
   autocmd CompleteDone * pclose " close when done
