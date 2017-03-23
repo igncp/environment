@@ -80,6 +80,9 @@ cat >> ~/.vimrc <<"EOF"
   let g:syntastic_javascript_eslint_exec = 'eslint_d'
   let g:syntastic_typescript_checkers = ['tsc', 'tslint']
   let g:flow#enable = 0
+
+ autocmd BufNewFile,BufRead *.js
+	\ call neosnippet#commands#_source("/home/vagrant/.vim/bundle/vim-snippets/snippets/javascript.es6.react.snippets")
 EOF
 
 cat > /tmp/js-and-ts-snippets <<"EOF"
