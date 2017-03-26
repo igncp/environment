@@ -48,12 +48,13 @@ echo "Changed vim javascript syntax"
 EOF
 
 # not installing vim-javascript as it doesn't work with rainbow
+install_vim_package ternjs/tern_for_vim "cd ~/.vim/bundle/tern_for_vim; npm i"
+install_vim_package quramy/tsuquyomi
+install_vim_package leafgarland/typescript-vim
+install_vim_package kchmck/vim-coffee-script
 install_vim_package flowtype/vim-flow
 install_vim_package jelera/vim-javascript-syntax "sh /tmp/clean-vim-js-syntax.sh"
-install_vim_package kchmck/vim-coffee-script
-install_vim_package leafgarland/typescript-vim
-install_vim_package quramy/tsuquyomi
-install_vim_package ternjs/tern_for_vim "cd ~/.vim/bundle/tern_for_vim; npm i"
+install_vim_package samuelsimoes/vim-jsx-utils
 
 cat >> ~/.vimrc <<"EOF"
 " quick console.log
@@ -83,6 +84,9 @@ cat >> ~/.vimrc <<"EOF"
 
  autocmd BufNewFile,BufRead *.js
 	\ call neosnippet#commands#_source("/home/vagrant/.vim/bundle/vim-snippets/snippets/javascript.es6.react.snippets")
+
+" jsx utils
+  nnoremap <leader>jx :call JSXEachAttributeInLine()<cr>/><cr>i<cr><bs><right><c-c>
 EOF
 
 cat > /tmp/js-and-ts-snippets <<"EOF"
@@ -112,10 +116,22 @@ snippet it
   });
 snippet exp
   expect(${1:}).to.${0};
-snippet ii
+snippet i
   import {
     ${1},
   } from "${2}";
+snippet t
+  <${1}${3}>${2}</$1>
+snippet T
+  <${1} ${2}/>
+snippet TT
+  <${1}
+  />
+snippet tt
+  <${1}
+  >
+    ${2}
+  </$1>
 EOF
 cat /tmp/js-and-ts-snippets > ~/.vim-snippets/javascript.snippets
 cat /tmp/js-and-ts-snippets > ~/.vim-snippets/typescript.snippets
