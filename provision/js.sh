@@ -151,6 +151,5 @@ source_if_exists ~/.nodenv/versions/6.3.0/lib/node_modules/yarn-completions/node
 EOF
 
 install_node_modules gnomon
-echo 'C-j: "\C-atime \C-e | gnomon \C-m"' >> ~/.inputrc
 
 # js END

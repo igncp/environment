@@ -200,7 +200,6 @@ cat > ~/.inputrc <<"EOF"
 set show-all-if-ambiguous on
 C-h:unix-filename-rubout
 C-k:edit-and-execute-command
-C-j: "\C-atime \C-m"
 EOF
 
 cat > ~/.tmux.conf <<"EOF"
@@ -289,7 +288,8 @@ EOF
 
 # Search and Replace utility
   cat >> ~/.bash_aliases <<"EOF"
-SR() { _CustomSR $1 && history -s $(cat /tmp/sr_replace) && history -s $(cat /tmp/sr_search); }
+SR() { _CustomSR $@ && history -s $(echo "SR ""$@") && \
+  history -s $(cat /tmp/sr_replace) && history -s $(cat /tmp/sr_search); }
 _CustomSR() {
   ask_with_default() {
     NAME="$1"; DEFAULT="$2"
@@ -300,15 +300,17 @@ _CustomSR() {
   }
 
   DIR_TO_FIND=${1:-.}
+  SEARCH_REGEX_VALUE="${2:-foo}" # read will not allow to move the cursor, allowing this for convenience
+  REPLACEMENT_STR_VALUE="${3:-''}"
   echo "src: $DIR_TO_FIND"
   EXTRA_FIND_ARGS=$(ask_with_default "extra find arguments" "-name '*'")
-  SEARCH_REGEX=$(ask_with_default "search regexp" "foo")
-  REPLACEMENT_STR=$(ask_with_default "replacement str" "")
+  SEARCH_REGEX=$(ask_with_default "search regexp" "$SEARCH_REGEX_VALUE")
+  REPLACEMENT_STR=$(ask_with_default "replacement str" "$REPLACEMENT_STR_VALUE")
   CASE_SENSITIVE=$(ask_with_default "case sensitive" "yes")
 
   GREP_OPTS=""; SED_OPTS="g"
   if [ "$CASE_SENSITIVE" != "yes" ]; then
-    GREP_OPTS=" -i "; SED_OPTS="gI"
+    GREP_OPTS=" -i "; SED_OPTS="I"
   fi
 
   CMD_SEARCH="find $DIR_TO_FIND -type f $EXTRA_FIND_ARGS | xargs grep --color=always $GREP_OPTS -E "'"'"$SEARCH_REGEX"'" | less -R'

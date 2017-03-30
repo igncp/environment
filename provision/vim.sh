@@ -31,6 +31,7 @@ fi
 git config --global core.editor nvim # faster than sed
 
 install_vim_package airblade/vim-gitgutter
+install_vim_package airblade/vim-rooter
 install_vim_package andrewRadev/splitjoin.vim # gS, gJ
 install_vim_package bogado/file-line
 install_vim_package ctrlpvim/ctrlp.vim
@@ -41,6 +42,8 @@ install_vim_package flazz/vim-colorschemes
 install_vim_package haya14busa/incsearch.vim
 install_vim_package honza/vim-snippets
 install_vim_package jiangmiao/auto-pairs
+install_vim_package junegunn/fzf "cd ~/.vim/bundle/fzf && ./install --all; cd -"
+install_vim_package junegunn/fzf.vim
 install_vim_package kana/vim-textobj-indent
 install_vim_package kana/vim-textobj-user
 install_vim_package kshenoy/vim-signature
@@ -328,9 +331,6 @@ vnoremap <silent> y y`]
 nnoremap <silent> p p`]
 vnoremap <silent> p p`]
 
-" change to current file directory
-  nnoremap <leader>kg :cd %:p:h<cr>:pwd<cr>
-
 " don't have to press the extra key when exiting the terminal
   augroup terminal
     autocmd!
@@ -494,6 +494,27 @@ vnoremap <silent> p p`]
 
 " highlight last inserted text
   nnoremap gV `[v`]
+
+" fzf maps
+  nnoremap <leader>ja :Ag!<cr>
+  nnoremap <leader>jc :Commands!<cr>
+  nnoremap <leader>jg :GFiles?<cr>
+  nnoremap <leader>jh :History:!<cr>
+  nnoremap <leader>jj :Lines!<cr>
+  nnoremap <leader>jl :BLines!<cr>
+  nnoremap <leader>jm :Marks!<cr>
+  nnoremap <leader>jM :Maps!<cr>
+  nnoremap <leader>jt :Tags!<cr>
+  nnoremap <leader>jw :Windows!<cr>
+
+" related working dir
+  let g:rooter_manual_only = 1
+  nnoremap <leader>,, :pwd<cr>
+  nnoremap <leader>,. :cd <c-r>=expand(getcwd())<cr>/
+  nnoremap <leader>,f :cd <c-r>=expand("%:p:h")<cr>/
+  nnoremap <leader>,h :cd ~/
+  nnoremap <leader>,p :cd /project/
+  nnoremap <leader>,r :Rooter<cr>
 
 function! SetColors()
   hi Error ctermbg=lightred ctermfg=black
