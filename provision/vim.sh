@@ -42,11 +42,8 @@ install_vim_package flazz/vim-colorschemes
 install_vim_package haya14busa/incsearch.vim
 install_vim_package honza/vim-snippets
 install_vim_package jiangmiao/auto-pairs
-install_vim_package junegunn/fzf "cd ~/.vim/bundle/fzf && ./install --all; cd -"
-install_vim_package junegunn/fzf.vim
 install_vim_package kana/vim-textobj-indent
 install_vim_package kana/vim-textobj-user
-install_vim_package kshenoy/vim-signature
 install_vim_package luochen1990/rainbow
 install_vim_package majutsushi/tagbar
 install_vim_package mbbill/undotree
@@ -110,7 +107,8 @@ let g:hardtime_default_on = 1
   endf
 
 " replace in selection
-  vnoremap <leader>r :<bs><bs><bs><bs><bs>%s/\%V\C<c-r>"//g<left><left>
+  vnoremap <leader>r :<bs><bs><bs><bs><bs>%s/\%V\C//g<left><left><left>
+  vnoremap <leader>R :<bs><bs><bs><bs><bs>%s/\%V\C<c-r>"//g<left><left>
 
 " replace with selection. To replace by current register, use <c-r>0 to paste it
   vmap <leader>g "ay:%s/\C<c-r>a//g<left><left>
@@ -157,9 +155,17 @@ let g:hardtime_default_on = 1
   nmap <leader>t :%s/\s\+$<cr><c-o>
 
 " folding
+  set foldlevelstart=20
   set foldmethod=indent
   set fml=0
+  nnoremap <leader>fr :set foldmethod=manual<cr>
+  nnoremap <leader>fR :set foldmethod=indent<cr>
+  vnoremap <leader>ft <c-c>:set foldmethod=manual<cr>mlmk`<kmk`>jmlggvG$zd<c-c>'kVggzf'lVGzfgg<down>
   nnoremap <leader>r zR
+  inoremap <leader>; <C-O>za
+  nnoremap <leader>; za
+  onoremap <leader>; <C-C>za
+  vnoremap <leader>; zf
 
 " reload all saved files without warnings
   set autoread
@@ -176,9 +182,9 @@ autocmd Filetype markdown setlocal wrap
 
 " toggle distraction free mode
   nnoremap <silent> <leader>n :set nonumber<cr>:GitGutterDisable<cr>:set norelativenumber<cr>:set laststatus=0<cr>
-    \ :hi NonText ctermfg=black<cr>:let g:syntastic_auto_loc_list = 0<cr>:hi Folded ctermbg=black ctermfg=black<cr>
+    \ :let g:syntastic_auto_loc_list = 0<cr>:hi Folded ctermbg=black ctermfg=black<cr>
   nnoremap <silent> <leader>N :set number<cr>:GitGutterEnable<cr>:set relativenumber<cr>:set laststatus=2<cr>
-    \ :hi NonText ctermfg=grey<cr>:let g:syntastic_auto_loc_list = 2<cr>:hi Folded ctermbg=236 ctermfg=236<cr>
+    \ :let g:syntastic_auto_loc_list = 2<cr>:hi Folded ctermbg=236 ctermfg=236<cr>
 
 " fix c-b mapping to use with tmux (one page up)
   nnoremap <c-d> <c-b>
@@ -225,6 +231,9 @@ cnoremap <c-K> <c-U>
 
 " remove autoindentation when pasting
   set pastetoggle=<F2>
+
+"  vim fugitive
+  set diffopt+=vertical
 
 " deoplete
   let g:deoplete#enable_at_startup = 1
@@ -306,10 +315,8 @@ vnoremap <leader>ku y:%s/\C<c-r>"//gn<cr>
   nmap <leader>kl vii:sort<cr>
 
 nnoremap <leader>ku viwy:%s/\C<c-r>"//gn<cr>
-nnoremap <leader>; :
 nnoremap <leader>x :set noeol<cr>:set binary<cr>:w<cr>:set nobinary<cr>
 nnoremap <leader>ko :mksession! ~/mysession.vim<cr>:qa<cr>
-nnoremap <leader>km :SignatureToggleSigns<cr>
 au BufNewFile,BufRead *.ejs set filetype=html
 
 " move up/down from the beginning/end of lines
@@ -516,7 +523,13 @@ vnoremap <silent> p p`]
   nnoremap <leader>,p :cd /project/
   nnoremap <leader>,r :Rooter<cr>
 
+
+" http://vim.wikia.com/wiki/File:Xterm-color-table.png
 function! SetColors()
+  hi DiffAdd ctermbg=22
+  hi DiffChange ctermbg=52
+  hi DiffText ctermbg=red
+  hi NonText ctermfg=black
   hi Error ctermbg=lightred ctermfg=black
   hi Folded ctermbg=236 ctermfg=236
   hi IncSearch gui=NONE ctermfg=black ctermfg=blue
@@ -574,5 +587,11 @@ You can open that file in vim with <leader>E
 EOF
 
 touch ~/.vim-macros-custom
+
+install_vim_package junegunn/fzf "cd ~/.vim/bundle/fzf && ./install --all; cd -"
+install_vim_package junegunn/fzf.vim
+__add_n_completion() { sed -i "s|nvim n |nvim |; s|nvim |nvim n |" "$1"; }
+__add_n_completion /home/vagrant/.vim/bundle/fzf/shell/completion.bash
+__add_n_completion /home/vagrant/.fzf/shell/completion.bash
 
 # vim END

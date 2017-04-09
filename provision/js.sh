@@ -34,10 +34,17 @@ EOF
 
 cat >> ~/.bash_aliases <<"EOF"
 alias Serve="http-server -c-1 -p 9000"
-GitDiff() { git diff --color $@ | diff-so-fancy | less -R; }
+GitDiff() { git diff --color $@; }
+GitsShow() { git show --color $@; }
 # Fix coloring of mocha in some windows terminals
 alias Mocha="./node_modules/.bin/mocha -c $@ > >(perl -pe 's/\x1b\[90m/\x1b[92m/g') 2> >(perl -pe 's/\x1b\[90m/\x1b[92m/g' 1>&2)"
 EOF
+
+git config --global core.pager "diff-so-fancy | less --tabs=4 -RFX"
+git config --global color.diff-highlight.oldNormal "red bold"
+git config --global color.diff-highlight.oldHighlight "red bold 52"
+git config --global color.diff-highlight.newNormal "green bold"
+git config --global color.diff-highlight.newHighlight "green bold 22"
 
 cat > /tmp/clean-vim-js-syntax.sh <<"EOF"
 sed -i 's|const |async await |' ~/.vim/bundle/vim-javascript-syntax/syntax/javascript.vim

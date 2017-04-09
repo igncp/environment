@@ -267,7 +267,6 @@ export FZF_ALT_C_COMMAND="AG_DIRS"
 EOF
 # Ctrl+t binding breaks window when tmux + (n)vim + ctrl-z: no visible input. Disable it
 sed -i "s|C-t|C-$|" ~/.fzf/shell/key-bindings.bash
-sed -i "s|nvim n |nvim |; s|nvim |nvim n |" /home/vagrant/.fzf/shell/completion.bash
 cat >> ~/.bash_sources <<"EOF"
 source_if_exists ~/.fzf.bash
 EOF
@@ -329,7 +328,7 @@ add_shellcheck_ignores() {
     echo 'SHELLCHECK_IGNORES="$SHELLCHECK_IGNORES,SC'"$DIRECTIVE"'"' >> ~/.bashrc
   done
 }
-add_shellcheck_ignores 2016 2028 2046 2086 2143 2164
+add_shellcheck_ignores 2016 2028 2046 2086 2143 2164 2181
 echo 'export SHELLCHECK_OPTS="-e $SHELLCHECK_IGNORES"' >> ~/.bashrc
 
 install_pacman_package graphviz dot

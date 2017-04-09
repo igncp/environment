@@ -24,6 +24,6 @@ install_gems() {
   done
 }
 
-install_gems bundler lolcat
+install_gems bundler lolcat fit-commit
 
 # ruby END

@@ -6,12 +6,15 @@ install_pacman_package jdk8-openjdk java
 
 # jvm-extras START
 
-if [ ! -f ~/selenium-server.jar ]; then
-  SELENIUM_FILE_NAME=selenium-server-standalone-2.39.0.jar
+if [ ! -f ~/selenium/selenium-server.jar ]; then
   cd ~
-  curl -O http://selenium-release.storage.googleapis.com/2.39/"$SELENIUM_FILE_NAME"
-  mv "$SELENIUM_FILE_NAME" selenium-server.jar # java -jar ~/selenium-server.jar
+  rm -rf selenium; mkdir -p selenium; cd selenium
+  curl -L https://github.com/mozilla/geckodriver/releases/download/v0.11.1/geckodriver-v0.11.1-linux64.tar.gz | tar xz
+  curl -O http://selenium-release.storage.googleapis.com/3.0/selenium-server-standalone-3.0.1.jar
+  mv selenium* selenium-server.jar # java -jar -Dwebdriver.gecko.driver=~/selenium/geckodriver ~/selenium/selenium-server.jar
 fi
+echo 'alias SeleniumGecko="java -jar -Dwebdriver.gecko.driver=/home/vagrant/selenium/geckodriver ~/selenium/selenium-server.jar"' \
+  >> ~/.bash_aliases # this should be run in the VM gui screen
 
 if [ ! -d /usr/local/lib/gradle ] > /dev/null 2>&1 ; then
   cd ~
