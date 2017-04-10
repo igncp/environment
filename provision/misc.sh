@@ -82,4 +82,15 @@ echo "  -> task list"
 task list
 EOF
 
+# geeknote: requires python2
+if ! type geeknote > /dev/null 2>&1 ; then
+  cd ~; sudo rm -rf geeknote
+  git clone https://github.com/jeffkowalski/geeknote
+  sudo pip2 install lxml proxyenv 
+  cd geeknote
+  sudo python2 setup.py install
+  cd ~; sudo rm -rf geeknote
+  geeknote settings --editor "$EDITOR"
+fi
+
 # misc END

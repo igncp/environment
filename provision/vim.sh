@@ -162,7 +162,6 @@ let g:hardtime_default_on = 1
   nnoremap <leader>fR :set foldmethod=indent<cr>
   vnoremap <leader>ft <c-c>:set foldmethod=manual<cr>mlmk`<kmk`>jmlggvG$zd<c-c>'kVggzf'lVGzfgg<down>
   nnoremap <leader>r zR
-  inoremap <leader>; <C-O>za
   nnoremap <leader>; za
   onoremap <leader>; <C-C>za
   vnoremap <leader>; zf
@@ -337,6 +336,9 @@ inoremap <c-a> <esc>I
 vnoremap <silent> y y`]
 nnoremap <silent> p p`]
 vnoremap <silent> p p`]
+
+" delete from cursor to end of line
+  inoremap <C-Del> <C-\><C-O>D
 
 " don't have to press the extra key when exiting the terminal
   augroup terminal
