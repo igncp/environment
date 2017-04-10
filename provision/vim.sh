@@ -389,7 +389,7 @@ vnoremap <silent> p p`]
 " fast grep
   let g:FastGrep_fn = ':-tabnew\|te
     \ Grep() { grep -rn --color=always "$@"; printf "\n\n\n----\n\n\n"; grep --color=always -rl "$@"; }
-    \ && Grep -i "<c-r>"" <c-r>=g:Fast_grep<cr>\| less -R<c-left><c-left><left><left>'
+    \ && Grep -i "<c-r>"" <c-r>=g:Fast_grep<cr> \| less -R<c-left><c-left><left><left><left><c-left><left><left>'
   let g:Fast_grep=''
   nnoremap <leader>B :let g:Fast_grep=''<left>
   execute 'vnoremap <leader>b y' . g:FastGrep_fn
