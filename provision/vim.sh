@@ -51,7 +51,6 @@ install_vim_package milkypostman/vim-togglelist
 install_vim_package ntpeters/vim-better-whitespace
 install_vim_package plasticboy/vim-markdown
 install_vim_package scrooloose/nerdcommenter
-install_vim_package scrooloose/syntastic
 install_vim_package shougo/deoplete.nvim # :UpdateRemotePlugins
 install_vim_package shougo/neosnippet.vim
 install_vim_package shougo/vimproc.vim "cd ~/.vim/bundle/vimproc.vim && make; cd -"
@@ -65,6 +64,7 @@ install_vim_package tpope/vim-surround
 install_vim_package vim-airline/vim-airline
 install_vim_package vim-airline/vim-airline-themes
 install_vim_package vim-ruby/vim-ruby
+install_vim_package w0rp/ale
 install_vim_package xolox/vim-colorscheme-switcher
 install_vim_package xolox/vim-misc
 
@@ -120,9 +120,6 @@ let g:hardtime_default_on = 1
 " prevent saving backup files
   set nobackup
   set noswapfile
-
-" support all hex colors (e.g. for syntastic)
-  set  t_Co=256
 
 " incsearch.vim
   map /  <Plug>(incsearch-forward)
@@ -181,9 +178,9 @@ autocmd Filetype markdown setlocal wrap
 
 " toggle distraction free mode
   nnoremap <silent> <leader>n :set nonumber<cr>:GitGutterDisable<cr>:set norelativenumber<cr>:set laststatus=0<cr>
-    \ :let g:syntastic_auto_loc_list = 0<cr>:hi Folded ctermbg=black ctermfg=black<cr>
+    \ :let g:ale_set_quickfix = 0<cr>:hi Folded ctermbg=black ctermfg=black<cr>
   nnoremap <silent> <leader>N :set number<cr>:GitGutterEnable<cr>:set relativenumber<cr>:set laststatus=2<cr>
-    \ :let g:syntastic_auto_loc_list = 2<cr>:hi Folded ctermbg=236 ctermfg=236<cr>
+    \ let g:ale_set_quickfix = 1<cr>:hi Folded ctermbg=236 ctermfg=236<cr>
 
 " fix c-b mapping to use with tmux (one page up)
   nnoremap <c-d> <c-b>
@@ -261,49 +258,6 @@ let g:vim_markdown_folding_disabled = 1
   if executable('ag')
     let g:ctrlp_user_command = 'ag %s -l --hidden --nocolor -g "" --ignore .git'
   endif
-
-" syntastic
-  set statusline+=%#warningmsg#
-  set statusline+=%{SyntasticStatuslineFlag()}
-  set statusline+=%*
-  let g:syntastic_always_populate_loc_list = 1
-  let g:syntastic_auto_loc_list = 1
-  let g:syntastic_check_on_open = 1
-  let g:syntastic_check_on_wq = 0
-  let g:syntastic_scss_checkers = ['stylelint']
-  let g:syntastic_json_checkers=[]
-  let g:syntastic_loc_list_height=3
-  let g:syntastic_error_symbol = '•'
-  let g:syntastic_style_error_symbol = '!?'
-  nnoremap <leader>o :SyntasticToggleMode<cr>
-  " Allow :lprev to work with empty location list, or at first location
-  function! <SID>LocationPrevious()
-    try
-      lprev
-    catch /:E553:/
-      lfirst
-    catch /:E\%(42\|776\):/
-      echo "Location list empty"
-    catch /.*/
-      echo v:exception
-    endtry
-  endfunction
-  " Allow :lnext to work with empty location list, or at last location
-  function! <SID>LocationNext()
-    try
-      lnext
-    catch /:E553:/
-      lfirst
-    catch /:E\%(42\|776\):/
-      echo "Location list empty"
-    catch /.*/
-      echo v:exception
-    endtry
-  endfunction
-  nnoremap <silent> <Plug>LocationPrevious :<C-u>exe 'call <SID>LocationPrevious()'<CR>
-  nnoremap <silent> <Plug>LocationNext :<C-u>exe 'call <SID>LocationNext()'<CR>
-  nmap <silent> e[  <Plug>LocationPrevious
-  nmap <silent> e]  <Plug>LocationNext
 
 map <leader>kw :tabnew <c-R>=expand("%:p:h") . "/" <cr>
 map <leader>kW :e <c-R>=expand("%:p:h") . "/" <cr>
@@ -525,6 +479,14 @@ vnoremap <silent> p p`]
   nnoremap <leader>,p :cd /project/
   nnoremap <leader>,r :Rooter<cr>
 
+" ale
+  let g:ale_open_list = 1
+  let g:ale_set_loclist = 0
+  let g:ale_set_quickfix = 1
+  let g:ale_sign_column_always = 1
+  nmap <silent> e[ <Plug>(ale_next_wrap)
+  nmap <silent> e] <Plug>(ale_previous_wrap)
+  nnoremap <leader>o :ALEToggle<cr>
 
 " http://vim.wikia.com/wiki/File:Xterm-color-table.png
 function! SetColors()
@@ -544,10 +506,6 @@ function! SetColors()
     hi Pmenu ctermfg=white ctermbg=17
     hi PmenuSel ctermfg=white ctermbg=29
   hi link TabNum Special
-  hi link SyntasticErrorSign SignColumn
-  hi link SyntasticWarningSign SignColumn
-  hi link SyntasticStyleErrorSign SignColumn
-  hi link SyntasticStyleWarningSign SignColumn
   hi Visual ctermfg=white ctermbg=17
 endfunction
 
