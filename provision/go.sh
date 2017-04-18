@@ -37,7 +37,7 @@ install_go_package github.com/kisielk/errcheck
 install_vim_package fatih/vim-go
 
 cat >> ~/.vimrc <<"EOF"
-" let g:syntastic_go_checkers = ['go', 'golint', 'govet']
+let g:syntastic_go_checkers = ['go', 'golint', 'govet']
 set rtp+=$GOPATH/src/github.com/golang/lint/misc/vim
 let g:go_list_type = "quickfix"
 EOF

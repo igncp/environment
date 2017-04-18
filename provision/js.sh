@@ -83,10 +83,10 @@ cat >> ~/.vimrc <<"EOF"
 " run eslint over file
   nnoremap <silent> <leader>kb :!eslint_d --fix %<cr>:e<cr>
 
-" npm linters
-  let g:ale_javascript_eslint_executable = 'eslint_d'
-  let g:ale_sass_stylelint_executable='stylelint_d'
-  let g:ale_scss_stylelint_executable='stylelint_d'
+" js linters
+  let g:syntastic_javascript_checkers = ['flow', 'eslint']
+  let g:syntastic_javascript_eslint_exec = 'eslint_d'
+  let g:syntastic_typescript_checkers = ['tsc', 'tslint']
   let g:flow#enable = 0
 
  autocmd BufNewFile,BufRead *.js
@@ -158,11 +158,5 @@ source_if_exists ~/.nodenv/versions/6.3.0/lib/node_modules/yarn-completions/node
 EOF
 
 install_node_modules gnomon
-
-install_node_modules node-inspector
-cat >> ~/.bash_aliases <<"EOF"
-alias NI='node-inspector -p 9001'
-alias ND='node-debug --debug-brk'
-EOF
 
 # js END
