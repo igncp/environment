@@ -93,7 +93,7 @@ let g:hardtime_default_on = 1
   nnoremap <Del> "_d
 
 " numbers maps
-  set relativenumber
+  set norelativenumber
   nnoremap <leader>h :set relativenumber!<cr>
 
 " search visually selected text
@@ -180,9 +180,9 @@ autocmd Filetype markdown setlocal wrap
   xnoremap <S-Tab> <gv
 
 " toggle distraction free mode
-  nnoremap <silent> <leader>n :set nonumber<cr>:GitGutterDisable<cr>:set norelativenumber<cr>:set laststatus=0<cr>
+  nnoremap <silent> <leader>n :set nonumber<cr>:GitGutterDisable<cr>:set laststatus=0<cr>
     \ :let g:syntastic_auto_loc_list = 0<cr>:hi Folded ctermbg=black ctermfg=black<cr>
-  nnoremap <silent> <leader>N :set number<cr>:GitGutterEnable<cr>:set relativenumber<cr>:set laststatus=2<cr>
+  nnoremap <silent> <leader>N :set number<cr>:GitGutterEnable<cr>:set laststatus=2<cr>
     \ :let g:syntastic_auto_loc_list = 2<cr>:hi Folded ctermbg=236 ctermfg=236<cr>
 
 " fix c-b mapping to use with tmux (one page up)

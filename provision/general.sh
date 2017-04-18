@@ -165,12 +165,14 @@ MkdirCd(){ mkdir -p $1; cd $1; }
 Popd(){ popd -n +"$1" > /dev/null; cd --; }
 KillProcessUsingPort() { PID=$(lsof -i "tcp:$1" | awk 'NR!=1 {print $2}'); \
   if [[ ! -z $PID ]]; then echo "killing $PID"; sudo kill -9 $PID; fi; }
+
 alias AliasesReload='source ~/.bash_aliases'
 alias ConfigureTimezone='sudo timedatectl set-timezone Asia/Hong_Kong'
 alias EditProvision="$EDITOR /project/provision/provision.sh && provision.sh"
 alias Exit="\$(ps aux | grep tmux | grep -v grep | awk '{print $2}' | xargs kill) || exit"
 alias LsTmpFiles='ls -laht /tmp | tac'
 alias Sudo='sudo -E ' # this preserves aliases and environment in root
+alias Tee="tee /dev/tty";
 alias Tmux="tmux; exit"
 
 alias GitStatus='git status -u'
