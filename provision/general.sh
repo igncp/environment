@@ -337,7 +337,7 @@ install_pacman_package graphviz dot
 cat > ~/.dot-script.sh <<"EOF2"
   FILE_PATH=$1
   EXTENSION=$2
-  FNAME="${FILE_PATH::-4}" # remove extension
+  FNAME="${FILE_PATH::-4}" # remove .dot extension
   RELATIVE=$(python -c "import os.path; print(os.path.relpath('$FNAME', '$PWD'))")
   dot "$FILE_PATH" -T"$EXTENSION" > "$FNAME"."$EXTENSION" && \
   printf "created ${GREEN}$RELATIVE."$EXTENSION"${NC}\n"
@@ -361,6 +361,27 @@ DotSVGRecursiveWatch() {
 }
 DotJPGRecursiveWatch() {
   _DotRecursiveWatch jpg $@
+}
+EOF
+
+cat > ~/.m4-script.sh <<"EOF2"
+  FILE_PATH="$1"
+  RESULT_EXTENSION="$2"
+  FNAME="${FILE_PATH::-3}" # remove .m4 extension
+  RELATIVE=$(python -c "import os.path; print(os.path.relpath('$FNAME', '$PWD'))")
+  m4 "$FILE_PATH" > "$FNAME"."$RESULT_EXTENSION" && \
+  printf "created ${GREEN}$RELATIVE."$RESULT_EXTENSION"${NC}\n"
+EOF2
+chmod +x ~/.m4-script.sh
+cat >> ~/.bash_aliases <<"EOF"
+M4RecursiveWatch() {
+  RESULT_EXTENSION="$1"
+  USED_DIR="${2:-.}"
+  printf "looking recursively in: ${BLUE}$USED_DIR${NC}\n"
+  while true; do # when a file is added, entr will exit
+    sleep 1
+    find "$USED_DIR" -type f -name "*.m4" | entr -d ~/.m4-script.sh /_ "$RESULT_EXTENSION"
+  done
 }
 EOF
 
