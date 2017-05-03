@@ -65,6 +65,7 @@ install_vim_package tpope/vim-surround
 install_vim_package vim-airline/vim-airline
 install_vim_package vim-airline/vim-airline-themes
 install_vim_package vim-ruby/vim-ruby
+install_vim_package vim-scripts/AnsiEsc.vim
 install_vim_package xolox/vim-colorscheme-switcher
 install_vim_package xolox/vim-misc
 
@@ -236,7 +237,9 @@ cnoremap <c-K> <c-U>
 
 " deoplete
   let g:deoplete#enable_at_startup = 1
+  let g:deoplete#auto_complete_start_length=1
   let g:deoplete#file#enable_buffer_path = 1
+  call deoplete#custom#set('_', 'matchers', ['matcher_full_fuzzy'])
   inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
   inoremap <expr><s-tab> pumvisible() ? "\<c-p>" : "\<tab>"
 
@@ -515,6 +518,12 @@ vnoremap <silent> p p`]
   nnoremap <leader>jM :Maps!<cr>
   nnoremap <leader>jt :Tags!<cr>
   nnoremap <leader>jw :Windows!<cr>
+  nnoremap <leader>jf :Filetypes!<cr>
+  nnoremap <leader>je :AnsiEsc<cr>
+
+" disable deop;deoplete
+  nnoremap <leader>jd :call deoplete#disable()<cr>
+  nnoremap <leader>jD :call deoplete#enable()<cr>
 
 " related working dir
   let g:rooter_manual_only = 1
@@ -592,8 +601,15 @@ touch ~/.vim-macros-custom
 
 install_vim_package junegunn/fzf "cd ~/.vim/bundle/fzf && ./install --all; cd -"
 install_vim_package junegunn/fzf.vim
-__add_n_completion() { sed -i "s|nvim n |nvim |; s|nvim |nvim n |" "$1"; }
+__add_n_completion() {
+  ALL_CMDS="n sh node ll"; sed -i "s|nvim $ALL_CMDS |nvim |; s|nvim |nvim $ALL_CMDS |" "$1";
+  DIR_CMDS='mkdir tree'; sed -i "s|pushd $DIR_CMDS |pushd |; s|pushd |pushd $DIR_CMDS |" "$1";
+}
 __add_n_completion /home/vagrant/.vim/bundle/fzf/shell/completion.bash
 __add_n_completion /home/vagrant/.fzf/shell/completion.bash
+cat >> ~/.bash_aliases <<"EOF"
+NFZF() { nvim -R -c "set foldlevel=20" -c "Line!" -; } # useful to pipe to this cmd
+Tree() { tree -a $@ -C -I "node_modules|.git" | nvim -R -c "AnsiEsc" -c "set foldlevel=20" -; }
+EOF
 
 # vim END

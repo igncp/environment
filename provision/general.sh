@@ -395,4 +395,12 @@ if ! type entr > /dev/null 2>&1 ; then
   cd ~ && sudo rm -rf ~/_entr-tmp
 fi
 
+check_file_exists() {
+  FILE=$1
+  if [ ! -f "$FILE" ]; then
+    echo "This provision depends on the file: $1 . Will exit now."
+    exit 1
+  fi
+}
+
 # general END

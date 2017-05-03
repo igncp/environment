@@ -1,12 +1,9 @@
 # lamp START
 
-# * config files
-# - apache: httpd.conf
-# - wordpress: wp-config.php
-
 # * requires
 # - mysql database (for the cms)
 
+check_file_exists /project/provision/httpd.conf
 if ! type apachectl > /dev/null 2>&1 ; then
   echo "installing apache"
   sudo pacman -S --noconfirm apache
@@ -57,6 +54,7 @@ fi
 
 DB_USER="bar"
 DB_USER_PASSWORD="baz"
+check_file_exists /project/provision/wp-config.php
 # wordpress
   # if [ ! -f ~/wordpress-installation-finished ]; then
     # sudo apt-get install -y php5-curl php5-gd php-mbstring php5-mcrypt php-xml php5-xmlrpc php5-mysqlnd-ms
