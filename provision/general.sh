@@ -78,12 +78,12 @@ if [[ ! -z $(sudo systemctl status netdata.service | grep inactive) ]]; then
 fi
 
 if [ ! -f ~/.acd_func ]; then
-  sudo curl -o ~/.acd_func \
+  curl -o ~/.acd_func \
     https://raw.githubusercontent.com/djoot/all-bash-history/master/acd_func.sh
 fi
 
 if [ ! -f ~/.git-prompt ]; then
-  sudo curl -o ~/.git-prompt \
+  curl -o ~/.git-prompt \
     https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh
 fi
 
@@ -245,17 +245,6 @@ cat > ~/.ctags <<"EOF"
 --regex-markdown=/^##[ \t]+(.*)/\1/i,Heading_L2/
 --regex-markdown=/^###[ \t]+(.*)/\1/k,Heading_L3/
 EOF
-
-if ! type packer > /dev/null 2>&1 ; then
-  rm -rf ~/packer
-  mkdir ~/packer && cd ~/packer
-  sudo pacman -S --noconfirm wget git expac jshon
-  sudo wget https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=packer
-  mv PKGBUILD?h=packer PKGBUILD
-  makepkg
-  sudo pacman --noconfirm -U packer-*
-  cd ~ && rm -rf ~/packer
-fi
 
 if [ ! -d ~/.fzf ]; then
   git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf

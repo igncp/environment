@@ -47,8 +47,6 @@ EOF
 install_pacman_package chromium
 install_pacman_package gimp
 
-sudo pacman -S --noconfirm ttf-freefont ttf-arphic-uming ttf-baekmuk # fonts for chromium
-
 if [ ! -f ~/.check-files/gui-fonts ]; then
   sudo pacman -S --noconfirm ttf-freefont ttf-arphic-uming ttf-baekmuk # fonts for chromium
   mkdir -p ~/.check-files; touch ~/.check-files/gui-fonts
@@ -75,7 +73,7 @@ fi
 EOF
   mkdir -p ~/.config/i3
   check_file_exists /project/provision/i3-config
-  cp_or_exit /project/provision/i3-config ~/.config/i3
+  cp /project/provision/i3-config ~/.config/i3
 
 # gui END
 
