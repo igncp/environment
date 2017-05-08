@@ -93,7 +93,7 @@ cat >> ~/.vimrc <<"EOF"
 	\ call neosnippet#commands#_source("/home/vagrant/.vim/bundle/vim-snippets/snippets/javascript.es6.react.snippets")
 
 " jsx utils
-  nnoremap <leader>jx :call JSXEachAttributeInLine()<cr>/><cr>i<cr><bs><right><c-c>
+  nnoremap <leader>jx $i<left><space><cr><up><c-c>:call JSXEachAttributeInLine()<CR>:%s/\s\+$<CR><c-o>A<cr><tab>
 EOF
 
 cat > /tmp/js-and-ts-snippets <<"EOF"
@@ -166,3 +166,31 @@ alias ND='node-debug --debug-brk'
 EOF
 
 # js END
+
+# js-extras START
+
+# reason: https://github.com/facebook/reason
+  echo 'eval $(opam config env)' >> ~/.bashrc
+  if ! type opam > /dev/null 2>&1; then
+    wget https://raw.github.com/ocaml/opam/master/shell/opam_installer.sh -O - | sh -s /usr/local/bin
+    opam update
+    opam switch 4.03.0
+    eval $(opam config env)
+    cd ~
+    git clone git@github.com:facebook/reason.git
+    cd reason
+    opam pin add -y reason-parser reason-parser
+    opam pin add -y reason .
+    npm install -g git://github.com/reasonml/reason-cli.git
+  fi
+  install_vim_package reasonml/vim-reason-loader
+  cat >> ~/.vimrc <<"EOF"
+  let g:deoplete#omni_patterns = {}
+  let g:deoplete#omni_patterns.reason = '[^. *\t]\.\w*\|\h\w*|#'
+  let g:deoplete#sources = {}
+  let g:deoplete#sources.reason = ['omni', 'buffer']
+  let g:syntastic_reason_checkers=['merlin']
+  autocmd FileType reason nmap <buffer> <leader>kb :ReasonPrettyPrint<Cr>
+EOF
+
+# js-extras END

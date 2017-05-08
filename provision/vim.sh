@@ -338,7 +338,7 @@ inoremap <c-e> <esc>A
 inoremap <c-a> <esc>I
 vnoremap <silent> y y`]
 nnoremap <silent> p p`]
-vnoremap <silent> p p`]
+vnoremap <silent> p pgvy`]
 
 " delete from cursor to end of line
   inoremap <C-Del> <C-\><C-O>D
@@ -543,8 +543,8 @@ function! SetColors()
   hi NonText ctermfg=black
   hi Error ctermbg=lightred ctermfg=black
   hi Folded ctermbg=236 ctermfg=236
-  hi IncSearch gui=NONE ctermfg=black ctermfg=blue
-  hi MatchParen ctermfg=black
+  hi IncSearch gui=NONE ctermbg=black ctermfg=red
+  hi MatchParen ctermfg=black ctermbg=white
   hi Search cterm=NONE ctermfg=black ctermbg=white
   hi SpellBad ctermbg=lightred ctermfg=black
   hi TabLine ctermfg=gray ctermbg=black
