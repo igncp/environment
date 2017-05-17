@@ -246,22 +246,6 @@ cat > ~/.ctags <<"EOF"
 --regex-markdown=/^###[ \t]+(.*)/\1/k,Heading_L3/
 EOF
 
-if [ ! -d ~/.fzf ]; then
-  git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-  ~/.fzf/install --all
-fi
-install_pacman_package the_silver_searcher ag
-cat >> ~/.bashrc <<"EOF"
-export FZF_COMPLETION_TRIGGER='['
-AG_DIRS() { ag -u --hidden --ignore .git -g "" "$@" | xargs dirname | sort | uniq; }
-export FZF_ALT_C_COMMAND="AG_DIRS"
-EOF
-# Ctrl+t binding breaks window when tmux + (n)vim + ctrl-z: no visible input. Disable it
-sed -i "s|C-t|C-$|" ~/.fzf/shell/key-bindings.bash
-cat >> ~/.bash_sources <<"EOF"
-source_if_exists ~/.fzf.bash
-EOF
-
 if [ ! -f ~/.config/up/up.sh ]; then
   curl --create-dirs -o ~/.config/up/up.sh https://raw.githubusercontent.com/shannonmoeller/up/master/up.sh
 fi
