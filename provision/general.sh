@@ -171,6 +171,7 @@ alias ConfigureTimezone='sudo timedatectl set-timezone Asia/Hong_Kong'
 alias EditProvision="$EDITOR /project/provision/provision.sh && provision.sh"
 alias Exit="\$(ps aux | grep tmux | grep -v grep | awk '{print $2}' | xargs kill) || exit"
 alias LsTmpFiles='ls -laht /tmp | tac'
+alias RsyncDelete='rsync -rhv --delete' # remember to add a slash at the end of source (dest doesn't matter)
 alias Sudo='sudo -E ' # this preserves aliases and environment in root
 alias Tee="tee /dev/tty";
 alias Tmux="tmux; exit"
@@ -375,5 +376,47 @@ check_file_exists() {
     exit 1
   fi
 }
+
+# fzf
+  if [ ! -d ~/.fzf ]; then
+    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+    ~/.fzf/install --all
+  fi
+  install_pacman_package the_silver_searcher ag
+  cat >> ~/.bashrc <<"EOF"
+  export FZF_COMPLETION_TRIGGER='['
+  AG_DIRS() { ag -u --hidden --ignore .git -g "" "$@" | xargs dirname | sort | uniq; }
+  export FZF_ALT_C_COMMAND="AG_DIRS"
+EOF
+  # Ctrl+t binding breaks window when tmux + (n)vim + ctrl-z: no visible input. Disable it
+  sed -i "s|C-t|C-$|" ~/.fzf/shell/key-bindings.bash
+  cat >> ~/.bash_sources <<"EOF"
+  source_if_exists ~/.fzf.bash
+EOF
+
+  cat >> ~/.bash_aliases <<"EOF"
+  __FZFBookmarkedCommands() {
+    cat ~/.bookmarked-commands |
+    fzf --height 100% --border -m --ansi --no-sort --reverse --multi --bind 'ctrl-s:toggle-sort' --header 'Press CTRL-S to toggle sort'
+  }
+  __FZFScripts() {
+    $(find /project/scripts -type f ! -name "*.md" |
+    fzf --height 100% --border -m -q "'" --ansi --no-sort --reverse --multi --bind 'ctrl-s:toggle-sort' --header 'Press CTRL-S to toggle sort')
+  }
+
+  bind '"\er": redraw-current-line'
+  bind '"\C-q\C-q": "$(__FZFBookmarkedCommands)\e\C-e\er"'
+  bind '"\C-q\C-a": "$(__FZFScripts)\e\C-e\er\n"'
+  bind '"\C-q\C-w": "$(__FZFScripts)\e\C-e\er"'
+EOF
+  cat > ~/.bookmarked-commands <<"EOF"
+    GitCommit ""
+    GitEditorCommit
+    GitStatus
+    GitAddAll
+    GitDiff HEAD
+    git l
+    git fetch
+EOF
 
 # general END
