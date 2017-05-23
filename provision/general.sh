@@ -414,7 +414,8 @@ EOF
     GitEditorCommit
     GitStatus
     GitAddAll
-    GitDiff HEAD
+    GitDiff HEAD | diff-so-fancy | less -R
+    git checkout -b
     git l
     git fetch
 EOF
