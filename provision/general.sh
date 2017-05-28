@@ -175,6 +175,8 @@ alias RsyncDelete='rsync -rhv --delete' # remember to add a slash at the end of 
 alias Sudo='sudo -E ' # this preserves aliases and environment in root
 alias Tee="tee /dev/tty";
 alias Tmux="tmux; exit"
+alias Visudo='sudo env EDITOR=vim visudo'
+VisudoUser() { sudo env EDITOR=vim visudo -f /etc/sudoers.d/$1; }
 
 alias GitStatus='git status -u'
 GitOpenStatusFiles() { $EDITOR -p $(git status --porcelain $1 | grep -vE "^ D" | sed s/^...//); }
@@ -406,8 +408,9 @@ EOF
 
   bind '"\er": redraw-current-line'
   bind '"\C-q\C-q": "$(__FZFBookmarkedCommands)\e\C-e\er"'
-  bind '"\C-q\C-a": "$(__FZFScripts)\e\C-e\er\n"'
-  bind '"\C-q\C-w": "$(__FZFScripts)\e\C-e\er"'
+  bind '"\C-q\C-w": "$(__FZFBookmarkedCommands)\e\C-e\er\n"'
+  bind '"\C-q\C-a": "$(__FZFScripts)\e\C-e\er"'
+  bind '"\C-q\C-s": "$(__FZFScripts)\e\C-e\er\n"'
 EOF
   cat > ~/.bookmarked-commands <<"EOF"
     GitCommit ""
@@ -419,5 +422,11 @@ EOF
     git l
     git fetch
 EOF
+
+if ! type h > /dev/null 2>&1 ; then
+  rm -rf ~/hhighlighter
+  git clone --depth 1 https://github.com/paoloantinori/hhighlighter.git ~/hhighlighter
+fi
+echo 'source_if_exists ~/hhighlighter/h.sh' >> ~/.bash_sources
 
 # general END
