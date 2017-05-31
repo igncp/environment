@@ -93,4 +93,6 @@ if ! type geeknote > /dev/null 2>&1 ; then
   geeknote settings --editor "$EDITOR"
 fi
 
+# useful fonts: https://github.com/ryanoasis/nerd-fonts#patched-fonts
+
 # misc END
