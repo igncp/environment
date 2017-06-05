@@ -36,4 +36,3 @@ Some of the conventions they take into account are:
 ## License
 
 MIT
-

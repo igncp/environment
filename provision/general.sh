@@ -163,6 +163,7 @@ Find() { find "$@" ! -path "*node_modules*" ! -path "*.git*"; }
 GetProcessUsingPort(){ fuser $1/tcp; }
 MkdirCd(){ mkdir -p $1; cd $1; }
 Popd(){ popd -n +"$1" > /dev/null; cd --; }
+VisudoUser() { sudo env EDITOR=vim visudo -f /etc/sudoers.d/$1; }
 KillProcessUsingPort() { PID=$(lsof -i "tcp:$1" | awk 'NR!=1 {print $2}'); \
   if [[ ! -z $PID ]]; then echo "killing $PID"; sudo kill -9 $PID; fi; }
 
@@ -176,7 +177,7 @@ alias Sudo='sudo -E ' # this preserves aliases and environment in root
 alias Tee="tee /dev/tty";
 alias Tmux="tmux; exit"
 alias Visudo='sudo env EDITOR=vim visudo'
-VisudoUser() { sudo env EDITOR=vim visudo -f /etc/sudoers.d/$1; }
+alias Xargs='xargs -I{}'
 
 alias GitStatus='git status -u'
 GitOpenStatusFiles() { $EDITOR -p $(git status --porcelain $1 | grep -vE "^ D" | sed s/^...//); }
@@ -421,9 +422,10 @@ EOF
     git checkout -b
     git l
     git fetch
+    cp .git/COMMIT_EDITMSG /tmp/COMMIT_EDITMSG
 EOF
 
-if ! type h > /dev/null 2>&1 ; then
+if [ ! -f ~/hhighlighter/h.sh ] > /dev/null 2>&1 ; then
   rm -rf ~/hhighlighter
   git clone --depth 1 https://github.com/paoloantinori/hhighlighter.git ~/hhighlighter
 fi
