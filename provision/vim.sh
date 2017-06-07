@@ -5,6 +5,7 @@ install_vim_package() {
   DIR=$(echo $REPO | sed -r "s|.+/(.+)|\1|") # foo/bar => bar
   EXTRA_CMD=$2
   if [ ! -d ~/.vim/bundle/"$DIR" ]; then
+    echo "installing $REPO"
     git clone https://github.com/$REPO.git ~/.vim/bundle/"$DIR"
     if [[ ! -z $EXTRA_CMD ]]; then eval $EXTRA_CMD; fi
   fi
@@ -42,6 +43,7 @@ install_vim_package flazz/vim-colorschemes
 install_vim_package haya14busa/incsearch.vim
 install_vim_package honza/vim-snippets
 install_vim_package jiangmiao/auto-pairs
+install_vim_package junegunn/limelight.vim
 install_vim_package kana/vim-textobj-indent
 install_vim_package kana/vim-textobj-user
 install_vim_package luochen1990/rainbow
@@ -447,7 +449,7 @@ vnoremap <silent> p pgvy`]
   " add ':e' to paste a PATH_TO_FILE:LINE_NUMBER from fast grep
   nnoremap <c-t> :tabnew<cr>:e <left><right>
   nnoremap <c-d> :tabclose<cr>
-  nnoremap <leader>z :tab split<cr>
+  nnoremap <leader>zz :tab split<cr>
   " Rename tabs to show tab number.
   if exists("+showtabline")
       function! MyTabLine()
@@ -534,6 +536,12 @@ vnoremap <silent> p pgvy`]
   nnoremap <leader>,p :cd /project/
   nnoremap <leader>,r :Rooter<cr>
 
+" limelight
+  let g:limelight_conceal_ctermfg = 'black'
+  let g:limelight_bop = '^'
+  let g:limelight_eop = '$'
+  nnoremap <leader>zl :Limelight!!<cr>
+  nnoremap <leader>zL :let g:limelight_paragraph_span = <left><right>
 
 " http://vim.wikia.com/wiki/File:Xterm-color-table.png
 function! SetColors()
