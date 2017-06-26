@@ -423,6 +423,7 @@ EOF
     git l
     git fetch
     cp .git/COMMIT_EDITMSG /tmp/COMMIT_EDITMSG
+    (alias ; typeset -f) | NFZF
 EOF
 
 if [ ! -f ~/hhighlighter/h.sh ] > /dev/null 2>&1 ; then

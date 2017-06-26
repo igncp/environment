@@ -41,7 +41,7 @@ install_vim_package elzr/vim-json
 install_vim_package evidens/vim-twig
 install_vim_package flazz/vim-colorschemes
 install_vim_package haya14busa/incsearch.vim
-install_vim_package honza/vim-snippets
+install_vim_package honza/vim-snippets "find ~/.vim/bundle/vim-snippets/snippets/ -type f | xargs sed -i 's|:\${VISUAL}||'"
 install_vim_package jiangmiao/auto-pairs
 install_vim_package junegunn/limelight.vim
 install_vim_package kana/vim-textobj-indent
