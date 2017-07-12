@@ -341,6 +341,8 @@ inoremap <c-a> <esc>I
 vnoremap <silent> y y`]
 nnoremap <silent> p p`]
 vnoremap <silent> p pgvy`]
+nnoremap <leader>zk v%
+nnoremap <leader>zK v%<del>
 
 " delete from cursor to end of line
   inoremap <C-Del> <C-\><C-O>D
