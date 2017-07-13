@@ -1,6 +1,6 @@
 # js START
 
-NODE_VERSION=6.3.0
+NODE_VERSION=6.11.1
 if [ ! -f ~/.check-files/node ]; then
   echo "setup node with nodenv"
   cd ~
@@ -27,7 +27,7 @@ install_node_modules http-server diff-so-fancy eslint babel-eslint cloc yo eslin
 
 cat >> ~/.bashrc <<"EOF"
 export PATH=$PATH:/home/$USER/.nodenv/bin
-export PATH=$PATH:/home/$USER/.nodenv/versions/6.3.0/bin/
+export PATH=$PATH:/home/$USER/.nodenv/versions/6.11.1/bin/
 eval "$(nodenv init -)"
 source <(npm completion)
 EOF
@@ -153,9 +153,6 @@ snippet toc
 EOF
 
 install_node_modules yarn yarn-completions
-cat >> ~/.bash_sources <<"EOF"
-source_if_exists ~/.nodenv/versions/6.3.0/lib/node_modules/yarn-completions/node_modules/tabtab/.completions/yarn.bash
-EOF
 
 install_node_modules gnomon
 

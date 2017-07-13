@@ -11,4 +11,8 @@ if ! type ethrun > /dev/null 2>&1 ; then
   cd ~; rm -rf ethereum-tmp
 fi
 
+install_node_modules truffle ethereumjs-testrpc
+
+install_pacman_package geth
+
 # ethereum END
