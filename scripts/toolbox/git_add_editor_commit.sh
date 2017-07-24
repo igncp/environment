@@ -2,7 +2,7 @@
 
 git reset > /dev/null 2>&1
 
-SELECTED_FILES=$(git status --porcelain | fzf --height 100% --border  -m --ansi --nth 2 \
+SELECTED_FILES=$(git status --porcelain | fzf --height 100% --border  -m --ansi --nth 2 --reverse --cycle \
   --preview '(git diff --color=always -- {-1} | sed 1,4d; cat {-1}) | head -500')
 
 if [ -z "$SELECTED_FILES" ]; then
