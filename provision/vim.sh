@@ -55,6 +55,7 @@ install_vim_package plasticboy/vim-markdown
 install_vim_package scrooloose/nerdcommenter
 install_vim_package scrooloose/syntastic
 install_vim_package shougo/deoplete.nvim # :UpdateRemotePlugins
+install_vim_package shougo/neoinclude.vim
 install_vim_package shougo/neosnippet.vim
 install_vim_package shougo/vimproc.vim "cd ~/.vim/bundle/vimproc.vim && make; cd -"
 install_vim_package takac/vim-hardtime
