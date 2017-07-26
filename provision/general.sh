@@ -389,6 +389,7 @@ check_file_exists() {
   install_pacman_package the_silver_searcher ag
   cat >> ~/.bashrc <<"EOF"
   export FZF_COMPLETION_TRIGGER='['
+  export FZF_DEFAULT_OPTS='--bind=pgup:preview-page-up,pgdn:preview-page-down,ctrl-j:preview-down,ctrl-k:preview-up --preview-window right:wrap'
   AG_DIRS() { ag -u --hidden --ignore .git -g "" "$@" | xargs dirname | sort | uniq; }
   export FZF_ALT_C_COMMAND="AG_DIRS"
 EOF

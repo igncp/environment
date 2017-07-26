@@ -613,7 +613,7 @@ touch ~/.vim-macros-custom
 install_vim_package junegunn/fzf "cd ~/.vim/bundle/fzf && ./install --all; cd -"
 install_vim_package junegunn/fzf.vim
 __add_n_completion() {
-  ALL_CMDS="n sh node ll"; sed -i "s|nvim $ALL_CMDS |nvim |; s|nvim |nvim $ALL_CMDS |" "$1";
+  ALL_CMDS="n sh RsyncDelete node ll"; sed -i "s|nvim $ALL_CMDS |nvim |; s|nvim |nvim $ALL_CMDS |" "$1";
   DIR_CMDS='mkdir tree'; sed -i "s|pushd $DIR_CMDS |pushd |; s|pushd |pushd $DIR_CMDS |" "$1";
 }
 __add_n_completion /home/vagrant/.vim/bundle/fzf/shell/completion.bash

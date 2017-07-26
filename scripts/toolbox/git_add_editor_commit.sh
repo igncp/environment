@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
-git reset > /dev/null 2>&1
+git add -A . > /dev/null 2>&1
 
 SELECTED_FILES=$(git status --porcelain | fzf --height 100% --border  -m --ansi --nth 2 --reverse --cycle \
-  --preview '(git diff --color=always -- {-1} | sed 1,4d; cat {-1}) | head -500')
+  --preview 'git diff --color=always HEAD -- {-1}')
+
+git reset > /dev/null 2>&1
 
 if [ -z "$SELECTED_FILES" ]; then
   exit 0
