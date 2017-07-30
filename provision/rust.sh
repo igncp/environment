@@ -1,16 +1,19 @@
 # rust START
 
-install_pacman_package rust rustc
-install_pacman_package cargo
+if ! type rustc > /dev/null 2>&1 ; then
+  curl https://sh.rustup.rs -sSf | sh -s -- --no-modify-path -y --default-toolchain nightly
+  rustup component add rust-src
+fi
 
 cat >> ~/.bashrc <<"EOF"
 export PATH=$PATH:~/.cargo/bin
-export RUST_SRC_PATH=/home/vagrant/.multirust/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src
+export RUST_SRC_PATH=/home/vagrant/.multirust/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src
 EOF
 
 install_vim_package rust-lang/rust.vim
 install_vim_package racer-rust/vim-racer
 install_vim_package mattn/webapi-vim
+install_vim_package cespare/vim-toml
 
 cat >> ~/.vimrc <<"EOF"
 let g:rustfmt_autosave = 1
@@ -27,6 +30,12 @@ au FileType rust nmap gd <Plug>(rust-def)
 au FileType rust nmap gs <Plug>(rust-def-split)
 au FileType rust nmap gx <Plug>(rust-def-vertical)
 au FileType rust nmap <leader>gd <Plug>(rust-doc)
+
+let RustPrintMapping="vnoremap <leader>kk yOprintln!(\"a {}\", a);<C-c>9hvpgvyf\"lllvp"
+autocmd filetype rust :exe RustPrintMapping
+
+let g:deoplete#sources#rust#racer_binary='/home/vagrant/.cargo/bin/racer'
+let g:deoplete#sources#rust#rust_source_path='/home/vagrant/rust-src'
 EOF
 
 # it expects a bin file for each crate
@@ -42,11 +51,15 @@ install_cargo_crate() {
 install_cargo_crate rustfmt
 install_cargo_crate racer
 
-if ! type rustup > /dev/null 2>&1 ; then
-  curl https://sh.rustup.rs -sSf | sh -s -- --no-modify-path -y
-  rustup component add rust-src
-fi
-
 install_pacman_package valgrind
+
+# for code coverage
+install_pacman_package llvm llvm-ar
+if ! type lcov > /dev/null 2>&1 ; then
+  rm -rf ~/lcov-pkg
+  git clone https://aur.archlinux.org/lcov.git ~/lcov-pkg ; cd ~/lcov-pkg
+  makepkg -s
+  sudo pacman -U --noconfirm ./*.pkg.tar.xz
+fi
 
 # rust END

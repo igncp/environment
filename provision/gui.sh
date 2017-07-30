@@ -2,19 +2,10 @@
 
 if [ ! -f ~/.check-files/gui ]; then
   echo "installing gui"
-  sudo pacman -S --noconfirm xfce4 xfce4-goodies
+  install_pacman_package xorg
+  install_pacman_package xorg-xinit
   mkdir -p ~/.check-files && touch ~/.check-files/gui
 fi
-sudo bash -c 'echo "allowed_users=anybody" > /etc/X11/Xwrapper.config'
-sudo bash -c 'echo "needs_root_rights=yes" >> /etc/X11/Xwrapper.config'
-cat >> ~/.bash_aliases <<"EOF"
-alias StartXFCE4='startxfce4&'
-alias XFCE4SettingsEditor='xfce4-settings-editor'
-SetupXFCE4() {
-  xfconf-query -c xfce4-panel -p /panels/panel-1/size -s 25
-  xfconf-query -c xfce4-desktop -np '/desktop-icons/style' -t 'int' -s '0'
-}
-EOF
 
 # terminator
   install_pacman_package terminator
@@ -35,7 +26,7 @@ EOF
     cursor_blink = False
     cursor_color = "#ff0068"
     cursor_color_fg = False
-    font = Monospace 14
+    font = Monospace 18
     foreground_color = "#ffffff"
     icon_bell = False
     palette = "#073642:#d25071:#bbdba5:#00b5ac:#268bd2:#d33682:#7cbcb7:#eee8d5:#002b36:#eb8395:#586e75:#8f9fa5:#839496:#6c71c4:#93a1a1:#fdf6e3"
@@ -60,20 +51,41 @@ fi
     install_pacman_package gvim
     install_pacman_package i3status
   fi
-  echo 'exec i3' > ~/.xinitrc
+  # dpi will change the font size of the gui menus
+  cat > ~/.xinitrc <<"EOF"
+  xrandr --dpi 150
+  exec i3
+EOF
   cat >> ~/.bash_aliases <<"EOF"
   I3Start() {
     setxkbmap -layout gb;
     /usr/bin/VBoxClient-all;
   }
-  alias ModifyI3Conf='$EDITOR /project/provision/i3-config; cp /project/provision/i3-config ~/.config/i3/config'
+  alias ModifyI3Conf='$EDITOR /project/provision/i3-config; cp /project/provision/i3-config ~/.config/i3/config; echo Copied I3 Config'
   alias I3Reload='i3-msg reload'
+  alias I3LogOut='i3-msg exit'
   alias I3Poweroff='systemctl poweroff'
   alias I3Start='startx'
 EOF
   mkdir -p ~/.config/i3
   check_file_exists /project/provision/i3-config
   cp /project/provision/i3-config ~/.config/i3
+
+# alacritty
+  if ! type alacritty > /dev/null 2>&1 ; then
+    rm -rf ~/alacritty-git
+    git clone https://aur.archlinux.org/alacritty-git.git ~/alacritty-git
+    cd ~/alacritty-git
+    makepkg -s
+    sudo pacman -U ./*.pkg.tar.xz
+    cd ~; rm -rf ~/alacritty-git
+  fi
+  check_file_exists /project/provision/alacritty.yml
+  cp /project/provision/i3-config ~/.config/alacritty/alacritty.yml
+  cat >> ~/.bash_aliases <<"EOF"
+  alias ModifyAlacritty='$EDITOR /project/provision/alacritty.yml;
+    cp /project/provision/alacritty.yml ~/.config/alacritty/alacritty.yml; echo Alacritty copied'
+EOF
 
 # gui END
 
@@ -86,5 +98,15 @@ EOF
     java -Dvim.files=$HOME/.vim -Declipse.home=/opt/eclipse -jar eclim_2.6.0.jar install
     touch ~/.check-files/eclim
   fi
+
+# code
+if ! type code > /dev/null 2>&1 ; then
+  rm -rf ~/visual-studio-code
+  git clone https://aur.archlinux.org/visual-studio-code.git ~/visual-studio-code
+  cd ~/visual-studio-code
+  makepkg -s
+  sudo pacman -U ./*.pkg.tar.xz --noconfirm
+  cd ~ && rm -rf ~/visual-studio-code
+fi
 
 # gui-extras END

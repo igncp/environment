@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# set -o xtrace # displays commands, helpful for debugging errors
+
 # general START
 
 if [ -d /project/scripts ]; then chmod -R +x /project/scripts; fi
