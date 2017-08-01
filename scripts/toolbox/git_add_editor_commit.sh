@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+cd $(git rev-parse --show-toplevel)
+
 git add -A . > /dev/null 2>&1
 
 SELECTED_FILES=$(git status --porcelain | fzf --height 100% --border  -m --ansi --nth 2 --reverse --cycle \
