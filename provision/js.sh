@@ -107,7 +107,9 @@ snippet cj
   console.log("LOG POINT - ${0:}");
 snippet des
   describe("${1:}", () => {
-    ${0}
+    it("${2:}", () => {
+      ${0}
+    });
   });
 snippet desf
   describe("${1:}", function() {
@@ -139,6 +141,14 @@ snippet tt
   >
     ${2}
   </$1>
+snippet jee
+  expect(${1}).toEqual(${0});
+snippet jeesa
+  expect(${1}.args).toEqual([[${0}]])
+snippet jeesc
+  expect(${1}.callCount).toEqual(${2:0})${0}
+snippet >
+  (${1}) => ${2:null}${0}
 EOF
 cat /tmp/js-and-ts-snippets > ~/.vim-snippets/javascript.snippets
 cat /tmp/js-and-ts-snippets > ~/.vim-snippets/typescript.snippets
@@ -189,5 +199,8 @@ EOF
   let g:syntastic_reason_checkers=['merlin']
   autocmd FileType reason nmap <buffer> <leader>kb :ReasonPrettyPrint<Cr>
 EOF
+
+install_node_modules import-js
+install_vim_package galooshi/vim-import-js
 
 # js-extras END
