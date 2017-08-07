@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 DIR=$(find . -type d ! -path "*.git*" ! -path "*node_modules*" | \
-  fzf --height 100% --border -m  --ansi --header 'This can intensive for the memory')
+  fzf --height 100% --border -m  --ansi --header 'This can be memory intensive if the dir has many big files')
 
 
 if [ -z "$DIR" ]; then
