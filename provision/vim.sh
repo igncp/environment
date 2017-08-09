@@ -331,6 +331,9 @@ au BufNewFile,BufRead *.ejs set filetype=html
 " useful maps for macros
   nnoremap <leader>d @d
   nnoremap W @q
+  nnoremap <leader>zw :nnoremap W @
+  nnoremap <leader>zW :nnoremap W @q<cr>
+  " run the following map from the macros file, there should be at least two tabs opened
   nnoremap <leader>W _v$<left>y:q<cr>:let @="<c-r>""<home><right><right><right><right><right>
   nnoremap <leader>Q :!cat ~/.vim-macros > /tmp/macros;
     \ cat ~/.vim-macros-custom >> /tmp/macros<cr><cr>:tabnew /tmp/macros<cr>
