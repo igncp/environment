@@ -333,11 +333,24 @@ au BufNewFile,BufRead *.ejs set filetype=html
   nnoremap W @q
   nnoremap <leader>zw :nnoremap W @
   nnoremap <leader>zW :nnoremap W @q<cr>
-  " run the following map from the macros file, there should be at least two tabs opened
-  nnoremap <leader>W _v$<left>y:q<cr>:let @="<c-r>""<home><right><right><right><right><right>
+  " run this macro from the macros file, there should be at least two tabs opened
+  nnoremap <leader>WWW _v$<left>y:q<cr>:let @="<c-r>""<home><right><right><right><right><right>
   nnoremap <leader>Q :!cat ~/.vim-macros > /tmp/macros;
     \ cat ~/.vim-macros-custom >> /tmp/macros<cr><cr>:tabnew /tmp/macros<cr>
   nnoremap <leader>E :tabnew ~/.vim-macros-custom<cr>
+  function! ReplaceWeirdCharactersForMacros()
+    let replacements = {
+      \ "\<C-[>": '\\<esc>',
+      \ "\<C-M>": '\\<cr>',
+      \ "b": '\\<esc>',
+      \ "": '\\<esc>',
+      \ "k": '\\<bs>'
+      \}
+    for [a, b] in items(replacements)
+      execute "s/" . a . "/" . b . "/ge"
+    endfor
+  endfunction
+  nnoremap <leader>za :call ReplaceWeirdCharactersForMacros()<cr>
 
 nnoremap <leader>kv :%s/\t/  /g<cr>
 vnoremap <F4> :sort<cr>
