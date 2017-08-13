@@ -270,7 +270,7 @@ EOF
 # Search and Replace utility
   cat >> ~/.bash_aliases <<"EOF"
 SR() { _CustomSR $@ && history -s $(echo "SR ""$@") && \
-  history -s $(cat /tmp/sr_replace) && history -s $(cat /tmp/sr_search); }
+  history -s $(cat /tmp/sr_replace) && history -s $(cat /tmp/sr_search_old) && history -s $(cat /tmp/sr_search_new); }
 _CustomSR() {
   ask_with_default() {
     NAME="$1"; DEFAULT="$2"
@@ -294,11 +294,13 @@ _CustomSR() {
     GREP_OPTS=" -i "; SED_OPTS="I"
   fi
 
-  CMD_SEARCH="find $DIR_TO_FIND -type f $EXTRA_FIND_ARGS | xargs grep --color=always $GREP_OPTS -E "'"'"$SEARCH_REGEX"'" | less -R'
+  CMD_SEARCH_NEW="find $DIR_TO_FIND -type f $EXTRA_FIND_ARGS | xargs grep --color=always $GREP_OPTS -E "'"'"$SEARCH_REGEX"'" | less -R'
+  CMD_SEARCH_OLD="find $DIR_TO_FIND -type f $EXTRA_FIND_ARGS | xargs grep --color=always $GREP_OPTS -E "'"'"$REPLACEMENT_STR"'" | less -R'
   CMD_REPLACE="find $DIR_TO_FIND -type f $EXTRA_FIND_ARGS | xargs grep $GREP_OPTS -El "'"'"$SEARCH_REGEX"'"'
   CMD_REPLACE="$CMD_REPLACE | xargs -I {} sed -i 's|$SEARCH_REGEX|$REPLACEMENT_STR|$SED_OPTS' {}"
 
-  echo "$CMD_SEARCH" > /tmp/sr_search
+  echo "$CMD_SEARCH_NEW" > /tmp/sr_search_new
+  echo "$CMD_SEARCH_OLD" > /tmp/sr_search_old
   echo "$CMD_REPLACE" > /tmp/sr_replace
 }
 EOF
@@ -429,6 +431,7 @@ EOF
     git fetch
     cp .git/COMMIT_EDITMSG /tmp/COMMIT_EDITMSG
     (alias ; typeset -f) | NFZF
+    git commit -m "$(head .git/COMMIT_EDITMSG  -n 1)"
 EOF
 
 if [ ! -f ~/hhighlighter/h.sh ] > /dev/null 2>&1 ; then
