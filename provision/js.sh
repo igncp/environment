@@ -81,7 +81,7 @@ cat >> ~/.vimrc <<"EOF"
   autocmd FileType javascript nnoremap <silent> <buffer> gb :TernDef<CR><Paste>
 
 " run eslint over file
-  nnoremap <silent> <leader>kb :!eslint_d --fix %<cr>:e<cr>
+  autocmd filetype javascript :exe "nnoremap <silent> <leader>kb :!eslint_d --fix %<cr>:e<cr>"
 
 " js linters
   let g:syntastic_javascript_checkers = ['flow', 'eslint']
