@@ -172,6 +172,25 @@ alias NI='node-inspector -p 9001'
 alias ND='node-debug --debug-brk'
 EOF
 
+cat > ~/.js-tests-specs-displayer <<"EOF"
+#!/usr/bin/env bash
+# this file is generated from the provision, changes will be overwritten
+FILE_PATH="$1";
+source ~/hhighlighter/h.sh
+export H_COLORS_FG="green,blue"
+grep -E "it\(|describe\(|it\.only\(|describe\.only\(" "$FILE_PATH" |
+  sed -r 's| \(\) => \{$||; s| async$||; s|,$||; s|it.only\(|it(|; s|describe\.only\(|describe(|' |
+  h "describe\((.*)" "it\((.*)" |
+  sed "s|describe(||; s|it(||;" > /tmp/tests-specs
+sed -i '1i'"$FILE_PATH\n" /tmp/tests-specs
+echo "" >> /tmp/tests-specs
+less -R /tmp/tests-specs
+EOF
+chmod +x ~/.js-tests-specs-displayer
+cat >> ~/.vimrc <<"EOF"
+  autocmd filetype javascript :exe 'nnoremap <leader>zt :-tabnew\|te ~/.js-tests-specs-displayer <c-r>=expand("%:p")<cr><cr>'
+EOF
+
 # js END
 
 # js-extras START
