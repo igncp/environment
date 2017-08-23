@@ -166,6 +166,7 @@ GetProcessUsingPort(){ fuser $1/tcp; }
 MkdirCd(){ mkdir -p $1; cd $1; }
 Popd(){ popd -n +"$1" > /dev/null; cd --; }
 VisudoUser() { sudo env EDITOR=vim visudo -f /etc/sudoers.d/$1; }
+ViDir() { find $@ | vidir -; }
 RandomLine() { sort -R "$1" | head -n 1; }
 KillProcessUsingPort() { PID=$(lsof -i "tcp:$1" | awk 'NR!=1 {print $2}'); \
   if [[ ! -z $PID ]]; then echo "killing $PID"; sudo kill -9 $PID; fi; }

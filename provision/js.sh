@@ -191,6 +191,8 @@ cat >> ~/.vimrc <<"EOF"
   autocmd filetype javascript :exe 'nnoremap <leader>zt :-tabnew\|te ~/.js-tests-specs-displayer <c-r>=expand("%:p")<cr><cr>'
 EOF
 
+echo "./node_modules/.bin/jest">> ~/.bookmarked-commands
+
 # js END
 
 # js-extras START
