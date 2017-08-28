@@ -405,14 +405,15 @@ EOF
   source_if_exists ~/.fzf.bash
 EOF
 
-  mkdir -p ~/.custom-scripts
+  mkdir -p /project/scripts/custom
+
   cat >> ~/.bash_aliases <<"EOF"
   __FZFBookmarkedCommands() {
     cat ~/.bookmarked-commands |
     fzf --height 100% --border -m --ansi --no-sort --reverse --multi --bind 'ctrl-s:toggle-sort' --header 'Press CTRL-S to toggle sort'
   }
   __FZFScripts() {
-    $(find /project/scripts ~/.custom-scripts -type f ! -name "*.md" |
+    $(find /project/scripts -type f ! -name "*.md" |
     fzf --height 100% --border -m -q "'" --ansi --no-sort --reverse --multi --bind 'ctrl-s:toggle-sort' --header 'Press CTRL-S to toggle sort')
   }
 
