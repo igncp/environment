@@ -111,12 +111,16 @@ snippet des
       ${0}
     });
   });
-snippet desf
+snippet xdescribeFunction
   describe("${1:}", function() {
     ${0}
   });
-snippet bef
+snippet XbeforeEach
   beforeEach(() => {
+    ${0}
+  });
+snippet XafterEach
+  afterEach(() => {
     ${0}
   });
 snippet it
@@ -124,7 +128,7 @@ snippet it
     ${0}
   });
 snippet exp
-  expect(${1:}).to.${0};
+  expect(${1:}).to${0};
 snippet i
   import {
     ${1},
@@ -141,12 +145,12 @@ snippet tt
   >
     ${2}
   </$1>
-snippet jee
+snippet XexpectToEqual
   expect(${1}).toEqual(${0});
-snippet jeesa
-  expect(${1}.args).toEqual([[${0}]])
-snippet jeesc
-  expect(${1}.callCount).toEqual(${2:0})${0}
+snippet XexpectJustCallsToEqual
+  expect(${1}.mock.calls).toEqual([[${0}]])
+snippet XexpectCallsLengthToEqual
+  expect(${1}.mock.calls.length).toEqual(${2:0})${0}
 snippet >
   (${1}) => ${2:null}${0}
 EOF
