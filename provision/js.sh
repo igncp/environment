@@ -148,7 +148,7 @@ snippet tt
 snippet XexpectToEqual
   expect(${1}).toEqual(${0});
 snippet XexpectJustCallsToEqual
-  expect(${1}.mock.calls).toEqual([[${0}]])
+  expect(${1}.mock.calls).toEqual([${0}])
 snippet XexpectCallsLengthToEqual
   expect(${1}.mock.calls.length).toEqual(${2:0})${0}
 snippet >
