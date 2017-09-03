@@ -670,7 +670,9 @@ add_special_vim_map() {
   MAP_COMMENT="$3"
 
   echo "nnoremap <leader>zm$MAP_KEYS_AFTER_LEADER $MAP_END" >> ~/.vimrc
-  echo "<Space>zm$MAP_KEYS_AFTER_LEADER -- $MAP_COMMENT" > ~/.special-vim-maps-from-provision.txt
+  echo "<Space>zm$MAP_KEYS_AFTER_LEADER -- $MAP_COMMENT" >> ~/.special-vim-maps-from-provision.txt
 }
+
+echo "" > ~/.special-vim-maps-from-provision.txt
 
 # vim END
