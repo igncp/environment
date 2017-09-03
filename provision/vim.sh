@@ -659,7 +659,7 @@ function! SpecialMaps()
   call fzf#run(options_dict)
 endfunction
 
-nnoremap <leader><tab> :call SpecialMaps()<cr>
+nnoremap <c-f> :call SpecialMaps()<cr>
 inoremap <c-f> <c-c>:call SpecialMaps()<cr>
 EOF
 
