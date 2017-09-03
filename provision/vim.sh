@@ -640,4 +640,37 @@ NFZF() { nvim -R -c "set foldlevel=20" -c "Line!" -; } # useful to pipe to this 
 Tree() { tree -a $@ -C -I "node_modules|.git" | nvim -R -c "AnsiEsc" -c "set foldlevel=20" -; }
 EOF
 
+cat >> ~/.vimrc <<"EOF"
+" from fzf.vim
+function! s:key_sink(line)
+  let key = matchstr(a:line, '^\S*')
+  redraw
+  call feedkeys(substitute(key, '<[^ >]\+>', '\=eval("\"\\".submatch(0)."\"")', 'g'))
+endfunction
+function! SpecialMaps()
+  let file_content = system('cat ~/.special-vim-maps-from-provision.txt')
+  let source_list = split(file_content, '\n')
+  let options_dict = {
+    \ 'options': ' --prompt "Maps (n)> " --ansi --no-hscroll --query "<Space>zm" --nth 1,..',
+    \ 'source': source_list,
+    \ 'sink': function('s:key_sink'),
+    \ 'name': 'maps'}
+
+  call fzf#run(options_dict)
+endfunction
+
+nnoremap <leader><tab> :call SpecialMaps()<cr>
+EOF
+
+# these maps will be present in a fzf list (apart from working normally)
+# the must begin with <leader>zm (where <leader> == <Space>)
+add_special_vim_map() {
+  MAP_KEYS_AFTER_LEADER="$1"
+  MAP_END="$2"
+  MAP_COMMENT="$3"
+
+  echo "nnoremap <leader>zm$MAP_KEYS_AFTER_LEADER $MAP_END" >> ~/.vimrc
+  echo "<Space>zm$MAP_KEYS_AFTER_LEADER -- $MAP_COMMENT" > ~/.special-vim-maps-from-provision.txt
+}
+
 # vim END

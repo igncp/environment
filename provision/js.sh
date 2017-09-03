@@ -228,4 +228,6 @@ EOF
 install_node_modules import-js
 install_vim_package galooshi/vim-import-js
 
+add_special_vim_map "ct" $'? it(<cr>V$%y$%o<cr><c-c>Vpf\'<right>ci\'' 'Copy it test case content'
+
 # js-extras END
