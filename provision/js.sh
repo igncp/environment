@@ -228,6 +228,7 @@ EOF
 install_node_modules import-js
 install_vim_package galooshi/vim-import-js
 
-add_special_vim_map "ct" $'? it(<cr>V$%y$%o<cr><c-c>Vpf\'<right>ci\'' 'Copy it test case content'
+add_special_vim_map "ct" $'? it(<cr>V$%y$%o<cr><c-c>Vpf\'<right>ci\'' 'test copy it test case content'
+add_special_vim_map "ee" $'iXexpectEqual<c-o>:call feedkeys("<c-l>", "t")<cr>' 'test expect toEqual'
 
 # js-extras END

@@ -660,6 +660,7 @@ function! SpecialMaps()
 endfunction
 
 nnoremap <leader><tab> :call SpecialMaps()<cr>
+inoremap <c-f> <c-c>:call SpecialMaps()<cr>
 EOF
 
 # these maps will be present in a fzf list (apart from working normally)
