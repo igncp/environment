@@ -244,8 +244,8 @@ cnoremap <c-K> <c-U>
   let g:deoplete#auto_complete_start_length=1
   let g:deoplete#file#enable_buffer_path = 1
   call deoplete#custom#set('_', 'matchers', ['matcher_full_fuzzy'])
-  inoremap <expr><tab> pumvisible() ? "\<c-n>" : "\<tab>"
-  inoremap <expr><s-tab> pumvisible() ? "\<c-p>" : "\<tab>"
+  inoremap <expr><c-j> pumvisible() ? "\<c-n>" : "\<c-j>"
+  inoremap <expr><c-k> pumvisible() ? "\<c-p>" : "\<c-k>"
 
 let g:NERDSpaceDelims = 1
 let g:rainbow_active = 1
@@ -314,6 +314,8 @@ let g:vim_markdown_folding_disabled = 1
 
 map <leader>kw :tabnew <c-R>=expand("%:p:h") . "/" <cr>
 map <leader>kW :e <c-R>=expand("%:p:h") . "/" <cr>
+
+nnoremap <leader>c" _f"ci"
 
 vnoremap <leader>ku y:%s/\C<c-r>"//gn<cr>
 

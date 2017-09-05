@@ -153,6 +153,8 @@ snippet XexpectCallsLengthToEqual
   expect(${1}.mock.calls.length).toEqual(${2:0})${0}
 snippet >
   (${1}) => ${2:null}${0}
+snippet XjestMock
+  jest.mock("${0}", () => ${0})
 EOF
 cat /tmp/js-and-ts-snippets > ~/.vim-snippets/javascript.snippets
 cat /tmp/js-and-ts-snippets > ~/.vim-snippets/typescript.snippets
@@ -237,10 +239,12 @@ function! g:RunCtrlPWithFilterInNewTab(query)
 endfunction
 EOF
 
-_add_special_vim_map "cpfat" $':call RunCtrlPWithFilterInNewTab(\'<c-r>=expand("%:t:r")<cr>test\')<cr>' 'ctrlp filename adding test'
-_add_special_vim_map "cpfrt" $':call RunCtrlPWithFilterInNewTab(\'<c-r>=expand("%:t:r")<cr><bs><bs><bs><bs><bs>\')<cr>' 'ctrlp filename removing test'
-add_special_vim_map "ct" $'? it(<cr>V$%y$%o<cr><c-c>Vpf\'<right>ci\'' 'test copy it test case content'
+add_special_vim_map "cpfat" $':call RunCtrlPWithFilterInNewTab(\'<c-r>=expand("%:t:r")<cr>test\')<cr>' 'ctrlp filename adding test'
+add_special_vim_map "cpfrt" $':call RunCtrlPWithFilterInNewTab(\'<c-r>=expand("%:t:r")<cr><bs><bs><bs><bs><bs>\')<cr>' 'ctrlp filename removing test'
+add_special_vim_map "ctt" $'? it(<cr>V$%y$%o<cr><c-c>Vpf\'<right>ci\'' 'test copy it test case content'
+add_special_vim_map "ctd" $'? describe(<cr>V$%y$%o<cr><c-c>Vpf\'<right>ci\'' 'test copy describe test content'
 add_special_vim_map "ee" $'iXexpectEqual<c-o>:call feedkeys("<c-l>", "t")<cr>' 'test expect toEqual'
+add_special_vim_map "titr" $'_ciwconst<c-c>/from<cr>ciw= require(<del><c-c>$a)' 'transform import to require'
 
 cat >> ~/.vim-macros <<"EOF"
 
