@@ -199,6 +199,28 @@ EOF
 
 echo "./node_modules/.bin/jest">> ~/.bookmarked-commands
 
+cat >> ~/.vimrc <<"EOF"
+function! g:RunCtrlPWithFilterInNewTab(query)
+  let g:ctrlp_default_input=a:query
+  execute '-tabnew'
+  execute 'CtrlP'
+  let g:ctrlp_default_input=''
+endfunction
+EOF
+
+add_special_vim_map "cpfat" $':call RunCtrlPWithFilterInNewTab(\'<c-r>=expand("%:t:r")<cr>test\')<cr>' 'ctrlp filename adding test'
+add_special_vim_map "cpfrt" $':call RunCtrlPWithFilterInNewTab(\'<c-r>=expand("%:t:r")<cr><bs><bs><bs><bs><bs>\')<cr>' 'ctrlp filename removing test'
+add_special_vim_map "ctit" $'? it(<cr>V$%y$%o<cr><c-c>Vpf\'<right>ci\'' 'test copy it test case content'
+add_special_vim_map "ctde" $'? describe(<cr>V$%y$%o<cr><c-c>Vpf\'<right>ci\'' 'test copy describe test content'
+add_special_vim_map "eeq" $'iXexpectEqual<c-o>:call feedkeys("<c-l>", "t")<cr>' 'test expect toEqual'
+add_special_vim_map "titr" $'_ciwconst<c-c>/from<cr>ciw= require(<del><c-c>$a)' 'transform import to require'
+
+cat >> ~/.vim-macros <<"EOF"
+
+" Convert jsx prop to object property
+_f=i\<del>: \<c-c>\<right>%s,\<c-c>``s\<c-c>``j
+EOF
+
 # js END
 
 # js-extras START
@@ -229,27 +251,5 @@ EOF
 
 install_node_modules import-js
 install_vim_package galooshi/vim-import-js
-
-cat >> ~/.vimrc <<"EOF"
-function! g:RunCtrlPWithFilterInNewTab(query)
-  let g:ctrlp_default_input=a:query
-  execute '-tabnew'
-  execute 'CtrlP'
-  let g:ctrlp_default_input=''
-endfunction
-EOF
-
-add_special_vim_map "cpfat" $':call RunCtrlPWithFilterInNewTab(\'<c-r>=expand("%:t:r")<cr>test\')<cr>' 'ctrlp filename adding test'
-add_special_vim_map "cpfrt" $':call RunCtrlPWithFilterInNewTab(\'<c-r>=expand("%:t:r")<cr><bs><bs><bs><bs><bs>\')<cr>' 'ctrlp filename removing test'
-add_special_vim_map "ctt" $'? it(<cr>V$%y$%o<cr><c-c>Vpf\'<right>ci\'' 'test copy it test case content'
-add_special_vim_map "ctd" $'? describe(<cr>V$%y$%o<cr><c-c>Vpf\'<right>ci\'' 'test copy describe test content'
-add_special_vim_map "ee" $'iXexpectEqual<c-o>:call feedkeys("<c-l>", "t")<cr>' 'test expect toEqual'
-add_special_vim_map "titr" $'_ciwconst<c-c>/from<cr>ciw= require(<del><c-c>$a)' 'transform import to require'
-
-cat >> ~/.vim-macros <<"EOF"
-
-" Convert jsx prop to object property
-_f=i\<del>: \<c-c>\<right>%s,\<c-c>``s\<c-c>``j
-EOF
 
 # js-extras END
