@@ -23,7 +23,7 @@ install_node_modules() {
   done
 }
 
-install_node_modules http-server diff-so-fancy eslint babel-eslint cloc yo eslint_d flow flow-cli
+install_node_modules http-server diff-so-fancy eslint babel-eslint cloc yo eslint_d flow flow-cli flow-bin
 
 cat >> ~/.bashrc <<"EOF"
 export PATH=$PATH:/home/$USER/.nodenv/bin
