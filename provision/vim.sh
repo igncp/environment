@@ -260,6 +260,7 @@ let g:vim_markdown_folding_disabled = 1
   let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist)|(\.(swp|ico|git|svn))$'
   nnoremap <leader>p :CtrlP %:p:h<cr> " CtrlP in file's dir
   nnoremap <leader>P :CtrlPMRUFiles<cr>
+  nnoremap <leader>zp :CtrlP <c-r>=expand(getcwd())<cr><cr>
   nnoremap <leader>kpp :CtrlP /project<cr>
   nnoremap <leader>kpd :CtrlP ~/dev<cr>
   nnoremap <leader>kph :CtrlP ~<cr>
@@ -312,8 +313,10 @@ let g:vim_markdown_folding_disabled = 1
   nmap <silent> e[  <Plug>LocationPrevious
   nmap <silent> e]  <Plug>LocationNext
 
-map <leader>kw :tabnew <c-R>=expand("%:p:h") . "/" <cr>
-map <leader>kW :e <c-R>=expand("%:p:h") . "/" <cr>
+nnoremap <leader>kw :tabnew <c-R>=expand("%:p:h") . "/" <cr>
+nnoremap <leader>kW :e <c-R>=expand("%:p:h") . "/" <cr>
+nnoremap <leader>ke :Mkdir <c-R>=expand("%:p:h") . "/"<cr>
+nnoremap <leader>kE :Move <c-R>=expand("%:p:h") . "/"<cr>
 
 nnoremap <leader>c" _f"ci"
 

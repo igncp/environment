@@ -170,6 +170,7 @@ ViDir() { find $@ | vidir -; }
 RandomLine() { sort -R "$1" | head -n 1; }
 KillProcessUsingPort() { PID=$(lsof -i "tcp:$1" | awk 'NR!=1 {print $2}'); \
   if [[ ! -z $PID ]]; then echo "killing $PID"; sudo kill -9 $PID; fi; }
+SshGeneratePemPublicKey() { FILE=$1; ssh-keygen -f "$FILE" -e -m pem; }
 
 alias AliasesReload='source ~/.bash_aliases'
 alias ConfigureTimezone='sudo timedatectl set-timezone Asia/Hong_Kong'
