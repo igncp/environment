@@ -156,10 +156,10 @@ snippet >
 snippet XjestJustMock
   jest.mock("${0}")
 snippet XjestMockWithVariable
-  const $2 = {
+  const mock$2 = {
     ${0}: jest.fn(),
   }
-  jest.mock("${1}", () => ${2})
+  jest.mock("${1}", () => mock${2})
 snippet XjestSpyOn
   jest.spyOn(${1}, "${2}")
 EOF
