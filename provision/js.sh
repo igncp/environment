@@ -153,8 +153,15 @@ snippet XexpectCallsLengthToEqual
   expect(${1}.mock.calls.length).toEqual(${2:0})${0}
 snippet >
   (${1}) => ${2:null}${0}
-snippet XjestMock
-  jest.mock("${0}", () => ${0})
+snippet XjestJustMock
+  jest.mock("${0}")
+snippet XjestMockWithVariable
+  const $2 = {
+    ${0}: jest.fn(),
+  }
+  jest.mock("${1}", () => ${2})
+snippet XjestSpyOn
+  jest.spyOn(${1}, "${2}")
 EOF
 cat /tmp/js-and-ts-snippets > ~/.vim-snippets/javascript.snippets
 cat /tmp/js-and-ts-snippets > ~/.vim-snippets/typescript.snippets
