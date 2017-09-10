@@ -162,6 +162,8 @@ snippet XjestMockWithVariable
   jest.mock("${1}", () => mock${2})
 snippet XjestSpyOn
   jest.spyOn(${1}, "${2}")
+snippet XjestFn
+  jest.fn(${1})${0}
 EOF
 cat /tmp/js-and-ts-snippets > ~/.vim-snippets/javascript.snippets
 cat /tmp/js-and-ts-snippets > ~/.vim-snippets/typescript.snippets
@@ -221,11 +223,17 @@ add_special_vim_map "ctit" $'? it(<cr>V$%y$%o<cr><c-c>Vpf\'<right>ci\'' 'test co
 add_special_vim_map "ctde" $'? describe(<cr>V$%y$%o<cr><c-c>Vpf\'<right>ci\'' 'test copy describe test content'
 add_special_vim_map "eeq" $'iXexpectEqual<c-o>:call feedkeys("<c-l>", "t")<cr>' 'test expect toEqual'
 add_special_vim_map "titr" $'_ciwconst<c-c>/from<cr>ciw= require(<del><c-c>$a)' 'transform import to require'
+add_special_vim_map "sjsfun" "v/[^,] {<cr><right>%" "select js function"
+add_special_vim_map "djsfun" "v/[^,] {<cr><right>%d" "cut js function"
+add_special_vim_map "jsjmi" "a.mockImplementation(() => )<left>" "jest mock implementation"
 
 cat >> ~/.vim-macros <<"EOF"
 
 " Convert jsx prop to object property
 _f=i\<del>: \<c-c>\<right>%s,\<c-c>``s\<c-c>``j
+
+" Create test property
+_f:v$\<left>\<del>A: \<c-c>_viwyA''\<c-c>\<left>paValue\<c-c>A,\<c-c>_\<down>
 EOF
 
 # js END
