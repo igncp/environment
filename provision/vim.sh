@@ -367,6 +367,7 @@ vnoremap <silent> p pgvy`]
 nnoremap <leader>zk v%
 nnoremap <leader>zK v%<del>
 nnoremap <leader>zf :let @" = expand("%")<cr>
+vnoremap ; :<c-u>
 
 " delete from cursor to end of line
   inoremap <C-Del> <C-\><C-O>D

@@ -226,6 +226,8 @@ add_special_vim_map "titr" $'_ciwconst<c-c>/from<cr>ciw= require(<del><c-c>$a)' 
 add_special_vim_map "sjsfun" "v/[^,] {<cr><right>%" "select js function"
 add_special_vim_map "djsfun" "v/[^,] {<cr><right>%d" "cut js function"
 add_special_vim_map "jsjmi" "a.mockImplementation(() => )<left>" "jest mock implementation"
+add_special_vim_map "jrct" "gv:<c-u>%s/\%V\C+//ge<cr>:<c-u>%s/\%V\CObject //ge<cr>:<c-u>%s/\%V\CArray //ge<cr>" \
+  "jest replace copied text from terminal"
 
 cat >> ~/.vim-macros <<"EOF"
 

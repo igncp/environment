@@ -10,8 +10,10 @@ if [ -z "$SRC_FILE" ]; then
   exit 0
 fi
 
+SRC_FILE_NAME=$(basename "$SRC_FILE" | cut -d'.' -f1)
+
 TEST_FILE=$(eval "$FIND_CMD -name '*.test.*'" |
-  fzf --height 100% --border --ansi --header "Please choose the test file")
+  fzf --height 100% --border --query "$SRC_FILE_NAME" --ansi --header "Please choose the test file")
 
 if [ -z "$TEST_FILE" ]; then
   exit 0
