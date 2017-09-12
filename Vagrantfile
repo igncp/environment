@@ -1,6 +1,5 @@
 Vagrant.configure(2) do |config|
-  config.vm.box = "arch14"
-  config.vm.box_url = 'http://vagrant.srijn.net/archlinux-x64-2014-01-07.box'
+  config.vm.box = "archlinux/archlinux"
   config.vm.hostname = 'PROJECT_HOSTNAME'
 
   # config.vm.network :forwarded_port, guest: 80, host: 9080

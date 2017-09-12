@@ -57,7 +57,7 @@ fi
   exec i3
 EOF
   cat >> ~/.bash_aliases <<"EOF"
-  I3Start() {
+  I3Setup() {
     setxkbmap -layout gb;
     /usr/bin/VBoxClient-all;
   }

@@ -16,9 +16,6 @@ if [ ! -f ~/.check-files/basic-packages ]; then
   sudo pacman -Su --noconfirm
   sudo pacman-db-upgrade
   sudo pacman -S --noconfirm ca-certificates-mozilla bash-completion
-  # http://superuser.com/a/788480
-  sudo sed -ir 's|^HOOKS=".*"$|HOOKS="base udev block autodetect modconf filesystems keyboard fsck"|' /etc/mkinitcpio.conf
-  sudo mkinitcpio -p linux
   mkdir -p ~/.check-files && touch ~/.check-files/basic-packages
 fi
 
@@ -44,6 +41,7 @@ download_cached() {
   sudo chown $USER "$LOCATION/$FILE_NAME"
 }
 
+install_pacman_package base-devel make
 install_pacman_package git
 cat > ~/.gitconfig <<"EOF"
 [user]
@@ -214,6 +212,7 @@ C-h:unix-filename-rubout
 C-k:edit-and-execute-command
 EOF
 
+install_pacman_package tmux
 cat > ~/.tmux.conf <<"EOF"
 set -g status off
 set-window-option -g xterm-keys on
