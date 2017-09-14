@@ -208,6 +208,11 @@ set wildmenu
 
 nnoremap <leader>kc :RandomColorScheme<cr>:call SetColors()<cr>:colorscheme<cr>
 
+" this will display foo-bar in autocomplete
+  set iskeyword+=-
+  nnoremap <leader>z- :set iskeyword+=-<cr>
+  nnoremap <leader>z_ :set iskeyword-=-<cr>
+
 " ignore case in searches
   set ic
 
