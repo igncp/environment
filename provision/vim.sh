@@ -391,7 +391,7 @@ vnoremap ; :<c-u>
   if has('conceal')
     set conceallevel=2 concealcursor=niv
   endif
-  let g:neosnippet#snippets_directory='~/.vim/bundle/vim-snippets/snippets,~/.vim-snippets'
+  let g:neosnippet#snippets_directory='~/.vim/bundle/vim-snippets/snippets,~/.vim-snippets,/project/vim-custom-snippets'
   let g:neosnippet#disable_runtime_snippets={'c' : 1, 'cpp' : 1}
   let g:neosnippet#expand_word_boundary=1
   imap <c-d>     <Plug>(neosnippet_jump)
@@ -627,6 +627,10 @@ alias CheckVimSnippets='nvim ~/.vim/bundle/vim-snippets/snippets'
 EOF
 
 mkdir -p ~/.vim-snippets
+
+# this snippets will not be overriden by the provision
+# the should be changed manually
+mkdir -p /project/vim-custom-snippets/
 
 rm -rf /tmp/tmp.*
 
