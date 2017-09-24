@@ -50,7 +50,7 @@ cat > /tmp/clean-vim-js-syntax.sh <<"EOF"
 sed -i 's|const |async await |' ~/.vim/bundle/vim-javascript-syntax/syntax/javascript.vim
 sed -i 's|let var |let var const |' ~/.vim/bundle/vim-javascript-syntax/syntax/javascript.vim
 sed -i 's|export from|export|' ~/.vim/bundle/vim-javascript-syntax/syntax/javascript.vim
-sed -i 's|import public|import from public|' ~/.vim/bundle/vim-javascript-syntax/syntax/javascript.vim
+sed -i 's|import public|import from type public|' ~/.vim/bundle/vim-javascript-syntax/syntax/javascript.vim
 echo "Changed vim javascript syntax"
 EOF
 
@@ -164,6 +164,18 @@ snippet XjestSpyOn
   jest.spyOn(${1}, "${2}")
 snippet XjestFn
   jest.fn(${1})${0}
+snippet XconstJustRequire
+  const ${1} = require("${0}$1")
+snippet XconstObjRequire
+  const {
+    ${1},
+  } = require("${0}")
+snippet XjestMockImplementation
+  ${1}.mockImplementation(() => ${0})
+snippet XjestMockReturnValue
+  ${1}.mockReturnValue(${0})
+snippet XistanbulIgnoreElse
+   // istanbul ignore else
 EOF
 cat /tmp/js-and-ts-snippets > ~/.vim-snippets/javascript.snippets
 cat /tmp/js-and-ts-snippets > ~/.vim-snippets/typescript.snippets
@@ -222,12 +234,18 @@ add_special_vim_map "cpfrt" $':call RunCtrlPWithFilterInNewTab(\'<c-r>=expand("%
 add_special_vim_map "ctit" $'? it(<cr>V$%y$%o<cr><c-c>Vpf\'<right>ci\'' 'test copy it test case content'
 add_special_vim_map "ctde" $'? describe(<cr>V$%y$%o<cr><c-c>Vpf\'<right>ci\'' 'test copy describe test content'
 add_special_vim_map "eeq" $'iXexpectEqual<c-o>:call feedkeys("<c-l>", "t")<cr>' 'test expect toEqual'
-add_special_vim_map "titr" $'_ciwconst<c-c>/from<cr>ciw= require(<del><c-c>$a)' 'transform import to require'
 add_special_vim_map "sjsfun" "v/[^,] {<cr><right>%" "select js function"
 add_special_vim_map "djsfun" "v/[^,] {<cr><right>%d" "cut js function"
 add_special_vim_map "jsjmi" "a.mockImplementation(() => )<left>" "jest mock implementation"
 add_special_vim_map "jrct" "gv:<c-u>%s/\%V\C+//ge<cr>:<c-u>%s/\%V\CObject //ge<cr>:<c-u>%s/\%V\CArray //ge<cr>" \
   "jest replace copied text from terminal"
+add_special_vim_map 'tjmvs' 'I<c-right><right><c-c>viwy?describe(<cr>olet <c-c>pa;<c-c><c-o><left>v_<del>' \
+  'jest move variable outside of it'
+add_special_vim_map "titr" $'_ciwconst<c-c>/from<cr>ciw= require(<del><c-c>$a)<c-c>V:<c-u>%s/\%V\C;//g<cr>' \
+  'transform import to require'
+add_special_vim_map "jimc" "a.mock.calls<c-c>" "jest instert mock calls"
+add_special_vim_map "jimi" "a.mockImplementation(() => )<left>" "jest instert mock implementation"
+add_special_vim_map "jirv" "a.mockReturnValue()<left>" "jest instert mock return value"
 
 cat >> ~/.vim-macros <<"EOF"
 
