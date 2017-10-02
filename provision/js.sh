@@ -199,6 +199,16 @@ alias NI='node-inspector -p 9001'
 alias ND='node-debug --debug-brk'
 EOF
 
+cat >> ~/.vim-snippets/javascript.snippets <<"EOF"
+snippet XimportType
+  import type {
+    ${1},
+  } from '${0}';
+snippet XflowComment
+  // @flow
+  ${0}
+EOF
+
 cat > ~/.js-tests-specs-displayer <<"EOF"
 #!/usr/bin/env bash
 # this file is generated from the provision, changes will be overwritten
