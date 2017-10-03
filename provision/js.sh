@@ -111,10 +111,6 @@ snippet des
       ${0}
     });
   });
-snippet xdescribeFunction
-  describe("${1:}", function() {
-    ${0}
-  });
 snippet XbeforeEach
   beforeEach(() => {
     ${0}
@@ -134,7 +130,7 @@ snippet i
     ${1},
   } from "${2}";
 snippet t
-  <${1}${3}>${2}</$1>
+  <${1}>${2}</$1>
 snippet T
   <${1} ${2}/>
 snippet TT
@@ -149,8 +145,6 @@ snippet XexpectToEqual
   expect(${1}).toEqual(${0});
 snippet XexpectJustCallsToEqual
   expect(${1}.mock.calls).toEqual([${0}])
-snippet XexpectCallsLengthToEqual
-  expect(${1}.mock.calls.length).toEqual(${2:0})${0}
 snippet >
   (${1}) => ${2:null}${0}
 snippet XjestJustMock
@@ -176,6 +170,12 @@ snippet XjestMockReturnValue
   ${1}.mockReturnValue(${0})
 snippet XistanbulIgnoreElse
    // istanbul ignore else
+snippet XenzymeShallowWrapper
+  const wrapper = shallow(
+    <${0} />
+  )
+snippet XexpectEnzymeFindLength
+  expect(${1:wrapper}.find(${2})).toHaveLength(${0:1});
 EOF
 cat /tmp/js-and-ts-snippets > ~/.vim-snippets/javascript.snippets
 cat /tmp/js-and-ts-snippets > ~/.vim-snippets/typescript.snippets
@@ -294,7 +294,10 @@ EOF
   autocmd FileType reason nmap <buffer> <leader>kb :ReasonPrettyPrint<Cr>
 EOF
 
-install_node_modules import-js
-install_vim_package galooshi/vim-import-js
+# import js
+  install_node_modules import-js
+  install_vim_package galooshi/vim-import-js
+  add_special_vim_map 'impjswor' ':ImportJSWord<cr>' 'import js word'
+  add_special_vim_map 'impjswor' ':ImportJSFix<cr>' 'import js file'
 
 # js-extras END
