@@ -36,4 +36,8 @@ else
   SECONDARY_WITH_QUOTES='"'"$SECONDARY_TEST_FILE"'"'
 fi
 
-echo './node_modules/.bin/jest --watch --coverage --collectCoverageFrom="'"$SRC_FILE"'" '"$SECONDARY_WITH_QUOTES"' "'"$TEST_FILE"'"'
+ECHO_CMD='while true; do '
+ECHO_CMD+='./node_modules/.bin/jest --watch --coverage --collectCoverageFrom="'"$SRC_FILE"'" '"$SECONDARY_WITH_QUOTES"' "'"$TEST_FILE"'"'
+ECHO_CMD+='; sleep 2; done'
+
+echo "$ECHO_CMD"

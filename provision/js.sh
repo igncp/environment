@@ -111,11 +111,11 @@ snippet des
       ${0}
     });
   });
-snippet XbeforeEach
+snippet xBeforeEach
   beforeEach(() => {
     ${0}
   });
-snippet XafterEach
+snippet xAfterEach
   afterEach(() => {
     ${0}
   });
@@ -125,10 +125,6 @@ snippet it
   });
 snippet exp
   expect(${1:}).to${0};
-snippet i
-  import {
-    ${1},
-  } from "${2}";
 snippet t
   <${1}>${2}</$1>
 snippet T
@@ -141,41 +137,61 @@ snippet tt
   >
     ${2}
   </$1>
-snippet XexpectToEqual
+snippet xExpectToEqual
   expect(${1}).toEqual(${0});
-snippet XexpectJustCallsToEqual
+snippet xExpectJustCallsToEqual
   expect(${1}.mock.calls).toEqual([${0}])
 snippet >
   (${1}) => ${2:null}${0}
-snippet XjestJustMock
+snippet xJestJustMock
   jest.mock("${0}")
-snippet XjestMockWithVariable
+snippet xJestMockWithVariable
   const mock$2 = {
     ${0}: jest.fn(),
   }
   jest.mock("${1}", () => mock${2})
-snippet XjestSpyOn
+snippet xJestSpyOn
   jest.spyOn(${1}, "${2}")
-snippet XjestFn
-  jest.fn(${1})${0}
-snippet XconstJustRequire
+snippet xConstJustRequire
   const ${1} = require("${0}$1")
-snippet XconstObjRequire
+snippet xConstRequireDestructuring
   const {
     ${1},
   } = require("${0}")
-snippet XjestMockImplementation
+snippet xJestMockImplementation
   ${1}.mockImplementation(() => ${0})
-snippet XjestMockReturnValue
+snippet xJestMockReturnValue
   ${1}.mockReturnValue(${0})
-snippet XistanbulIgnoreElse
+snippet xIstanbulIgnoreElse
    // istanbul ignore else
-snippet XenzymeShallowWrapper
+snippet xEnzymeShallowWrapper
   const wrapper = shallow(
     <${0} />
   )
-snippet XexpectEnzymeFindLength
+snippet xExpectEnzymeFindLength
   expect(${1:wrapper}.find(${2})).toHaveLength(${0:1});
+snippet xJestFnRaw
+  jest.fn(${0})
+snippet xJestFnConst
+  const ${1} = jest.fn(${0})
+snippet xJestFnProperty
+  ${1}: jest.fn(${0}),
+snippet xJestFnExisting
+  ${1} = jest.fn(${0})
+snippet xReactSetState
+  ${1: this}.setState({
+    ${2}: ${0},
+  })
+snippet i
+  import ${1} from "${0}"
+snippet ii
+  import {
+    ${1},
+  } from "${0}"
+snippet xConstObjEqual
+  const ${1} = {
+    ${2}: ${0},
+  }
 EOF
 cat /tmp/js-and-ts-snippets > ~/.vim-snippets/javascript.snippets
 cat /tmp/js-and-ts-snippets > ~/.vim-snippets/typescript.snippets

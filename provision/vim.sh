@@ -288,7 +288,7 @@ let g:vim_markdown_folding_disabled = 1
   let g:syntastic_loc_list_height=3
   let g:syntastic_error_symbol = '•'
   let g:syntastic_style_error_symbol = '!?'
-  nnoremap <leader>o :SyntasticToggleMode<cr>
+  nnoremap <leader>jo :SyntasticToggleMode<cr>
   " Allow :lprev to work with empty location list, or at first location
   function! <SID>LocationPrevious()
     try
@@ -574,6 +574,21 @@ vnoremap ; :<c-u>
   let g:limelight_eop = '$'
   nnoremap <leader>zl :Limelight!!<cr>
   nnoremap <leader>zL :let g:limelight_paragraph_span = <left><right>
+
+" http://vim.wikia.com/wiki/Insert_multiple_lines
+  function! OpenLines(nrlines, dir)
+    let nrlines = a:nrlines < 1 ? 1 : a:nrlines
+    let start = line('.') + a:dir
+    call append(start, repeat([''], nrlines))
+    if a:dir < 0
+      call cursor(start + 1, 0)
+    else
+      call cursor(start + nrlines, 0)
+    endif
+  endfunction
+  " before using v:count
+  nnoremap <Leader>o :<C-u>call OpenLines(2, 0)<CR>Vc
+  nnoremap <Leader>O :<C-u>call OpenLines(2, -1)<CR>Vc
 
 " http://vim.wikia.com/wiki/File:Xterm-color-table.png
 function! SetColors()
