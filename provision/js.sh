@@ -217,9 +217,7 @@ EOF
 
 cat >> ~/.vim-snippets/javascript.snippets <<"EOF"
 snippet XimportType
-  import type {
-    ${1},
-  } from '${0}';
+  import type { ${1} } from '${0}';
 snippet XflowComment
   // @flow
   ${0}
@@ -242,6 +240,18 @@ EOF
 chmod +x ~/.js-tests-specs-displayer
 cat >> ~/.vimrc <<"EOF"
   autocmd filetype javascript :exe 'nnoremap <leader>zt :-tabnew\|te ~/.js-tests-specs-displayer <c-r>=expand("%:p")<cr><cr>'
+
+  function! ToggleItOnly()
+    execute "normal! ?it(\\|it.only(\<cr>\<right>\<right>"
+    let current_char = nr2char(strgetchar(getline('.')[col('.') - 1:], 0))
+    if current_char == "."
+      execute "normal! v4l\<del>"
+    else
+      execute "normal! i.only\<c-c>"
+    endif
+    execute "normal! \<c-o>"
+  endfunction
+  autocmd filetype javascript :exe 'nnoremap <leader>zo :call ToggleItOnly()<cr>'
 EOF
 
 echo "./node_modules/.bin/jest">> ~/.bookmarked-commands
@@ -280,6 +290,9 @@ _f=i\<del>: \<c-c>\<right>%s,\<c-c>``s\<c-c>``j
 
 " Create test property
 _f:v$\<left>\<del>A: \<c-c>_viwyA''\<c-c>\<left>paValue\<c-c>A,\<c-c>_\<down>
+
+" wrap type object in tag
+i<\<c-c>\<right>%a>\<c-c>\<left>%\<left>
 EOF
 
 # js END

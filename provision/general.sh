@@ -191,6 +191,7 @@ GitResetLastCommit() { LAST_COMMIT_MESSAGE=$(git log -1 --pretty=%B); \
 alias GitAddAll='GitAdd .'
 alias GitCommit='git commit -m'
 alias GitEditorCommit='git commit -v'
+alias GitRebaseResetAuthorContinue='git commit --amend --reset-author --no-edit; git rebase --continue'
 
 alias Now='date +"%T"'
 alias Ports='sudo netstat -tulanp'
