@@ -282,6 +282,8 @@ add_special_vim_map "titr" $'_ciwconst<c-c>/from<cr>ciw= require(<del><c-c>$a)<c
 add_special_vim_map "jimc" "a.mock.calls<c-c>" "jest instert mock calls"
 add_special_vim_map "jimi" "a.mockImplementation(() => )<left>" "jest instert mock implementation"
 add_special_vim_map "jirv" "a.mockReturnValue()<left>" "jest instert mock return value"
+add_special_vim_map "ftmakeexact" $'_f{a\|<c-c><left>%i\|' 'flowtype make exact type'
+add_special_vim_map "ftshowerrors" $':-tabnew\|te flow <c-r>=expand("%")<cr> --color always \| less -R<cr>' 'flowtype display errors'
 
 cat >> ~/.vim-macros <<"EOF"
 

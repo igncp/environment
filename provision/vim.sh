@@ -373,6 +373,7 @@ nnoremap <leader>zk v%
 nnoremap <leader>zK v%<del>
 nnoremap <leader>zf :let @" = expand("%")<cr>
 vnoremap ; :<c-u>
+nnoremap <leader>zx 'mzz
 
 " delete from cursor to end of line
   inoremap <C-Del> <C-\><C-O>D
