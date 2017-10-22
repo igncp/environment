@@ -284,6 +284,7 @@ add_special_vim_map "jimi" "a.mockImplementation(() => )<left>" "jest instert mo
 add_special_vim_map "jirv" "a.mockReturnValue()<left>" "jest instert mock return value"
 add_special_vim_map "ftmakeexact" $'_f{a\|<c-c><left>%i\|' 'flowtype make exact type'
 add_special_vim_map "ftshowerrors" $':-tabnew\|te flow <c-r>=expand("%")<cr> --color always \| less -R<cr>' 'flowtype display errors'
+add_special_vim_map 'ftcrefuntype' 'viwyi<c-right><left>: T_<c-c>pviwyO<c-c>Otype <c-c>pa = () => <c-c>4hi' 'flowtype create function type'
 
 cat >> ~/.vim-macros <<"EOF"
 
