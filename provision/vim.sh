@@ -195,15 +195,16 @@ autocmd Filetype markdown setlocal wrap
 
 nnoremap <silent> <leader>s :if exists("g:syntax_on") \| syntax off \| else \| syntax enable \| endif<cr>
 
-set nohlsearch
 set autoindent
 set clipboard=unnamedplus
 set expandtab
+set nohlsearch
 set number
 set shiftwidth=2
-set softtabstop=2
-set tabstop=2
 set smartcase
+set softtabstop=2
+set switchbuf+=usetab,newtab
+set tabstop=2
 set wildmenu
 
 nnoremap <leader>kc :RandomColorScheme<cr>:call SetColors()<cr>:colorscheme<cr>

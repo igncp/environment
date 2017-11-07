@@ -230,6 +230,9 @@ bind c new-window -c "#{pane_current_path}"
 # keep your finger on ctrl, or don't
 bind-key ^D detach-client
 
+set -wg mode-style bg=black,fg=blue
+set-option -g message-bg black
+set-option -g message-fg white
 EOF
 
 install_tmux_plugin() {
