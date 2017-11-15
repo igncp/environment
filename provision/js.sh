@@ -252,6 +252,8 @@ cat >> ~/.vimrc <<"EOF"
     execute "normal! \<c-o>"
   endfunction
   autocmd filetype javascript :exe 'nnoremap <leader>zo :call ToggleItOnly()<cr>'
+
+  nnoremap <leader>BT :let g:Fast_grep_opts='--exclude-dir="__tests__" --exclude-dir="__integration__" -i'<left>
 EOF
 
 echo "./node_modules/.bin/jest">> ~/.bookmarked-commands
@@ -267,8 +269,8 @@ EOF
 
 add_special_vim_map "cpfat" $':call RunCtrlPWithFilterInNewTab(\'<c-r>=expand("%:t:r")<cr>test\')<cr>' 'ctrlp filename adding test'
 add_special_vim_map "cpfrt" $':call RunCtrlPWithFilterInNewTab(\'<c-r>=expand("%:t:r")<cr><bs><bs><bs><bs><bs>\')<cr>' 'ctrlp filename removing test'
-add_special_vim_map "ctit" $'? it(<cr>V$%y$%o<cr><c-c>Vpf\'<right>ci\'' 'test copy it test case content'
-add_special_vim_map "ctde" $'? describe(<cr>V$%y$%o<cr><c-c>Vpf\'<right>ci\'' 'test copy describe test content'
+add_special_vim_map "ctit" $'? it(<cr>V$%y$%o<cr><c-c>Vpf(2l' 'test copy it test case content'
+add_special_vim_map "ctde" $'? describe(<cr>V$%y$%o<cr><c-c>Vpf(2l' 'test copy describe test content'
 add_special_vim_map "eeq" $'iXexpectEqual<c-o>:call feedkeys("<c-l>", "t")<cr>' 'test expect toEqual'
 add_special_vim_map "sjsfun" "v/[^,] {<cr><right>%" "select js function"
 add_special_vim_map "djsfun" "v/[^,] {<cr><right>%d" "cut js function"

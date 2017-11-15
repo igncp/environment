@@ -1,11 +1,5 @@
 #!/usr/bin/env bash
 
-if [ $# -eq 0 ]; then
-  ABSOLUTE_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]}")"
-  echo "$ABSOLUTE_PATH _"
-  exit 0
-fi
-
 REMOTES=$(git remote | wc -l)
 
 if [[ $REMOTES -eq 1 ]]; then
@@ -19,8 +13,10 @@ BRANCH=$(git branch --color=always | grep -v '/HEAD\s' | sort |
   --preview 'git log --oneline --date=short --pretty="format:%C(auto)%cd %h%d %s" $(sed s/^..// <<< {} | cut -d" " -f1) |
   head -'$LINES | sed 's/^..//' | cut -d' ' -f1 | sed 's#^remotes/##')
 
+if [ -z "$BRANCH" ]; then
+  exit 0
+fi
+
 CMD="git push $(echo "$REMOTE" | cut -d' ' -f1) $BRANCH"
 
 echo "$CMD"
-
-eval "$CMD"

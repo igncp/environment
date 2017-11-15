@@ -430,9 +430,11 @@ nnoremap <leader>? :call setreg("g", "<c-r>=expand("%:p")<cr>")<cr>
 " fast grep
   let g:FastGrep_fn = ':-tabnew\|te
     \ Grep() { grep -rn --color=always "$@"; printf "\n\n\n----\n\n\n"; grep --color=always -rl "$@"; }
-    \ && Grep -i "<c-r>"" <c-r>=g:Fast_grep<cr> \| less -R<c-left><c-left><left><left><left><c-left><left><left>'
+    \ && Grep <c-r>=g:Fast_grep_opts<cr> "<c-r>"" <c-r>=g:Fast_grep<cr> \| less -R<c-left><c-left><left><left><left><c-left><left><left>'
   let g:Fast_grep=''
-  nnoremap <leader>B :let g:Fast_grep=''<left>
+  let g:Fast_grep_opts='-i'
+  nnoremap <leader>BB :let g:Fast_grep=''<left>
+  nnoremap <leader>BV :let g:Fast_grep_opts='-i '<left>
   execute 'vnoremap <leader>b y' . g:FastGrep_fn
   execute 'nnoremap <leader>b" vi"y' . g:FastGrep_fn
   execute 'nnoremap <leader>bw viwy' . g:FastGrep_fn
