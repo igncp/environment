@@ -275,7 +275,7 @@ add_special_vim_map "eeq" $'iXexpectEqual<c-o>:call feedkeys("<c-l>", "t")<cr>' 
 add_special_vim_map "sjsfun" "v/[^,] {<cr><right>%" "select js function"
 add_special_vim_map "djsfun" "v/[^,] {<cr><right>%d" "cut js function"
 add_special_vim_map "jsjmi" "a.mockImplementation(() => )<left>" "jest mock implementation"
-add_special_vim_map "jrct" "gv:<c-u>%s/\%V\C+//ge<cr>:<c-u>%s/\%V\CObject //ge<cr>:<c-u>%s/\%V\CArray //ge<cr>" \
+add_special_vim_map "jrct" "vi}:<c-u>%s/\%V\C+//ge<cr>:<c-u>%s/\%V\CObject //ge<cr>:<c-u>%s/\%V\CArray //ge<cr>" \
   "jest replace copied text from terminal"
 add_special_vim_map 'tjmvs' 'I<c-right><right><c-c>viwy?describe(<cr>olet <c-c>pa;<c-c><c-o><left>v_<del>' \
   'jest move variable outside of it'
