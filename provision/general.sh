@@ -184,6 +184,7 @@ alias Tee="tee /dev/tty";
 alias Tmux="tmux; exit"
 alias Visudo='sudo env EDITOR=vim visudo'
 alias Xargs='xargs -I{}'
+alias CleanNCurses='stty sane;clear;'
 
 alias GitStatus='git status -u'
 GitOpenStatusFiles() { $EDITOR -p $(git status --porcelain $1 | grep -vE "^ D" | sed s/^...//); }
