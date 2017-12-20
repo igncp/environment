@@ -4,7 +4,9 @@ Vagrant.configure(2) do |config|
 
   # config.vm.network :forwarded_port, guest: 80, host: 9080
   # config.vm.network :forwarded_port, guest: 443, host: 8443 # https
-  # config.vm.network :forwarded_port, guest: 9000, host: 9000
+  # config.vm.network :forwarded_port, guest: 9000, host: 9000 # http-server
+  # config.vm.network :forwarded_port, guest: 9001, host: 9001
+  # config.vm.network :forwarded_port, guest: 9002, host: 9002 # gdbgui
   # for i in 9000..9050; config.vm.network :forwarded_port, guest: i, host: i; end
   # config.vm.network :forwarded_port, guest: 6419, host: 6419 # grip
   # config.vm.network :forwarded_port, guest: 19999, host: 19999 # netdata
