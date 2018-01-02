@@ -82,6 +82,8 @@ cat >> ~/.vimrc <<"EOF"
 
 " run eslint over file
   autocmd filetype javascript :exe "nnoremap <silent> <leader>kb :!eslint_d --fix %<cr>:e<cr>"
+  autocmd filetype javascript :exe "nnoremap <silent> <c-a> :update<cr>:!eslint_d --fix %<cr>:e<cr>"
+  autocmd filetype javascript :exe "inoremap <silent> <c-a> <c-c>:update<cr>:!eslint_d --fix %<cr>:e<cr>"
 
 " js linters
   let g:syntastic_javascript_checkers = ['flow', 'eslint']
@@ -192,6 +194,14 @@ snippet xConstObjEqual
   const ${1} = {
     ${2}: ${0},
   }
+snippet xItSentenceFunctions
+  calls the expected functions when
+snippet xJestMockComponent
+  const mock$2 = () => null;
+
+  jest.mock("../${1}", () => mock${2});
+snippet xExpectToContain
+  expect(${1}).toContain(${0});
 EOF
 cat /tmp/js-and-ts-snippets > ~/.vim-snippets/javascript.snippets
 cat /tmp/js-and-ts-snippets > ~/.vim-snippets/typescript.snippets
@@ -275,8 +285,6 @@ add_special_vim_map "eeq" $'iXexpectEqual<c-o>:call feedkeys("<c-l>", "t")<cr>' 
 add_special_vim_map "sjsfun" "v/[^,] {<cr><right>%" "select js function"
 add_special_vim_map "djsfun" "v/[^,] {<cr><right>%d" "cut js function"
 add_special_vim_map "jsjmi" "a.mockImplementation(() => )<left>" "jest mock implementation"
-add_special_vim_map "jrct" "vi}:<c-u>%s/\%V\C+//ge<cr>:<c-u>%s/\%V\CObject //ge<cr>:<c-u>%s/\%V\CArray //ge<cr>" \
-  "jest replace copied text from terminal"
 add_special_vim_map 'tjmvs' 'I<c-right><right><c-c>viwy?describe(<cr>olet <c-c>pa;<c-c><c-o><left>v_<del>' \
   'jest move variable outside of it'
 add_special_vim_map "titr" $'_ciwconst<c-c>/from<cr>ciw= require(<del><c-c>$a)<c-c>V:<c-u>%s/\%V\C;//g<cr>' \
@@ -287,6 +295,9 @@ add_special_vim_map "jirv" "a.mockReturnValue()<left>" "jest instert mock return
 add_special_vim_map "ftmakeexact" $'_f{a\|<c-c><left>%i\|' 'flowtype make exact type'
 add_special_vim_map "ftshowerrors" $':-tabnew\|te flow <c-r>=expand("%")<cr> --color always \| less -R<cr>' 'flowtype display errors'
 add_special_vim_map 'ftcrefuntype' 'viwyi<c-right><left>: T_<c-c>pviwyO<c-c>Otype <c-c>pa = () => <c-c>4hi' 'flowtype create function type'
+add_special_vim_map 'ftcasttoany' 'gvdi()<c-c><left>pa: any<c-c>' 'flowtype cast to any'
+add_special_vim_map "jrct" "gv:<c-u>%s/\%V\C+//ge<cr>:<c-u>%s/\%V\CObject //ge<cr>:<c-u>%s/\%V\CArray //ge<cr>:<c-u>%s/\%V\C\[Fun.*\]/expect.any(Function)/ge<cr>" \
+  "jest replace copied text from terminal"
 
 cat >> ~/.vim-macros <<"EOF"
 
