@@ -377,6 +377,7 @@ vnoremap ; :<c-u>
 nnoremap <leader>zx 'mzz
 nnoremap <leader>/ :call setreg("f", "<c-r>=expand("%:t:r")<cr>")<cr>
 nnoremap <leader>? :call setreg("g", "<c-r>=expand("%:p")<cr>")<cr>
+nnoremap ' :<C-u>marks<CR>:normal! `
 
 " delete from cursor to end of line
   inoremap <C-Del> <C-\><C-O>D
