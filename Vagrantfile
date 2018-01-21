@@ -1,4 +1,5 @@
 Vagrant.configure(2) do |config|
+  # Version of VB tested: 5.1.30
   config.vm.box = "archlinux/archlinux"
   config.vm.hostname = 'PROJECT_HOSTNAME'
 
@@ -18,8 +19,6 @@ Vagrant.configure(2) do |config|
 
   config.vm.synced_folder ".", "/project"
   config.vm.synced_folder "~/vm-shared", "/vm-shared"
-
-  config.vm.provision "shell", inline: ". /project/provision/provision.sh", privileged: false
 
   config.vm.provider "virtualbox" do |v|
     v.memory = 2024

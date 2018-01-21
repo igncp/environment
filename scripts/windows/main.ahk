@@ -5,8 +5,19 @@ CapsLock::Send {ctrl down}c{ctrl up}
 
 ; Also download: https://github.com/pmb6tz/windows-desktop-switcher
 
-;Switch desktop modification (disable mayus lock)
-; Globals
+CapsLock & q::
+CapsLock & w::
+CapsLock & e::
+CapsLock & a::
+CapsLock & s::
+CapsLock & d::
+CapsLock & f::
+CapsLock & z::
+CapsLock & x::
+CapsLock & c::
+CapsLock & v::
+CapsLock & g::
+CapsLock & r::
 CapsLock::		; CapsLock
 +CapsLock::	; Shift+CapsLock
 !CapsLock::	; Alt+CapsLock

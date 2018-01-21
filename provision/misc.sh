@@ -94,5 +94,15 @@ if ! type geeknote > /dev/null 2>&1 ; then
 fi
 
 # useful fonts: https://github.com/ryanoasis/nerd-fonts#patched-fonts
+  # using monofur at the moment
+
+# exercism
+if ! type exercism > /dev/null 2>&1 ; then
+  cd ~
+  git clone https://aur.archlinux.org/exercism-cli.git
+  cd exercism-cli
+  makepkg -si --noconfirm
+  cd ~; rm -rf exercism-cli
+fi
 
 # misc END

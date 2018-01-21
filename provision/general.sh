@@ -181,7 +181,7 @@ alias PacmanUpdateRepos='sudo pacman -Sy'
 alias RsyncDelete='rsync -rhv --delete' # remember to add a slash at the end of source (dest doesn't matter)
 alias Sudo='sudo -E ' # this preserves aliases and environment in root
 alias Tee="tee /dev/tty";
-alias Tmux="tmux; exit"
+alias Tmux="tmux attach; exit"
 alias Visudo='sudo env EDITOR=vim visudo'
 alias Xargs='xargs -I{}'
 alias CleanNCurses='stty sane;clear;'
@@ -234,6 +234,8 @@ bind-key ^D detach-client
 set -wg mode-style bg=black,fg=blue
 set-option -g message-bg black
 set-option -g message-fg white
+
+new-session -n $HOST
 EOF
 
 install_tmux_plugin() {
@@ -321,7 +323,7 @@ add_shellcheck_ignores() {
     echo 'SHELLCHECK_IGNORES="$SHELLCHECK_IGNORES,SC'"$DIRECTIVE"'"' >> ~/.bashrc
   done
 }
-add_shellcheck_ignores 2016 2028 2046 2086 2143 2164 2181
+add_shellcheck_ignores 2016 2028 2046 2086 2143 2164 2181 1117
 echo 'export SHELLCHECK_OPTS="-e $SHELLCHECK_IGNORES"' >> ~/.bashrc
 
 install_pacman_package graphviz dot

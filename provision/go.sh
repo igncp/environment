@@ -35,7 +35,7 @@ install_go_package github.com/golang/lint/golint
 install_go_package github.com/kisielk/errcheck
 
 if ! type shfmt >/dev/null 2>&1; then
-  go get -u github.com/mvdan/sh/cmd/shfmt
+  go get -u mvdan.cc/sh/cmd/shfmt
 fi
 
 install_vim_package fatih/vim-go
