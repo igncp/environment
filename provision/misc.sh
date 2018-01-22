@@ -86,7 +86,7 @@ EOF
 if ! type geeknote > /dev/null 2>&1 ; then
   cd ~; sudo rm -rf geeknote
   git clone https://github.com/jeffkowalski/geeknote
-  sudo pip2 install lxml proxyenv 
+  sudo pip2 install lxml proxyenv
   cd geeknote
   sudo python2 setup.py install
   cd ~; sudo rm -rf geeknote

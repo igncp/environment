@@ -6,7 +6,9 @@ if ! type docker > /dev/null 2>&1 ; then
   tar -xJf docker.tar.xz
   sudo rm -rf /usr/local/lib/docker; sudo mv usr /usr/local/lib/docker
   cd ~; rm -rf ~/docker
-  wget https://raw.githubusercontent.com/docker/docker/master/contrib/completion/bash/docker -O ~/.docker-completion.sh
+  git clone https://github.com/docker/cli --depth 1 docker-cli
+  cp ~/docker-cli/contrib/completion/bash/docker ~/.docker-completion.sh
+  rm -rf ~/docker-cli
 fi
 echo 'export PATH=$PATH:/usr/local/lib/docker/bin' >> ~/.bashrc
 echo 'source_if_exists ~/.docker-completion.sh' >> ~/.bash_sources
