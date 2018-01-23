@@ -390,6 +390,7 @@ nnoremap ' :<C-u>marks<CR>:normal! `
     autocmd!
     autocmd TermClose * close
   augroup end
+  autocmd TermOpen * startinsert
 
 " neosnippet
   " Enter in select mode: gh
@@ -439,7 +440,7 @@ nnoremap ' :<C-u>marks<CR>:normal! `
   let g:Fast_grep_opts='-i'
   nnoremap <leader>BB :let g:Fast_grep=''<left>
   nnoremap <leader>BV :let g:Fast_grep_opts='-i '<left>
-  execute 'vnoremap <leader>b yi' . g:FastGrep_fn
+  execute 'vnoremap <leader>b y' . g:FastGrep_fn
   execute 'nnoremap <leader>b" vi"y' . g:FastGrep_fn
   execute 'nnoremap <leader>bw viwy' . g:FastGrep_fn
   execute 'nnoremap <leader>bb vy' . g:FastGrep_fn

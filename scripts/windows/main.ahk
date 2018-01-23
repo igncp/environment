@@ -5,6 +5,7 @@ CapsLock::Send {ctrl down}c{ctrl up}
 
 ; Also download: https://github.com/pmb6tz/windows-desktop-switcher
 
+CapsLock::
 CapsLock & q::
 CapsLock & w::
 CapsLock & e::
@@ -18,7 +19,16 @@ CapsLock & c::
 CapsLock & v::
 CapsLock & g::
 CapsLock & r::
-CapsLock::		; CapsLock
+CapsLock & p::
+CapsLock & n::
+CapsLock & up::
+CapsLock & down::
+CapsLock & left::
+CapsLock & right::
+CapsLock & home::
+CapsLock & end::
+CapsLock & space::
+CapsLock & backspace::
 +CapsLock::	; Shift+CapsLock
 !CapsLock::	; Alt+CapsLock
 ^CapsLock::		; Ctrl+CapsLock
