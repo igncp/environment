@@ -28,6 +28,18 @@ install_pacman_package() {
   fi
 }
 
+install_from_aur() {
+  CMD_CHECK="$1"; REPO="$2"
+  if ! type "$CMD_CHECK" > /dev/null 2>&1 ; then
+    TMP_DIR=$(mktemp -d)
+    cd "$TMP_DIR"
+    git clone "$REPO"
+    cd ./*
+    makepkg -si --noconfirm
+    cd; rm -rf "$TMP_DIR"
+  fi
+}
+
 download_cached() {
   URL=$1; FILE_NAME=$2; LOCATION=$3
   if [ ! -f /vm-shared/installs/"$FILE_NAME" ]; then
@@ -255,6 +267,12 @@ install_tmux_plugin() {
 install_tmux_plugin tmux-plugins/tpm
 install_tmux_plugin tmux-plugins/tmux-resurrect
 install_tmux_plugin tmux-plugins/tmux-sessionist
+
+if [ ! -f ~/.tmux-completion.sh ]; then
+  wget https://raw.githubusercontent.com/Bash-it/bash-it/4e730eb9a15c/completion/available/tmux.completion.bash \
+    -O ~/.tmux-completion.sh
+fi
+echo 'source_if_exists ~/.tmux-completion.sh' >> ~/.bashrc
 
 cat > ~/.ctags <<"EOF"
 --regex-make=/^([^# \t]*):/\1/t,target/

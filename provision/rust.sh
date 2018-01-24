@@ -55,11 +55,6 @@ install_pacman_package valgrind
 
 # for code coverage
 install_pacman_package llvm llvm-ar
-if ! type lcov > /dev/null 2>&1 ; then
-  rm -rf ~/lcov-pkg
-  git clone https://aur.archlinux.org/lcov.git ~/lcov-pkg ; cd ~/lcov-pkg
-  makepkg -s
-  sudo pacman -U --noconfirm ./*.pkg.tar.xz
-fi
+install_from_aur lcov https://aur.archlinux.org/lcov.git
 
 # rust END

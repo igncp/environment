@@ -99,14 +99,6 @@ EOF
     touch ~/.check-files/eclim
   fi
 
-# code
-if ! type code > /dev/null 2>&1 ; then
-  rm -rf ~/visual-studio-code
-  git clone https://aur.archlinux.org/visual-studio-code.git ~/visual-studio-code
-  cd ~/visual-studio-code
-  makepkg -s
-  sudo pacman -U ./*.pkg.tar.xz --noconfirm
-  cd ~ && rm -rf ~/visual-studio-code
-fi
+install_from_aur code  https://aur.archlinux.org/visual-studio-code.git
 
 # gui-extras END
