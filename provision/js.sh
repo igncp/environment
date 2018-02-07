@@ -311,6 +311,42 @@ _f:v$\<left>\<del>A: \<c-c>_viwyA''\<c-c>\<left>paValue\<c-c>A,\<c-c>_\<down>
 i<\<c-c>\<right>%a>\<c-c>\<left>%\<left>
 EOF
 
+# requires jq by default
+cat >> ~/.vimrc <<"EOF"
+let g:SpecialImports_Cdm_Default_End=' | sed -r "s|^([^.])|./\1|"'
+  \ . ' | grep -E "(\.js|\.s?css)$" | grep -v "__tests__" | sed "s|\.js$||; s|/index$||"'
+  \ . ' > /tmp/vim_special_import;'
+  \ . ' jq ".dependencies,.devDependencies | keys" package.json | grep -o $"\".*" | sed $"s|\"||g; s|,||"'
+  \ . ' >> /tmp/vim_special_import) && cat /tmp/vim_special_import'
+let g:SpecialImports_Cdm_Rel_Default='(find ./src -type f | xargs realpath --relative-to="$(dirname <CURRENT_FILE>)"'
+  \ . g:SpecialImports_Cdm_Default_End
+let g:SpecialImports_Cdm_Full_Default='(DIR="./src";  find "$DIR" -type f | xargs realpath --relative-to="$DIR"'
+  \ . g:SpecialImports_Cdm_Default_End . ' | sed "s|^\.|#|"'
+let g:SpecialImports_Cmd=g:SpecialImports_Cdm_Full_Default
+
+function! s:SpecialImportsSink(selected)
+  execute "norm! o \<c-u>import  from '". a:selected . "'\<c-c>I\<c-right>"
+  call feedkeys('i', 'n')
+endfunction
+
+function! SpecialImports()
+  let l:final_cmd = substitute(g:SpecialImports_Cmd, "<CURRENT_FILE>", expand('%:p'), "")
+  let file_content = system(l:final_cmd)
+  let source_list = split(file_content, '\n')
+  let options_dict = {
+    \ 'options': ' --prompt "File (n)> " --ansi --no-hscroll --nth 1,..',
+    \ 'source': source_list,
+    \ 'sink': function('s:SpecialImportsSink')}
+
+  call fzf#run(options_dict)
+endfunction
+
+nnoremap <leader>jss :call SpecialImports()<cr>
+nnoremap <leader>jsS :let g:SpecialImports_Cmd='<c-r>=g:SpecialImports_Cmd<cr>'<home><c-right><c-right><right>
+nnoremap <leader>jsQ :let g:SpecialImports_Cmd='<c-r>=g:SpecialImports_Cdm_Full_Default<cr>'<home><c-right><c-right><right>
+nnoremap <leader>jsW :let g:SpecialImports_Cmd='<c-r>=g:SpecialImports_Cdm_Rel_Default<cr>'<home><c-right><c-right><right>
+EOF
+
 # js END
 
 # js-extras START
