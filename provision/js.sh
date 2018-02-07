@@ -313,16 +313,16 @@ EOF
 
 # requires jq by default
 cat >> ~/.vimrc <<"EOF"
-let g:SpecialImports_Cdm_Default_End=' | sed -r "s|^([^.])|./\1|"'
+let g:SpecialImports_Cmd_Default_End=' | sed -r "s|^([^.])|./\1|"'
   \ . ' | grep -E "(\.js|\.s?css)$" | grep -v "__tests__" | sed "s|\.js$||; s|/index$||"'
   \ . ' > /tmp/vim_special_import;'
   \ . ' jq ".dependencies,.devDependencies | keys" package.json | grep -o $"\".*" | sed $"s|\"||g; s|,||"'
   \ . ' >> /tmp/vim_special_import) && cat /tmp/vim_special_import'
-let g:SpecialImports_Cdm_Rel_Default='(find ./src -type f | xargs realpath --relative-to="$(dirname <CURRENT_FILE>)"'
-  \ . g:SpecialImports_Cdm_Default_End
-let g:SpecialImports_Cdm_Full_Default='(DIR="./src";  find "$DIR" -type f | xargs realpath --relative-to="$DIR"'
-  \ . g:SpecialImports_Cdm_Default_End . ' | sed "s|^\.|#|"'
-let g:SpecialImports_Cmd=g:SpecialImports_Cdm_Full_Default
+let g:SpecialImports_Cmd_Rel_Default='(find ./src -type f | xargs realpath --relative-to="$(dirname <CURRENT_FILE>)"'
+  \ . g:SpecialImports_Cmd_Default_End
+let g:SpecialImports_Cmd_Full_Default='(DIR="./src";  find "$DIR" -type f | xargs realpath --relative-to="$DIR"'
+  \ . g:SpecialImports_Cmd_Default_End . ' | sed "s|^\.|#|"'
+let g:SpecialImports_Cmd=g:SpecialImports_Cmd_Full_Default
 
 function! s:SpecialImportsSink(selected)
   execute "norm! o \<c-u>import  from '". a:selected . "'\<c-c>I\<c-right>"
@@ -343,8 +343,8 @@ endfunction
 
 nnoremap <leader>jss :call SpecialImports()<cr>
 nnoremap <leader>jsS :let g:SpecialImports_Cmd='<c-r>=g:SpecialImports_Cmd<cr>'<home><c-right><c-right><right>
-nnoremap <leader>jsQ :let g:SpecialImports_Cmd='<c-r>=g:SpecialImports_Cdm_Full_Default<cr>'<home><c-right><c-right><right>
-nnoremap <leader>jsW :let g:SpecialImports_Cmd='<c-r>=g:SpecialImports_Cdm_Rel_Default<cr>'<home><c-right><c-right><right>
+nnoremap <leader>jsQ :let g:SpecialImports_Cmd='<c-r>=g:SpecialImports_Cmd_Full_Default<cr>'<home><c-right><c-right><right>
+nnoremap <leader>jsW :let g:SpecialImports_Cmd='<c-r>=g:SpecialImports_Cmd_Rel_Default<cr>'<home><c-right><c-right><right>
 EOF
 
 # js END
