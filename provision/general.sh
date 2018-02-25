@@ -186,9 +186,11 @@ FindLinesJustInFirstFile() { comm -23 <(sort "$1") <(sort "$2"); }
 LineN() { head -n $1 | tail -n 1; }
 
 alias AliasesReload='source ~/.bash_aliases'
+alias CleanNCurses='stty sane;clear;'
 alias ConfigureTimezone='sudo timedatectl set-timezone Asia/Hong_Kong'
 alias EditProvision="$EDITOR /project/provision/provision.sh && provision.sh"
 alias Exit="\$(ps aux | grep tmux | grep -v grep | awk '{print $2}' | xargs kill) || exit"
+alias Less="less -i"
 alias LsTmpFiles='ls -laht /tmp | tac'
 alias PacmanUpdateRepos='sudo pacman -Sy'
 alias RsyncDelete='rsync -rhv --delete' # remember to add a slash at the end of source (dest doesn't matter)
@@ -197,7 +199,6 @@ alias Tee="tee /dev/tty";
 alias Tmux="tmux attach; exit"
 alias Visudo='sudo env EDITOR=vim visudo'
 alias Xargs='xargs -I{}'
-alias CleanNCurses='stty sane;clear;'
 
 alias GitStatus='git status -u'
 GitOpenStatusFiles() { $EDITOR -p $(git status --porcelain $1 | grep -vE "^ D" | sed s/^...//); }

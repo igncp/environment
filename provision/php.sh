@@ -1,40 +1,13 @@
-# lamp START
+# php START
 
 # * requires
 # - mysql database (for the cms)
 
-check_file_exists /project/provision/httpd.conf
-if ! type apachectl > /dev/null 2>&1 ; then
-  echo "installing apache"
-  sudo pacman -S --noconfirm apache
-  chmod o+x /home/$USER # necessary to follow symlinks: https://bbs.archlinux.org/viewtopic.php?id=77791
-  sudo cp /project/provision/httpd.conf /etc/httpd/conf/httpd.conf
-
-  # ssl: https://localhost:8443 from the host. http://stackoverflow.com/a/18602774
-    cd /etc/httpd/conf
-    sudo rm -rf server.key server.crt
-    sudo openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:4096 -out server.key
-    sudo chmod 400 server.key
-    sudo openssl req -new -sha256 -key server.key -out server.csr -subj "/C=GB/ST=London/L=London/O=Global Security/OU=IT Department/CN=localhost"
-    sudo openssl x509 -req -days 1095 -in server.csr -signkey server.key -out server.crt
-    sudo systemctl restart httpd.service
-fi
-sudo cp /project/provision/httpd.conf /etc/httpd/conf/httpd.conf
-cat >> ~/.bash_aliases <<"EOF"
-  alias ApacheRestart='sudo systemctl restart httpd.service'
-  alias ApacheStatus='sudo systemctl status httpd.service'
-  alias ModifyApacheConf='$EDITOR /project/provision/httpd.conf; sudo cp /project/provision/httpd.conf /etc/httpd/conf/'
-  ModifyApacheLog() { Sudo $EDITOR /var/log/httpd/error_log; }
-EOF
-cat >> ~/.vimrc <<"EOF"
-au BufRead,BufNewFile error_log setfiletype httpd
-" quick error_log
-  autocmd FileType php vnoremap <leader>kk yoerror_log('a' . print_r(a, true));<c-c>FaFavpT'i$<c-c>vi'yf'i: <c-c>llfavp
-EOF
-
 if [ ! -f ~/.check-files/php ]; then
   echo "installing php"
   sudo pacman -S --noconfirm php php-apache
+  # @TODO: Move this block to a php-apache provision inside this file
+  # @TODO: Append php directives to apache config file
   sudo sh -c "echo '<?php phpinfo(); ?>' > /srv/http/php.php"
   sudo systemctl restart httpd.service
   mkdir -p ~/.check-files && touch ~/.check-files/php
@@ -45,9 +18,9 @@ fi
     curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
   fi
 
-# lamp END
+# php END
 
-# lamp-extras START
+# php-extras START
 
 # NOTES:
 # - WordPress and Drupal have to be ported from Ubuntu Linux to Arch Linux
@@ -161,4 +134,4 @@ check_file_exists /project/provision/wp-config.php
 # source_if_exists ~/.drush/drush.prompt.sh
 # EOF
 
-# lamp-extras END
+# php-extras END
