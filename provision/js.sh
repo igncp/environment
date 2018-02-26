@@ -351,6 +351,24 @@ EOF
 
 # js-extras START
 
+cat >> ~/.vimrc <<"EOF"
+function! OpenJSTestOppositeFile()
+  let l:dir_name = expand('%:p:h:t')
+  let l:file_basename = expand('%:t:r')
+  let l:dir_path = expand('%:p:h')
+  if l:dir_name == '__tests__'
+    let l:new_dir_path = substitute(l:dir_path, '\/__tests__$', "", "")
+    let l:new_file_name = substitute(l:file_basename, '\.test$', "", "")
+    let l:full_file_path = l:new_dir_path . '/' . l:new_file_name . '.js'
+  else
+    call system('(mkdir -p ' . l:dir_path . "/__tests__)")
+    let l:full_file_path = l:dir_path . '/__tests__/' . l:file_basename . ".test.js"
+  endif
+  execute ':tab drop ' . l:full_file_path
+endfunction
+nnoremap <leader>jsj :call OpenJSTestOppositeFile()<cr>
+EOF
+
 # reason: https://github.com/facebook/reason
   echo 'eval $(opam config env)' >> ~/.bashrc
   if ! type opam > /dev/null 2>&1; then
