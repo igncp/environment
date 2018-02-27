@@ -74,6 +74,7 @@ fi
 
 install_pacman_package ctags
 install_pacman_package curl
+install_pacman_package rsync
 install_pacman_package htop
 install_pacman_package jq
 install_pacman_package moreutils vidir
@@ -215,13 +216,6 @@ alias Ports='sudo netstat -tulanp'
 alias Headers='curl -I' # e.g. Headers google.com
 alias TopMemory='ps auxf | sort -nr -k 4 | head -n' # e.g. TopMemory 10
 alias ChModRX='chmod -R +x'
-
-UpdateSrc() {
-  rm -rf /project/src
-  rsync -av \
-    --exclude='*node_modules*' \
-    ~/src /project
-}
 EOF
 
 cat > ~/.inputrc <<"EOF"
@@ -250,6 +244,8 @@ set-option -g message-bg black
 set-option -g message-fg white
 
 new-session -n $HOST
+
+set -g @copycat_search_C-t '\.test\.js:[0-9]'
 EOF
 
 install_tmux_plugin() {
@@ -268,6 +264,7 @@ install_tmux_plugin() {
 install_tmux_plugin tmux-plugins/tpm
 install_tmux_plugin tmux-plugins/tmux-resurrect
 install_tmux_plugin tmux-plugins/tmux-sessionist
+install_tmux_plugin tmux-plugins/tmux-copycat
 
 if [ ! -f ~/.tmux-completion.sh ]; then
   wget https://raw.githubusercontent.com/Bash-it/bash-it/4e730eb9a15c/completion/available/tmux.completion.bash \
@@ -459,6 +456,7 @@ EOF
     GitAddAll
     GitDiff HEAD | diff-so-fancy | less -R
     git checkout -b
+    tmux kill-session -t
     git l
     git fetch
     cp .git/COMMIT_EDITMSG /tmp/COMMIT_EDITMSG
