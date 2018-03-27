@@ -5,6 +5,9 @@ CapsLock::Send {ctrl down}c{ctrl up}
 
 ; Also download: https://github.com/pmb6tz/windows-desktop-switcher
 
+AppsKey::CapsLock
+NumPadDot::CapsLock
+
 CapsLock::
 CapsLock & q::
 CapsLock & w::

@@ -470,4 +470,11 @@ if [ ! -f ~/hhighlighter/h.sh ] > /dev/null 2>&1 ; then
 fi
 echo 'source_if_exists ~/hhighlighter/h.sh' >> ~/.bash_sources
 
+if [ ! -f ~/.dircolors ]; then
+  dircolors -p > ~/.dircolors
+  sed -i 's|^OTHER_WRITABLE 34;42|OTHER_WRITABLE 34;4|' ~/.dircolors
+fi
+
+echo 'eval "$(dircolors ~/.dircolors)"' >> ~/.bashrc
+
 # general END
