@@ -28,6 +28,7 @@ clone_example_from_gh() {
   fi
 
 # cron job
+  # https://crontab.guru
   crontab <<"EOF"
 */15 * * * * /project/scripts/MyScript.sh
 EOF
@@ -98,5 +99,17 @@ fi
 
 # exercism
 install_from_aur exercism https://aur.archlinux.org/exercism-cli.git
+
+# mp4 utils
+if ! type mp4info > /dev/null 2>&1 ; then
+  rm -rf /tmp/mp4info; mkdir /tmp/mp4info; cd /tmp/mp4info
+  # https://www.bento4.com/downloads/
+  wget http://zebulon.bok.net/Bento4/binaries/Bento4-SDK-1-5-1-622.x86_64-unknown-linux.zip
+  unzip ./*.zip
+  rm ./*.zip
+  mv ./* bento4
+  sudo mv bento4/bin/* /usr/bin/
+  cd ~;  rm -rf /tmp/mp4info
+fi
 
 # misc END
