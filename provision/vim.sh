@@ -99,7 +99,7 @@ let g:hardtime_default_on = 1
 
 " numbers maps
   set norelativenumber
-  nnoremap <leader>h :set relativenumber!<cr>
+  nnoremap <leader>hh :set relativenumber!<cr>
 
 " search visually selected text
   vmap * :<c-u>call <SID>VSetSearch()<cr>/<cr>

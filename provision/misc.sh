@@ -112,4 +112,34 @@ if ! type mp4info > /dev/null 2>&1 ; then
   cd ~;  rm -rf /tmp/mp4info
 fi
 
+# languagetool
+if [ ! -d /usr/lib/languagetool ]; then
+  cd ~; sudo rm -rf /usr/lib/languagetool
+  curl -L https://git.io/vNqdP | sudo bash
+  sudo mv LanguageTool* /usr/lib/languagetool
+  sudo chown -R $USER:$USER /usr/lib/languagetool
+fi
+mkdir -p /usr/lib/languagetool/bin
+cat > /usr/lib/languagetool/bin/languagetool <<"EOF"
+#!/usr/bin/env bash
+
+echo "wrapper in /usr/lib/languagetool/bin/languagetool"
+if [ "$#" -eq 0 ]; then
+  DEFAULT_ARGS=''
+else
+  DEFAULT_ARGS='-d EN_QUOTES,DASH_RULE'
+  echo "default args: $DEFAULT_ARGS"
+  echo ""
+fi
+eval 'java -jar /usr/lib/languagetool/languagetool-commandline.jar '"$DEFAULT_ARGS $@";
+EOF
+chmod +x /usr/lib/languagetool/bin/languagetool
+echo 'export PATH=$PATH:/usr/lib/languagetool/bin' >> ~/.bashrc
+cat >> ~/.vimrc <<"EOF"
+let s:LanguageToolMap=':tabnew /tmp/languagetool<cr>ggVGp:x<cr>:-tabnew\|te
+  \ /usr/lib/languagetool/bin/languagetool /tmp/languagetool \| less<cr>'
+execute 'vnoremap <leader>hl y' . s:LanguageToolMap
+execute 'nnoremap <leader>hl ggVGy<c-o>' . s:LanguageToolMap
+EOF
+
 # misc END

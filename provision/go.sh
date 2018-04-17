@@ -33,6 +33,7 @@ install_go_package() {
 
 install_go_package github.com/golang/lint/golint
 install_go_package github.com/kisielk/errcheck
+install_go_package github.com/ValeLint/vale
 
 if ! type shfmt >/dev/null 2>&1; then
   go get -u mvdan.cc/sh/cmd/shfmt
