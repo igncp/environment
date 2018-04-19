@@ -30,23 +30,6 @@ cat > "$GENERATED_FILE" <<"EOF"
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width" />
         <title>Grammarly</title>
-    /head>
-    <body>
-        <textarea style="height: 500px; width: 100%; font-size: 20px";>
-EOF
-if [ -z "$TOOLBOX_SCRIPTS_GRAMMARLY_FILE" ]; then
-  GENERATED_FILE="/tmp/grammarly.html"
-else
-  GENERATED_FILE="$TOOLBOX_SCRIPTS_GRAMMARLY_FILE"
-fi
-
-cat > "$GENERATED_FILE" <<"EOF"
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width" />
-        <title>Grammarly</title>
     </head>
     <body>
         <textarea id="textarea" style="height: 500px; width: 100%; font-size: 20px";>
