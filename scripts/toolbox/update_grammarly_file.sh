@@ -30,9 +30,10 @@ cat > "$GENERATED_FILE" <<"EOF"
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width" />
         <title>Grammarly</title>
+        <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAAAqCAYAAADf/ynVAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAJkSURBVFhH7Ze/axRBFMc3ORPjQeIJBowWIQbUiDZBSBMsBVs1XKGlYOMRKy1ExVIQEkgqkyoBG4mNhfkPLEQLQxQEDRYignCnkTMXPNc87ztxZ3d+vDckW92n2e+DOfaz7w17s1GbNrtMB65BLA9evDRWHHiC0siBd7NB9wj6UXXkeowoQiIpEgsVSsMRZIl9OX7tfk9n112UO4JPzivm61LpzXQU7Smg+k/tZAXJydctwUPIGk4xl1Tp7QySH4/k2pbcUeRtOnHNUD1RWUTUKK3OiKQIz/ohXDWsHTN1y3aD+q2FaPPZS1T2da7OpfecUcwktffy2Wjf7QlULXz7yCTIlbOOMo1UiqA16XVK1jPerBhnhBypJN/HbiK1sEkl783umEIqRcTrv5D4aGLVkcorRA2S+f36Iyo5vrGZSHUsHkXI8PPKVFC3pKhxikcZAj2Q9KFyEVOQ3ObSC1RuchUj6nces7rnFAvZtFx8ct6OkdxuCtpgjzJvOdEey7N7mlhho2sZ0UnHwT4kPvRAvQs3UNlRf+SaWN/a1HlEK7Rp428/UMkonBlmd1w0SiJklCG/yYilD2zUoebKJ1QtusvjSH56n+vfMLXTk0hZ2Ocx9a5ZLz/8d1UU75VZXaA1hcF+VKD5B8GN8QRLSI7W6Zcld10S1tGa+Dx89UKxu2cJ5TYh+4WQSBHWUR75MP8UUYNuENcbqPzQR4pLqtpsPEDUsHZMYRppkpCxKWrNxuzQ+znjQq8YMbH/2KlHh8+toNwRTONLwhJT+LrHxSdFiMQUoYIcIUWQWBKfpESmTZv8iKK/G+nY5VmBi1IAAAAASUVORK5CYII=" />
     </head>
     <body>
-        <textarea id="textarea" style="height: 500px; width: 100%; font-size: 20px";>
+        <textarea id="textarea" style="height: 500px; width: 100%; font-size: 24px";>
 EOF
 cat "$CONTENT_FILE" >> "$GENERATED_FILE"
 cat >> "$GENERATED_FILE" <<"EOF"
@@ -43,9 +44,11 @@ echo "const uuid = '$NEW_UUID';" >> $GENERATED_FILE
 cat >> "$GENERATED_FILE" <<"EOF"
 const el = document.getElementById('textarea')
 
-// remove last empty line
+// remove last empty line if multiple
 const lines = el.value.split('\n')
-el.value = lines.slice(0, lines.length - 1).join('\n')
+if (lines.length > 1) {
+  el.value = lines.slice(0, lines.length - 1).join('\n')
+}
 
 el.addEventListener('keyup', (e) => {
   const value = JSON.stringify(e.target.value)
