@@ -26,6 +26,9 @@ clone_example_from_gh() {
       chmod 755 ghi && \
       sudo mv ghi /usr/local/bin
   fi
+  echo 'ghiIssueFolded() { tmux split-window -h;
+    tmux select-pane -t 0; tmux resize-pane -x 60;
+    ghi show $1 > /tmp/$1; tmux kill-pane -t 1; }' >> ~/.bash_aliases
 
 # cron job
   # https://crontab.guru
