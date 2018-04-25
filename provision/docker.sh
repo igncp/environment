@@ -14,4 +14,8 @@ echo 'export PATH=$PATH:/usr/local/lib/docker/bin' >> ~/.bashrc
 echo 'source_if_exists ~/.docker-completion.sh' >> ~/.bash_sources
 echo 'alias docker="sudo docker"' >> ~/.bash_aliases
 
+# Cleanup of subvolumes (run in `sudo su`)
+# Setup detailed here: https://gist.github.com/hopeseekr/cd2058e71d01deca5bae9f4e5a555440
+# for subvolume in /var/lib/docker/btrfs/subvolumes/*; do btrfs subvolume delete $subvolume; done
+
 # docker END
