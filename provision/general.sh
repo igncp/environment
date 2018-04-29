@@ -168,6 +168,7 @@ EOF
 cat > ~/.bash_aliases <<"EOF"
 alias cp="cp -r"
 alias ll="ls -lah --color=always"
+alias l="less -i"
 alias mkdir="mkdir -p"
 alias rm="rm -rf"
 alias tree="tree -a"
