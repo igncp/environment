@@ -469,7 +469,7 @@ nnoremap ' :<C-u>marks<CR>:normal! `
   nnoremap <bs> gg
 
 " undo tree
-  nnoremap <leader>m :UndotreeShow<cr><c-w><left>
+  nnoremap <leader>mm :UndotreeShow<cr><c-w><left>
 
 " wrap quickfix window
   augroup quickfix
