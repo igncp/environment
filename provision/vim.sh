@@ -409,6 +409,7 @@ nnoremap ' :<C-u>marks<CR>:normal! `
 " save file shortcuts
   nmap <c-s> :update<esc>
   inoremap <c-s> <esc>:update<cr>
+  nnoremap <leader>ks :silent exec "!mkdir -p <c-R>=expand("%:p:h")<cr>"<cr>:w<cr>:silent exec ":CtrlPClearAllCaches"<cr>
 
 " copy - paste between files and VMs
   vmap <leader>fy "uy:-tabnew /vm-shared/_vitmp<cr>ggVG"up:x<cr>
@@ -717,5 +718,10 @@ add_special_vim_map() {
 }
 
 echo "" > ~/.special-vim-maps-from-provision.txt
+
+cat > ~/.vim-snippets/markdown.snippets <<"EOF"
+snippet xBoldColon
+  **${1}**: ${0}
+EOF
 
 # vim END

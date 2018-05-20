@@ -211,7 +211,7 @@ install_node_modules markdown-toc
 cat >> ~/.bash_aliases <<"EOF"
 alias MarkdownTocRecursive='find . ! -path "*.git*" -name "*.md" | xargs -I {} markdown-toc -i {}'
 EOF
-cat > ~/.vim-snippets/markdown.snippets <<"EOF"
+cat >> ~/.vim-snippets/markdown.snippets <<"EOF"
 snippet toc
   <!-- toc -->
 EOF

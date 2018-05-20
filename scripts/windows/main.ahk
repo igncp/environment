@@ -4,9 +4,7 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 CapsLock::Send {ctrl down}c{ctrl up}
 
 ; Also download: https://github.com/pmb6tz/windows-desktop-switcher
-
-AppsKey::CapsLock
-NumPadDot::CapsLock
+; Change the original implementation to use Alt + Num (e.g. !1)
 
 CapsLock::
 CapsLock & q::
