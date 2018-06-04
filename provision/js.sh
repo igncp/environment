@@ -400,4 +400,11 @@ EOF
   add_special_vim_map 'impjswor' ':ImportJSWord<cr>' 'import js word'
   add_special_vim_map 'impjswor' ':ImportJSFix<cr>' 'import js file'
 
+# local eslint
+  cat >> ~/.vimrc <<"EOF"
+    if executable('node_modules/.bin/eslint')
+      let b:syntastic_javascript_eslint_exec = 'node_modules/.bin/eslint'
+    endif
+EOF
+
 # js-extras END
