@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-FIND_CMD='find . -type f ! -path "*node_modules*" ! -path "*.git*" ! -path "*coverage*" ! -path "*.happypack*"'
+FIND_CMD='find . -type f -name "*.js*" ! -path "*node_modules*" ! -path "*.git*" ! -path "*coverage*" ! -path "*.happypack*" ! -path "*.snap"'
 
 SRC_FILE=$(eval "$FIND_CMD ! -name '*.test.*'" |
   fzf --height 100% --border --ansi --header "Please choose the source file to check the coverage" |
@@ -37,7 +37,7 @@ else
 fi
 
 ECHO_CMD='while true; do '
-ECHO_CMD+='./node_modules/.bin/jest --watch --coverage --collectCoverageFrom="'"$SRC_FILE"'" '"$SECONDARY_WITH_QUOTES"' "'"$TEST_FILE"'"'
+ECHO_CMD+='./node_modules/.bin/jest '"$SECONDARY_WITH_QUOTES"' "'"$TEST_FILE"'" --watch --coverage --collectCoverageFrom="'"$SRC_FILE"'"'
 ECHO_CMD+='; sleep 2; done'
 
 echo "$ECHO_CMD"

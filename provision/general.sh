@@ -212,6 +212,7 @@ alias GitCommit='git commit -m'
 alias GitEditorCommit='git commit -v'
 alias GitRebaseResetAuthorContinue='git commit --amend --reset-author --no-edit; git rebase --continue'
 alias GitBranchOrder='git branch -r --sort=creatordate --format "%(creatordate:relative);%(committername);%(refname:lstrip=-1)" | grep -v ";HEAD$" | column -s ";" -t | tac | less'
+alias GitListConflictFiles='git diff --name-only --diff-filter=U'
 
 alias Now='date +"%T"'
 alias Ports='sudo netstat -tulanp'
