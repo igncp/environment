@@ -1,3 +1,7 @@
+# Plugins:
+# - https://github.com/sprotheroe/vagrant-disksize using fdisk to increase current partition (delete and create again)
+#   https://stackoverflow.com/a/31747505/3244654
+# - https://github.com/fgrehm/vagrant-notify
 Vagrant.configure(2) do |config|
   # Version of VB tested: 5.1.30
   config.vm.box = "archlinux/archlinux"

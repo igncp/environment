@@ -249,7 +249,7 @@ cnoremap <c-K> <c-U>
   let g:deoplete#enable_at_startup = 1
   let g:deoplete#auto_complete_start_length=1
   let g:deoplete#file#enable_buffer_path = 1
-  call deoplete#custom#set('_', 'matchers', ['matcher_full_fuzzy'])
+  call deoplete#custom#source('_', 'matchers', ['matcher_full_fuzzy'])
   inoremap <expr><c-j> pumvisible() ? "\<c-n>" : "\<c-j>"
   inoremap <expr><c-k> pumvisible() ? "\<c-p>" : "\<c-k>"
 

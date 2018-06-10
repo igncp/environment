@@ -192,6 +192,7 @@ alias CleanNCurses='stty sane;clear;'
 alias ConfigureTimezone='sudo timedatectl set-timezone Asia/Hong_Kong'
 alias EditProvision="$EDITOR /project/provision/provision.sh && provision.sh"
 alias Exit="\$(ps aux | grep tmux | grep -v grep | awk '{print $2}' | xargs kill) || exit"
+alias FDisk='sudo fdisk /dev/sda'
 alias Less="less -i"
 alias LsTmpFiles='ls -laht /tmp | tac'
 alias PacmanUpdateRepos='sudo pacman -Sy'
