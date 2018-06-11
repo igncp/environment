@@ -20,8 +20,8 @@
   mount /dev/sda1 /mnt
   pacstrap /mnt base
   genfstab -U /mnt >> /mnt/etc/fstab
-  curl -o /mnt/root/start.sh L https://raw.githubusercontent.com/igncp/vagrant-personal-cookbook/master/arch-linux/installation/two.sh
+  curl -o /mnt/root/start.sh -L https://raw.githubusercontent.com/igncp/vagrant-personal-cookbook/master/arch-linux/installation/two.sh
   echo ""
   echo "Next steps:"
   echo "arch-chroot /mnt"
-  echo "sh start.sh"
+  echo "sh root/start.sh"
