@@ -676,8 +676,8 @@ __add_n_completion() {
   ALL_CMDS="n sh RsyncDelete node l nn ll"; sed -i "s|nvim $ALL_CMDS |nvim |; s|nvim |nvim $ALL_CMDS |" "$1";
   DIR_CMDS='mkdir tree'; sed -i "s|pushd $DIR_CMDS |pushd |; s|pushd |pushd $DIR_CMDS |" "$1";
 }
-__add_n_completion /home/vagrant/.vim/bundle/fzf/shell/completion.bash
-__add_n_completion /home/vagrant/.fzf/shell/completion.bash
+__add_n_completion /home/"$USER"/.vim/bundle/fzf/shell/completion.bash
+__add_n_completion /home/"$USER"/.fzf/shell/completion.bash
 cat >> ~/.bash_aliases <<"EOF"
 NFZF() { nvim -R -c "set foldlevel=20" -c "Line!" -; } # useful to pipe to this cmd
 Tree() { tree -a $@ -C -I "node_modules|.git" | nvim -R -c "AnsiEsc" -c "set foldlevel=20" -; }

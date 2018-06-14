@@ -13,9 +13,9 @@ call SetColors()
 cat >> ~/.vimrc <<"EOF"
 function! SetupEnvironment()
   let l:path = expand('%:p')
-  if l:path =~ '/home/vagrant/foo/bar'
+  if l:path =~ '/home/igncp/foo/bar'
     let g:Fast_grep='lib'
-  elseif l:path =~ '/home/vagrant/bar/baz'
+  elseif l:path =~ '/home/igncp/bar/baz'
     let g:Fast_grep='main'
   else
     let g:Fast_grep='src'

@@ -26,6 +26,8 @@ usermod -G vboxsf -a igncp
 chown igncp /project
 rm /root/start.sh
 pacman -S --noconfirm vim
+sudo sed -i 's|#en_US\.UTF|en_US.UTF|' /etc/locale.gen
+sudo locale-gen
 
   # exit
   # reboot

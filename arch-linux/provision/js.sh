@@ -93,7 +93,7 @@ cat >> ~/.vimrc <<"EOF"
   let g:flow#enable = 0
 
  autocmd BufNewFile,BufRead *.js
-	\ call neosnippet#commands#_source("/home/vagrant/.vim/bundle/vim-snippets/snippets/javascript-es6-react.snippets")
+	\ call neosnippet#commands#_source("/home/igncp/.vim/bundle/vim-snippets/snippets/javascript-es6-react.snippets")
 
 " jsx utils
   nnoremap <leader>jx $i<left><space><cr><up><c-c>:call JSXEachAttributeInLine()<CR>:%s/\s\+$<CR><c-o>A<cr><tab>
