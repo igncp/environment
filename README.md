@@ -14,10 +14,14 @@ The focus is in:
 
 Some approaches are not usual, but this setup has already been very convinient:
 
-- creating the content of files from the scripts instead of having dotfiles: minimizing the configuration points boosts productivity
-- having a big script file (~ 4k lines) instead of many smaller ones: one file eases editing and search, and 4k is not too many lines
-- code duplication in scripts: no interdependencies between scripts, very simple maintainability
-- output commands from scripts instead of calling them: creating scripts that can be called FZF improves the terminal productivity
+- Creating the content of files from the scripts instead of having dotfiles
+    - Minimizing the configuration points boosts productivity
+- Having a big script file (~ 4k lines) instead of many smaller ones
+    - One file eases editing and search, and 4k is not too many lines
+- Having code duplication in scripts
+    - No interdependencies between scripts, very simple maintainability
+- Output commands from scripts instead of calling them
+    - Creating scripts that can be used for FZF improves the terminal productivity
 
 ## License
 
