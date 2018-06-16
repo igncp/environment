@@ -145,4 +145,16 @@ execute 'vnoremap <leader>hl y' . s:LanguageToolMap
 execute 'nnoremap <leader>hl ggVGy<c-o>' . s:LanguageToolMap
 EOF
 
+# git-chglog
+if ! type chglog > /dev/null 2>&1 ; then
+  curl -s https://api.github.com/repos/git-chglog/git-chglog/releases/latest \
+    | grep browser_download_url \
+    | grep linux_amd64 \
+    | grep -oP 'h.*64' \
+    | wget -i - \
+    && mv git-chglog_* chglog \
+    && chmod +x chglog \
+    && sudo mv chglog /usr/bin/
+fi
+
 # misc END

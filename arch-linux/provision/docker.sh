@@ -4,10 +4,15 @@ install_pacman_package docker
 
 echo 'export PATH=$PATH:/usr/local/lib/docker/bin' >> ~/.bashrc
 echo 'source_if_exists ~/.docker-completion.sh' >> ~/.bash_sources
+
 cat >> ~/.bash_aliases <<"EOF"
 alias docker="sudo docker"
+
+alias DockerAttachLastContainer='docker start  `docker ps -q -l`; docker attach `docker ps -q -l`'
 alias DockerCleanAll='docker stop $(docker ps -aq); docker rm $(docker ps -aq); docker rmi $(docker images -q)'
 alias DockerCleanContainers='docker stop $(docker ps -aq); docker rm $(docker ps -aq)'
+
+DockerBashImage() { docker run -it $1 /bin/bash; }
 EOF
 
 # Setup with overlay2 filesystem

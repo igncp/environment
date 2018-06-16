@@ -28,7 +28,7 @@ cat >> ~/.bash_aliases <<"EOF"
   ModifyApacheLog() { Sudo $EDITOR /var/log/httpd/error_log; }
 EOF
 
-sudo chown vagrant /srv/http/
+sudo chown igncp /srv/http/
 sudo rm -f /srv/http/*
 
 sudo apachectl restart &

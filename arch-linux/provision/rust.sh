@@ -7,7 +7,7 @@ fi
 
 cat >> ~/.bashrc <<"EOF"
 export PATH=$PATH:~/.cargo/bin
-export RUST_SRC_PATH=/home/vagrant/.multirust/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src
+export RUST_SRC_PATH=/home/igncp/.multirust/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src
 EOF
 
 install_vim_package rust-lang/rust.vim
@@ -23,7 +23,7 @@ let g:syntastic_rust_checkers = ['rustc']
   let g:syntastic_rust_rustc_exe = 'cargo check'
   let g:syntastic_rust_rustc_fname = ''
 
-let g:racer_cmd = "/home/vagrant/.cargo/bin/racer"
+let g:racer_cmd = "/home/igncp/.cargo/bin/racer"
 let g:racer_experimental_completer = 1
 
 au FileType rust nmap gd <Plug>(rust-def)
@@ -34,8 +34,8 @@ au FileType rust nmap <leader>gd <Plug>(rust-doc)
 let RustPrintMapping="vnoremap <leader>kk yOprintln!(\"a {}\", a);<C-c>9hvpgvyf\"lllvp"
 autocmd filetype rust :exe RustPrintMapping
 
-let g:deoplete#sources#rust#racer_binary='/home/vagrant/.cargo/bin/racer'
-let g:deoplete#sources#rust#rust_source_path='/home/vagrant/rust-src'
+let g:deoplete#sources#rust#racer_binary='/home/igncp/.cargo/bin/racer'
+let g:deoplete#sources#rust#rust_source_path='/home/igncp/rust-src'
 EOF
 
 # it expects a bin file for each crate

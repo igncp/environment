@@ -215,6 +215,7 @@ alias GitRebaseResetAuthorContinue='git commit --amend --reset-author --no-edit;
 alias GitBranchOrder='git branch -r --sort=creatordate --format "%(creatordate:relative);%(committername);%(refname:lstrip=-1)" | grep -v ";HEAD$" | column -s ";" -t | tac | less'
 alias GitListConflictFiles='git diff --name-only --diff-filter=U'
 
+alias RemoveAnsiColors="sed 's/\x1b\[[0-9;]*m//g'"
 alias Now='date +"%T"'
 alias Ports='sudo netstat -tulanp'
 alias Headers='curl -I' # e.g. Headers google.com

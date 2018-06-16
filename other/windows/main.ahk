@@ -4,7 +4,8 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 CapsLock::Send {ctrl down}c{ctrl up}
 
 ; Also download: https://github.com/pmb6tz/windows-desktop-switcher
-; Change the original implementation to use Alt + Num (e.g. !1)
+; Change the original implementation to use Left Alt + Num (e.g. <!1)
+; It is important that it is only Left Alt so Right Alt can be used with I3
 
 CapsLock::
 CapsLock & q::

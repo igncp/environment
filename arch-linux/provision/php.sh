@@ -53,10 +53,10 @@ check_file_exists /project/provision/wp-config.php
     # cp /project/provision/wp-config.php wordpress/wp-config.php
     # mkdir -p wordpress/wp-content/upgrade
     # sudo rm -rf /var/www/html/wordpress
-    # sudo ln -s /home/vagrant/wordpress /var/www/html/
+    # sudo ln -s /home/igncp/wordpress /var/www/html/
 
-    # sudo chown -R vagrant:www-data /var/www/html
-    # sudo chown -R vagrant:www-data wordpress
+    # sudo chown -R igncp:www-data /var/www/html
+    # sudo chown -R igncp:www-data wordpress
 
     # cd ~/wordpress
     # wp core install --title="WP TITLE" --url="http://localhost:9080/wordpress" \
@@ -109,15 +109,15 @@ check_file_exists /project/provision/wp-config.php
     # sudo rm -rf ~/drupal/themes/$THEME_NAME
     # ln -s ~/src/$THEME_NAME ~/drupal/themes/$THEME_NAME
 
-    # sudo chown -R vagrant:www-data .
+    # sudo chown -R igncp:www-data .
     # sudo chown www-data:www-data sites/default/settings.php
     # sudo chown -R www-data:www-data sites/default/files
 
     # sudo chmod -R 750 .
 
     # sudo rm -rf /var/www/html
-    # sudo ln -s /home/vagrant/drupal /var/www/html
-    # sudo chown -R vagrant:www-data ~/src
+    # sudo ln -s /home/igncp/drupal /var/www/html
+    # sudo chown -R igncp:www-data ~/src
     # sudo chmod -R 750 ~/src
 
     # # drush config-set -y system.theme default $THEME_NAME
@@ -125,7 +125,7 @@ check_file_exists /project/provision/wp-config.php
     # sudo service apache2 restart
   # fi
 
-  # sudo chown -R vagrant:www-data ~/src
+  # sudo chown -R igncp:www-data ~/src
   # sudo chmod -R 750 ~/src
 
   # cat >> ~/.bash_sources <<"EOF"

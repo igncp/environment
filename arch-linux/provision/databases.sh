@@ -27,9 +27,9 @@ if [ ! -f ~/.check-files/postgresql ]; then
   sudo chown -c -R postgres:postgres /var/lib/postgres
   sudo systemctl enable postgresql
   sudo -H -u postgres bash -c "initdb -D '/var/lib/postgres/data'"
-  sudo -u postgres createuser vagrant
-  sudo -u postgres createdb vagrant
-  sudo -u postgres psql -c 'ALTER USER vagrant WITH SUPERUSER;'
+  sudo -u postgres createuser igncp
+  sudo -u postgres createdb igncp
+  sudo -u postgres psql -c 'ALTER USER igncp WITH SUPERUSER;'
   sudo systemctl restart postgresql
   mkdir -p ~/.check-files && touch ~/.check-files/postgresql
 fi
@@ -43,9 +43,9 @@ if [ ! -f ~/.check-files/pgadmin ]; then
   download_cached https://ftp.postgresql.org/pub/pgadmin3/pgadmin4/v1.1/pip/$PGADMIN_FILE $PGADMIN_FILE ~
   sudo pip install ~/$PGADMIN_FILE
   rm ~/$PGADMIN_FILE
-  sudo chown -R vagrant /usr/lib/python3.5/site-packages/pgadmin4/
+  sudo chown -R igncp /usr/lib/python3.5/site-packages/pgadmin4/
   sudo mkdir -p /var/log/pgadmin4
-  sudo chown -R vagrant /var/log/pgadmin4
+  sudo chown -R igncp /var/log/pgadmin4
   mkdir -p ~/.check-files && touch ~/.check-files/pgadmin
 fi
 cat > /usr/lib/python3.5/site-packages/pgadmin4/config_local.py <<"EOF"

@@ -1,18 +1,17 @@
 # js START
 
-NODE_VERSION=6.11.1
-if [ ! -f ~/.check-files/node ]; then
+NODE_VERSION=8.9.0
+if [ ! -d ~/.nodenv ]; then
   echo "setup node with nodenv"
   cd ~
-  if [ ! -d ~/.nodenv ]; then git clone https://github.com/nodenv/nodenv.git ~/.nodenv && cd ~/.nodenv && src/configure && make -C src; fi && \
+  git clone https://github.com/nodenv/nodenv.git ~/.nodenv && cd ~/.nodenv && src/configure && make -C src && \
     export PATH=$PATH:/home/$USER/.nodenv/bin && \
     eval "$(nodenv init -)" && \
     if [ ! -d $(nodenv root)/plugins/node-build ]; then git clone https://github.com/nodenv/node-build.git $(nodenv root)/plugins/node-build; fi && \
     if [ ! -d $(nodenv root)/plugins/nodenv-update ]; then git clone https://github.com/nodenv/nodenv-update.git "$(nodenv root)"/plugins/nodenv-update; fi && \
     if [ ! -d .nodenv/versions/$NODE_VERSION ]; then nodenv install $NODE_VERSION; fi && \
-    nodenv global $NODE_VERSION && \
-    mkdir -p ~/.check-files && touch ~/.check-files/node
-  rm -f ~/install.sh
+    nodenv global $NODE_VERSION
+  cd ~
 fi
 
 install_node_modules() {
@@ -28,7 +27,7 @@ install_node_modules http-server diff-so-fancy eslint babel-eslint cloc yo eslin
 
 cat >> ~/.bashrc <<"EOF"
 export PATH=$PATH:/home/$USER/.nodenv/bin
-export PATH=$PATH:/home/$USER/.nodenv/versions/6.11.1/bin/
+export PATH=$PATH:/home/$USER/.nodenv/versions/8.9.0/bin/
 eval "$(nodenv init -)"
 source <(npm completion)
 EOF
@@ -349,62 +348,3 @@ nnoremap <leader>jsW :let g:SpecialImports_Cmd='<c-r>=g:SpecialImports_Cmd_Rel_D
 EOF
 
 # js END
-
-# js-extras START
-
-cat >> ~/.vimrc <<"EOF"
-function! OpenJSTestOppositeFile()
-  let l:dir_name = expand('%:p:h:t')
-  let l:file_basename = expand('%:t:r')
-  let l:dir_path = expand('%:p:h')
-  if l:dir_name == '__tests__'
-    let l:new_dir_path = substitute(l:dir_path, '\/__tests__$', "", "")
-    let l:new_file_name = substitute(l:file_basename, '\.test$', "", "")
-    let l:full_file_path = l:new_dir_path . '/' . l:new_file_name . '.js'
-  else
-    call system('(mkdir -p ' . l:dir_path . "/__tests__)")
-    let l:full_file_path = l:dir_path . '/__tests__/' . l:file_basename . ".test.js"
-  endif
-  execute ':tab drop ' . l:full_file_path
-endfunction
-nnoremap <leader>jsj :call OpenJSTestOppositeFile()<cr>
-EOF
-
-# reason: https://github.com/facebook/reason
-  echo 'eval $(opam config env)' >> ~/.bashrc
-  if ! type opam > /dev/null 2>&1; then
-    wget https://raw.github.com/ocaml/opam/master/shell/opam_installer.sh -O - | sh -s /usr/local/bin
-    opam update
-    opam switch 4.03.0
-    eval $(opam config env)
-    cd ~
-    git clone git@github.com:facebook/reason.git
-    cd reason
-    opam pin add -y reason-parser reason-parser
-    opam pin add -y reason .
-    npm install -g git://github.com/reasonml/reason-cli.git
-  fi
-  install_vim_package reasonml/vim-reason-loader
-  cat >> ~/.vimrc <<"EOF"
-  let g:deoplete#omni_patterns = {}
-  let g:deoplete#omni_patterns.reason = '[^. *\t]\.\w*\|\h\w*|#'
-  let g:deoplete#sources = {}
-  let g:deoplete#sources.reason = ['omni', 'buffer']
-  let g:syntastic_reason_checkers=['merlin']
-  autocmd FileType reason nmap <buffer> <leader>kb :ReasonPrettyPrint<Cr>
-EOF
-
-# import js
-  install_node_modules import-js
-  install_vim_package galooshi/vim-import-js
-  add_special_vim_map 'impjswor' ':ImportJSWord<cr>' 'import js word'
-  add_special_vim_map 'impjswor' ':ImportJSFix<cr>' 'import js file'
-
-# local eslint
-  cat >> ~/.vimrc <<"EOF"
-    if executable('node_modules/.bin/eslint')
-      let b:syntastic_javascript_eslint_exec = 'node_modules/.bin/eslint'
-    endif
-EOF
-
-# js-extras END

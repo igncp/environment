@@ -71,6 +71,10 @@ EOF
   check_file_exists /project/provision/i3-config
   cp /project/provision/i3-config ~/.config/i3
 
+# gui END
+
+# gui-extras START
+
 # alacritty
   if ! type alacritty > /dev/null 2>&1 ; then
     rm -rf ~/alacritty-git
@@ -86,10 +90,6 @@ EOF
   alias ModifyAlacritty='$EDITOR /project/provision/alacritty.yml;
     cp /project/provision/alacritty.yml ~/.config/alacritty/alacritty.yml; echo Alacritty copied'
 EOF
-
-# gui END
-
-# gui-extras START
 
 # eclim
   if [ ! -f ~/.check-files/eclim ]; then

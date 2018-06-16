@@ -11,7 +11,11 @@
 
 exec "setxkbmap gb"
 
-set $mod Mod1
+# Mod1 = alt (aka meta)
+# Mod2 = number lock
+# Mod4 = super (aka windows)
+# Mod5 = level 3 shift (aka AltGr, Opt)
+set $mod Mod2
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.

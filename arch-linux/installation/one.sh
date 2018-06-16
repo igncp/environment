@@ -14,13 +14,14 @@
 # Run:
   # @TODO: Improve partitions for performance
   # fdisk /dev/sda # create new partition: n p <enter> <enter> <enter> w
-  # @TODO: Find how to copy this in VBox terminal. Find how to pipe to shell
-  # curl -L https://raw.githubusercontent.com/igncp/vagrant-personal-cookbook/master/arch-linux/installation/one.sh | bash
+  # @TODO: Find how to copy this in VBox terminal
+  # curl -L https://raw.githubusercontent.com/igncp/environment/master/arch-linux/installation/one.sh | bash
   mkfs.ext4 /dev/sda1
   mount /dev/sda1 /mnt
   pacstrap /mnt base
   genfstab -U /mnt >> /mnt/etc/fstab
-  curl -o /mnt/root/start.sh -L https://raw.githubusercontent.com/igncp/vagrant-personal-cookbook/master/arch-linux/installation/two.sh
+  curl -o /mnt/root/start.sh \
+    -L https://raw.githubusercontent.com/igncp/environment/master/arch-linux/installation/two.sh
   echo ""
   echo "Next steps:"
   echo "arch-chroot /mnt"
