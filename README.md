@@ -10,7 +10,7 @@ The focus is in:
 
 - Productivity
 - Simplicity
-- Maintainablity
+- Maintainability
 
 Some approaches are not usual, but this setup has already been very convinient:
 
