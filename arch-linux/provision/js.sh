@@ -215,7 +215,7 @@ snippet toc
   <!-- toc -->
 EOF
 
-install_node_modules yarn yarn-completions
+install_node_modules yarn
 
 install_node_modules gnomon
 

@@ -9,6 +9,6 @@
 sudo mount -t vboxsf project /project -o uid=1000,gid=1000
 sudo systemctl start systemd-timesyncd.service
 
-if [ -f /project/provision.sh ]; then
+if [ -f /project/provision/provision.sh ]; then
   sh /project/provision/provision.sh
 fi

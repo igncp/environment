@@ -12,7 +12,7 @@ The focus is in:
 - Simplicity
 - Maintainability
 
-Some approaches are not usual, but this setup has already been very convinient:
+Some approaches are not usual, but this setup has already been very convenient:
 
 - Creating the content of files from the scripts instead of having dotfiles
     - Minimizing the configuration points boosts productivity
