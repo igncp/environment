@@ -23,7 +23,7 @@ pacman -S --noconfirm vim
 sed -i 's|#en_US\.UTF|en_US.UTF|' /etc/locale.gen
 locale-gen
 curl -o /home/igncp/init.sh \
-  -L https://raw.githubusercontent.com/igncp/vagrant-personal-cookbook/master/arch-linux/installation/three.sh
+  -L https://raw.githubusercontent.com/igncp/environment/master/arch-linux/installation/three.sh
 
   # exit
   # reboot
