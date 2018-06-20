@@ -22,6 +22,7 @@ rm /root/start.sh
 pacman -S --noconfirm vim
 sed -i 's|#en_US\.UTF|en_US.UTF|' /etc/locale.gen
 locale-gen
+localectl set-locale LANG=en_US.UTF-8
 curl -o /home/igncp/init.sh \
   -L https://raw.githubusercontent.com/igncp/environment/master/arch-linux/installation/three.sh
 

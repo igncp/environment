@@ -14,9 +14,8 @@ clone_example_from_gh() {
     COMMIT=$3
     mkdir -p $PARENT_PATH
     git clone $REPO_URL $FULL_PATH
-    cd $FULL_PATH
-    git reset --hard $COMMIT > /dev/null 2>&1
-    cd - > /dev/null 2>&1
+    (cd $FULL_PATH
+      git reset --hard $COMMIT > /dev/null 2>&1)
   fi
 }
 
@@ -155,6 +154,20 @@ if ! type chglog > /dev/null 2>&1 ; then
     && mv git-chglog_* chglog \
     && chmod +x chglog \
     && sudo mv chglog /usr/bin/
+fi
+
+# scc: performant cloc with extra info
+if ! type scc > /dev/null 2>&1 ; then
+  (cd ~ && \
+    curl -s https://api.github.com/repos/boyter/scc/releases/latest \
+      | grep unknown-linux \
+      | grep browser \
+      | cut -d : -f 2,3 \
+      | tr -d \" \
+      | xargs wget
+    unzip scc*.zip
+    rm scc*.zip
+    sudo mv scc /usr/bin)
 fi
 
 # misc END

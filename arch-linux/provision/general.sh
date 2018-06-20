@@ -125,12 +125,25 @@ export GREEN='\033[0;32m'
 export BLUE='\033[0;34m'
 export NC='\033[0m'
 
-stty -ixon # prevent the terminal from hanging on ctrl+s
+# prevent the terminal from hanging on ctrl+s
+# although it can be recovered with ctrl+q
+stty -ixon
 
 export HISTCONTROL=ignoreboth:erasedups
 export EDITOR=vim
 
-CHI_NUMBERS=(0 1 2 3 4 5 6 7 8 9 10)
+# add this in custom provisioning with:
+# sed -i '1iWITH_CANTO_WORD=1' ~/.bashrc
+CANTO_WORD=""
+if [[ $WITH_CANTO_WORD -eq 1 ]]; then
+  if [ ! -f ~/canto.txt ]; then
+    echo "You must copy environment/other/canto.txt to ~/canto.txt"
+  else
+    CANTO_WORD=" $(cat ~/canto.txt | shuf -n 1)"
+  fi
+fi
+
+CHI_NUMBERS=(零 一 二 三 四 五 六 七 八 九)
 getTime() {
   MINUTES=$(date +"%M"); HOURS=$(date +"%H")
   echo $HOURS":"$MINUTES
