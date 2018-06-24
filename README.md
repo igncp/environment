@@ -4,6 +4,8 @@ This repo contains my personal environment configurations
 
 It is mostly bash scripts and configuration files
 
+The only dependency is [Virtual Box](https://www.virtualbox.org/wiki/Downloads)
+
 It tries to automate the most number of tasks and make the updates as fast as possible
 
 The focus is in:

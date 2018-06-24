@@ -4,21 +4,6 @@ if [ ! -d ~/english-words ]; then
   git clone https://github.com/dwyl/english-words ~/english-words
 fi
 
-
-clone_example_from_gh() {
-  PARENT_PATH=~/examples/$1
-  DIR=$(echo $2 | sed -r "s|(.+)/(.+)|\1_-_\2|") # foo/bar => foo_-_bar
-  FULL_PATH=$PARENT_PATH/$DIR
-  if [ ! -d $FULL_PATH ]; then
-    REPO_URL=https://github.com/$2.git
-    COMMIT=$3
-    mkdir -p $PARENT_PATH
-    git clone $REPO_URL $FULL_PATH
-    (cd $FULL_PATH
-      git reset --hard $COMMIT > /dev/null 2>&1)
-  fi
-}
-
 # github issues
   if ! type ghi > /dev/null 2>&1; then
     curl -sL https://raw.githubusercontent.com/stephencelis/ghi/master/ghi > ghi && \
@@ -169,5 +154,7 @@ if ! type scc > /dev/null 2>&1 ; then
     rm scc*.zip
     sudo mv scc /usr/bin)
 fi
+
+install_pacman_package pdfgrep
 
 # misc END

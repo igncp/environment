@@ -72,19 +72,23 @@ if [ ! -f /usr/local/bin/git-extras ]; then
   cd ~ && rm -rf ~/.git-extras
 fi
 
+install_pacman_package 'net-tools' netstat
+install_pacman_package at
 install_pacman_package ctags
 install_pacman_package curl
-install_pacman_package rsync
 install_pacman_package htop
 install_pacman_package jq
+install_pacman_package lsof
 install_pacman_package moreutils vidir
 install_pacman_package ncdu
+install_pacman_package rsync
 install_pacman_package strace
 install_pacman_package tree
 install_pacman_package unzip
-install_pacman_package zip
-install_pacman_package lsof
 install_pacman_package wget
+install_pacman_package zip
+
+sudo atd
 
 install_pacman_package netdata
 if [[ ! -z $(sudo systemctl status netdata.service | grep inactive) ]]; then
@@ -206,9 +210,11 @@ alias ConfigureTimezone='sudo timedatectl set-timezone Asia/Hong_Kong'
 alias EditProvision="$EDITOR /project/provision/provision.sh && provision.sh"
 alias Exit="\$(ps aux | grep tmux | grep -v grep | awk '{print $2}' | xargs kill) || exit"
 alias FDisk='sudo fdisk /dev/sda'
+alias HierarchyManual='man hier'
 alias Less="less -i"
 alias LsTmpFiles='ls -laht /tmp | tac'
 alias PacmanUpdateRepos='sudo pacman -Sy'
+alias PathShow='echo $PATH | tr ":" "\n" | sort | uniq | less'
 alias RsyncDelete='rsync -rhv --delete' # remember to add a slash at the end of source (dest doesn't matter)
 alias Sudo='sudo -E ' # this preserves aliases and environment in root
 alias Tee="tee /dev/tty";

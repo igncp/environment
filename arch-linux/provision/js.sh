@@ -202,6 +202,11 @@ snippet xJestMockComponent
   jest.mock("../${1}", () => mock${2});
 snippet xExpectToContain
   expect(${1}).toContain(${0});
+snippet xLogOnce
+  if (!console.info.${1:logged} && ${2:true}) {
+    console.info.$1 = true;
+    ${3:console.info('logged')};
+  }
 EOF
 cat /tmp/js-and-ts-snippets > ~/.vim-snippets/javascript.snippets
 cat /tmp/js-and-ts-snippets > ~/.vim-snippets/typescript.snippets
