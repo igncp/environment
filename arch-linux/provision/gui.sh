@@ -58,9 +58,9 @@ fi
 EOF
   cat >> ~/.bash_aliases <<"EOF"
   I3Setup() {
-    setxkbmap -layout gb;
     /usr/bin/VBoxClient-all;
   }
+  alias I3GBLayout='setxkbmap -layout gb'
   alias ModifyI3Conf='$EDITOR /project/provision/i3-config; cp /project/provision/i3-config ~/.config/i3/config; echo Copied I3 Config'
   alias I3Reload='i3-msg reload'
   alias I3LogOut='i3-msg exit'

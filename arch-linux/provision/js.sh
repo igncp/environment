@@ -195,7 +195,11 @@ snippet xConstObjEqual
     ${2}: ${0},
   }
 snippet xItSentenceFunctions
-  calls the expected functions when
+  calls ${1:the expected functions}${2: when}${3}
+snippet xItSentenceReturn
+  returns ${1:the expected result}${2: when}${3}
+snippet xItSentenceSnapshot
+  matches the snapshot ${2: when}${3}
 snippet xJestMockComponent
   const mock$2 = () => null;
 

@@ -177,9 +177,14 @@ export PATH=$PATH:~/.cabal/bin
 
 source ~/.bash_sources
 
-if [ "$(pwd)" = "/home/$USER" ]; then
-  if [ -d ~/src ]; then cd ~/src; fi
-fi
+GetCurrentCantoCharMeaning() {
+  CANTO_CHAR=$(echo "$CANTO_WORD" | grep -o '^.')
+  printf "requesting: $CANTO_CHAR\n\n"
+  curl http://www.cantonese.sheik.co.uk/scripts/wordsearch.php?level=0 -X POST \
+    -d "TEXT=$CANTO_CHAR&SEARCHTYPE=0&radicaldropdown&searchsubmit=1" > /tmp/cantodict-result.txt
+  printf "curl response saved in: /tmp/cantodict-result.txt\n\n"
+  cat /tmp/cantodict-result.txt | grep -Eo 'http:.*?characters\/[0-9]*\/' | head -n 1
+}
 EOF
 
 cat > ~/.bash_aliases <<"EOF"
