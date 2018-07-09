@@ -414,9 +414,9 @@ nnoremap ' :<C-u>marks<CR>:normal! `
   nnoremap <leader>ks :silent exec "!mkdir -p <c-R>=expand("%:p:h")<cr>"<cr>:w<cr>:silent exec ":CtrlPClearAllCaches"<cr>
 
 " copy - paste between files and VMs
-  vmap <leader>fy "uy:-tabnew /vm-shared/_vitmp<cr>ggVG"up:x<cr>
-  nmap <leader>fp :-tabnew /vm-shared/_vitmp<cr>gg_vG$<left>"uy:q!<cr>"up
-  vmap <leader>fp <c-c>:-tabnew /vm-shared/_vitmp<cr>ggvG$<left>"uy:q!<cr>gv"up
+  vmap <leader>fy "uy:-tabnew /tmp/vim-shared<cr>ggVG"up:x<cr>
+  nmap <leader>fp :-tabnew /tmp/vim-shared<cr>gg_vG$<left>"uy:q!<cr>"up
+  vmap <leader>fp <c-c>:-tabnew /tmp/vim-shared<cr>ggvG$<left>"uy:q!<cr>gv"up
 
 " lines in files
   nnoremap <leader>kr :-tabnew\|te ( F(){ find $1 -type f \| xargs wc -l \| sort -rn \|

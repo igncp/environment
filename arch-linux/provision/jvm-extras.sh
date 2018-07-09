@@ -80,4 +80,7 @@ EOF
 
 install_pacman_package android-tools adb
 
+# eclipse
+  install_pacman_package eclipse-java eclipse
+
 # jvm-extras END
