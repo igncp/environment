@@ -215,6 +215,7 @@ alias ConfigureTimezone='sudo timedatectl set-timezone Asia/Hong_Kong'
 alias EditProvision="$EDITOR /project/provision/provision.sh && provision.sh"
 alias Exit="\$(ps aux | grep tmux | grep -v grep | awk '{print $2}' | xargs kill) || exit"
 alias FDisk='sudo fdisk /dev/sda'
+alias FilterLeaf=$'sort -r | awk \'a!~"^"$0{a=$0;print}\' | sort'
 alias HierarchyManual='man hier'
 alias Less="less -i"
 alias LsTmpFiles='ls -laht /tmp | tac'

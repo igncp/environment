@@ -32,6 +32,23 @@ eval "$(nodenv init -)"
 source <(npm completion)
 EOF
 
+cat >> ~/.vimrc <<"EOF"
+  function! DisplayPrettyFlowType()
+    let column = col('.')
+    let line = line(".")
+    let file_path = expand('%:p')
+
+    let cmd = "printf '// @flow\n\n' > /tmp/flow_type.js"
+    let cmd = cmd . "; ./node_modules/.bin/flow type-at-pos  " . file_path . " " . line . " " . column . " >> /tmp/flow_type.js"
+    let cmd = cmd . "; sed -i '$ d' /tmp/flow_type.js"
+    let cmd = cmd . "; prettier --write --parser flow /tmp/flow_type.js"
+
+    call system(cmd)
+    execute ":-tabnew /tmp/flow_type.js"
+  endfunction
+  autocmd filetype javascript :exe 'nnoremap <leader>jd :call DisplayPrettyFlowType()<cr>'
+EOF
+
 cat >> ~/.bash_aliases <<"EOF"
 alias Serve="http-server -c-1 -p 9000"
 GitDiff() { git diff --color $@; }
