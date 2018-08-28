@@ -239,6 +239,7 @@ alias GitEditorCommit='git commit -v'
 alias GitRebaseResetAuthorContinue='git commit --amend --reset-author --no-edit; git rebase --continue'
 alias GitBranchOrder='git branch -r --sort=creatordate --format "%(creatordate:relative);%(committername);%(refname:lstrip=-1)" | grep -v ";HEAD$" | column -s ";" -t | tac | less'
 alias GitListConflictFiles='git diff --name-only --diff-filter=U'
+alias GitListFilesChangedHistory='git log --pretty=format: --name-only | sort | uniq -c | sort -rg' # can add `--author Foo`, --since, or remove files
 
 alias RemoveAnsiColors="sed 's/\x1b\[[0-9;]*m//g'"
 alias Now='date +"%T"'
