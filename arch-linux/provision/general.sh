@@ -171,6 +171,7 @@ PS1_END="\[\e[34m\]\$(getTime)\[\e[32m\]$TMUX_PREFIX_B\[\e[m\] "
 export PS1="$PS1_BEGINNING""$PS1_MIDDLE""$PS1_END"
 
 export PATH=$PATH:/project/scripts
+export PATH=$PATH:/project/scripts/bootstrap
 export PATH=$PATH:/project/provision
 export PATH=$PATH:~/.local/bin
 export PATH=$PATH:~/.cabal/bin
