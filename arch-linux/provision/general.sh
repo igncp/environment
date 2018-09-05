@@ -327,44 +327,6 @@ source_if_exists /usr/share/doc/task/scripts/bash/task.sh # to have _task availa
 complete -o nospace -F _task t
 EOF
 
-# Search and Replace utility
-  cat >> ~/.bash_aliases <<"EOF"
-SR() { _CustomSR $@ && history -s $(echo "SR ""$@") && \
-  history -s $(cat /tmp/sr_replace) && history -s $(cat /tmp/sr_search_old) && history -s $(cat /tmp/sr_search_new); }
-_CustomSR() {
-  ask_with_default() {
-    NAME="$1"; DEFAULT="$2"
-    printf "$NAME [$DEFAULT]: " > /dev/stderr
-    read VAR
-    if [[ -z $VAR ]]; then VAR=$DEFAULT; fi
-    echo "$VAR"
-  }
-
-  DIR_TO_FIND=${1:-.}
-  SEARCH_REGEX_VALUE="${2:-foo}" # read will not allow to move the cursor, allowing this for convenience
-  REPLACEMENT_STR_VALUE="${3:-''}"
-  echo "src: $DIR_TO_FIND"
-  EXTRA_FIND_ARGS=$(ask_with_default "extra find arguments" "-name '*'")
-  SEARCH_REGEX=$(ask_with_default "search regexp" "$SEARCH_REGEX_VALUE")
-  REPLACEMENT_STR=$(ask_with_default "replacement str" "$REPLACEMENT_STR_VALUE")
-  CASE_SENSITIVE=$(ask_with_default "case sensitive" "yes")
-
-  GREP_OPTS=""; SED_OPTS="g"
-  if [ "$CASE_SENSITIVE" != "yes" ]; then
-    GREP_OPTS=" -i "; SED_OPTS="I"
-  fi
-
-  CMD_SEARCH_NEW="find $DIR_TO_FIND -type f $EXTRA_FIND_ARGS | xargs grep --color=always $GREP_OPTS -E "'"'"$SEARCH_REGEX"'" | less -R'
-  CMD_SEARCH_OLD="find $DIR_TO_FIND -type f $EXTRA_FIND_ARGS | xargs grep --color=always $GREP_OPTS -E "'"'"$REPLACEMENT_STR"'" | less -R'
-  CMD_REPLACE="find $DIR_TO_FIND -type f $EXTRA_FIND_ARGS | xargs grep $GREP_OPTS -El "'"'"$SEARCH_REGEX"'"'
-  CMD_REPLACE="$CMD_REPLACE | xargs -I {} sed -i 's|$SEARCH_REGEX|$REPLACEMENT_STR|$SED_OPTS' {}"
-
-  echo "$CMD_SEARCH_NEW" > /tmp/sr_search_new
-  echo "$CMD_SEARCH_OLD" > /tmp/sr_search_old
-  echo "$CMD_REPLACE" > /tmp/sr_replace
-}
-EOF
-
 install_pacman_package shellcheck
 echo 'SHELLCHECK_IGNORES="SC1090"' >> ~/.bashrc
 add_shellcheck_ignores() {
@@ -508,5 +470,14 @@ if [ ! -f ~/.dircolors ]; then
 fi
 
 echo 'eval "$(dircolors ~/.dircolors)"' >> ~/.bashrc
+
+if ! type sr > /dev/null 2>&1 ; then
+  cd ~; rm -rf sr-tmp
+  git clone https://github.com/igncp/sr.git sr-tmp --depth 1
+  cd sr-tmp
+  make
+  sudo mv build/bin/sr /usr/bin
+  cd ~ ; rm -rf sr-tmp
+fi
 
 # general END

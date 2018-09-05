@@ -155,6 +155,15 @@ if ! type scc > /dev/null 2>&1 ; then
     sudo mv scc /usr/bin)
 fi
 
+# googler
+if ! type googler > /dev/null 2>&1 ; then
+  sudo curl -o /usr/local/bin/googler \
+    https://raw.githubusercontent.com/jarun/googler/v3.6/googler
+  sudo chmod +x /usr/local/bin/googler
+  sudo -o /usr/share/bash-completion/completions/googler \
+    https://raw.githubusercontent.com/jarun/googler/master/auto-completion/bash/googler-completion.bash
+fi
+
 install_pacman_package pdfgrep
 
 # misc END
