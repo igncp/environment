@@ -480,4 +480,7 @@ if ! type sr > /dev/null 2>&1 ; then
   cd ~ ; rm -rf sr-tmp
 fi
 
+# for gng2 key generation: sudo rngd -r /dev/urandom
+install_pacman_package rng-tools rngd
+
 # general END
