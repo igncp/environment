@@ -18,8 +18,11 @@ if ! type redis-server > /dev/null 2>&1 ; then
   sudo sh -c 'sed -e "s/^daemonize no$/daemonize yes/" -e "s/^# bind 127.0.0.1$/bind 127.0.0.1/" -e "s/^dir \.\//dir \/var\/lib\/redis\//" -e "s/^loglevel verbose$/loglevel notice/" -e "s/^logfile stdout$/logfile \/var\/log\/redis.log/" redis.conf > /etc/redis/redis.conf'
 fi
 
+# mysql
 install_pacman_package mariadb mysql
-install_pacman_package mysql-workbench
+if ! type mycli > /dev/null 2>&1 ; then
+  sudo pip install -U mycli
+fi
 
 install_pacman_package postgresql postgres
 if [ ! -f ~/.check-files/postgresql ]; then

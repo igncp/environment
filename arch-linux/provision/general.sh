@@ -483,4 +483,15 @@ fi
 # for gng2 key generation: sudo rngd -r /dev/urandom
 install_pacman_package rng-tools rngd
 
+cat > /tmp/choose_session.sh <<"EOF"
+#!/usr/bin/env bash
+
+SESSION=$(tmux ls | grep -o '^.*: ' | sed 's|: ||' | fzf)
+
+if [ -z "$SESSION" ]; then exit 0; fi
+
+tmux switch-client -t "$SESSION"
+EOF
+echo "bind b split-window 'sh /tmp/choose_session.sh'" >> ~/.tmux.conf
+
 # general END
