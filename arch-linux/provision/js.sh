@@ -14,9 +14,11 @@ if [ ! -d ~/.nodenv ]; then
   cd ~
 fi
 
+CURRENT_NODE_VERSION=$(nodenv version | ag -o '^.+? ' | sed 's| ||g')
+
 install_node_modules() {
   for MODULE_NAME in "$@"; do
-    if [ ! -d ~/.nodenv/versions/$NODE_VERSION/lib/node_modules/$MODULE_NAME ]; then
+    if [ ! -d ~/.nodenv/versions/$CURRENT_NODE_VERSION/lib/node_modules/$MODULE_NAME ]; then
       echo "doing: npm i -g $MODULE_NAME"
       npm i -g $MODULE_NAME
     fi
@@ -24,6 +26,7 @@ install_node_modules() {
 }
 
 install_node_modules http-server diff-so-fancy eslint babel-eslint cloc yo eslint_d flow flow-cli flow-bin
+install_node_modules typescript tslint
 
 cat >> ~/.bashrc <<"EOF"
 export PATH=$PATH:/home/$USER/.nodenv/bin
@@ -99,13 +102,14 @@ cat >> ~/.vimrc <<"EOF"
 
 " run eslint over file
   autocmd filetype javascript :exe "nnoremap <silent> <leader>kb :!eslint_d --fix %<cr>:e<cr>"
+  autocmd filetype typescript :exe "nnoremap <silent> <leader>kb :!tslint --fix %<cr>:e<cr>"
   autocmd filetype javascript :exe "nnoremap <silent> <c-a> :update<cr>:!eslint_d --fix %<cr>:e<cr>"
   autocmd filetype javascript :exe "inoremap <silent> <c-a> <c-c>:update<cr>:!eslint_d --fix %<cr>:e<cr>"
 
 " js linters
   let g:syntastic_javascript_checkers = ['flow', 'eslint']
   let g:syntastic_javascript_eslint_exec = 'eslint_d'
-  let g:syntastic_typescript_checkers = ['tsc', 'tslint']
+  let g:syntastic_typescript_checkers = ['tsuquyomi', 'tslint']
   let g:flow#enable = 0
 
  autocmd BufNewFile,BufRead *.js

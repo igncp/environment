@@ -448,7 +448,7 @@ EOF
     GitEditorCommit
     GitStatus
     GitAddAll
-    GitDiff HEAD | diff-so-fancy | less -R
+    GitDiff HEAD -- ':!*package-lock.json' ':!*yarn.lock' | diff-so-fancy | less -R
     git checkout -b
     tmux kill-session -t
     git l
