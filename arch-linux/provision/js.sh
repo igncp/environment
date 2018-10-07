@@ -103,6 +103,7 @@ cat >> ~/.vimrc <<"EOF"
 " run eslint over file
   autocmd filetype javascript :exe "nnoremap <silent> <leader>kb :!eslint_d --fix %<cr>:e<cr>"
   autocmd filetype typescript :exe "nnoremap <silent> <leader>kb :!tslint --fix %<cr>:e<cr>"
+  autocmd filetype typescript :exe "nnoremap <silent> <leader>kB :!tslint --fix %<cr>:!prettier --write %<cr>:e<cr>"
   autocmd filetype javascript :exe "nnoremap <silent> <c-a> :update<cr>:!eslint_d --fix %<cr>:e<cr>"
   autocmd filetype javascript :exe "inoremap <silent> <c-a> <c-c>:update<cr>:!eslint_d --fix %<cr>:e<cr>"
 

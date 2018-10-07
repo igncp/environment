@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-CACHED_FILE="/tmp/$(pwd | sed 's|^.||g; s|/|-|g')-yarn-run"
+CACHED_FILE="/tmp/$(pwd | sed 's|^.||g; s|/|-|g')-npm-run"
 
 if [ ! -f "$CACHED_FILE" ]; then
   NPM_RUN=$(npm run)
@@ -16,4 +16,4 @@ if [ -z "$COMMAND" ]; then
   exit 0
 fi
 
-echo "yarn run $COMMAND"
+echo "npm run $COMMAND"
