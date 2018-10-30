@@ -166,4 +166,8 @@ fi
 
 install_pacman_package pdfgrep
 
+# latex
+  install_pacman_package texlive-most pdflatex
+  install_vim_package vim-latex/vim-latex
+
 # misc END
