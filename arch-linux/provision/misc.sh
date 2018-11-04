@@ -150,7 +150,7 @@ if ! type scc > /dev/null 2>&1 ; then
       | cut -d : -f 2,3 \
       | tr -d \" \
       | xargs wget
-    unzip scc*.zip
+    unzip scc*64*.zip
     rm scc*.zip
     sudo mv scc /usr/bin)
 fi

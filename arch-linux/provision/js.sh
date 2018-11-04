@@ -1,6 +1,6 @@
 # js START
 
-NODE_VERSION=8.9.0
+NODE_VERSION=10.13.0
 if [ ! -d ~/.nodenv ]; then
   echo "setup node with nodenv"
   cd ~
