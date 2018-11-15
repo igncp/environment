@@ -244,7 +244,6 @@ alias GitListConflictFiles='git diff --name-only --diff-filter=U'
 alias GitListFilesChangedHistory='git log --pretty=format: --name-only | sort | uniq -c | sort -rg' # can add `--author Foo`, --since, or remove files
 
 alias RemoveAnsiColors="sed 's/\x1b\[[0-9;]*m//g'"
-alias Now='date +"%T"'
 alias Ports='sudo netstat -tulanp'
 alias Headers='curl -I' # e.g. Headers google.com
 alias TopMemory='ps auxf | sort -nr -k 4 | head -n' # e.g. TopMemory 10
@@ -494,5 +493,24 @@ if [ -z "$SESSION" ]; then exit 0; fi
 tmux switch-client -t "$SESSION"
 EOF
 echo "bind b split-window 'sh /tmp/choose_session.sh'" >> ~/.tmux.conf
+
+if [ ! -d /project/.git ]; then
+  (cd /project && git init)
+fi
+
+if [ ! -f /project/.gitignore ]; then
+  cat > /project/.gitignore <<"EOF"
+/*
+
+!/provision
+!.gitignore
+!scripts/
+!vim-custom-snippets/
+EOF
+fi
+
+cat >> ~/.bash_aliases <<"EOF"
+alias UpdateProvision='(cd /project && git add -A . && (git commit -m "Update provision" || true) && git push origin master)'
+EOF
 
 # general END
