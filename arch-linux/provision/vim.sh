@@ -49,6 +49,7 @@ install_vim_package kana/vim-textobj-indent
 install_vim_package kana/vim-textobj-user
 install_vim_package luochen1990/rainbow
 install_vim_package majutsushi/tagbar
+install_vim_package martinda/Jenkinsfile-vim-syntax
 install_vim_package mbbill/undotree
 install_vim_package milkypostman/vim-togglelist
 install_vim_package ntpeters/vim-better-whitespace
