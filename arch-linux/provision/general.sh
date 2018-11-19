@@ -510,7 +510,15 @@ EOF
 fi
 
 cat >> ~/.bash_aliases <<"EOF"
-alias UpdateProvision='(cd /project && git add -A . && (git commit -m "Update provision" || true) && git push origin master)'
+UpdateProvisionRepo() {
+  cd /project; git add -A .; git diff HEAD; git status
+  read -p "If you are sure, press y: " -n 1 -r
+  echo
+  if [[ $REPLY =~ ^[y]$ ]]; then
+    git commit -m "Update repo"; git push origin master
+  fi
+  cd -
+}
 EOF
 
 # general END
