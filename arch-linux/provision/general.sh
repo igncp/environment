@@ -334,7 +334,7 @@ add_shellcheck_ignores() {
     echo 'SHELLCHECK_IGNORES="$SHELLCHECK_IGNORES,SC'"$DIRECTIVE"'"' >> ~/.bashrc
   done
 }
-add_shellcheck_ignores 2016 2028 2046 2086 2143 2164 2181 1117
+add_shellcheck_ignores 2016 2028 2046 2059 2086 2088 2143 2164 2181 1117
 echo 'export SHELLCHECK_OPTS="-e $SHELLCHECK_IGNORES"' >> ~/.bashrc
 
 install_pacman_package graphviz dot

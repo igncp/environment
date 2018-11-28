@@ -727,4 +727,16 @@ snippet xBoldColon
   **${1}**: ${0}
 EOF
 
+# https://misc.flogisoft.com/bash/tip_colors_and_formatting
+cat > ~/.vim-snippets/sh.snippets <<"EOF"
+snippet xColorBlue
+  COLOR_BLUE="\e[34m"
+snippet xColorGreen
+  COLOR_GREEN="\e[32m"
+snippet xColorRed
+  COLOR_RED="\e[31m"
+snippet xColorReset
+  COLOR_RESET="\e[0m"
+EOF
+
 # vim END
