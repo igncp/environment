@@ -739,4 +739,8 @@ snippet xColorReset
   COLOR_RESET="\e[0m"
 EOF
 
+add_special_vim_map "renameexisting" $':Rename <c-r>=expand("%:t")<cr>' 'rename existing file'
+add_special_vim_map "showabsolutepath" $':echo expand("%:p")<cr>' 'show absolute path of file'
+add_special_vim_map "showrelativepath" $':echo @%<cr>' 'show relative path of file'
+
 # vim END

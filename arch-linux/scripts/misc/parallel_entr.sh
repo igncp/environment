@@ -25,15 +25,18 @@ prefix_with_text_and_color() {
 run_entr_task \
   '~/FOO -type f' \
   'date; echo foo' | \
-    prefix_with_text_and_color "foo prefix: " "$COLOR_GREEN" &
+    prefix_with_text_and_color "foo prefix: " "$COLOR_GREEN" \
+    &
 
 run_entr_task \
   '~/BAR -type f' \
-  '(seep 1 && rsync -rhv --delete BAZ/ BAM/)' | \
-    prefix_with_text_and_color "cat: " "$COLOR_BLUE" &
+  '(sleep 1 && rsync -rhv --delete BAZ/ BAM/)' | \
+    prefix_with_text_and_color "cat: " "$COLOR_BLUE" \
+    &
 
 run_entr_task \
   '~/BAX -type f' \
-  'echo baz' &
+  'echo baz' \
+  &
 
 wait
