@@ -55,7 +55,6 @@ install_vim_package milkypostman/vim-togglelist
 install_vim_package ntpeters/vim-better-whitespace
 install_vim_package plasticboy/vim-markdown
 install_vim_package scrooloose/nerdcommenter
-install_vim_package scrooloose/syntastic
 install_vim_package shougo/deoplete.nvim # :UpdateRemotePlugins
 install_vim_package shougo/neoinclude.vim
 install_vim_package shougo/neosnippet.vim
@@ -71,6 +70,7 @@ install_vim_package vim-airline/vim-airline
 install_vim_package vim-airline/vim-airline-themes
 install_vim_package vim-ruby/vim-ruby
 install_vim_package vim-scripts/AnsiEsc.vim
+install_vim_package w0rp/ale
 install_vim_package xolox/vim-colorscheme-switcher
 install_vim_package xolox/vim-misc
 
@@ -127,7 +127,7 @@ let g:hardtime_default_on = 1
   set nobackup
   set noswapfile
 
-" support all hex colors (e.g. for syntastic)
+" support all hex colors
   set  t_Co=256
 
 " incsearch.vim
@@ -187,9 +187,9 @@ autocmd Filetype markdown setlocal wrap
 
 " toggle distraction free mode
   nnoremap <silent> <leader>n :set nonumber<cr>:GitGutterDisable<cr>:set laststatus=0<cr>
-    \ :let g:syntastic_auto_loc_list = 0<cr>:hi Folded ctermbg=black ctermfg=black<cr>
+    \ :hi Folded ctermbg=black ctermfg=black<cr>
   nnoremap <silent> <leader>N :set number<cr>:GitGutterEnable<cr>:set laststatus=2<cr>
-    \ :let g:syntastic_auto_loc_list = 2<cr>:hi Folded ctermbg=236 ctermfg=236<cr>
+    \ :hi Folded ctermbg=236 ctermfg=236<cr>
 
 " fix c-b mapping to use with tmux (one page up)
   nnoremap <c-d> <c-b>
@@ -237,6 +237,7 @@ cnoremap <c-K> <c-U>
 
 " airline
   set laststatus=2
+  let g:airline_theme='minimalist'
   let g:airline_left_sep=''
   let g:airline_right_sep=''
 
@@ -255,7 +256,7 @@ cnoremap <c-K> <c-U>
   inoremap <expr><c-k> pumvisible() ? "\<c-p>" : "\<c-k>"
 
 let g:NERDSpaceDelims = 1
-let g:rainbow_active = 1
+let g:rainbow_active = 0
 let g:vim_json_syntax_conceal = 0
 let g:vim_markdown_conceal = 0
 let g:vim_markdown_folding_disabled = 1
@@ -277,48 +278,43 @@ let g:vim_markdown_folding_disabled = 1
     let g:ctrlp_user_command = 'ag %s -l --hidden --nocolor -g "" --ignore .git'
   endif
 
-" syntastic
-  set statusline+=%#warningmsg#
-  set statusline+=%{SyntasticStatuslineFlag()}
-  set statusline+=%*
-  let g:syntastic_always_populate_loc_list = 1
-  let g:syntastic_auto_loc_list = 1
-  let g:syntastic_check_on_open = 1
-  let g:syntastic_check_on_wq = 0
-  let g:syntastic_scss_checkers = ['stylelint']
-  let g:syntastic_json_checkers=[]
-  let g:syntastic_loc_list_height=3
-  let g:syntastic_error_symbol = '•'
-  let g:syntastic_style_error_symbol = '!?'
-  nnoremap <leader>jo :SyntasticToggleMode<cr>
-  " Allow :lprev to work with empty location list, or at first location
-  function! <SID>LocationPrevious()
-    try
-      lprev
-    catch /:E553:/
-      lfirst
-    catch /:E\%(42\|776\):/
-      echo "Location list empty"
-    catch /.*/
-      echo v:exception
-    endtry
-  endfunction
-  " Allow :lnext to work with empty location list, or at last location
-  function! <SID>LocationNext()
-    try
-      lnext
-    catch /:E553:/
-      lfirst
-    catch /:E\%(42\|776\):/
-      echo "Location list empty"
-    catch /.*/
-      echo v:exception
-    endtry
-  endfunction
-  nnoremap <silent> <Plug>LocationPrevious :<C-u>exe 'call <SID>LocationPrevious()'<CR>
-  nnoremap <silent> <Plug>LocationNext :<C-u>exe 'call <SID>LocationNext()'<CR>
-  nmap <silent> e[  <Plug>LocationPrevious
-  nmap <silent> e]  <Plug>LocationNext
+" Allow :lprev to work with empty location list, or at first location
+function! <SID>LocationPrevious()
+  try
+    lprev
+  catch /:E553:/
+    lfirst
+  catch /:E\%(42\|776\):/
+    echo "Location list empty"
+  catch /.*/
+    echo v:exception
+  endtry
+endfunction
+" Allow :lnext to work with empty location list, or at last location
+function! <SID>LocationNext()
+  try
+    lnext
+  catch /:E553:/
+    lfirst
+  catch /:E\%(42\|776\):/
+    echo "Location list empty"
+  catch /.*/
+    echo v:exception
+  endtry
+endfunction
+
+" ale
+  let g:ale_lint_on_text_changed = 'never'
+  let g:ale_sign_error = 'E '
+  let g:ale_sign_warning = 'W '
+  let g:ale_set_highlights = 0
+  let g:ale_open_list = 0
+  let g:ale_keep_list_window_open = 0
+  let g:ale_list_window_size = 0
+  let g:ale_set_loclist = 0
+  let g:ale_set_quickfix = 0
+  nmap <silent> e[ <Plug>(ale_previous_wrap)
+  nmap <silent> e]  <Plug>(ale_next_wrap)
 
 nnoremap <leader>kw :tabnew <c-R>=expand("%:p:h") . "/" <cr>
 nnoremap <leader>kW :e <c-R>=expand("%:p:h") . "/" <cr>
@@ -623,11 +619,22 @@ function! SetColors()
     hi Pmenu ctermfg=white ctermbg=17
     hi PmenuSel ctermfg=white ctermbg=29
   hi link TabNum Special
-  hi link SyntasticErrorSign SignColumn
-  hi link SyntasticWarningSign SignColumn
-  hi link SyntasticStyleErrorSign SignColumn
-  hi link SyntasticStyleWarningSign SignColumn
   hi Visual ctermfg=white ctermbg=17
+	hi clear ALEErrorSign
+  hi clear ALEWarningSign
+
+  hi Comment cterm=NONE ctermfg=cyan ctermbg=black
+  hi LineNr cterm=NONE ctermfg=gray ctermbg=black
+  hi String cterm=NONE ctermfg=green ctermbg=black
+
+  hi Identifier   cterm=NONE ctermfg=white ctermbg=black
+  hi Type         cterm=NONE ctermfg=white ctermbg=black
+  hi Constant     cterm=NONE ctermfg=white ctermbg=black
+  hi Special      cterm=NONE ctermfg=white ctermbg=black
+  hi Statement cterm=NONE ctermfg=white ctermbg=black
+  hi PreProc cterm=NONE ctermfg=white ctermbg=black
+
+  hi Todo         term=standout ctermfg=Blue ctermbg=Yellow guifg=Blue guibg=Yellow
 endfunction
 
 call SetColors()
