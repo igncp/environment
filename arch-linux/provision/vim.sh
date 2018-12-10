@@ -634,7 +634,7 @@ function! SetColors()
   hi Statement cterm=NONE ctermfg=white ctermbg=black
   hi PreProc cterm=NONE ctermfg=white ctermbg=black
 
-  hi Todo         term=standout ctermfg=Blue ctermbg=Yellow guifg=Blue guibg=Yellow
+  hi Todo ctermfg=black ctermbg=white
 endfunction
 
 call SetColors()
