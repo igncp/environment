@@ -372,4 +372,13 @@ nnoremap <leader>jsQ :let g:SpecialImports_Cmd='<c-r>=g:SpecialImports_Cmd_Full_
 nnoremap <leader>jsW :let g:SpecialImports_Cmd='<c-r>=g:SpecialImports_Cmd_Rel_Default<cr>'<home><c-right><c-right><right>
 EOF
 
+cat >> ~/.vimrc <<"EOF"
+let g:ale_linters = {
+\'javascript': ['flow', 'eslint'],
+\}
+let g:ale_fixers = {
+\'javascript': ['eslint'],
+\}
+EOF
+
 # js END

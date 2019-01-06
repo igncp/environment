@@ -31,7 +31,7 @@ au FileType rust nmap gs <Plug>(rust-def-split)
 au FileType rust nmap gx <Plug>(rust-def-vertical)
 au FileType rust nmap <leader>gd <Plug>(rust-doc)
 
-let RustPrintMapping="vnoremap <leader>kk yOprintln!(\"a {}\", a);<C-c>9hvpgvyf\"lllvp"
+let RustPrintMapping="vnoremap <leader>kk yOprintln!(\"a {:?}\", a);<C-c>11hvpgvyf\"lllvp"
 autocmd filetype rust :exe RustPrintMapping
 
 let g:deoplete#sources#rust#racer_binary='/home/igncp/.cargo/bin/racer'
@@ -52,6 +52,15 @@ install_cargo_crate rustfmt
 install_cargo_crate racer
 
 install_pacman_package valgrind
+
+cat > ~/.vim-snippets/rust.snippets <<"EOF"
+snippet xDeadCode
+  #[allow(dead_code)]
+snippet xNowInstant
+  let ${0:now} = std::time::Instant::now();
+snippet xPrintInstant
+  println!("${1}{:?}", ${0:now}.elapsed());
+EOF
 
 # for code coverage
 install_pacman_package llvm llvm-ar
