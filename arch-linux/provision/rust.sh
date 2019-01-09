@@ -10,6 +10,10 @@ export PATH=$PATH:~/.cargo/bin
 export RUST_SRC_PATH=/home/igncp/.multirust/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src
 EOF
 
+cat >> ~/.bash_aliases <<"EOF"
+alias CargoClippy='CMD="# rm -rf target && cargo clippy --all-targets --all-features -- -D warnings"; echo $CMD; history -s $CMD'
+EOF
+
 install_vim_package rust-lang/rust.vim
 install_vim_package racer-rust/vim-racer
 install_vim_package mattn/webapi-vim
@@ -60,6 +64,13 @@ snippet xNowInstant
   let ${0:now} = std::time::Instant::now();
 snippet xPrintInstant
   println!("${1}{:?}", ${0:now}.elapsed());
+snippet xModTests
+  #[cfg(test)]
+  mod tests {
+    use super::*;
+
+    ${0}
+  }
 EOF
 
 # for code coverage
