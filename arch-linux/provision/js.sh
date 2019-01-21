@@ -381,4 +381,9 @@ let g:ale_fixers = {
 \}
 EOF
 
+cat >> ~/.vimrc <<"EOF"
+let g:tsuquyomi_disable_default_mappings = 1
+let g:ale_linters_ignore = {'typescript': ['eslint']}
+EOF
+
 # js END
