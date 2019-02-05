@@ -71,6 +71,10 @@ snippet xModTests
 
     ${0}
   }
+snippet xAssertEq
+  assert_eq!(${1}, ${0});
+snippet xPrintEmpty
+  println!();
 EOF
 
 # for code coverage

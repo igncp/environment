@@ -1,5 +1,8 @@
 # js START
 
+# Dependencies:
+# - after: vim.sh
+
 NODE_VERSION=10.13.0
 if [ ! -d ~/.nodenv ]; then
   echo "setup node with nodenv"
@@ -26,7 +29,6 @@ install_node_modules() {
 }
 
 install_node_modules http-server diff-so-fancy eslint babel-eslint cloc yo eslint_d flow flow-cli flow-bin
-install_node_modules typescript tslint
 
 cat >> ~/.bashrc <<"EOF"
 export PATH=$PATH:/home/$USER/.nodenv/bin
@@ -76,21 +78,17 @@ EOF
 
 # not installing vim-javascript as it doesn't work with rainbow
 install_vim_package ternjs/tern_for_vim "cd ~/.vim/bundle/tern_for_vim; npm i"
-install_vim_package quramy/tsuquyomi
-install_vim_package leafgarland/typescript-vim
 install_vim_package kchmck/vim-coffee-script
 install_vim_package flowtype/vim-flow
 install_vim_package jelera/vim-javascript-syntax "sh /tmp/clean-vim-js-syntax.sh"
 install_vim_package samuelsimoes/vim-jsx-utils
 
 cat >> ~/.vimrc <<"EOF"
-" quick console.log
+" quick console.log (maybe used by typescript later on)
   let ConsoleMappingA="vnoremap <leader>kk yOconsole.log('a', a);<C-c>6hvpvi'yf'lllvp"
   let ConsoleMappingB='nnoremap <leader>kj iconsole.log("LOG POINT - <C-r>=fake#gen("nonsense")<CR>");<cr><c-c>'
   autocmd filetype javascript :exe ConsoleMappingA
   autocmd filetype javascript :exe ConsoleMappingB
-  autocmd FileType typescript :exe ConsoleMappingA
-  autocmd FileType typescript :exe ConsoleMappingB
 
 " grep same indent props
   execute 'nnoremap <leader>ki ^hv0y' . g:GrepCF_fn . ' -o "^<c-r>"\w*:"<left>'
@@ -102,15 +100,12 @@ cat >> ~/.vimrc <<"EOF"
 
 " run eslint over file
   autocmd filetype javascript :exe "nnoremap <silent> <leader>kb :!eslint_d --fix %<cr>:e<cr>"
-  autocmd filetype typescript :exe "nnoremap <silent> <leader>kb :!tslint --fix %<cr>:e<cr>"
-  autocmd filetype typescript :exe "nnoremap <silent> <leader>kB :!tslint --fix %<cr>:!prettier --write %<cr>:e<cr>"
   autocmd filetype javascript :exe "nnoremap <silent> <c-a> :update<cr>:!eslint_d --fix %<cr>:e<cr>"
   autocmd filetype javascript :exe "inoremap <silent> <c-a> <c-c>:update<cr>:!eslint_d --fix %<cr>:e<cr>"
 
 " js linters
   let g:syntastic_javascript_checkers = ['flow', 'eslint']
   let g:syntastic_javascript_eslint_exec = 'eslint_d'
-  let g:syntastic_typescript_checkers = ['tsuquyomi', 'tslint']
   let g:flow#enable = 0
 
  autocmd BufNewFile,BufRead *.js
@@ -120,7 +115,7 @@ cat >> ~/.vimrc <<"EOF"
   nnoremap <leader>jx $i<left><space><cr><up><c-c>:call JSXEachAttributeInLine()<CR>:%s/\s\+$<CR><c-o>A<cr><tab>
 EOF
 
-cat > /tmp/js-and-ts-snippets <<"EOF"
+cat > ~/.vim-snippets/javascript.snippets <<"EOF"
 snippet ide
   if (${0}) {
     debugger;
@@ -234,8 +229,6 @@ snippet xLogOnce
     ${3:console.info('logged')};
   }
 EOF
-cat /tmp/js-and-ts-snippets > ~/.vim-snippets/javascript.snippets
-cat /tmp/js-and-ts-snippets > ~/.vim-snippets/typescript.snippets
 
 install_node_modules markdown-toc
 cat >> ~/.bash_aliases <<"EOF"
@@ -379,11 +372,6 @@ let g:ale_linters = {
 let g:ale_fixers = {
 \'javascript': ['eslint'],
 \}
-EOF
-
-cat >> ~/.vimrc <<"EOF"
-let g:tsuquyomi_disable_default_mappings = 1
-let g:ale_linters_ignore = {'typescript': ['eslint']}
 EOF
 
 # js END
