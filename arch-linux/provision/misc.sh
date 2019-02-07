@@ -170,4 +170,12 @@ install_pacman_package pdfgrep
   install_pacman_package texlive-most pdflatex
   install_vim_package vim-latex/vim-latex
 
+# aws
+if ! type aws > /dev/null 2>&1 ; then
+  sudo pip install awscli
+fi
+cat >> ~/.bash_rc <<"EOF"
+complete -C aws_completer aws
+EOF
+
 # misc END
