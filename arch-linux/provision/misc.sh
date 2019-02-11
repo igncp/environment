@@ -174,7 +174,7 @@ install_pacman_package pdfgrep
 if ! type aws > /dev/null 2>&1 ; then
   sudo pip install awscli
 fi
-cat >> ~/.bash_rc <<"EOF"
+cat >> ~/.bashrc <<"EOF"
 complete -C aws_completer aws
 EOF
 
