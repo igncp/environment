@@ -1,7 +1,7 @@
 # ts START
 
 # Dependencies:
-# - after: vim.sh, js.sh
+# - after: js.sh
 
 install_node_modules typescript tslint
 

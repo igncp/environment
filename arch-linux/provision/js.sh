@@ -1,7 +1,7 @@
 # js START
 
 # Dependencies:
-# - after: vim.sh
+# - after: vim-extra.sh
 
 NODE_VERSION=10.13.0
 if [ ! -d ~/.nodenv ]; then
