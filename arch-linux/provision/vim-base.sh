@@ -158,7 +158,7 @@ vnoremap <leader>ku y:%s/\C<c-r>"//gn<cr>
   nmap <leader>hj  movii<c-c>A,<c-c>_vii:sort<cr>vii<c-c>A<backspace><c-c>`o
 
 nnoremap <leader>ku viwy:%s/\C<c-r>"//gn<cr>
-nnoremap <leader>x :set noeol<cr>:set binary<cr>:w<cr>:set nobinary<cr>
+nnoremap <leader>x :set binary<cr>:set noeol<cr>:w<cr>:set nobinary<cr>:set eol<cr>
 nnoremap <leader>ko :mksession! ~/mysession.vim<cr>:qa<cr>
 au BufNewFile,BufRead *.ejs set filetype=html
 
