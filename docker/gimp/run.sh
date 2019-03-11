@@ -13,7 +13,6 @@ sudo docker run \
   --net=host \
   --env="DISPLAY" \
   --volume="$HOME/.Xauthority:/root/.Xauthority:rw" \
-  --entrypoint=/bin/bash \
   -it \
   --name $CONTAINER_NAME \
   $CONTAINER_NAME
