@@ -3,5 +3,5 @@
 set -e
 
 sudo docker build \
-  -t androidstudio \
+  -t tizen-studio \
   .
