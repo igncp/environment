@@ -18,7 +18,3 @@ See [TODO.md](./TODO.md) for ideas of images.
 - Prefer custom images than unmaintained ones
 - Maximize automation
 - Optimize commands to manage disk space
-
-## Useful Links
-
-- https://awesome-docker.netlify.com/

@@ -7,6 +7,9 @@
 - Tizen Studio in Ubuntu
     - CLI package is working
     - Download and run IDE missing
+- DokuWiki
+    - Setup nice urls
+    - Setup volume
 
 ## Ideas
 
@@ -14,7 +17,6 @@
 - MongoDB Client
 - MySQL
 - PhpMyAdmin
-- MySQLWorkbench
 - PostgreSQL
 - pgAdmin
 - Shaka Packager
@@ -26,10 +28,7 @@
 - Redis
 - Elasticsearch + Kibana
 - Neo4j
-- Jupyter
-- DokuWiki
 - Beehive
-- Mindmaps
 
 ## Useful Links
 

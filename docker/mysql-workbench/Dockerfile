@@ -1,3 +1,5 @@
+# mysql-workbench
+
 FROM ubuntu:18.04
 
 RUN apt-get update \
@@ -9,10 +11,14 @@ RUN apt-get update \
   && chown ubuntu /home/ubuntu/app
 
 RUN apt-get update \
-  && apt-get install software-properties-common -y \
-  && add-apt-repository ppa:webupd8team/java -y \
-  && echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections \
-  && echo debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-selections \
-  && apt-get install oracle-java8-installer android-sdk -y
+  && apt-get install -qqy x11-apps \
+  && rm -rf /home/ubuntu/.Xauthority \
+  && sudo -u ubuntu echo 'echo "127.0.0.1 $(hostname)" | sudo tee /etc/hosts >/dev/null' >> /home/ubuntu/.bashrc
+
+RUN apt-get update \
+  && apt-get install -y mysql-workbench
 
 USER ubuntu
+WORKDIR /home/ubuntu
+
+ENTRYPOINT mysql-workbench
