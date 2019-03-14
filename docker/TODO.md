@@ -4,9 +4,10 @@
 
 - Android Studio in Ubuntu
     - Download and run IDE missing
-- Tizen Studio in Ubuntu
-    - CLI package is working
-    - Download and run IDE missing
+- Tizen Studio
+    - Continue from Extension Manager
+- MediaWiki
+    - Setup MariaDB volume
 - DokuWiki
     - Setup nice urls
     - Setup volume
@@ -21,7 +22,6 @@
 - pgAdmin
 - Shaka Packager
 - RabbitMQ
-- Jenkins
 - Magento
 - Apache Server
 - Sentry

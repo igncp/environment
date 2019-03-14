@@ -3,6 +3,10 @@
 
 install_pacman_package docker
 
+# TODO:
+# sudo curl -L "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+# sudo chmod +x /usr/local/bin/docker-compose
+
 echo 'export PATH=$PATH:/usr/local/lib/docker/bin' >> ~/.bashrc
 echo 'source_if_exists ~/.docker-completion.sh' >> ~/.bash_sources
 

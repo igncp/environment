@@ -3,20 +3,22 @@
 # You can download the latest Ubuntu version from:
 # https://developer.tizen.org/development/tizen-studio/download And place it in
 # this directory (bin files will be ignored) Only the normal IDE is supported
-# (not RT, which requires Docker CE inside the container)
+# (not RT, which requires Docker CE inside the container).
+
+# The recommendation is to download both the CLI and IDE.
 
 set -e
 
 if test -n "$(sudo docker container ls -a | grep tizen-studio)"; then
-  docker stop tizen-studio
-  docker start tizen-studio
-  docker exec -it tizen-studio /bin/bash
+  sudo docker stop tizen-studio
+  sudo docker start tizen-studio
+  sudo docker exec -it tizen-studio /bin/bash
   exit 0
 fi
 
-docker run \
+sudo docker run \
   -v "$(pwd):/project:ro" \
-  -v "/tmp/.X11-unix:/tmp/.X11-unix" \
+  -v "$HOME/.Xauthority:/home/ubuntu/.Xauthority:rw" \
   --net=host \
   --env="DISPLAY" \
   -it \
