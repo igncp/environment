@@ -23,6 +23,12 @@ function! SetupEnvironment()
 endfunction
 autocmd! BufReadPost,BufNewFile * call SetupEnvironment()
 EOF
+
+# Inter-VM communication
+mkdir -p ~/.sftp
+cat >> ~/.bash_aliases <<"EOF"
+VMSSH() { cd ~/.sftp; ssh IP_OF_VM; }
+SFTPUpload() { sftp IP_OF_VM:/home/igncp/.sftp <<< 'put '"$1" ; }
 EOF
 
 # custom END

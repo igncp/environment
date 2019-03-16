@@ -10,7 +10,7 @@
 # Add shared folder
   # Menu > Devices > Shared Folders > Settings > Add new
   # Check: Make Permanent, Auto-Mount
-  # Used name: project
+  # Used names (2): project and vm-shared
 # Run:
   # @TODO: Improve partitions for performance
   # fdisk /dev/sda # create new partition: n p <enter> <enter> <enter> w
