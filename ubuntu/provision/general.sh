@@ -100,7 +100,7 @@ get_jobs_prefix() {
 }
 PS1_BEGINNING="\n\n\[\e[33m\]$TMUX_PREFIX_A\[\e[36m\]\W\[\e[m\]"
 PS1_MIDDLE="\[\e[32m\]\[\e[m\]\[\e[33m\] \$(get_jobs_prefix)\[\e[m\]"
-PS1_END="\[\e[34m\]\$(getTime)\[\e[32m\]$TMUX_PREFIX_B\[\e[m\] "
+PS1_END="\[\e[34m\]\$(getTime)\[\e[32m\] $TMUX_PREFIX_B\[\e[m\] "
 export PS1="$PS1_BEGINNING"" UBUNTU ""$PS1_MIDDLE""$PS1_END"
 
 export PATH=$PATH:/project/scripts
@@ -193,5 +193,12 @@ if [ ! -f /project/.gitignore ]; then
 !vim-custom-snippets/
 EOF
 fi
+
+if [ ! -f ~/.dircolors ]; then
+  dircolors -p > ~/.dircolors
+  sed -i 's|^OTHER_WRITABLE 34;42|OTHER_WRITABLE 34;4|' ~/.dircolors
+fi
+
+echo 'eval "$(dircolors ~/.dircolors)"' >> ~/.bashrc
 
 # general END

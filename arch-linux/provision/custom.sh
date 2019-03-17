@@ -25,10 +25,11 @@ autocmd! BufReadPost,BufNewFile * call SetupEnvironment()
 EOF
 
 # Inter-VM communication
-mkdir -p ~/.sftp
+mkdir -p ~/scp
 cat >> ~/.bash_aliases <<"EOF"
-VMSSH() { cd ~/.sftp; ssh IP_OF_VM; }
-SFTPUpload() { sftp IP_OF_VM:/home/igncp/.sftp <<< 'put '"$1" ; }
+VMSSH() { cd ~/scp; ssh IP_OF_VM; }
+VMUpload() { scp -r "$1" IP_OF_VM:/home/igncp/scp; }
+VMDownload() { scp -r IP_OF_VM:"$1" /home/igncp/scp/; }
 EOF
 
 # custom END
