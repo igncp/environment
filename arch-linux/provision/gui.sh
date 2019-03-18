@@ -7,6 +7,10 @@ if [ ! -f ~/.check-files/gui ]; then
   mkdir -p ~/.check-files && touch ~/.check-files/gui
 fi
 
+if [ -f ~/.i3/config ]; then
+  sed -i -r 's|\$mod\+([0-9]+) |$mod+Control+\1 |' ~/.i3/config
+fi
+
 # terminator
   install_pacman_package terminator
   mkdir -p ~/.config/terminator
@@ -26,7 +30,7 @@ fi
     cursor_blink = False
     cursor_color = "#ff0068"
     cursor_color_fg = False
-    font = Monospace 18
+    font = Monospace 12
     foreground_color = "#ffffff"
     icon_bell = False
     palette = "#073642:#d25071:#bbdba5:#00b5ac:#268bd2:#d33682:#7cbcb7:#eee8d5:#002b36:#eb8395:#586e75:#8f9fa5:#839496:#6c71c4:#93a1a1:#fdf6e3"
