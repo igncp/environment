@@ -4,6 +4,10 @@ if ! type startx > /dev/null 2>&1 ; then
   sudo apt-get install -y i3 xinit
 fi
 
+if [ -f ~/.i3/config ]; then
+  sed -i -r 's|\$mod\+([0-9]+) |$mod+Control+\1 |' ~/.i3/config
+fi
+
 # terminator
   if ! type terminator > /dev/null 2>&1 ; then
     sudo apt-get install -y terminator

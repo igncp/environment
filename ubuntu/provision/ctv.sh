@@ -15,6 +15,8 @@ EOF
 
 cat >> ~/.bashrc <<"EOF"
 export PATH="$PATH:/home/igncp/tizen-studio/ide"
+export PATH="$PATH:/home/igncp/tizen-studio/tools"
+export PATH="$PATH:/home/igncp/tizen-studio/tools/ide/bin/"
 EOF
 
 # ctv END

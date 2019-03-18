@@ -120,6 +120,7 @@ alias mkdir="mkdir -p"
 alias rm="rm -rf"
 alias tree="tree -a"
 alias ag="ag --hidden"
+alias n="vim"
 
 DisplayFilesConcatenated(){ xargs tail -n +1 | sed "s|==>|\n\n\n\n\n$1==>|; s|<==|<==\n|" | $EDITOR -; }
 Find() { find "$@" ! -path "*node_modules*" ! -path "*.git*"; }

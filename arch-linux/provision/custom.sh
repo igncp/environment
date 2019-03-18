@@ -25,11 +25,11 @@ autocmd! BufReadPost,BufNewFile * call SetupEnvironment()
 EOF
 
 # Inter-VM communication
-mkdir -p ~/scp
+mkdir -p ~/vms
 cat >> ~/.bash_aliases <<"EOF"
-VMSSH() { cd ~/scp; ssh IP_OF_VM; }
-VMUpload() { scp -r "$1" IP_OF_VM:/home/igncp/scp; }
-VMDownload() { scp -r IP_OF_VM:"$1" /home/igncp/scp/; }
+VMSSH() { cd ~/vms; ssh IP_OF_VM; }
+VMUpload() { rsync --delete -rh -e ssh "${@:3}" "$1" IP_OF_VM:/home/igncp/vms/"$2" ; }
+VMDownload() { rsync --delete -rh -e ssh "${@:3}" IP_OF_VM:"$1" /home/igncp/vms/"$2"; }
 EOF
 
 # custom END
