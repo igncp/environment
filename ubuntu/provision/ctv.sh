@@ -4,11 +4,12 @@
   # Important: Ubuntu 14/16 is required
   # Download installation from: http://webostv.developer.lge.com/sdk/installation
   # Unzip and follow GUI installation
-cat >> ~/.bashrc <<"EOF"
+  cat >> ~/.bashrc <<"EOF"
 export PATH="$PATH:/usr/local/share/webOS_TV_SDK/CLI/bin"
 EOF
 
 # tizen studio
+  # Download Ubuntu IDE version from: https://developer.tizen.org/development/tizen-studio/download
   # Install JDK and dependencies (TODO: Automate)
   # sudo add-apt-repository ppa:webupd8team/java ; sudo apt update; sudo apt install -y oracle-java8-installer
   # sudo apt-get install -y rpm2cpio libwebkitgtk-1.0-0 expect gettext ruby
