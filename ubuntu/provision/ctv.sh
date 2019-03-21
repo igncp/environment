@@ -32,6 +32,12 @@ alias TizenListNotInstalledPkgs='TizenPM show-pkgs | grep -E "^ni"'
 alias TizenListWebTemplates='tizen list web-project'
 # Couldn't find how to create these files without UI, although seems OpenSSL could do it
 alias TizenListAuthorCertificates='find tizen-studio-data | grep p12'
+alias TizenSeeCliLog='less -SN /home/igncp/tizen-studio-data/cli/logs/cli.log'
 EOF
+
+  # Tizen Studio 3.x has an issue in Ubuntu with the Certificate Manager
+  # https://developer.tizen.org/forums/sdk-ide/certificate-manager-doesnt-store-passwords
+  # To download a previous version (2.5)
+  # http://download.tizen.org/sdk/Installer/
 
 # ctv END
