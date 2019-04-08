@@ -85,6 +85,10 @@ let mapleader = "\<Space>"
   onoremap <leader>; <C-C>za
   vnoremap <leader>; zf
 
+" override Ex mode
+  nnoremap gQ vipgq
+  vnoremap gQ <c-c>vipgq
+
 " reload all saved files without warnings
   set autoread
   autocmd FocusGained * checktime
