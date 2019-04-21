@@ -117,8 +117,15 @@ nnoremap <leader>kc :RandomColorScheme<cr>:call SetColors()<cr>:colorscheme<cr>
 let g:NERDSpaceDelims = 1
 let g:rainbow_active = 0
 let g:vim_json_syntax_conceal = 0
-let g:vim_markdown_conceal = 0
-let g:vim_markdown_folding_disabled = 1
+
+" markdown
+  let g:vim_markdown_auto_insert_bullets = 0
+  let g:vim_markdown_new_list_item_indent = 0
+  let g:vim_markdown_conceal = 0
+  let g:tex_conceal = ""
+  let g:vim_markdown_math = 1
+  let g:vim_markdown_folding_disabled = 1
+  autocmd Filetype markdown set conceallevel=0
 
 " ctrlp
   let g:ctrlp_map = '<c-p>'
@@ -127,7 +134,8 @@ let g:vim_markdown_folding_disabled = 1
   let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist)|(\.(swp|ico|git|svn))$'
   nnoremap <leader>p :CtrlP %:p:h<cr> " CtrlP in file's dir
   nnoremap <leader>P :CtrlPMRUFiles<cr>
-  nnoremap <leader>zp :CtrlP <c-r>=expand(getcwd())<cr><cr>
+  nnoremap <leader>zP :let g:CustomZPDir='<c-r>=expand(getcwd())<cr>'
+  nnoremap <leader>zp :CtrlP <c-r>=expand(g:CustomZPDir)<cr><cr>
   nnoremap <leader>kpp :CtrlP /project<cr>
   nnoremap <leader>kpd :CtrlP ~/dev<cr>
   nnoremap <leader>kph :CtrlP ~<cr>
