@@ -76,7 +76,6 @@ install_pacman_package 'net-tools' netstat
 install_pacman_package at
 install_pacman_package ctags
 install_pacman_package curl
-install_pacman_package htop
 install_pacman_package jq
 install_pacman_package lsof
 install_pacman_package moreutils vidir
@@ -87,6 +86,9 @@ install_pacman_package tree
 install_pacman_package unzip
 install_pacman_package wget
 install_pacman_package zip
+
+# https://www.thegeekstuff.com/2011/09/linux-htop-examples
+install_pacman_package htop
 
 sudo atd
 

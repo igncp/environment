@@ -307,7 +307,7 @@ function! SetColors()
     hi PmenuSel ctermfg=white ctermbg=29
   hi link TabNum Special
   hi Visual ctermfg=white ctermbg=17
-	hi clear ALEErrorSign
+  hi clear ALEErrorSign
   hi clear ALEWarningSign
 
   hi Comment    cterm=NONE ctermfg=cyan  ctermbg=black
