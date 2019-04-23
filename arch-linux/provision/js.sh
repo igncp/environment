@@ -32,7 +32,7 @@ install_node_modules http-server diff-so-fancy eslint babel-eslint cloc yo eslin
 
 cat >> ~/.bashrc <<"EOF"
 export PATH=$PATH:/home/$USER/.nodenv/bin
-export PATH=$PATH:/home/$USER/.nodenv/versions/8.9.0/bin/
+export PATH=$PATH:/home/$USER/.nodenv/versions/10.13.0/bin/
 eval "$(nodenv init -)"
 source <(npm completion)
 EOF
