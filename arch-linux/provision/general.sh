@@ -199,6 +199,7 @@ alias mkdir="mkdir -p"
 alias rm="rm -rf"
 alias tree="tree -a"
 
+AgN() { ag -l "$@" | xargs "$EDITOR" -p; }
 DisplayFilesConcatenated(){ xargs tail -n +1 | sed "s|==>|\n\n\n\n\n$1==>|; s|<==|<==\n|" | $EDITOR -; }
 Find() { find "$@" ! -path "*node_modules*" ! -path "*.git*"; }
 GetProcessUsingPort(){ fuser $1/tcp; }
