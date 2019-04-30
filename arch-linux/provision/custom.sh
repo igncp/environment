@@ -32,21 +32,32 @@ VMUpload() { rsync --delete -rh -e ssh "${@:3}" "$1" IP_OF_VM:/home/igncp/vms/"$
 VMDownload() { rsync --delete -rh -e ssh "${@:3}" IP_OF_VM:"$1" /home/igncp/vms/"$2"; }
 EOF
 
-if ! type ttyd > /dev/null 2>&1 ; then
-  wget https://github.com/tsl0922/ttyd/releases/download/1.4.4/ttyd_linux.x86_64
-  sudo mv ttyd_linux.x86_64 /usr/bin/ttyd
-fi
+# ttyd
+  if ! type ttyd > /dev/null 2>&1 ; then
+    wget https://github.com/tsl0922/ttyd/releases/download/1.4.4/ttyd_linux.x86_64
+    sudo mv ttyd_linux.x86_64 /usr/bin/ttyd
+  fi
 
-cat >> ~/.bash_aliases <<"EOF"
-# https://github.com/xtermjs/xterm.js/blob/3.12.0/typings/xterm.d.ts#L26
-TTYD() {
-  ttyd \
-    -p PORT \
-    -c USERNAME:PASS \
-    -t fontSize=18 \
-    --once \
-    bash -x
-}
+  # Remember to update PORT,USERNAME,PASS
+  cat >> ~/.bash_aliases <<"EOF"
+  # https://github.com/xtermjs/xterm.js/blob/3.12.0/typings/xterm.d.ts#L26
+  TTYD() {
+    ttyd \
+      -p PORT \
+      -c USERNAME:PASS \
+      -t fontSize=16 \
+      --once \
+      bash -x
+  }
+
+  TTYD_Stop() {
+    TMUX_PID=$(sudo netstat -ltnp | grep PORT | grep -Eo [0-9]*/tmux | grep -o [0-9]*)
+    SSH_PID=$(sudo netstat -ltnp | grep PORT | grep -Eo [0-9]*/ssh | grep -o [0-9]*)
+
+    echo "PID TMUX: $TMUX_PID . PID SSH: $SSH_PID"
+
+    sudo kill "$TMUX_PID"; sudo kill "$SSH_PID"
+  }
 EOF
 
 # custom END
