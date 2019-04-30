@@ -32,6 +32,23 @@ VMUpload() { rsync --delete -rh -e ssh "${@:3}" "$1" IP_OF_VM:/home/igncp/vms/"$
 VMDownload() { rsync --delete -rh -e ssh "${@:3}" IP_OF_VM:"$1" /home/igncp/vms/"$2"; }
 EOF
 
+if ! type ttyd > /dev/null 2>&1 ; then
+  wget https://github.com/tsl0922/ttyd/releases/download/1.4.4/ttyd_linux.x86_64
+  sudo mv ttyd_linux.x86_64 /usr/bin/ttyd
+fi
+
+cat >> ~/.bash_aliases <<"EOF"
+# https://github.com/xtermjs/xterm.js/blob/3.12.0/typings/xterm.d.ts#L26
+TTYD() {
+  ttyd \
+    -p PORT \
+    -c USERNAME:PASS \
+    -t fontSize=18 \
+    --once \
+    bash -x
+}
+EOF
+
 # custom END
 
 echo "finished provisioning"
