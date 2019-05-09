@@ -1,15 +1,19 @@
 #!/usr/bin/env bash
 
-# You can download the latest Ubuntu version from: https://developer.android.com/studio#downloads
-# And place it in this directory (zip files will be ignored)
-
 set -e
 
-docker run \
+if test -n "$(sudo docker container ls -a | grep android-studio)"; then
+  sudo docker stop android-studio
+  sudo docker start android-studio
+  sudo docker exec -it android-studio /bin/bash
+  exit 0
+fi
+
+sudo docker run \
   -v "$(pwd):/project:ro" \
-  -v="$HOME/.Xauthority:/root/.Xauthority:rw" \
-  --net=host \
+  -v "$HOME/.Xauthority:/home/ubuntu/.Xauthority:rw" \
   --env="DISPLAY" \
+  --net host \
   -it \
   --name android-studio \
   android-studio \

@@ -66,7 +66,7 @@ EOF
     # sudo -s # all the next commands will be as root
     # for subvolume in /var/lib/docker/btrfs/subvolumes/*; do btrfs subvolume delete $subvolume; done
     # mkdir -p /media; cd /media
-    # fallocate -l 2G docker-volume.img # 2Gb in this examples, in the gist is 10Gb
+    # fallocate -l 25G docker-volume.img # 25Gb in this examples, in the gist is 10Gb
     # mkfs.ext4 docker-volume.img
     # mount -o loop -t ext4 /media/docker-volume.img /var/lib/docker
     # echo "/media/docker-volume.img /var/lib/docker ext4 defaults 0 0" >> /etc/fstab
