@@ -11,6 +11,7 @@
 # # choose custom installation
 # # choose the location `/home/ubuntu/android-sdk` as the location path
 # # ~/android-studio should not be removed
+# sh /project/postinstall.sh
 
 set -e
 

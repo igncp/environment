@@ -28,7 +28,7 @@ COPY --chown=ubuntu:root android-studio.tar.gz ./
 RUN tar -xf android-studio.tar.gz \
   && rm android-studio.tar.gz
 
-ENV ANDROID_HOME=/usr/lib/android-sdk
+ENV ANDROID_HOME=/home/ubuntu/android-sdk
 ENV JAVA_HOME=/home/ubuntu/android-studio/jre
 ENV PATH="$PATH:/home/ubuntu/android-sdk/platform-tools"
 ENV PATH="$PATH:/home/ubuntu/android-sdk/tools/bin"
