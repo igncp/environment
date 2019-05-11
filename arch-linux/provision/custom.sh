@@ -40,13 +40,18 @@ EOF
 
   # Remember to update PORT,USERNAME,PASS
   cat >> ~/.bash_aliases <<"EOF"
+  # Copy selection shortcut is: Ctrl + Insert
   # https://github.com/xtermjs/xterm.js/blob/3.12.0/typings/xterm.d.ts#L26
+  # Configured fornt in browser: Monaco
   TTYD() {
-    ttyd \
+    TTYD_Stop; TTYD_Stop; TTYD_Stop; ttyd \
       -p PORT \
       -c USERNAME:PASS \
-      -t fontSize=16 \
+      -t fontSize=18 \
+      -t fontFamily='Monospace' \
+      -t lineHeight='1.2px' \
       --once \
+      "$@" \
       bash -x
   }
 
