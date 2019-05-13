@@ -18,12 +18,13 @@ Even if using Vim for daily programming. Need to know how to use this and config
 "window.menuBarVisibility": "default",
 "editor.minimap.enabled": false,
 "editor.fontSize": 18,
+"editor.renderIndentGuides": false,
 "eslint.autoFixOnSave": true,
 "javascript.validate.enable": false,
 "editor.renderLineHighlight": "none",
 "editor.cursorStyle": "block",
 "editor.cursorBlinking": "solid",
-"workbench.colorTheme": "Monokai",
+"workbench.colorTheme": "Plain (Dark Colored)",
 "workbench.colorCustomizations": {
     "editorCursor.foreground": "#f1345d",
     "editorCursor.background": "#000000"

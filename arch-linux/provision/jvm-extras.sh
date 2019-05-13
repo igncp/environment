@@ -78,7 +78,13 @@ cat >> ~/.bash_aliases <<"EOF"
 alias Kibana='kibana -H 0.0.0.0'
 EOF
 
-install_pacman_package android-tools adb
+# android
+  install_pacman_package android-tools adb
+  # Licenses:
+  # yes | /home/igncp/android-sdk/tools/bin/sdkmanager --licenses
+  cat >> ~/.bashrc <<"EOF"
+  export ANDROID_HOME="/home/igncp/android-sdk"
+EOF
 
 # eclipse
   install_pacman_package eclipse-java eclipse

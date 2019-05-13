@@ -75,34 +75,6 @@ EOF
   check_file_exists /project/provision/i3-config
   cp /project/provision/i3-config ~/.config/i3
 
+# gui-extras available
+
 # gui END
-
-# gui-extras START
-
-# alacritty
-  if ! type alacritty > /dev/null 2>&1 ; then
-    rm -rf ~/alacritty-git
-    git clone https://aur.archlinux.org/alacritty-git.git ~/alacritty-git
-    cd ~/alacritty-git
-    makepkg -s
-    sudo pacman -U ./*.pkg.tar.xz
-    cd ~; rm -rf ~/alacritty-git
-  fi
-  check_file_exists /project/provision/alacritty.yml
-  cp /project/provision/i3-config ~/.config/alacritty/alacritty.yml
-  cat >> ~/.bash_aliases <<"EOF"
-  alias ModifyAlacritty='$EDITOR /project/provision/alacritty.yml;
-    cp /project/provision/alacritty.yml ~/.config/alacritty/alacritty.yml; echo Alacritty copied'
-EOF
-
-# eclim
-  if [ ! -f ~/.check-files/eclim ]; then
-    cd ~
-    wget https://github.com/ervandew/eclim/releases/download/2.6.0/eclim_2.6.0.jar
-    java -Dvim.files=$HOME/.vim -Declipse.home=/opt/eclipse -jar eclim_2.6.0.jar install
-    touch ~/.check-files/eclim
-  fi
-
-install_from_aur code  https://aur.archlinux.org/visual-studio-code.git
-
-# gui-extras END

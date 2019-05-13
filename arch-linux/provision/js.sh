@@ -374,4 +374,6 @@ let g:ale_fixers = {
 \}
 EOF
 
+# js-extras available
+
 # js END

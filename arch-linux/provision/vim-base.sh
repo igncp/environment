@@ -334,4 +334,6 @@ EOF
 
 cp ~/.vimrc ~/.base-vimrc
 
+# vim-extras available
+
 # vim-base END

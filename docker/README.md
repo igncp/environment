@@ -4,6 +4,7 @@
 - Rename image: `docker tag OLD_NAME NEW_NAME; docker rmi OLD_NAME`
 - Stop and remove container: `docker rm -f CONTAINER`
 - Stats about disk usage: `docker system df -v | less -S # takes a few seconds`
+- Setup keyboard layout (Ubuntu): `apt-get install -y console-data # dpkg-reconfigure console-data`
 
 ## Docker Images
 
