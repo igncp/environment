@@ -57,7 +57,6 @@ fi
   fi
   # dpi will change the font size of the gui menus
   cat > ~/.xinitrc <<"EOF"
-  xrandr --dpi 150
   exec i3
 EOF
   cat >> ~/.bash_aliases <<"EOF"
@@ -69,11 +68,11 @@ EOF
   alias I3Reload='i3-msg reload'
   alias I3LogOut='i3-msg exit'
   alias I3Poweroff='systemctl poweroff'
-  alias I3Start='startx'
+  alias I3Start='bash ~/init.sh && startx'
 EOF
   mkdir -p ~/.config/i3
   check_file_exists /project/provision/i3-config
-  cp /project/provision/i3-config ~/.config/i3
+  cp /project/provision/i3-config ~/.config/i3/config
 
 # gui-extras available
 

@@ -39,4 +39,6 @@ EOF
     fi
   fi
 
+  cp /project/provision/vscode-settings.json /home/igncp/.config/Code/User/settings.json
+
 # gui-extras END
