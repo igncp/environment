@@ -13,4 +13,6 @@ EOF
 
 install_vim_package dart-lang/dart-vim-plugin
 
+install_pacman_package dart
+
 # dart END
