@@ -2,8 +2,6 @@
 
 ## Started
 
-- Android Studio in Ubuntu
-    - Download and run IDE missing
 - Tizen Studio
     - Continue from Extension Manager
 - MediaWiki
