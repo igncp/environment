@@ -18,8 +18,6 @@
 - PhpMyAdmin
 - PostgreSQL
 - pgAdmin
-- Shaka Packager
-- RabbitMQ
 - Magento
 - Apache Server
 - Sentry
