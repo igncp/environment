@@ -42,4 +42,11 @@ EOF
 
   cp /project/provision/vscode-settings.json /home/igncp/.config/Code/User/settings.json
 
+# Automatic X server
+  cat >> ~/.bashrc <<"EOF"
+if ! xhost >& /dev/null && [ -z "$SSH_CLIENT" ] && [ -z "$SSH_TTY" ]; then
+  exec startx
+fi
+EOF
+
 # gui-extras END

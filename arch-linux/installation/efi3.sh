@@ -17,6 +17,8 @@ cp /home/igncp/misc/environment/arch-linux/provision/general.sh /project/provisi
 } >> /project/provision/provision.sh
 
 sudo systemctl enable systemd-timesyncd.service
+sudo systemctl enable sshd.service
+sudo systemctl enable dhcpcd.service
 
 echo "last steps:"
 echo "# Enable network with netctl"

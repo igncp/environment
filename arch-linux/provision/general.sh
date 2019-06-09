@@ -170,7 +170,10 @@ get_jobs_prefix() {
   JOBS=$(jobs | wc -l)
   if [ "$JOBS" -eq "0" ]; then echo ""; else echo "${CHI_NUMBERS[$JOBS]} "; fi
 }
-PS1_BEGINNING="\n\n\[\e[33m\]$TMUX_PREFIX_A\[\e[36m\]\W\[\e[m\]"
+if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+  SSH_PS1_NOTICE="___SSH___ "
+fi
+PS1_BEGINNING="\n\n\[\e[33m\]$TMUX_PREFIX_A\[\e[36m\]$SSH_PS1_NOTICE\W\[\e[m\]"
 PS1_MIDDLE="\[\e[32m\]\$(__git_ps1)\[\e[m\]\[\e[33m\] \$(get_jobs_prefix)\[\e[m\]"
 PS1_END="\[\e[34m\]\$(getTime)\[\e[32m\]$TMUX_PREFIX_B\[\e[m\] "
 export PS1="$PS1_BEGINNING""$PS1_MIDDLE""$PS1_END"

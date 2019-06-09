@@ -181,8 +181,8 @@ EOF
 # brightness
   # https://wiki.archlinux.org/index.php/Backlight#ACPI
   cat >> ~/.bash_aliases <<"EOF"
-BrightnessIntel() { echo "$1" | sudo tee /sys/class/backlight/intel_backlight/brightness; }'
-MaxBrightnessIntel() { cat /sys/class/backlight/intel_backlight/max_brightness; }'
+BrightnessIntel() { echo "$1" | sudo tee /sys/class/backlight/intel_backlight/brightness; }
+MaxBrightnessIntel() { cat /sys/class/backlight/intel_backlight/max_brightness; }
 EOF
 
 # misc END

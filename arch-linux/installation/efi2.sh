@@ -4,6 +4,7 @@
 
 pacman -Syy
 pacman -S --noconfirm git vim
+pacman -S --noconfirm openssh ufw
 pacman -S --noconfirm dialog wpa_supplicant # for wifi-menu
 
 pacman -S --noconfirm grub efibootmgr dosfstools os-prober mtools
