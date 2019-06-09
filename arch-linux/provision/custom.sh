@@ -36,6 +36,7 @@ EOF
   if ! type ttyd > /dev/null 2>&1 ; then
     wget https://github.com/tsl0922/ttyd/releases/download/1.4.4/ttyd_linux.x86_64
     sudo mv ttyd_linux.x86_64 /usr/bin/ttyd
+    sudo chmod +x /usr/bin/ttyd
   fi
 
   # Remember to update PORT,USERNAME,PASS

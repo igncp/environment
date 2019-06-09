@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+# https://www.youtube.com/watch?v=QP68hRqQTJ4
+
+pacman -Syy
+pacman -S --noconfirm git dialog # dialog for wifi-menu
+
+pacman -S --noconfirm grub efibootmgr dosfstools os-prober mtools
+mkdir /boot/EFI
+mount /dev/sda1 /boot/EFI
+grub-install --target=x86_64-efi --bootloader-id=grub_uefi --recheck
+grub-mkconfig -o /boot/grub/grub.cfg
+
+echo "Set a new password for root:"
+passwd
+
+useradd igncp -m
+echo "Set a new password for igncp:"
+passwd igncp
+
+pacman -S sudo --noconfirm
+echo "igncp ALL=(ALL) ALL" >> /etc/sudoers
+
+rm /root/start.sh
+
+echo "Next steps: Create swap file"
+echo "fallocate -l 8G /swapfile # use 2 times the RAM size"
+echo "chmod 600 /swapfile ; mkswap /swapfile ; echo '/swapfile none swap sw 0 0' | tee -a /etc/fstab"
+echo "then reboot (or run above after reboot)"

@@ -25,7 +25,7 @@ locale-gen
 localectl set-locale LANG=en_US.UTF-8
 pacman -S --noconfirm cronie
 curl -o /home/igncp/init.sh \
-  -L https://raw.githubusercontent.com/igncp/environment/master/arch-linux/installation/three.sh
+  -L https://raw.githubusercontent.com/igncp/environment/master/arch-linux/installation/vm3.sh
 chown igncp /home/igncp/init.sh
 
   # exit
