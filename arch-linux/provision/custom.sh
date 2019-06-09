@@ -10,7 +10,6 @@ cat >> ~/.vimrc <<"EOF"
 let g:hardtime_default_on = 0
 call SetColors()
 
-cat >> ~/.vimrc <<"EOF"
 function! SetupEnvironment()
   let l:path = expand('%:p')
   if l:path =~ '/home/igncp/foo/bar'

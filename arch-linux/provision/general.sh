@@ -4,6 +4,8 @@
 
 # general START
 
+set -e
+
 if [ -d /project/scripts ]; then chmod -R +x /project/scripts; fi
 if [ -f /project/provision/provision.sh ]; then chmod +x /project/provision/provision.sh; fi
 
@@ -73,6 +75,7 @@ if [ ! -f /usr/local/bin/git-extras ]; then
 fi
 
 install_pacman_package 'net-tools' netstat
+install_pacman_package alsa-utils alsamixer # for audio
 install_pacman_package at
 install_pacman_package ctags
 install_pacman_package curl
@@ -213,6 +216,7 @@ KillProcessUsingPort() { PID=$(lsof -i "tcp:$1" | awk 'NR!=1 {print $2}'); \
 SshGeneratePemPublicKey() { FILE=$1; ssh-keygen -f "$FILE" -e -m pem; }
 FindLinesJustInFirstFile() { comm -23 <(sort "$1") <(sort "$2"); }
 LineN() { head -n $1 | tail -n 1; }
+WatchBattery() { watch -n0 cat /sys/class/power_supply/BAT0/capacity; }
 
 alias AliasesReload='source ~/.bash_aliases'
 alias CleanNCurses='stty sane;clear;'

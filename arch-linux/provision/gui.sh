@@ -52,7 +52,6 @@ fi
   if ! type i3 > /dev/null 2>&1 ; then
     install_pacman_package i3-wm
     install_pacman_package dmenu
-    install_pacman_package gvim
     install_pacman_package i3status
   fi
   # dpi will change the font size of the gui menus
@@ -71,6 +70,7 @@ EOF
   alias I3Start='bash ~/init.sh && startx'
 EOF
   mkdir -p ~/.config/i3
+  touch ~/init.sh
   check_file_exists /project/provision/i3-config
   cp /project/provision/i3-config ~/.config/i3/config
 

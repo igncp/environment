@@ -27,7 +27,7 @@ if [ ! -f ~/.check-files/neovim ] ; then
   rm -rf ~/.config/nvim
   ln -s ~/.vim ~/.config/nvim
   ln -s ~/.vimrc ~/.config/nvim/init.vim
-  sudo chmod -R 755 /usr/lib/python3.6 # fix the deoplete issue
+  sudo chmod -R 755 /usr/lib/python3.7 # fix the deoplete issue
   mkdir -p ~/.check-files && touch ~/.check-files/neovim
 fi
 git config --global core.editor nvim # faster than sed
