@@ -12,9 +12,11 @@ cat >> ~/.vimrc <<"EOF"
   autocmd FileType typescript :exe ConsoleMappingA
   autocmd FileType typescript :exe ConsoleMappingB
 
-" run tslint over file
+" run tslint and prettier over file
   autocmd filetype typescript :exe "nnoremap <silent> <leader>kb :!tslint --fix %<cr>:e<cr>"
-  autocmd filetype typescript :exe "nnoremap <silent> <leader>kB :!tslint --fix %<cr>:!prettier --write %<cr>:e<cr>"
+  autocmd filetype typescript :exe "nnoremap <silent> <c-a> :update<cr>:!tslint --fix %<cr>:e<cr>"
+  autocmd filetype typescript :exe "inoremap <silent> <c-a> <c-c>:update<cr>:!tslint --fix %<cr>:e<cr>"
+  autocmd filetype typescript :exe "nnoremap <silent> <leader>kB :!./node_modules/.bin/prettier --write %<cr>:e<cr>"
 
 " ts linters
   let g:syntastic_typescript_checkers = ['tsuquyomi', 'tslint']
