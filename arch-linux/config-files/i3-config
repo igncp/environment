@@ -162,3 +162,5 @@ client.focused          #000000 #000000 #ffffff #000000
 client.focused_inactive #888888 #222222 #ffffff #222222
 client.unfocused        #888888 #222222 #ffffff #222222
 client.urgent           #900000 #900000 #ffffff #900000
+
+bindsym $mod+g workspace 5; exec /usr/bin/terminator -p ttyd

@@ -37,7 +37,13 @@ fi
     scrollbar_position = hidden
     show_titlebar = False
     use_system_font = False
+  [[ttyd]]
+    custom_command = TTYD
+    exit_action = hold
+    login_shell = True
+    use_custom_command = True
 EOF
+  # sed -i 's|font = Monospace .*|font = Monospace 14|' ~/.config/terminator/config
 
 install_pacman_package chromium
 install_pacman_package gimp
