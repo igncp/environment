@@ -23,4 +23,4 @@ _DotRecursiveWatch() {
   done
 }
 
-_DotRecursiveWatch png $@
+_DotRecursiveWatch png

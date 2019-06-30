@@ -14,6 +14,16 @@ You must manually download the following files:
     - http://eradman.com/entrproject/
     - Place it under `files/entr.tar.gz`
 
+## Usage
+
+```sh
+sh build.sh
+sh run.sh
+
+# recommended
+sh scripts/all_entr.sh
+```
+
 ## Supported
 
 - Graphviz:
