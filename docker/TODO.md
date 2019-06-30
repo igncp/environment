@@ -12,19 +12,20 @@
 
 ## Ideas
 
+- Apache Server
+- Beehive
+- Elasticsearch + Kibana
+- Gephi
+- Magento2
 - MongoDB
 - MongoDB Client
 - MySQL
+- Neo4j
 - PhpMyAdmin
 - PostgreSQL
-- pgAdmin
-- Magento
-- Apache Server
-- Sentry
 - Redis
-- Elasticsearch + Kibana
-- Neo4j
-- Beehive
+- Sentry
+- pgAdmin
 
 ## Useful Links
 

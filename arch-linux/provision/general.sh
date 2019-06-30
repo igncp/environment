@@ -79,10 +79,12 @@ install_pacman_package alsa-utils alsamixer # for audio
 install_pacman_package at
 install_pacman_package ctags
 install_pacman_package curl
+install_pacman_package feh # image previews
 install_pacman_package jq
 install_pacman_package lsof
 install_pacman_package moreutils vidir
 install_pacman_package ncdu
+install_pacman_package ranger
 install_pacman_package rsync
 install_pacman_package strace
 install_pacman_package tree
@@ -204,6 +206,7 @@ alias ll="ls -lah --color=always"
 alias mkdir="mkdir -p"
 alias rm="rm -rf"
 alias tree="tree -a"
+alias r="ranger"
 
 AgN() { ag -l "$@" | xargs "$EDITOR" -p; }
 DisplayFilesConcatenated(){ xargs tail -n +1 | sed "s|==>|\n\n\n\n\n$1==>|; s|<==|<==\n|" | $EDITOR -; }
