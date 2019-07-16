@@ -45,8 +45,13 @@ fi
 EOF
   # sed -i 's|font = Monospace .*|font = Monospace 14|' ~/.config/terminator/config
 
-install_pacman_package chromium
 install_pacman_package gimp
+
+install_pacman_package chromium
+cat >> ~/.bash_aliases <<"EOF"
+# useful to disable CORS without extensions
+alias ChromiumWithoutSecurity='chromium --user-data-dir="~/chrome-without-security" --disable-web-security & exit'
+EOF
 
 if [ ! -f ~/.check-files/gui-fonts ]; then
   sudo pacman -S --noconfirm ttf-freefont ttf-arphic-uming ttf-baekmuk # fonts for chromium
