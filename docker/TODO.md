@@ -23,7 +23,6 @@
 - Neo4j
 - PhpMyAdmin
 - PostgreSQL
-- Redis
 - Sentry
 - pgAdmin
 
