@@ -51,6 +51,7 @@ install_pacman_package chromium
 cat >> ~/.bash_aliases <<"EOF"
 # useful to disable CORS without extensions
 alias ChromiumWithoutSecurity='chromium --user-data-dir="~/chrome-without-security" --disable-web-security & exit'
+alias Chromium='chromium & exit'
 EOF
 
 if [ ! -f ~/.check-files/gui-fonts ]; then
