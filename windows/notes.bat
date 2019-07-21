@@ -16,3 +16,6 @@ REM Start "" "C:\Program Files\Sublime Text 3\sublime_text.exe"
 
 REM To cat a file
 REM `type FILENAME`, for example: `type foo.txt`
+
+REM To clear the screen
+REM `cls`
