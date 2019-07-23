@@ -12,3 +12,6 @@ return
 
 ; Close Chrome process (check in `tasklist`)
 Process, Close, chrome.exe
+
+; Launch a AHK on startup
+; https://stackoverflow.com/a/41730695/3244654

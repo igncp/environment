@@ -185,4 +185,8 @@ BrightnessIntel() { echo "$1" | sudo tee /sys/class/backlight/intel_backlight/br
 MaxBrightnessIntel() { cat /sys/class/backlight/intel_backlight/max_brightness; }
 EOF
 
+# Enable multilib (32)
+  # sudo vim /etc/pacman.conf # Uncomment the 4 multilib libes
+  # sudo pacman -Sy
+
 # misc END
