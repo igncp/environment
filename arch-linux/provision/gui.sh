@@ -86,6 +86,15 @@ EOF
   check_file_exists /project/provision/i3-config
   cp /project/provision/i3-config ~/.config/i3/config
 
+  cat >> ~/.bashrc <<"EOF"
+# To exit: mod+shift+e or I3LogOut
+if [ ! -f /tmp/first-i3 ]; then
+  touch /tmp/first-i3
+
+  sh ~/init.sh && startx
+fi
+EOF
+
 # gui-extras available
 
 # gui END

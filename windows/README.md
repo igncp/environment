@@ -2,7 +2,7 @@
 
 ## Change workspace shortcuts
 
-Import `./main.ahk` with AutoHotKey to be able to switch workspaces numerically.
+Import `./switch-desktop.ahk` with AutoHotKey to be able to switch workspaces numerically.
 
 ## Sleep shortcut file
 
