@@ -57,26 +57,6 @@ install_cargo_crate racer
 
 install_pacman_package valgrind
 
-cat > ~/.vim-snippets/rust.snippets <<"EOF"
-snippet xDeadCode
-  #[allow(dead_code)]
-snippet xNowInstant
-  let ${0:now} = std::time::Instant::now();
-snippet xPrintInstant
-  println!("${1}{:?}", ${0:now}.elapsed());
-snippet xModTests
-  #[cfg(test)]
-  mod tests {
-    use super::*;
-
-    ${0}
-  }
-snippet xAssertEq
-  assert_eq!(${1}, ${0});
-snippet xPrintEmpty
-  println!();
-EOF
-
 # for code coverage
 install_pacman_package llvm llvm-ar
 install_from_aur lcov https://aur.archlinux.org/lcov.git

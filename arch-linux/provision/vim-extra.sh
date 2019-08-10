@@ -367,7 +367,7 @@ EOF
 mkdir -p ~/.vim-snippets
 
 # this snippets will not be overriden by the provision
-# the should be changed manually
+# they should be changed manually
 mkdir -p /project/vim-custom-snippets/
 
 rm -rf /tmp/tmp.*
@@ -430,25 +430,14 @@ add_special_vim_map() {
 
 echo "" > ~/.special-vim-maps-from-provision.txt
 
-cat > ~/.vim-snippets/markdown.snippets <<"EOF"
-snippet xBoldColon
-  **${1}**: ${0}
-EOF
-
-# https://misc.flogisoft.com/bash/tip_colors_and_formatting
-cat > ~/.vim-snippets/sh.snippets <<"EOF"
-snippet xColorBlue
-  COLOR_BLUE="\e[34m"
-snippet xColorGreen
-  COLOR_GREEN="\e[32m"
-snippet xColorRed
-  COLOR_RED="\e[31m"
-snippet xColorReset
-  COLOR_RESET="\e[0m"
-EOF
-
 add_special_vim_map "renameexisting" $':Rename <c-r>=expand("%:t")<cr>' 'rename existing file'
 add_special_vim_map "showabsolutepath" $':echo expand("%:p")<cr>' 'show absolute path of file'
 add_special_vim_map "showrelativepath" $':echo @%<cr>' 'show relative path of file'
+
+if [ -f /project/scripts/create_vim_snippets.sh ]; then
+  sh /project/scripts/create_vim_snippets.sh
+else
+  echo "/project/scripts/create_vim_snippets.sh file missing"
+fi
 
 # vim-extra END

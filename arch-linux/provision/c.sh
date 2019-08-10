@@ -28,17 +28,4 @@ if ! type gcovr > /dev/null 2>&1 ; then
   sudo pip2 install gcovr
 fi
 
-# header files are treated as cpp
-cat > /tmp/c-and-cpp-snippets <<"EOF"
-snippet xDefineGuard
-  #ifndef ${1}_H
-  #define $1_H
-
-  ${0}
-
-  #endif
-EOF
-cat /tmp/c-and-cpp-snippets > ~/.vim-snippets/c.snippets
-cat /tmp/c-and-cpp-snippets > ~/.vim-snippets/cpp.snippets
-
 # c END

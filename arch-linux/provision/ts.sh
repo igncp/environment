@@ -22,8 +22,6 @@ cat >> ~/.vimrc <<"EOF"
   let g:syntastic_typescript_checkers = ['tsuquyomi', 'tslint']
 EOF
 
-cp ~/.vim-snippets/javascript.snippets ~/.vim-snippets/typescript.snippets
-
 cat >> ~/.vimrc <<"EOF"
 let g:tsuquyomi_disable_default_mappings = 1
 let g:tsuquyomi_disable_quickfix = 1
