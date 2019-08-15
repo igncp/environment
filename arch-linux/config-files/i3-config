@@ -163,4 +163,6 @@ client.focused_inactive #888888 #222222 #ffffff #222222
 client.unfocused        #888888 #222222 #ffffff #222222
 client.urgent           #900000 #900000 #ffffff #900000
 
-bindsym $mod+g workspace 5; exec /usr/bin/terminator -p ttyd
+# These profiles are configured under the Terminator provision
+# bindsym $mod+f workspace 6; exec /usr/bin/terminator -p ttyd
+bindsym $mod+g workspace 5; exec /usr/bin/terminator -p system-info

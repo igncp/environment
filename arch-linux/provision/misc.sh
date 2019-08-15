@@ -182,7 +182,7 @@ EOF
   # https://wiki.archlinux.org/index.php/Backlight#ACPI
   cat >> ~/.bash_aliases <<"EOF"
 BrightnessIntel() { echo "$1" | sudo tee /sys/class/backlight/intel_backlight/brightness; }
-MaxBrightnessIntel() { cat /sys/class/backlight/intel_backlight/max_brightness; }
+BrightnessIntelMax() { cat /sys/class/backlight/intel_backlight/max_brightness; }
 EOF
 
 # Enable multilib (32)

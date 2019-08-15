@@ -1,4 +1,3 @@
-
 # docker START
 
 install_pacman_package docker
@@ -73,4 +72,3 @@ EOF
   # At this point you can exit sudo and start dockerd. In the gist there are some checks commands to confirm
 
 # docker END
-

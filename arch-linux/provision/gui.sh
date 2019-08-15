@@ -42,6 +42,11 @@ fi
     exit_action = hold
     login_shell = True
     use_custom_command = True
+  [[system-info]]
+    custom_command = /home/igncp/.system-info.sh
+    exit_action = hold
+    login_shell = True
+    use_custom_command = True
 EOF
   # sed -i 's|font = Monospace .*|font = Monospace 14|' ~/.config/terminator/config
 
@@ -51,6 +56,7 @@ install_pacman_package chromium
 cat >> ~/.bash_aliases <<"EOF"
 # useful to disable CORS without extensions
 alias ChromiumWithoutSecurity='chromium --user-data-dir="~/chrome-without-security" --disable-web-security & exit'
+alias ChromiumIncognito='chromium -incognito & exit'
 alias Chromium='chromium & exit'
 EOF
 
@@ -65,7 +71,26 @@ fi
     install_pacman_package i3-wm
     install_pacman_package dmenu
     install_pacman_package i3status
+    install_pacman_package i3lock
+
+    cat > ~/i3lock.service <<"EOF"
+[Unit]
+Description=Lock screen before suspend
+Before=sleep.target
+
+[Service]
+User=igncp
+Type=forking
+Environment=DISPLAY=:0
+ExecStart=/usr/bin/i3lock -c 000000
+
+[Install]
+WantedBy=sleep.target
+EOF
+    sudo mv ~/i3lock.service /etc/systemd/system/
+    sudo systemctl enable i3lock.service
   fi
+
   # dpi will change the font size of the gui menus
   cat > ~/.xinitrc <<"EOF"
   exec i3

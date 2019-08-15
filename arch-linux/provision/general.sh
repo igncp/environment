@@ -239,7 +239,9 @@ alias PacmanUpdateRepos='sudo pacman -Sy'
 alias PathShow='echo $PATH | tr ":" "\n" | sort | uniq | less'
 alias RsyncDelete='rsync -rhv --delete' # remember to add a slash at the end of source (dest doesn't matter)
 alias Sudo='sudo -E ' # this preserves aliases and environment in root
+alias SystemInfo='sh ~/.system-info.sh'
 alias Tee="tee /dev/tty";
+alias TimeRestartService='sudo systemctl restart systemd-timesyncd.service'
 alias Tmux="tmux attach; exit"
 alias Visudo='sudo env EDITOR=vim visudo'
 alias Xargs='xargs -I{}'
@@ -269,6 +271,14 @@ set show-all-if-ambiguous on
 C-h:unix-filename-rubout
 C-k:edit-and-execute-command
 EOF
+
+cat > ~/.system-info.sh <<"EOF"
+clear
+echo ""
+echo "Battery: $(cat /sys/class/power_supply/BAT0/capacity)%"
+echo "Time: $(date)"
+EOF
+chmod +x ~/.system-info.sh
 
 install_pacman_package tmux
 cat > ~/.tmux.conf <<"EOF"
