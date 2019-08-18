@@ -1,19 +1,12 @@
 # gui-extras START
 
 # alacritty
-  if ! type alacritty > /dev/null 2>&1 ; then
-    rm -rf ~/alacritty-git
-    git clone https://aur.archlinux.org/alacritty-git.git ~/alacritty-git
-    cd ~/alacritty-git
-    makepkg -s
-    sudo pacman -U ./*.pkg.tar.xz
-    cd ~; rm -rf ~/alacritty-git
-  fi
+  intall_pacman_package alacritty
   check_file_exists /project/provision/alacritty.yml
   cp /project/provision/i3-config ~/.config/alacritty/alacritty.yml
   cat >> ~/.bash_aliases <<"EOF"
   alias ModifyAlacritty='$EDITOR /project/provision/alacritty.yml;
-    cp /project/provision/alacritty.yml ~/.config/alacritty/alacritty.yml; echo Alacritty copied'
+    cp /project/provision/alacritty.yml ~/.config/alacritty/alacritty.yml; echo "alacritty.yml copied"'
 EOF
 
 # eclim
