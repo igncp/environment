@@ -1,11 +1,13 @@
 # gui-extras START
 
 # alacritty
-  intall_pacman_package alacritty
+  install_pacman_package alacritty
   check_file_exists /project/provision/alacritty.yml
+  mkdir -p ~/.config/alacritty
   cp /project/provision/i3-config ~/.config/alacritty/alacritty.yml
   cat >> ~/.bash_aliases <<"EOF"
-  alias ModifyAlacritty='$EDITOR /project/provision/alacritty.yml;
+alias Alacritty='LANG=en_hk alacritty & exit'
+alias ModifyAlacritty='$EDITOR /project/provision/alacritty.yml;
     cp /project/provision/alacritty.yml ~/.config/alacritty/alacritty.yml; echo "alacritty.yml copied"'
 EOF
 
