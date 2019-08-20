@@ -11,6 +11,13 @@ if [ -f ~/.i3/config ]; then
   sed -i -r 's|\$mod\+([0-9]+) |$mod+Control+\1 |' ~/.i3/config
 fi
 
+install_pacman_package xclip
+
+cat >> ~/.bash_aliases <<"EOF"
+alias XClipCopy='xclip -selection clipboard' # usage: echo foo | XClipCopy
+alias XClipPaste='xclip -selection clipboard -o'
+EOF
+
 # terminator
   install_pacman_package terminator
   mkdir -p ~/.config/terminator
