@@ -297,7 +297,7 @@ function! SetColors()
   hi Error       ctermbg=lightred ctermfg=black
   hi Folded      ctermbg=236      ctermfg=236
   hi IncSearch   gui=NONE         ctermbg=black ctermfg=red
-  hi MatchParen  ctermfg=black    ctermbg=white
+  hi MatchParen  ctermfg=red      ctermbg=NONE
   hi Search      cterm=NONE       ctermfg=black ctermbg=white
   hi SpellBad    ctermbg=lightred ctermfg=black
   hi TabLine     ctermfg=gray     ctermbg=black
