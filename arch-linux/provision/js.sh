@@ -55,7 +55,7 @@ cat >> ~/.vimrc <<"EOF"
 EOF
 
 cat >> ~/.bash_aliases <<"EOF"
-alias Serve="http-server -c-1 -p 9000"
+Serve() { PORT="$2"; http-server -c-1 -p "${PORT:=9000}" $1; }
 GitDiff() { git diff --color $@; }
 GitsShow() { git show --color $@; }
 # Fix coloring of mocha in some windows terminals

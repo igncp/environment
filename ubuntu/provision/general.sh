@@ -171,7 +171,7 @@ alias GitListFilesChangedHistory='git log --pretty=format: --name-only | sort | 
 alias RemoveAnsiColors="sed 's/\x1b\[[0-9;]*m//g'"
 alias Ports='sudo netstat -tulanp'
 alias Headers='curl -I' # e.g. Headers google.com
-alias TopMemory='ps auxf | sort -nr -k 4 | head -n' # e.g. TopMemory 10
+alias TopMemory='ps auxf | sort -nr -k 4 | head' # e.g. TopMemory 10
 alias ChModRX='chmod -R +x'
 EOF
 

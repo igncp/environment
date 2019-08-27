@@ -209,6 +209,7 @@ alias tree="tree -a"
 alias r="ranger"
 
 AgN() { ag -l "$@" | xargs "$EDITOR" -p; }
+Diff() { diff --color=always "$@" | less -r; }
 DisplayFilesConcatenated(){ xargs tail -n +1 | sed "s|==>|\n\n\n\n\n$1==>|; s|<==|<==\n|" | $EDITOR -; }
 Find() { find "$@" ! -path "*node_modules*" ! -path "*.git*"; }
 GetProcessUsingPort(){ fuser $1/tcp; }
@@ -226,12 +227,12 @@ WatchBattery() { watch -n0 cat /sys/class/power_supply/BAT0/capacity; }
 
 alias AliasesReload='source ~/.bash_aliases'
 alias CleanNCurses='stty sane;clear;'
-alias ConfigureTimezone='sudo timedatectl set-timezone Asia/Hong_Kong'
 alias EditProvision="$EDITOR /project/provision/provision.sh && provision.sh"
 alias Exit="\$(ps aux | grep tmux | grep -v grep | awk '{print $2}' | xargs kill) || exit"
 alias FDisk='sudo fdisk /dev/sda'
 alias FilterLeaf=$'sort -r | awk \'a!~"^"$0{a=$0;print}\' | sort'
 alias HierarchyManual='man hier'
+alias HongKongTimezone='sudo timedatectl set-timezone Asia/Hong_Kong'
 alias LastColumn="awk '{print "'$NF'"}'"
 alias Less="less -i"
 alias LsTmpFiles='ls -laht /tmp | tac'
@@ -262,7 +263,7 @@ alias GitListFilesChangedHistory='git log --pretty=format: --name-only | sort | 
 alias RemoveAnsiColors="sed 's/\x1b\[[0-9;]*m//g'"
 alias Ports='sudo netstat -tulanp'
 alias Headers='curl -I' # e.g. Headers google.com
-alias TopMemory='ps auxf | sort -nr -k 4 | head -n' # e.g. TopMemory 10
+alias TopMemory='ps auxf | sort -nr -k 4 | head' # e.g. TopMemory 10
 alias ChModRX='chmod -R +x'
 EOF
 
