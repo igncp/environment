@@ -127,6 +127,19 @@ if [ ! -f /tmp/first-i3 ]; then
 fi
 EOF
 
+# notifications handler (notify-send)
+if ! type dunst > /dev/null 2>&1 ; then
+  echo "Installing Dunst"
+  (cd ~ \
+    && rm -rf dunst \
+    && git clone https://github.com/dunst-project/dunst.git \
+    && cd dunst \
+    && make && sudo make install)
+  (mkdir -p ~/.config/dunst \
+    && cp ~/dunst/dunstrc ~/.config/dunst/ \
+    && rm -rf ~/dunst)
+fi
+
 # gui-extras available
 
 # gui END
