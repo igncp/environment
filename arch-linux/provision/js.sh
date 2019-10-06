@@ -3,18 +3,26 @@
 # Dependencies:
 # - after: vim-extra.sh
 
+source_nodenv() {
+  export PATH=$PATH:/home/$USER/.nodenv/bin
+  eval "$(nodenv init -)"
+}
+
 NODE_VERSION=10.13.0
 if [ ! -d ~/.nodenv ]; then
   echo "setup node with nodenv"
   cd ~
   git clone https://github.com/nodenv/nodenv.git ~/.nodenv && cd ~/.nodenv && src/configure && make -C src && \
-    export PATH=$PATH:/home/$USER/.nodenv/bin && \
-    eval "$(nodenv init -)" && \
+    source_nodenv && \
     if [ ! -d $(nodenv root)/plugins/node-build ]; then git clone https://github.com/nodenv/node-build.git $(nodenv root)/plugins/node-build; fi && \
     if [ ! -d $(nodenv root)/plugins/nodenv-update ]; then git clone https://github.com/nodenv/nodenv-update.git "$(nodenv root)"/plugins/nodenv-update; fi && \
     if [ ! -d .nodenv/versions/$NODE_VERSION ]; then nodenv install $NODE_VERSION; fi && \
     nodenv global $NODE_VERSION
   cd ~
+fi
+
+if ! type nodenv > /dev/null 2>&1 ; then
+  source_nodenv
 fi
 
 CURRENT_NODE_VERSION=$(nodenv version | ag -o '^.+? ' | sed 's| ||g')

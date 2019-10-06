@@ -1,3 +1,4 @@
+
 #!/usr/bin/env bash
 
 # set -o xtrace # displays commands, helpful for debugging errors
@@ -74,19 +75,13 @@ if [ ! -f /usr/local/bin/git-extras ]; then
   cd ~ && rm -rf ~/.git-extras
 fi
 
-install_pacman_package 'net-tools' netstat
 install_pacman_package alsa-utils alsamixer # for audio
-install_pacman_package at
-install_pacman_package ctags
 install_pacman_package curl
-install_pacman_package feh # image previews
 install_pacman_package jq
 install_pacman_package lsof
 install_pacman_package moreutils vidir
 install_pacman_package ncdu
-install_pacman_package ranger
 install_pacman_package rsync
-install_pacman_package strace
 install_pacman_package tree
 install_pacman_package unzip
 install_pacman_package wget
@@ -94,13 +89,6 @@ install_pacman_package zip
 
 # https://www.thegeekstuff.com/2011/09/linux-htop-examples
 install_pacman_package htop
-
-sudo atd
-
-install_pacman_package netdata
-if [[ ! -z $(sudo systemctl status netdata.service | grep inactive) ]]; then
-  sudo systemctl restart netdata.service
-fi
 
 if [ ! -f ~/.acd_func ]; then
   curl -o ~/.acd_func \
@@ -209,8 +197,8 @@ alias tree="tree -a"
 alias r="ranger"
 
 AgN() { ag -l "$@" | xargs "$EDITOR" -p; }
-Diff() { diff --color=always "$@" | less -r; }
 DisplayFilesConcatenated(){ xargs tail -n +1 | sed "s|==>|\n\n\n\n\n$1==>|; s|<==|<==\n|" | $EDITOR -; }
+Diff() { diff --color=always "$@" | less -r; }
 Find() { find "$@" ! -path "*node_modules*" ! -path "*.git*"; }
 GetProcessUsingPort(){ fuser $1/tcp; }
 MkdirCd(){ mkdir -p $1; cd $1; }
@@ -297,8 +285,6 @@ bind c new-window -c "#{pane_current_path}"
 bind-key ^D detach-client
 
 set -wg mode-style bg=black,fg=blue
-set-option -g message-bg black
-set-option -g message-fg white
 
 new-session -n $HOST
 
@@ -329,100 +315,10 @@ if [ ! -f ~/.tmux-completion.sh ]; then
 fi
 echo 'source_if_exists ~/.tmux-completion.sh' >> ~/.bashrc
 
-cat > ~/.ctags <<"EOF"
---regex-make=/^([^# \t]*):/\1/t,target/
---langdef=markdown
---langmap=markdown:.mkd
---regex-markdown=/^#[ \t]+(.*)/\1/h,Heading_L1/
---regex-markdown=/^##[ \t]+(.*)/\1/i,Heading_L2/
---regex-markdown=/^###[ \t]+(.*)/\1/k,Heading_L3/
-EOF
-
 if [ ! -f ~/.config/up/up.sh ]; then
   curl --create-dirs -o ~/.config/up/up.sh https://raw.githubusercontent.com/shannonmoeller/up/master/up.sh
 fi
 echo 'source_if_exists ~/.config/up/up.sh' >> ~/.bash_sources
-
-install_pacman_package task
-cat >> ~/.bash_aliases <<"EOF"
-alias t='task'
-EOF
-cat >> ~/.bash_sources <<"EOF"
-source_if_exists /usr/share/doc/task/scripts/bash/task.sh # to have _task available
-complete -o nospace -F _task t
-EOF
-
-install_pacman_package shellcheck
-echo 'SHELLCHECK_IGNORES="SC1090"' >> ~/.bashrc
-add_shellcheck_ignores() {
-  for DIRECTIVE in "$@"; do
-    echo 'SHELLCHECK_IGNORES="$SHELLCHECK_IGNORES,SC'"$DIRECTIVE"'"' >> ~/.bashrc
-  done
-}
-add_shellcheck_ignores 2016 2028 2046 2059 2086 2088 2143 2164 2181 1117
-echo 'export SHELLCHECK_OPTS="-e $SHELLCHECK_IGNORES"' >> ~/.bashrc
-
-install_pacman_package graphviz dot
-cat > ~/.dot-script.sh <<"EOF2"
-  FILE_PATH=$1
-  EXTENSION=$2
-  FNAME="${FILE_PATH::-4}" # remove .dot extension
-  RELATIVE=$(python -c "import os.path; print(os.path.relpath('$FNAME', '$PWD'))")
-  dot "$FILE_PATH" -T"$EXTENSION" > "$FNAME"."$EXTENSION" && \
-  printf "created ${GREEN}$RELATIVE."$EXTENSION"${NC}\n"
-EOF2
-chmod +x ~/.dot-script.sh
-cat >> ~/.bash_aliases <<"EOF"
-_DotRecursiveWatch() {
-  EXTENSION=$1
-  USED_DIR=${2:-.}
-  printf "looking recursively in: ${BLUE}$USED_DIR${NC}\n"
-  while true; do # when a file is added, entr will exit
-    sleep 1
-    find "$USED_DIR" -type f -name "*.dot" | entr -d ~/.dot-script.sh /_ "$EXTENSION"
-  done
-}
-DotPNGRecursiveWatch() {
-  _DotRecursiveWatch png $@
-}
-DotSVGRecursiveWatch() {
-  _DotRecursiveWatch svg $@
-}
-DotJPGRecursiveWatch() {
-  _DotRecursiveWatch jpg $@
-}
-EOF
-
-cat > ~/.m4-script.sh <<"EOF2"
-  FILE_PATH="$1"
-  RESULT_EXTENSION="$2"
-  FNAME="${FILE_PATH::-3}" # remove .m4 extension
-  RELATIVE=$(python -c "import os.path; print(os.path.relpath('$FNAME', '$PWD'))")
-  m4 "$FILE_PATH" > "$FNAME"."$RESULT_EXTENSION" && \
-  printf "created ${GREEN}$RELATIVE."$RESULT_EXTENSION"${NC}\n"
-EOF2
-chmod +x ~/.m4-script.sh
-cat >> ~/.bash_aliases <<"EOF"
-M4RecursiveWatch() {
-  RESULT_EXTENSION="$1"
-  USED_DIR="${2:-.}"
-  printf "looking recursively in: ${BLUE}$USED_DIR${NC}\n"
-  while true; do # when a file is added, entr will exit
-    sleep 1
-    find "$USED_DIR" -type f -name "*.m4" | entr -d ~/.m4-script.sh /_ "$RESULT_EXTENSION"
-  done
-}
-EOF
-
-if ! type entr > /dev/null 2>&1 ; then
-  sudo rm -rf ~/_entr-tmp
-  cd ~ && mkdir ~/_entr-tmp && cd ~/_entr-tmp
-  curl -O https://bitbucket.org/eradman/entr/get/entr-3.6.tar.gz
-  tar -zxvf ./*.tar.gz
-  ENTR_DIR=$(find . -maxdepth 1 -mindepth 1 -type d) && cd $ENTR_DIR
-  ./configure && make test && sudo make install
-  cd ~ && sudo rm -rf ~/_entr-tmp
-fi
 
 check_file_exists() {
   FILE=$1
@@ -444,6 +340,7 @@ check_file_exists() {
   AG_DIRS() { ag -u --hidden --ignore .git -g "" "$@" | xargs dirname | sort | uniq; }
   export FZF_ALT_C_COMMAND="AG_DIRS"
 EOF
+
   # Ctrl+t binding breaks window when tmux + (n)vim + ctrl-z: no visible input. Disable it
   sed -i "s|C-t|C-$|" ~/.fzf/shell/key-bindings.bash
   cat >> ~/.bash_sources <<"EOF"
@@ -468,7 +365,8 @@ EOF
   bind '"\C-q\C-a": "$(__FZFScripts)\e\C-e\er"'
   bind '"\C-q\C-s": "$(__FZFScripts)\e\C-e\er\n"'
 EOF
-  cat > ~/.bookmarked-commands <<"EOF"
+
+ cat > ~/.bookmarked-commands <<"EOF"
     GitCommit ""
     GitEditorCommit
     GitStatus
@@ -483,30 +381,12 @@ EOF
     git commit -m "$(head .git/COMMIT_EDITMSG  -n 1)"
 EOF
 
-if [ ! -f ~/hhighlighter/h.sh ] > /dev/null 2>&1 ; then
-  rm -rf ~/hhighlighter
-  git clone --depth 1 https://github.com/paoloantinori/hhighlighter.git ~/hhighlighter
-fi
-echo 'source_if_exists ~/hhighlighter/h.sh' >> ~/.bash_sources
-
 if [ ! -f ~/.dircolors ]; then
   dircolors -p > ~/.dircolors
   sed -i 's|^OTHER_WRITABLE 34;42|OTHER_WRITABLE 34;4|' ~/.dircolors
 fi
 
 echo 'eval "$(dircolors ~/.dircolors)"' >> ~/.bashrc
-
-if ! type sr > /dev/null 2>&1 ; then
-  cd ~; rm -rf sr-tmp
-  git clone https://github.com/igncp/sr.git sr-tmp --depth 1
-  cd sr-tmp
-  make
-  sudo mv build/bin/sr /usr/bin
-  cd ~ ; rm -rf sr-tmp
-fi
-
-# for gng2 key generation: sudo rngd -r /dev/urandom
-install_pacman_package rng-tools rngd
 
 cat > /tmp/choose_session.sh <<"EOF"
 #!/usr/bin/env bash
@@ -517,6 +397,7 @@ if [ -z "$SESSION" ]; then exit 0; fi
 
 tmux switch-client -t "$SESSION"
 EOF
+
 echo "bind b split-window 'sh /tmp/choose_session.sh'" >> ~/.tmux.conf
 
 if [ ! -d /project/.git ]; then

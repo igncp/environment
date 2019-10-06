@@ -7,7 +7,6 @@ cat >> ~/.bash_aliases <<"EOF"
 EOF
 
 cat >> ~/.vimrc <<"EOF"
-let g:hardtime_default_on = 0
 call SetColors()
 
 function! SetupEnvironment()

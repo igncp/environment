@@ -31,10 +31,10 @@ EOF
     else
       echo "Not installing VS Code because the file '~/Downloads/vscode.tar.gz' is missing."
       echo "  https://code.visualstudio.com/#alt-downloads"
-      exit 1
     fi
   fi
 
+  mkdir -p /home/igncp/.config/Code/User
   cp /project/provision/vscode-settings.json /home/igncp/.config/Code/User/settings.json
 
 # Automatic X server

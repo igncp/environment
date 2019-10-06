@@ -77,7 +77,7 @@ install_vim_package xolox/vim-misc
 
 cat >> ~/.vimrc <<"EOF"
 execute pathogen#infect()
-let g:hardtime_default_on = 1
+let g:hardtime_default_on = 0
 
 " incsearch.vim
   map /  <Plug>(incsearch-forward)

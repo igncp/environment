@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 # to enable network
   sudo dhcpcd
 # to enable ssh server

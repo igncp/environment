@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 pacman -Syy
 pacman -S git --noconfirm
 echo "Set a new password for root:"

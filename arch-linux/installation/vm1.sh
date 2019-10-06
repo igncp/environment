@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 # Download Arch Linux ISO image
 # Create new Virtual Box image
   # VDI > Dynamically Allocated > Choose dir and Size
@@ -7,6 +9,8 @@
 # Add port forwarding:
   # Menu > Device > Network > Network Settings > Advanced > Port Forwading
   # (name) ssh (type) TCP (host) 3022 (guest) 22
+# Setup bidirectional clipboard
+# Remove mini-menu UI (the last of the options in the left bar)
 # Add shared folder
   # Menu > Devices > Shared Folders > Settings > Add new
   # Check: Make Permanent, Auto-Mount
@@ -14,8 +18,7 @@
 # Run:
   # @TODO: Improve partitions for performance
   # fdisk /dev/sda # create new partition: n p <enter> <enter> <enter> w
-  # @TODO: Find how to copy this in VBox terminal
-  # curl -L https://raw.githubusercontent.com/igncp/environment/master/arch-linux/installation/vm1.sh | bash
+  # curl -L ignaciocarbajo.com/arch-vm
   mkfs.ext4 /dev/sda1
   mount /dev/sda1 /mnt
   pacstrap /mnt base

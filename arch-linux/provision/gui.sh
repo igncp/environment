@@ -13,6 +13,18 @@ fi
 
 install_pacman_package xclip
 
+# https://linuxiswonderful.wordpress.com/2017/05/01/x-broken-as-drmsetmaster-failed/
+cat > /tmp/Xwrapper.config <<"EOF"
+allowed_users=console
+needs_root_rights=yes
+EOF
+sudo mv /tmp/Xwrapper.config /etc/X11/Xwrapper.config
+
+cat > /tmp/locale.conf <<"EOF"
+LANG=en_US.UTF-8
+EOF
+sudo mv /tmp/locale.conf /etc/locale.conf
+
 cat >> ~/.bash_aliases <<"EOF"
 alias XClipCopy='xclip -selection clipboard' # usage: echo foo | XClipCopy
 alias XClipPaste='xclip -selection clipboard -o'

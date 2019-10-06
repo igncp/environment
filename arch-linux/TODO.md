@@ -9,3 +9,4 @@
 
 - Go through current config to remember
 - Go through existing scripts to extend them
+- Remove unused configs or move them to extras
