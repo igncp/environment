@@ -117,6 +117,10 @@ EOF
   cat >> ~/.bash_aliases <<"EOF"
   I3Setup() {
     /usr/bin/VBoxClient-all;
+    # Run `xrandr` to see the available outputs and modes:
+      # xrandr --output Virtual-1 --mode 1280x768
+    # Other possibilities for layout:
+      # setxkbmap -layout us
   }
   alias I3GBLayout='setxkbmap -layout gb'
   alias ModifyI3Conf='$EDITOR /project/provision/i3-config; cp /project/provision/i3-config ~/.config/i3/config; echo Copied I3 Config'

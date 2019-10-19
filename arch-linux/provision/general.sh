@@ -81,6 +81,7 @@ install_pacman_package jq
 install_pacman_package lsof
 install_pacman_package moreutils vidir
 install_pacman_package ncdu
+install_pacman_package net-tools netstat
 install_pacman_package rsync
 install_pacman_package tree
 install_pacman_package unzip
