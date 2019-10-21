@@ -36,7 +36,7 @@ install_node_modules() {
   done
 }
 
-install_node_modules http-server diff-so-fancy eslint babel-eslint cloc yo eslint_d flow flow-cli flow-bin
+install_node_modules http-server diff-so-fancy eslint babel-eslint cloc eslint_d
 
 cat >> ~/.bashrc <<"EOF"
 export PATH=$PATH:/home/$USER/.nodenv/bin
@@ -86,7 +86,6 @@ EOF
 
 # not installing vim-javascript as it doesn't work with rainbow
 install_vim_package ternjs/tern_for_vim "cd ~/.vim/bundle/tern_for_vim; npm i"
-install_vim_package kchmck/vim-coffee-script
 install_vim_package flowtype/vim-flow
 install_vim_package jelera/vim-javascript-syntax "sh /tmp/clean-vim-js-syntax.sh"
 install_vim_package samuelsimoes/vim-jsx-utils
@@ -131,10 +130,6 @@ install_node_modules markdown-toc
 cat >> ~/.bash_aliases <<"EOF"
 alias MarkdownTocRecursive='find . ! -path "*.git*" -name "*.md" | xargs -I {} markdown-toc -i {}'
 EOF
-
-install_node_modules yarn
-
-install_node_modules gnomon
 
 cat > ~/.js-tests-specs-displayer <<"EOF"
 #!/usr/bin/env bash

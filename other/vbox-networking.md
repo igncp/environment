@@ -1,6 +1,6 @@
 # Setup Virtual Box Networking
 
-In order to SSH between machines, you must:
+## SSH between guests (same laptop)
 
 - File > Preferences > Network > Host-only Networks > Create
     - Enable DHCP server (first ending in 100, third 101, forth 254)
@@ -12,11 +12,11 @@ In order to SSH between machines, you must:
 Then each machine will need to have a static IP. This can be seen with:
   - `ifconfig -a`
 
-## Arch Linux
+### Arch Linux
 
 - Run `sh ~/init.sh` to trigger `dhcpcd` which will automatically pick one
 
-## Ubuntu Server 14.x
+### Ubuntu Server 14.x
 
 - `eth0` is the NAT adapter
 - `eth1` is the "Host-only Adapter"
@@ -39,7 +39,7 @@ iface eth1 inet static
 
 - `sudo reboot`
 
-## Ubuntu Server 18.x
+### Ubuntu Server 18.x
 
 - `enp0s3` is the NAT adapter
 - `enp0s8` is the "Host-only Adapter"
@@ -61,8 +61,20 @@ network:
 - `sudo netplan apply`
 - `reboot`
 
-## Debugging
+### Debugging
 
 - Use `ping IP_ADDRESS` from the host, and once working, from the VMs
 - Use `ipconfig` in Windows and `ifconfig -a` in linux
 - Make sure NAT adapter is the first one
+
+## SSH between laptops, same network
+
+These steps worked, but not all may be necessary
+
+- Create a 'Bidged Network Adapter', but not the first one
+- Choose the default one
+- Run `dhcpcd`
+- Wait a couple of minutes
+- Run `ifconfig -a` inside the guest to get the IP
+- Start the SSH service
+- SSH into the machine

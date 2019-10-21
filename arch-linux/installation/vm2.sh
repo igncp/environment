@@ -7,7 +7,8 @@ pacman -S git --noconfirm
 echo "Set a new password for root:"
 passwd
 pacman -S grub --noconfirm
-grub-install --target=i386-pc /dev/sda
+# Before it was: grub-install --target=i386-pc /dev/sda
+grub-install /dev/sda
 grub-mkconfig -o /boot/grub/grub.cfg
 useradd igncp -m
 echo "Set a new password for igncp:"
@@ -21,7 +22,7 @@ mkdir -p /project
 usermod -G vboxsf -a igncp
 chown igncp /project
 rm /root/start.sh
-pacman -S --noconfirm vim
+pacman -S --noconfirm vim dhcpcd
 sed -i 's|#en_US\.UTF|en_US.UTF|' /etc/locale.gen
 locale-gen
 localectl set-locale LANG=en_US.UTF-8

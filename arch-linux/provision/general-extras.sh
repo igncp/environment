@@ -2,7 +2,6 @@
 
 set -e
 
-install_pacman_package 'net-tools' netstat
 install_pacman_package at
 install_pacman_package ctags
 install_pacman_package feh # image previews

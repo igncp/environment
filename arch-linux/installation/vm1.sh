@@ -2,6 +2,9 @@
 
 set -e
 
+# Download Virtual Box
+  # On Mac, currently it needs to be v5.x
+  # https://www.virtualbox.org/wiki/Download_Old_Builds
 # Download Arch Linux ISO image
 # Create new Virtual Box image
   # VDI > Dynamically Allocated > Choose dir and Size
