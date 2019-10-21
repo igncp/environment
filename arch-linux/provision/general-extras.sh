@@ -124,4 +124,12 @@ fi
 # for gng2 key generation: sudo rngd -r /dev/urandom
 install_pacman_package rng-tools rngd
 
+cat >> ~/.bash_aliases <<"EOF"
+TimeManualSet() {
+  sudo systemctl stop systemd-timesyncd.service
+  sudo timedatectl set-time "$1" # "yyyy-MM-DD HH:MM:SS"
+}
+alias TimeManualUnset='sudo systemctl restart systemd-timesyncd.service'
+EOF
+
 # general-extras END
