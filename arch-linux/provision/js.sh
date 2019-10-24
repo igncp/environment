@@ -89,6 +89,7 @@ install_vim_package ternjs/tern_for_vim "cd ~/.vim/bundle/tern_for_vim; npm i"
 install_vim_package flowtype/vim-flow
 install_vim_package jelera/vim-javascript-syntax "sh /tmp/clean-vim-js-syntax.sh"
 install_vim_package samuelsimoes/vim-jsx-utils
+install_vim_package posva/vim-vue
 
 cat >> ~/.vimrc <<"EOF"
 " quick console.log (maybe used by typescript later on)
@@ -106,10 +107,10 @@ cat >> ~/.vimrc <<"EOF"
   autocmd FileType javascript nnoremap <silent> <buffer> gb :TernDef<CR><Paste>
 
 " run eslint or prettier over file
-  autocmd filetype javascript :exe "nnoremap <silent> <leader>kb :!eslint_d --fix %<cr>:e<cr>"
-  autocmd filetype javascript :exe "nnoremap <silent> <leader>kB :!./node_modules/.bin/prettier --write %<cr>:e<cr>"
-  autocmd filetype javascript :exe "nnoremap <silent> <c-a> :update<cr>:!eslint_d --fix %<cr>:e<cr>"
-  autocmd filetype javascript :exe "inoremap <silent> <c-a> <c-c>:update<cr>:!eslint_d --fix %<cr>:e<cr>"
+  autocmd filetype javascript,vue :exe "nnoremap <silent> <leader>kb :!eslint_d --fix %<cr>:e<cr>"
+  autocmd filetype javascript,vue :exe "nnoremap <silent> <leader>kB :!./node_modules/.bin/prettier --write %<cr>:e<cr>"
+  autocmd filetype javascript,vue :exe "nnoremap <silent> <c-a> :update<cr>:!eslint_d --fix %<cr>:e<cr>"
+  autocmd filetype javascript,vue :exe "inoremap <silent> <c-a> <c-c>:update<cr>:!eslint_d --fix %<cr>:e<cr>"
   autocmd filetype html :exe "nnoremap <silent> <leader>kB :!./node_modules/.bin/prettier --write %<cr>:e<cr>"
   " --tab-width 4 is for BitBucket lists
   autocmd filetype markdown :exe "nnoremap <silent> <leader>kB :!./node_modules/.bin/prettier --write --tab-width 4 %<cr>:e<cr>"
