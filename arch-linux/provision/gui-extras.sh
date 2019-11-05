@@ -44,4 +44,36 @@ if ! xhost >& /dev/null && [ -z "$SSH_CLIENT" ] && [ -z "$SSH_TTY" ]; then
 fi
 EOF
 
+# Keys handling (for host)
+  # For Brightness: update intel_backlight with the correct card
+  sudo chown igncp /sys/class/backlight/intel_backlight/brightness
+  cat > /home/igncp/change_brightness.sh <<"EOF"
+  echo $(("$(cat /sys/class/backlight/intel_backlight/brightness)" + "$1")) | tee /sys/class/backlight/intel_backlight/brightness
+EOF
+  install_pacman_package xbindkeys
+  cat > ~/.xbindkeysrc <<"EOF"
+# Docs
+# - https://wiki.archlinux.org/index.php/Xbindkeys#Installation
+# - https://wiki.archlinux.org/index.php/Backlight#xbacklight
+# refresh:
+# - stop (all) xbindkeys process(es)
+# - run: xbindkeys
+# get key name: xbindkeys --multikey
+# generate default config: xbindkeys -d > ~/.xbindkeysrc
+
+# specify a mouse button
+"amixer set Master 10%-"
+  XF86AudioLowerVolume
+
+"amixer set Master 10%+"
+  XF86AudioRaiseVolume
+
+# https://unix.stackexchange.com/a/385116
+"sh /home/igncp/change_brightness.sh 3000"
+  XF86MonBrightnessUp
+
+"sh /home/igncp/change_brightness.sh -3000"
+  XF86MonBrightnessDown
+EOF
+
 # gui-extras END
