@@ -9,7 +9,7 @@
 #
 # Please see http://i3wm.org/docs/userguide.html for a complete reference!
 
-exec "setxkbmap gb"
+# exec "setxkbmap gb"
 
 # Mod1 = alt (aka meta)
 # Mod2 = number lock
@@ -165,4 +165,4 @@ client.urgent           #900000 #900000 #ffffff #900000
 
 # These profiles are configured under the Terminator provision
 # bindsym $mod+f workspace 6; exec /usr/bin/terminator -p ttyd
-bindsym $mod+g workspace 5; exec /usr/bin/terminator -p system-info
+bindsym $mod+g workspace 5; exec /usr/bin/conky --config=/home/igncp/.conky.conf & exit
