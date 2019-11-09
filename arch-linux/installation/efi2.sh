@@ -7,7 +7,7 @@ pacman -S --noconfirm git vim
 pacman -S --noconfirm openssh ufw
 pacman -S --noconfirm dialog wpa_supplicant # for wifi-menu
 
-pacman -S --noconfirm grub efibootmgr dosfstools os-prober mtools linux
+pacman -S --noconfirm grub efibootmgr dosfstools os-prober mtools
 mkdir /boot/EFI
 mount /dev/sda1 /boot/EFI
 grub-install --target=x86_64-efi --bootloader-id=grub_uefi --recheck

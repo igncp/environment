@@ -23,7 +23,7 @@
 mkfs.fat -F32 /dev/sda1
 mkfs.ext4 /dev/sda2
 mount /dev/sda2 /mnt
-pacstrap /mnt base
+pacstrap /mnt base linux linux-firmware
 genfstab -U -p /mnt >> /mnt/etc/fstab
 curl -o /mnt/root/start.sh \
   -L https://raw.githubusercontent.com/igncp/environment/master/arch-linux/installation/efi2.sh
