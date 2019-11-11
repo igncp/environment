@@ -20,6 +20,9 @@ sudo systemctl enable systemd-timesyncd.service
 sudo systemctl enable sshd.service
 sudo systemctl enable dhcpcd.service
 
-echo "last steps:"
+echo "## Last steps:"
 echo "# Enable network with netctl"
+echo "# Update locale"
+echo "sudo vim /etc/locale.gen # uncomment one"
+echo "sudo locale-gen"
 echo "rm /home/igncp/first_after_install.sh"

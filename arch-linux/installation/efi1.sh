@@ -13,12 +13,10 @@
 #   1. Create a new one of type EFI System (500M).
 #   1. Create a new one of type Linux Filesystem: Rest of partition size
 #   1. Write
-# 1. `reboot now`
 # 1. `wifi-menu`
 # 1. Wait a few seconds
 # 1. `ping archlinux.org`
-# @TODO: Move this script to personal website
-# 1. `curl -L https://raw.githubusercontent.com/igncp/environment/master/arch-linux/installation/efi1.sh | bash`
+# 1. curl -L ignaciocarbajo.com/arch-efi
 
 mkfs.fat -F32 /dev/sda1
 mkfs.ext4 /dev/sda2
