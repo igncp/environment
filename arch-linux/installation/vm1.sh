@@ -18,17 +18,13 @@ set -e
   # Menu > Devices > Shared Folders > Settings > Add new
   # Check: Make Permanent, Auto-Mount
   # Used names (2): project and vm-shared
-# Run:
-  # @TODO: Improve partitions for performance
-  # fdisk /dev/sda # create new partition: n p <enter> <enter> <enter> w
-  # curl -L ignaciocarbajo.com/arch-vm
-  mkfs.ext4 /dev/sda1
-  mount /dev/sda1 /mnt
-  pacstrap /mnt base
-  genfstab -U /mnt >> /mnt/etc/fstab
-  curl -o /mnt/root/start.sh \
-    -L https://raw.githubusercontent.com/igncp/environment/master/arch-linux/installation/vm2.sh
-  echo ""
-  echo "Next steps:"
-  echo "arch-chroot /mnt"
-  echo "sh root/start.sh"
+
+# Run these commands manually depending on your needs
+
+cfdisk /dev/sda # create new partition: n p <enter> <enter> <enter> w
+mkfs.ext4 /dev/sda1
+mount /dev/sda1 /mnt # should be the partition to contain the system
+pacstrap /mnt base linux linux-firmware
+genfstab -U /mnt >> /mnt/etc/fstab
+arch-chroot /mnt
+curl -L ignaciocarbajo.com/arch-vm | bash # vm2.sh
