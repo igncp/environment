@@ -83,4 +83,8 @@ EOF
 # libre office
   install_pacman_package libreoffice-still libreoffice
 
+install_from_aur skypeforlinux https://aur.archlinux.org/skypeforlinux-stable-bin.git
+
+install_from_aur slack https://aur.archlinux.org/slack-desktop.git
+
 # gui-extras END
