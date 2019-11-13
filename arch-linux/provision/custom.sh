@@ -30,6 +30,26 @@ VMUpload() { rsync --delete -rh -e ssh "${@:3}" "$1" IP_OF_VM:/home/igncp/vms/"$
 VMDownload() { rsync --delete -rh -e ssh "${@:3}" IP_OF_VM:"$1" /home/igncp/vms/"$2"; }
 EOF
 
+# For encrypted devices
+cat >> ~/.bash_aliases <<"EOF"
+MountEncryptedDeviceNAME() {
+  CRYPT_NAME="CRYPT_NAME"
+  DEVICE_PATH="/dev/sdaX"
+  MOUNT_POINT="/home/igncp/POINT"
+
+  sudo cryptsetup open "$DEVICE_PATH" "$CRYPT_NAME"
+  mkdir -p "$MOUNT_POINT"
+  sudo mount "/dev/mapper/$CRYPT_NAME" "$MOUNT_POINT"
+}
+UmountEncryptedDeviceNAME() {
+  CRYPT_NAME="CRYPT_NAME"
+  MOUNT_POINT="/home/igncp/POINT"
+
+  sudo umount "$MOUNT_POINT"
+  sudo cryptsetup close "$CRYPT_NAME"
+}
+EOF
+
 # ttyd
   if ! type ttyd > /dev/null 2>&1 ; then
     wget https://github.com/tsl0922/ttyd/releases/download/1.4.4/ttyd_linux.x86_64

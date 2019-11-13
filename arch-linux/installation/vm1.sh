@@ -27,4 +27,6 @@ mount /dev/sda1 /mnt # should be the partition to contain the system
 pacstrap /mnt base linux linux-firmware
 genfstab -U /mnt >> /mnt/etc/fstab
 arch-chroot /mnt
+
 curl -L ignaciocarbajo.com/arch-vm | bash # vm2.sh
+sh /tmp/vm.sh

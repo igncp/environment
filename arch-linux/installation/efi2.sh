@@ -23,8 +23,6 @@ passwd igncp
 pacman -S sudo --noconfirm
 echo "igncp ALL=(ALL) ALL" >> /etc/sudoers
 
-rm /root/start.sh
-
 curl -o /home/igncp/first_after_install.sh \
   -L https://raw.githubusercontent.com/igncp/environment/master/arch-linux/installation/efi3.sh
 chown igncp /home/igncp/first_after_install.sh

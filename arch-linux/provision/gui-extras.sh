@@ -75,73 +75,12 @@ EOF
 "sh /home/igncp/change_brightness.sh -3000"
   XF86MonBrightnessDown
 EOF
-
-# conky (for host)
-  install_pacman_package conky
-  cat >> ~/.bash_aliases <<"EOF"
-alias Conky='conky --config=/home/igncp/.conky.conf & exit'
+  cat >> ~/.bashrc <<"EOF"
+IS_XBINDKEYS_RUNNING="$(ps aux | grep xbindkeys | grep -v grep)"
+if [ -z "$IS_XBINDKEYS_RUNNING" ]; then xbindkeys; fi
 EOF
-  cat > ~/.conky.conf <<"EOF"
-conky.config = {
-    alignment = 'top_left',
-    background = false,
-    border_width = 1,
-    cpu_avg_samples = 2,
-    default_color = 'white',
-    default_outline_color = 'white',
-    default_shade_color = 'white',
-    double_buffer = true,
-    draw_borders = false,
-    draw_graph_borders = true,
-    draw_outline = false,
-    draw_shades = false,
-    extra_newline = false,
-    font = 'DejaVu Sans Mono:size=20',
-    gap_x = 60,
-    gap_y = 60,
-    minimum_height = 720,
-    minimum_width = 1280,
-    net_avg_samples = 2,
-    no_buffers = true,
-    out_to_console = false,
-    out_to_ncurses = false,
-    out_to_stderr = false,
-    out_to_x = true,
-    own_window = true,
-    own_window_class = 'Conky',
-    own_window_type = override,
-    show_graph_range = false,
-    show_graph_scale = false,
-    stippled_borders = 0,
-    update_interval = 1.0,
-    uppercase = false,
-    use_spacer = 'none',
-    use_xft = true,
-}
 
-conky.text = [[
-${color grey}$color ${scroll 1920 $sysname $nodename $kernel $machine}
-$hr
-${color grey}${uid_name 1000}
-${color grey}Uptime:$color $uptime
-${voffset 10}
-${font Open Sans Light:pixelsize=80}Battery: ${battery_percent BAT0}%${font}
-${battery_bar}
-${voffset 10}
-${color grey}Frequency (in MHz):$color $freq
-${color grey}Frequency (in GHz):$color $freq_g
-${color grey}RAM Usage:$color $mem/$memmax - $memperc% ${membar 4}
-${color grey}Swap Usage:$color $swap/$swapmax - $swapperc% ${swapbar 4}
-${color grey}CPU Usage:$color $cpu% ${cpubar 4}
-${color grey}Processes:$color $processes  ${color grey}Running:$color $running_processes
-$hr
-${color grey}File systems:
- / $color${fs_used /}/${fs_size /} ${fs_bar 6 /}
-${color grey}Networking:
-Up:$color ${upspeed} ${color grey} - Down:$color ${downspeed}
-$hr
-${font Open Sans Light:pixelsize=60}${time %H:%M:%S} - ${time %d.%m.%Y}${font}
-]]
-EOF
+# libre office
+  install_pacman_package libreoffice-still libreoffice
 
 # gui-extras END
