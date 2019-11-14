@@ -24,6 +24,11 @@ cfdisk /dev/sda # Manage partitions
     # The swap is added later in efi2.sh via file
   # Write
 
+# Basic encryption steps (will clear disk)
+  # cryptsetup -y -v luksFormat /dev/sdaX
+  # cryptsetup open /dev/sdaX CRYPTNAME
+  # mkfs.ext4 /dev/mapper/CRYPTNAME
+
 wifi-menu # Wait a few seconds
 ping archlinux.org # to confirm that network works
 mkfs.fat -F32 /dev/sda1 # Boot partition

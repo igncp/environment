@@ -25,7 +25,8 @@
 
 - Try to find the BIOS key by selectively pressing less keys once it works
 - If possible and Linux, setup Live USB with latest version
-- Setup what happens when clicking the switch button or when closing the lid
+- Setup what happens when clicking the power button or when closing the lid
+- If Linux, setup special function keys like increase / decrease brightness
 - Install password manager
 - Synchronize browser
 - Install cloud storage
@@ -33,5 +34,5 @@
 - Create VMs
 - Add screen lock
 - Install GUI messaging apps
-- Login into usual websites: code, email, notes, planning
+- Login into usual websites: code, email, social, notes, planning
 - Setup different input methods (languages)

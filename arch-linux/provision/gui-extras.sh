@@ -83,8 +83,39 @@ EOF
 # libre office
   install_pacman_package libreoffice-still libreoffice
 
-install_from_aur skypeforlinux https://aur.archlinux.org/skypeforlinux-stable-bin.git
+# skype
+  install_from_aur skypeforlinux https://aur.archlinux.org/skypeforlinux-stable-bin.git
 
-install_from_aur slack https://aur.archlinux.org/slack-desktop.git
+# slack
+  install_from_aur slack https://aur.archlinux.org/slack-desktop.git
+
+# dropbox
+  # Once installed, run `dropbox` and a URL will be opened
+  if ! type entr > /dev/null 2>&1 ; then
+    # https://aur.archlinux.org/packages/dropbox/#pinned-676597
+    gpg --recv-keys 1C61A2656FB57B7E4DE0F4C1FC918B335044912E
+  fi
+  install_from_aur dropbox https://aur.archlinux.org/dropbox.git
+
+# japanese IME using uim
+  if [ ! -f ~/.check-files/japanese ]; then
+    sudo pacman -S --noconfirm adobe-source-han-sans-jp-fonts otf-ipafont
+    sudo pacman -S --noconfirm uim anthy
+    mkdir -p ~/.check-files && touch ~/.check-files/japanese
+  fi
+  cp ~/.xinitrc /tmp/.xinitrc
+  cat > ~/.xinitrc <<"EOF"
+uim-toolbar-gtk &
+export GTK_IM_MODULE='uim'
+export QT_IM_MODULE='uim'
+uim-xim &
+export XMODIFIERS='@im=uim'
+EOF
+  cat /tmp/.xinitrc >> ~/.xinitrc
+  # Preferences: uim-pref-gtk
+  # Toolbar: uim-toolbar-gtk &
+  # Choose: Authu (UTF-8)
+  # Switch key: Shift+Space
+  # Can remove toolbar and still use
 
 # gui-extras END
