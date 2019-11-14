@@ -36,3 +36,4 @@
 - Install GUI messaging apps
 - Login into usual websites: code, email, social, notes, planning
 - Setup different input methods (languages)
+- Install video player software

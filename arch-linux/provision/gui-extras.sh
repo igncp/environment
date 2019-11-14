@@ -118,4 +118,7 @@ EOF
   # Switch key: Shift+Space
   # Can remove toolbar and still use
 
+# vlc
+  install_pacman_package vlc
+
 # gui-extras END
