@@ -224,6 +224,14 @@ ${font Open Sans Light:pixelsize=60}${time %H:%M:%S} - ${time %d.%m.%Y}${font}
 ]]
 EOF
 
+if [ -f ~/.check-files/lightdm ]; then
+  sudo pacman -S --noconfirm lightdm lightdm-gtk-greeter
+
+  sudo systemctl enable lightdm.service
+
+  mkdir -p ~/.check-files && touch ~/.check-files/lightdm
+fi
+
 # gui-extras available
 
 # gui END

@@ -91,7 +91,7 @@ EOF
 
 # dropbox
   # Once installed, run `dropbox` and a URL will be opened
-  if ! type entr > /dev/null 2>&1 ; then
+  if ! type dropbox > /dev/null 2>&1 ; then
     # https://aur.archlinux.org/packages/dropbox/#pinned-676597
     gpg --recv-keys 1C61A2656FB57B7E4DE0F4C1FC918B335044912E
   fi
