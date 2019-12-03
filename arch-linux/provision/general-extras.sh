@@ -131,4 +131,12 @@ TimeManualSet() {
 alias TimeManualUnset='sudo systemctl restart systemd-timesyncd.service'
 EOF
 
+# network
+  cat >> ~/.bash_aliases <<"EOF"
+WifiConnect() {
+  sudo wifi-menu
+  sudo dhcpcd
+}
+EOF
+
 # general-extras END
