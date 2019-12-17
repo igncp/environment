@@ -139,4 +139,12 @@ WifiConnect() {
 }
 EOF
 
+# navi
+  if ! type navi > /dev/null 2>&1 ; then
+    sudo rm -rf /usr/lib/navi
+    sudo git clone --depth 1 https://github.com/denisidoro/navi /usr/lib/navi
+    sudo chown -R igncp:igncp /usr/lib/navi
+    (cd /usr/lib/navi && sudo make install)
+  fi
+
 # general-extras END
