@@ -121,4 +121,12 @@ EOF
 # vlc
   install_pacman_package vlc
 
+# Copy USB files to Android
+  install_pacman_package android-file-transfer
+
+# EBooks
+  install_pacman_package calibre
+  # After installing it may need:
+  # sudo pacman -Syu ; sudo pip3 install neovim
+
 # gui-extras END
