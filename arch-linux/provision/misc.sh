@@ -189,4 +189,15 @@ EOF
   # sudo vim /etc/pacman.conf # Uncomment the 4 multilib libes
   # sudo pacman -Sy
 
+# Automatic clone - Update for different providers / directories
+  clone_dev_github_repo() {
+    DIR_NAME="/home/igncp/dev/$1";
+
+    if [ ! -d "$DIR_NAME" ]; then
+      git clone "git@github.com:igncp/$1.git" "$DIR_NAME"
+    fi
+  }
+
+  clone_dev_github_repo environment
+
 # misc END
