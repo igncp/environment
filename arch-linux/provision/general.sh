@@ -1,4 +1,3 @@
-
 #!/usr/bin/env bash
 
 # set -o xtrace # displays commands, helpful for debugging errors
@@ -236,18 +235,20 @@ alias Tmux="tmux attach; exit"
 alias Visudo='sudo env EDITOR=vim visudo'
 alias Xargs='xargs -I{}'
 
-alias GitStatus='git status -u'
-GitOpenStatusFiles() { $EDITOR -p $(git status --porcelain $1 | grep -vE "^ D" | sed s/^...//); }
 GitAdd() { git add -A $@; GitStatus; }
+GitOpenStatusFiles() { $EDITOR -p $(git status --porcelain $1 | grep -vE "^ D" | sed s/^...//); }
+GitPrintRemoteUrl() { git config --get "remote.${1:-origin}.url"; }
 GitResetLastCommit() { LAST_COMMIT_MESSAGE=$(git log -1 --pretty=%B); \
   git reset --soft HEAD^; git add -A .; git commit -m "$LAST_COMMIT_MESSAGE"; }
+
 alias GitAddAll='GitAdd .'
+alias GitBranchOrder='git branch -r --sort=creatordate --format "%(creatordate:relative);%(committername);%(refname:lstrip=-1)" | grep -v ";HEAD$" | column -s ";" -t | tac | less'
 alias GitCommit='git commit -m'
 alias GitEditorCommit='git commit -v'
-alias GitRebaseResetAuthorContinue='git commit --amend --reset-author --no-edit; git rebase --continue'
-alias GitBranchOrder='git branch -r --sort=creatordate --format "%(creatordate:relative);%(committername);%(refname:lstrip=-1)" | grep -v ";HEAD$" | column -s ";" -t | tac | less'
 alias GitListConflictFiles='git diff --name-only --diff-filter=U'
 alias GitListFilesChangedHistory='git log --pretty=format: --name-only | sort | uniq -c | sort -rg' # can add `--author Foo`, --since, or remove files
+alias GitRebaseResetAuthorContinue='git commit --amend --reset-author --no-edit; git rebase --continue'
+alias GitStatus='git status -u'
 
 alias RemoveAnsiColors="sed 's/\x1b\[[0-9;]*m//g'"
 alias Ports='sudo netstat -tulanp'

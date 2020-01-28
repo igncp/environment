@@ -21,7 +21,6 @@ pacman -S --noconfirm virtualbox-guest-modules-arch virtualbox-guest-utils
 mkdir -p /project
 usermod -G vboxsf -a igncp
 chown igncp /project
-rm /root/start.sh
 pacman -S --noconfirm vim dhcpcd
 sed -i 's|#en_US\.UTF|en_US.UTF|' /etc/locale.gen
 locale-gen

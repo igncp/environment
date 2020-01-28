@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-FIND_CMD='find . -type f -name "*.js*" ! -path "*node_modules*" ! -path "*.git*" ! -path "*coverage*" ! -path "*.happypack*" ! -path "*.snap"'
+FIND_CMD='find . -type f \( -name "*.js*" -o -name "*.ts*" \) ! -path "*node_modules*" ! -path "*.git*" ! -path "*coverage*" ! -path "*.happypack*" ! -path "*.snap"'
 
 SRC_FILE=$(eval "$FIND_CMD ! -name '*.test.*'" |
   fzf --height 100% --border --ansi --header "Please choose the source file to check the coverage" |

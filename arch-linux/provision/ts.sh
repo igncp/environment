@@ -9,8 +9,8 @@ install_vim_package quramy/tsuquyomi
 install_vim_package leafgarland/typescript-vim
 
 cat >> ~/.vimrc <<"EOF"
-  autocmd FileType typescript :exe ConsoleMappingA
-  autocmd FileType typescript :exe ConsoleMappingB
+autocmd FileType typescript :exe ConsoleMappingA
+autocmd FileType typescript :exe ConsoleMappingB
 
 " run tslint and prettier over file
   autocmd filetype typescript :exe "nnoremap <silent> <leader>kb :!tslint --fix %<cr>:e<cr>"
@@ -20,9 +20,12 @@ cat >> ~/.vimrc <<"EOF"
 
 " ts linters
   let g:syntastic_typescript_checkers = ['tsuquyomi', 'tslint']
-EOF
 
-cat >> ~/.vimrc <<"EOF"
+augroup SyntaxSettings
+  autocmd!
+  autocmd BufNewFile,BufRead *.tsx set filetype=typescript
+augroup END
+
 let g:tsuquyomi_disable_default_mappings = 1
 let g:tsuquyomi_disable_quickfix = 1
 let g:ale_linters_ignore = {'typescript': ['eslint']}
