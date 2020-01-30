@@ -40,7 +40,7 @@ let mapleader = "\<Space>"
   vnoremap <leader>R :<bs><bs><bs><bs><bs>%s/\%V\C<c-r>"//g<left><left>
 
 " replace with selection. To replace by current register, use <c-r>0 to paste it
-  vmap <leader>g "ay:%s/\C<c-r>a//g<left><left>
+  vmap <leader>g "ay:%s/\C\<<c-r>a\>//g<left><left>
 
 " fill the search bar with current text and allow to edit it
   vnoremap <leader>G y/<c-r>"
