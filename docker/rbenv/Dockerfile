@@ -13,13 +13,14 @@ RUN apt-get update \
 USER ubuntu
 WORKDIR /home/ubuntu
 
+ENV PATH="$PATH:/home/ubuntu/.rbenv/bin"
+ENV PATH="$PATH:/home/ubuntu/.rbenv/shims"
+
 # The rbenv install step takes several minutes
 RUN (curl -sL https://github.com/rbenv/rbenv-installer/raw/master/bin/rbenv-installer | bash -) \
   && sudo apt-get update \
   && sudo apt-get install -y libssl-dev zlib1g-dev build-essential g++ \
-  && export PATH="$PATH:/home/ubuntu/.rbenv/bin" \
-  && echo 'export PATH="$PATH:/home/ubuntu/.rbenv/bin"' >> /home/ubuntu/.bashrc \
   && echo 'eval "$(rbenv init -)"' >> /home/ubuntu/.bashrc \
+  && eval "$(rbenv init -)" \
   && rbenv install --verbose 2.7.0 \
-  && rbenv global 2.7.0 \
-  && eval "$(rbenv init -)"
+  && rbenv global 2.7.0
