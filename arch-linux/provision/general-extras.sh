@@ -147,4 +147,43 @@ EOF
     (cd /usr/lib/navi && sudo make install)
   fi
 
+# tmux task
+
+cat > /project/scripts/custom/tmux-task.sh <<"EOF"
+#!/usr/bin/env bash
+
+echo "$@" > /tmp/pane-cmd-content.sh
+
+cat > /tmp/tmux-pane-cmd.sh <<"E2OF"
+#!/usr/bin/env bash
+
+rm -rf /tmp/pane-cmd-success
+
+printf "Running ... '$(head /tmp/pane-cmd-content.sh)' in '$(basename $(pwd))'"
+
+(sh /tmp/pane-cmd-content.sh && touch /tmp/pane-cmd-success) > /tmp/tmux-pane-cmd-log.txt 2>&1
+
+if [ ! -f /tmp/pane-cmd-success ]; then
+  HEIGHT=$(($(tmux display-message -p '#{client_height}') / 2))
+
+  # tmux select-pane -t 1
+  tmux resize-pane -t 1 -y "$HEIGHT"
+
+  sleep 1
+
+  less /tmp/tmux-pane-cmd-log.txt
+fi
+E2OF
+
+tmux \
+  split-window "sh /tmp/tmux-pane-cmd.sh" \
+  && tmux resize-pane -t 1 -y 1 \
+  && tmux select-pane -t 0at > /project/scripts/custom/tmux-task.sh <<"EOF"
+EOF
+
+cat >> ~/.bash_aliases <<"EOF"
+alias TmuxCmdLog='less /tmp/tmux-pane-cmd-log.txt'
+alias TmuxTask='sh /project/scripts/custom/tmux-task.sh'
+EOF
+
 # general-extras END
