@@ -356,6 +356,7 @@ n() {
 alias nn='nvim -n -u NONE -i NONE -N' # nvim without vimrc, plugins, syntax, etc
 alias nb='nvim -n -u ~/.base-vimrc -i NONE -N' # nvim with base vimrc
 alias NVimSession='nvim -S ~/mysession.vim'
+alias XargsNvim='xargs nvim -p'
 alias CheckVimSnippets='nvim ~/.vim/bundle/vim-snippets/snippets'
 # https://vi.stackexchange.com/a/277
 NProfile() {

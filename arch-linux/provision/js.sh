@@ -3,33 +3,19 @@
 # Dependencies:
 # - after: vim-extra.sh
 
-source_nodenv() {
-  export PATH=$PATH:/home/$USER/.nodenv/bin
-  eval "$(nodenv init -)"
-}
+NODE_VERSION=10.16.0
 
-NODE_VERSION=10.13.0
-if [ ! -d ~/.nodenv ]; then
-  echo "setup node with nodenv"
-  cd ~
-  git clone https://github.com/nodenv/nodenv.git ~/.nodenv && cd ~/.nodenv && src/configure && make -C src && \
-    source_nodenv && \
-    if [ ! -d $(nodenv root)/plugins/node-build ]; then git clone https://github.com/nodenv/node-build.git $(nodenv root)/plugins/node-build; fi && \
-    if [ ! -d $(nodenv root)/plugins/nodenv-update ]; then git clone https://github.com/nodenv/nodenv-update.git "$(nodenv root)"/plugins/nodenv-update; fi && \
-    if [ ! -d .nodenv/versions/$NODE_VERSION ]; then nodenv install $NODE_VERSION; fi && \
-    nodenv global $NODE_VERSION
-  cd ~
+if ! type node > /dev/null 2>&1 ; then
+  (asdf plugin add nodejs || true)
+  bash ~/.asdf/plugins/nodejs/bin/import-release-team-keyring
+
+  asdf install nodejs "$NODE_VERSION"
+  asdf global nodejs "$NODE_VERSION"
 fi
-
-if ! type nodenv > /dev/null 2>&1 ; then
-  source_nodenv
-fi
-
-CURRENT_NODE_VERSION=$(nodenv version | ag -o '^.+? ' | sed 's| ||g')
 
 install_node_modules() {
   for MODULE_NAME in "$@"; do
-    if [ ! -d ~/.nodenv/versions/$CURRENT_NODE_VERSION/lib/node_modules/$MODULE_NAME ]; then
+    if [ ! -d "$HOME/.asdf/installs/nodejs/$NODE_VERSION/.npm/lib/node_modules/$MODULE_NAME" ]; then
       echo "doing: npm i -g $MODULE_NAME"
       npm i -g $MODULE_NAME
     fi
@@ -37,13 +23,6 @@ install_node_modules() {
 }
 
 install_node_modules http-server diff-so-fancy eslint babel-eslint cloc eslint_d
-
-cat >> ~/.bashrc <<"EOF"
-export PATH=$PATH:/home/$USER/.nodenv/bin
-export PATH=$PATH:/home/$USER/.nodenv/versions/10.13.0/bin/
-eval "$(nodenv init -)"
-source <(npm completion)
-EOF
 
 cat >> ~/.vimrc <<"EOF"
   function! DisplayPrettyFlowType()
@@ -95,8 +74,8 @@ cat >> ~/.vimrc <<"EOF"
 " quick console.log (maybe used by typescript later on)
   let ConsoleMappingA="vnoremap <leader>kk yOconsole.log('a', a);<C-c>6hvpvi'yf'lllvp"
   let ConsoleMappingB='nnoremap <leader>kj iconsole.log("LOG POINT - <C-r>=fake#gen("nonsense")<CR>");<cr><c-c>'
-  autocmd filetype javascript :exe ConsoleMappingA
-  autocmd filetype javascript :exe ConsoleMappingB
+  autocmd filetype javascript,vue :exe ConsoleMappingA
+  autocmd filetype javascript,vue :exe ConsoleMappingB
 
 " grep same indent props
   execute 'nnoremap <leader>ki ^hv0y' . g:GrepCF_fn . ' -o "^<c-r>"\w*:"<left>'
@@ -253,6 +232,18 @@ let g:ale_linters = {
 let g:ale_fixers = {
 \'javascript': ['eslint'],
 \}
+EOF
+
+install_vim_package prettier/vim-prettier
+
+install_node_modules diff2html-cli
+
+cat >> ~/.bash_aliases <<"EOF"
+Diff2Html() {
+  mkdir -p /tmp/diff-result
+  # Serve is only useful in VM where there is no automatic open
+  diff2html -F /tmp/diff-result/index.html "$@" && Serve /tmp/diff-result
+}
 EOF
 
 # js-extras available

@@ -37,6 +37,10 @@ EOF
   mkdir -p /home/igncp/.config/Code/User
   cp /project/provision/vscode-settings.json /home/igncp/.config/Code/User/settings.json
 
+  cat >> ~/.bash_aliases <<"EOF"
+alias VSCodePickSettings='cp /home/igncp/.config/Code/User/settings.json /project/provision/vscode-settings.json'
+EOF
+
 # Automatic X server
   cat >> ~/.bashrc <<"EOF"
 if ! xhost >& /dev/null && [ -z "$SSH_CLIENT" ] && [ -z "$SSH_TTY" ]; then

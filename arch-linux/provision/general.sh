@@ -240,6 +240,16 @@ GitOpenStatusFiles() { $EDITOR -p $(git status --porcelain $1 | grep -vE "^ D" |
 GitPrintRemoteUrl() { git config --get "remote.${1:-origin}.url"; }
 GitResetLastCommit() { LAST_COMMIT_MESSAGE=$(git log -1 --pretty=%B); \
   git reset --soft HEAD^; git add -A .; git commit -m "$LAST_COMMIT_MESSAGE"; }
+GitFilesByAuthor() {
+  DEFAULT_AUTHOR="$(git config user.name)"; AUTHOR="${1:-$DEFAULT_AUTHOR}"
+  git log \
+    --pretty="%H" \
+    --author="$AUTHOR" \
+  | while read commit_hash; do \
+      git show --oneline --name-only $commit_hash | tail -n+2; \
+    done \
+  | sort | uniq | grep .
+}
 
 alias GitAddAll='GitAdd .'
 alias GitBranchOrder='git branch -r --sort=creatordate --format "%(creatordate:relative);%(committername);%(refname:lstrip=-1)" | grep -v ";HEAD$" | column -s ";" -t | tac | less'
@@ -428,5 +438,17 @@ UpdateProvisionRepo() {
   cd -
 }
 EOF
+
+SOURCE_ASDF='. $HOME/.asdf/asdf.sh'
+SOURCE_ASDF_COMPLETION='. $HOME/.asdf/completions/asdf.bash'
+
+echo -e "\n$SOURCE_ASDF" >> ~/.bashrc
+echo -e "\n$SOURCE_ASDF_COMPLETION" >> ~/.bashrc
+
+if ! type asdf > /dev/null 2>&1 ; then
+  git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.7.6
+  eval "$SOURCE_ASDF"
+  eval "$SOURCE_ASDF_COMPLETION"
+fi
 
 # general END

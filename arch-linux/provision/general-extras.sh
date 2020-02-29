@@ -178,7 +178,7 @@ E2OF
 tmux \
   split-window "sh /tmp/tmux-pane-cmd.sh" \
   && tmux resize-pane -t 1 -y 1 \
-  && tmux select-pane -t 0at > /project/scripts/custom/tmux-task.sh <<"EOF"
+  && tmux select-pane -t 0
 EOF
 
 cat >> ~/.bash_aliases <<"EOF"
