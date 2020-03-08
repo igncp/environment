@@ -268,7 +268,9 @@ alias ChModRX='chmod -R +x'
 EOF
 
 cat > ~/.inputrc <<"EOF"
+set mark-symlinked-directories on
 set show-all-if-ambiguous on
+
 C-h:unix-filename-rubout
 C-k:edit-and-execute-command
 EOF

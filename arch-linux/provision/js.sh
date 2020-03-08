@@ -87,12 +87,13 @@ cat >> ~/.vimrc <<"EOF"
 
 " run eslint or prettier over file
   autocmd filetype javascript,vue :exe "nnoremap <silent> <leader>kb :!eslint_d --fix %<cr>:e<cr>"
-  autocmd filetype javascript,vue :exe "nnoremap <silent> <leader>kB :!./node_modules/.bin/prettier --write %<cr>:e<cr>"
+  autocmd filetype javascript,vue :exe "nnoremap <silent> <leader>kB :!npx prettier --write %<cr>:e<cr>"
+  autocmd filetype javascript,vue :exe "vnoremap <silent> <leader>kB :'<,'>PrettierFragment<cr>"
   autocmd filetype javascript,vue :exe "nnoremap <silent> <c-a> :update<cr>:!eslint_d --fix %<cr>:e<cr>"
   autocmd filetype javascript,vue :exe "inoremap <silent> <c-a> <c-c>:update<cr>:!eslint_d --fix %<cr>:e<cr>"
-  autocmd filetype html :exe "nnoremap <silent> <leader>kB :!./node_modules/.bin/prettier --write %<cr>:e<cr>"
+  autocmd filetype html :exe "nnoremap <silent> <leader>kB :!npx prettier --write %<cr>:e<cr>"
   " --tab-width 4 is for BitBucket lists
-  autocmd filetype markdown :exe "nnoremap <silent> <leader>kB :!./node_modules/.bin/prettier --write --tab-width 4 %<cr>:e<cr>"
+  autocmd filetype markdown :exe "nnoremap <silent> <leader>kB :!npx prettier --write --tab-width 4 %<cr>:e<cr>"
 
 " js linters
   let g:syntastic_javascript_checkers = ['flow', 'eslint']

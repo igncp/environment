@@ -32,6 +32,10 @@ if [ ! -f ~/.check-files/neovim ] ; then
 fi
 git config --global core.editor nvim # faster than sed
 
+# Temporally removed plugins to try to minimize them
+# install_vim_package vim-airline/vim-airline
+# install_vim_package vim-airline/vim-airline-themes
+
 install_vim_package airblade/vim-gitgutter
 install_vim_package airblade/vim-rooter
 install_vim_package andrewRadev/splitjoin.vim # gS, gJ
@@ -67,8 +71,6 @@ install_vim_package tpope/vim-eunuch
 install_vim_package tpope/vim-fugitive
 install_vim_package tpope/vim-repeat
 install_vim_package tpope/vim-surround
-install_vim_package vim-airline/vim-airline
-install_vim_package vim-airline/vim-airline-themes
 install_vim_package vim-ruby/vim-ruby
 install_vim_package vim-scripts/AnsiEsc.vim
 install_vim_package w0rp/ale
@@ -182,6 +184,9 @@ endfunction
   let g:ale_set_quickfix = 0
   nmap <silent> e[ <Plug>(ale_previous_wrap)
   nmap <silent> e]  <Plug>(ale_next_wrap)
+
+  " Disable ALE when slow
+  " let g:ale_linters_explicit = 1
 
 " useful maps for macros
   nnoremap <leader>d @d
