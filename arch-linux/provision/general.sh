@@ -188,6 +188,7 @@ EOF
 
 cat > ~/.bash_aliases <<"EOF"
 alias ag="ag --hidden"
+alias agg='ag --hidden --ignore node_modules --ignore .git'
 alias cp="cp -r"
 alias l="less -i"
 alias ll="ls -lah --color=always"
@@ -200,12 +201,15 @@ AgN() { ag -l "$@" | xargs "$EDITOR" -p; }
 DisplayFilesConcatenated(){ xargs tail -n +1 | sed "s|==>|\n\n\n\n\n$1==>|; s|<==|<==\n|" | $EDITOR -; }
 Diff() { diff --color=always "$@" | less -r; }
 Find() { find "$@" ! -path "*node_modules*" ! -path "*.git*"; }
-GetProcessUsingPort(){ fuser $1/tcp; }
+GetProcessUsingPort(){ fuser $1/tcp 2>&1 | grep -oE '[0-9]*$'; }
+GetProcessUsingPortAndKill(){ fuser $1/tcp 2>&1 | grep -oE '[0-9]*$' | xargs -I {} kill {}; }
 MkdirCd(){ mkdir -p $1; cd $1; }
 Popd(){ popd -n +"$1" > /dev/null; cd --; }
 VisudoUser() { sudo env EDITOR=vim visudo -f /etc/sudoers.d/$1; }
 ViDir() { find $@ | vidir -; }
 RandomLine() { sort -R "$1" | head -n 1; }
+TopMemory() { ps aux | sort -nr -k 4 | head "$@" | sed -e 'G;G;'; } # e.g. TopMemory -n 5 | less -S
+TopCPU()    { ps aux | sort -nr -k 3 | head "$@" | sed -e 'G;G;'; } # e.g. TopCPU -n 5 | less -S
 KillProcessUsingPort() { PID=$(lsof -i "tcp:$1" | awk 'NR!=1 {print $2}'); \
   if [[ ! -z $PID ]]; then echo "killing $PID"; sudo kill -9 $PID; fi; }
 SshGeneratePemPublicKey() { FILE=$1; ssh-keygen -f "$FILE" -e -m pem; }
@@ -236,6 +240,13 @@ alias Visudo='sudo env EDITOR=vim visudo'
 alias Xargs='xargs -I{}'
 
 GitAdd() { git add -A $@; GitStatus; }
+GitFilesAddedDiff() {
+  GitAddAll 2>&1 > /dev/null;
+  R_PATH="$(git rev-parse --show-toplevel)";
+  git diff --name-only --diff-filter=A "$@" | sed 's|^|'"$R_PATH"'/|';
+}
+GitDiff() { git diff --color $@; }
+GitsShow() { git show --color $@; }
 GitOpenStatusFiles() { $EDITOR -p $(git status --porcelain $1 | grep -vE "^ D" | sed s/^...//); }
 GitPrintRemoteUrl() { git config --get "remote.${1:-origin}.url"; }
 GitResetLastCommit() { LAST_COMMIT_MESSAGE=$(git log -1 --pretty=%B); \
@@ -252,7 +263,7 @@ GitFilesByAuthor() {
 }
 
 alias GitAddAll='GitAdd .'
-alias GitBranchOrder='git branch -r --sort=creatordate --format "%(creatordate:relative);%(committername);%(refname:lstrip=-1)" | grep -v ";HEAD$" | column -s ";" -t | tac | less'
+alias GitBranchOrder='git branch -r --sort=creatordate --format "%(creatordate:relative);%(committername);%(refname)" | sed "s|refs/remotes/origin/||" | grep -v ";HEAD$" | column -s ";" -t | tac | less'
 alias GitCommit='git commit -m'
 alias GitEditorCommit='git commit -v'
 alias GitListConflictFiles='git diff --name-only --diff-filter=U'
@@ -263,7 +274,6 @@ alias GitStatus='git status -u'
 alias RemoveAnsiColors="sed 's/\x1b\[[0-9;]*m//g'"
 alias Ports='sudo netstat -tulanp'
 alias Headers='curl -I' # e.g. Headers google.com
-alias TopMemory='ps auxf | sort -nr -k 4 | head' # e.g. TopMemory 10
 alias ChModRX='chmod -R +x'
 EOF
 
@@ -322,6 +332,10 @@ install_tmux_plugin tmux-plugins/tpm
 install_tmux_plugin tmux-plugins/tmux-resurrect
 install_tmux_plugin tmux-plugins/tmux-sessionist
 install_tmux_plugin tmux-plugins/tmux-copycat
+
+if [ -f /tmp/tmux_bootstrap_bindings.txt ]; then
+  cat /tmp/tmux_bootstrap_bindings.txt >> ~/.tmux.conf
+fi
 
 if [ ! -f ~/.tmux-completion.sh ]; then
   wget https://raw.githubusercontent.com/Bash-it/bash-it/4e730eb9a15c/completion/available/tmux.completion.bash \

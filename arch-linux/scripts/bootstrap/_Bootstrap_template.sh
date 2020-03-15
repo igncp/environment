@@ -2,6 +2,13 @@
 
 sudo pkill -f tmux
 
+cat >> /tmp/tmux_bootstrap_bindings.txt <<"EOF"
+bind 1 split-window 'tmux switch-client -t SESSION_NAME_A'
+bind 2 split-window 'tmux switch-client -t SESSION_NAME_B'
+EOF
+
+provision.sh
+
 tmux \
   new-session -s SESSION_NAME \; \
   send-keys 'cd ~/PATH/TO/FILE; clear' C-m \; \

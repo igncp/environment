@@ -1,8 +1,13 @@
 # ruby START
 
-install_pacman_package ruby
+if ! type ruby > /dev/null 2>&1 ; then
+  asdf plugin add ruby
 
-echo $'export PATH="$(ruby -e \'print Gem.user_dir\')/bin:$PATH"' >> ~/.bashrc
+  # depends on libssl-dev
+  asdf install ruby 2.7.0
+
+  asdf global ruby 2.7.0
+fi
 
 install_gems() {
   GEMS_LIST=$(gem list)

@@ -43,8 +43,6 @@ EOF
 
 cat >> ~/.bash_aliases <<"EOF"
 Serve() { PORT="$2"; http-server -c-1 -p "${PORT:=9000}" $1; }
-GitDiff() { git diff --color $@; }
-GitsShow() { git show --color $@; }
 # Fix coloring of mocha in some windows terminals
 alias Mocha="./node_modules/.bin/mocha -c $@ > >(perl -pe 's/\x1b\[90m/\x1b[92m/g') 2> >(perl -pe 's/\x1b\[90m/\x1b[92m/g' 1>&2)"
 EOF
@@ -245,6 +243,12 @@ Diff2Html() {
   # Serve is only useful in VM where there is no automatic open
   diff2html -F /tmp/diff-result/index.html "$@" && Serve /tmp/diff-result
 }
+EOF
+
+cat >> ~/.vimrc <<"EOF"
+autocmd filetype vue :exe 'nnoremap <leader>jres /<script <cr>zz'
+autocmd filetype vue :exe 'nnoremap <leader>jreS /<\/script<cr>zz'
+autocmd filetype vue :exe 'nnoremap <leader>jrec /^export.*class<cr>zz'
 EOF
 
 # js-extras available

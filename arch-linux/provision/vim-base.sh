@@ -41,10 +41,11 @@ let mapleader = "\<Space>"
 
 " replace with selection. To replace by current register, use <c-r>0 to paste it
   vmap <leader>g "ay:%s/\C\<<c-r>a\>//g<left><left>
+  vmap <leader>G "ay:%s/\C<c-r>a//g<left><left>
 
 " fill the search bar with current text and allow to edit it
-  vnoremap <leader>G y/<c-r>"
-  nnoremap <leader>G viwy/<c-r>"
+  vnoremap <leader>/ y/<c-r>"
+  nnoremap <leader>/ viwy/<c-r>"
 
 " prevent saving backup files
   set nobackup
@@ -181,9 +182,9 @@ nnoremap <leader>zK v%<del>
 nnoremap <leader>zf :let @" = expand("%")<cr>
 vnoremap ; :<c-u>
 nnoremap <leader>zx 'mzz
-nnoremap <leader>/ :call setreg("f", "<c-r>=expand("%:t:r")<cr>")<cr>
-nnoremap <leader>? :call setreg("g", "<c-r>=expand("%:p")<cr>")<cr>
-nnoremap ' :<C-u>marks<CR>:normal! `
+nnoremap <leader>jrw :call setreg("f", "<c-r>=expand("%:t:r")<cr>")<cr>
+nnoremap <leader>jrW :call setreg("g", "<c-r>=expand("%:p")<cr>")<cr>
+" nnoremap ' :<C-u>marks<CR>:normal! `
 
 " use always the same cursor
   set guicursor=

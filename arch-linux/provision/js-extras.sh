@@ -55,4 +55,14 @@ EOF
     endif
 EOF
 
+cat >> ~/.gitconfig <<"EOF"
+[merge]
+  tool = vimdiff
+[mergetool]
+  prompt = true
+  keepBackup = false
+[mergetool "vimdiff"]
+  cmd = nvim -p $MERGED $LOCAL $BASE $REMOTE
+EOF
+
 # js-extras END
