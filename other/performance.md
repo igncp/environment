@@ -2,16 +2,23 @@
 
 General steps for improving the machine performance while developing.
 
+- https://wiki.archlinux.org/title/improving_performance
+
 ## VM
 
 - 3/4 Memory
 - CPUs 3/4 (when using 4/4 it is much slower beacuse host doesn't have enough)
-- Fixed size disk
-- Stop docker, lightdm and other services when not using them
+- Fixed size disk, check SSD option, can be small and add multiple
+- Stop docker, containerd, lightdm and other services when not using them
 - Upgrade to NodeJS 12 (and other libraries) when possible
 - No secondary display if possible
-- `cat 'vm.swappiness=10' >> /etc/sysctl.conf` if enough memory
+- Update swappiness for OS
 - Restart VM to check if there are memory leaks
+
+## VM and Host
+
+- Add `linux.sh` provision when in Linux to tune performance
+- Check OS specific code to improve performance (e.g. `arch-misc.sh`)
 
 ## Mac
 
