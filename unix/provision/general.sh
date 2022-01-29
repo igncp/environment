@@ -87,6 +87,11 @@ fi
 EOF
 
 cat >> ~/.bashrc <<"EOF"
+if [ -z "$PS1" ]; then
+  # prompt var is not set, so this is *not* an interactive shell (e.g. using scp)
+  return
+fi
+
 # move from word to word. avoid ctrl+b to use in tmux
   bind '"\C-g":vi-fWord' > /dev/null 2>&1
   bind '"\C-f":vi-bWord' > /dev/null 2>&1

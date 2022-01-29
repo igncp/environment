@@ -10,6 +10,7 @@ const items = [
   ["python", "unix/provision/python.sh"],
   ["vim-base", "unix/provision/vim-base.sh"],
   ["vim-extra", "unix/provision/vim-extra.sh"],
+  ["vim-root", "unix/provision/vim-root.sh"],
   ["js", "unix/provision/js.sh"],
   ["ts", "unix/provision/ts.sh"],
   ["gui-base", "unix/provision/gui-base.sh"],

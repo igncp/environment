@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Check nodes/vbox.md
+# Check notes/vbox.md
 # Download Ubuntu Server: https://ubuntu.com/download/server
 
 # Follow wizard of Ubuntu Server

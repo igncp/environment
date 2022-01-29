@@ -58,7 +58,7 @@ install_system_package iotop
 # echo '    dd if=/dev/zero of=/swapfile bs=1G count=10 status=progress # RAM size + 2G, in this case 10 GB Swap'
 # echo "    chmod 600 /swapfile ; mkswap /swapfile ; swapon /swapfile ; echo '/swapfile none swap sw 0 0' | tee -a /etc/fstab"
 
-if [ ! -f ~/.check-files/oomd ]; then
+if [ ! -f ~/.check-files/oomd ] && [ -n "$(systemctl list-units --full -all | grep systemd-oomd)" ]; then
   sudo systemctl enable --now systemd-oomd
   touch ~/.check-files/oomd
 fi

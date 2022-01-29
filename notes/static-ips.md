@@ -1,25 +1,18 @@
-### Arch Linux
+#### Ubuntu Server 20.x
 
-- Trigger `dhcpcd` which will automatically pick one
-
-#### Ubuntu Server 18.x
-
-- `enp0s3` is the NAT adapter
-- `enp0s8` is the "Host-only Adapter"
-- The `enp0s8` must have allocated a static IP.
-
-- `sudo vim /etc/netplan/50-cloud-init.yaml`
+- `sudo vim /etc/netplan/00-installer-config.yaml`
 
 ```
 network:
   ethernets:
     enp0s3:
-      dhcp4: true
-    enp0s8:
-      addresses: [IP_ADDRESS/MASK]
+      addresses: [192.168.1.X/24]
+      gateway4: 192.168.1.1
+      nameservers:
+        addresses: [4.2.2.2, 8.8.8.8]
   version: 2
 ```
 
-- And example for `[IP_ADDRESS/MASK]` is `192.168.111.103/24`
+- Update the `X` in addresses with the desired number
 - `sudo netplan apply`
 - `reboot`

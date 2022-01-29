@@ -3,7 +3,10 @@
 # remove the second instance of this function
 install_system_package() {
   PACKAGE="$1"
-  if [[ ! -z "$2" ]]; then CMD_CHECK="$2"; else CMD_CHECK="$1"; fi
+  if [ "$PACKAGE" == "task" ]; then
+    PACKAGE="taskwarrior"
+  fi
+  if [ ! -z "$2" ]; then CMD_CHECK="$2"; else CMD_CHECK="$1"; fi
   if ! type "$CMD_CHECK" > /dev/null 2>&1 ; then
     echo "doing: sudo apt-get install -y $PACKAGE"
     sudo apt-get install -y "$PACKAGE"
@@ -38,14 +41,19 @@ if [ -f /etc/sudoers.d/0pwfeedback ]; then
 fi
 
 if ! type nvim > /dev/null 2>&1 ; then
-  echo "in order to use autocomplete, use the latest version of neovim"
-  echo "download the release from: https://github.com/neovim/neovim/releases/"
-  exit 1
+  cd /tmp && rm -rf nvim-linux* && wget https://github.com/neovim/neovim/releases/download/v0.6.1/nvim-linux64.tar.gz
+  tar -xf ./nvim-linux64.tar.gz
+  mv nvim-linux64 ~/nvim
+  cd ~
 fi
+cat >> ~/.shellrc <<"EOF"
+export PATH="$PATH:/home/igncp/nvim/bin"
+EOF
 
 cat >> ~/.shell_aliases <<"EOF"
 alias SystemListInstalled='apt list --installed'
 alias AptLog='tail -f /var/log/apt/term.log'
+alias UbuntuVersion='lsb_release -a'
 EOF
 
 install_system_package python3

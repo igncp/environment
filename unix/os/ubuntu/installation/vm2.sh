@@ -5,8 +5,8 @@ set -e
 if [ ! -d ~/environment ]; then
   echo 'Send via rsync the environment directory'
   # From the host:
-    # rsync -rhv ./ igncp@192.168.1.X:/home/igncp/environment
-    # ssh igncp@192.168.1.X
+    # rsync -rhv ./ 192.168.1.X:/home/igncp/environment
+    # ssh 192.168.1.X
   exit 1
 fi
 
@@ -23,11 +23,18 @@ cp environment/unix/scripts/create_vim_snippets.sh ~/project/scripts
 
 cp environment/unix/provision/top.sh project/provision/provision.sh
 cat environment/unix/os/ubuntu/provision/ubuntu-beginning.sh >> project/provision/provision.sh
+cat environment/unix/provision/zsh.sh >> project/provision/provision.sh
+
 cat environment/unix/provision/general.sh >> project/provision/provision.sh
+cp environment/unix/configuration-files/htoprc project/provision/
+
 cat environment/unix/provision/linux.sh >> project/provision/provision.sh
 cat environment/unix/provision/python.sh >> project/provision/provision.sh
 cat environment/unix/provision/vim-base.sh >> project/provision/provision.sh
-cat environment/unix/os/ubuntu/provision/ubuntu-end.sh >> project/provision/provision.sh
+cat environment/unix/provision/vim-extra.sh >> project/provision/provision.sh
+cat environment/unix/provision/vim-root.sh >> project/provision/provision.sh
+cat environment/unix/provision/js.sh >> project/provision/provision.sh
+cat environment/unix/provision/ts.sh >> project/provision/provision.sh
 cat environment/unix/provision/custom.sh >> project/provision/provision.sh
 
 sed -i 's|___SSH___|[VM]|' project/provision/provision.sh
