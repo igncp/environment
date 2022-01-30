@@ -8,11 +8,8 @@ sudo chown igncp /tmp/.vimrc
 cat >> /tmp/.vimrc <<"EOF"
 syntax off
 set number
-
-" sort indent block. requires nmap. requires 2 plugins.
-  nmap <leader>kl vii:sort<cr>
-  " same as above but for objects without comma in the last item
-  nmap <leader>hj  movii<c-c>A,<c-c>_vii:sort<cr>vii<c-c>A<backspace><c-c>`o
+filetype plugin indent on
+let mapleader = "\<Space>"
 EOF
 sudo mv /tmp/.vimrc /root/.vimrc
 

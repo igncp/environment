@@ -1,4 +1,15 @@
-#### Ubuntu Server 20.x
+## Arch Linux - Via netctl
+
+- Copying the one in `/etc/netctl/examples` with static IP
+- It involves adding the following:
+```
+IP=static
+Address='192.168.1.55/24'
+Gateway='192.168.1.1'
+DNS=('192.168.1.1')
+```
+
+## Ubuntu Server 20.x
 
 - `sudo vim /etc/netplan/00-installer-config.yaml`
 

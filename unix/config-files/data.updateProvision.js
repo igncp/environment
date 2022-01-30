@@ -1,4 +1,4 @@
-const PROVISION_DIR = process.env.HOME +  "/project/provision";
+const PROVISION_DIR = process.env.HOME + "/project/provision";
 const ENVIRONMENT_DIR = process.env.HOME + "/development/environment";
 
 const items = [

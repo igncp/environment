@@ -44,6 +44,7 @@ cat environment/unix/provision/linux.sh >> project/provision/provision.sh
 cat environment/unix/provision/python.sh >> project/provision/provision.sh
 cat environment/unix/provision/vim-base.sh >> project/provision/provision.sh
 cat environment/unix/provision/vim-extra.sh >> project/provision/provision.sh
+cat environment/unix/provision/vim-root.sh >> project/provision/provision.sh
 cat environment/unix/provision/js.sh >> project/provision/provision.sh
 cat environment/unix/provision/ts.sh >> project/provision/provision.sh
 
@@ -61,6 +62,9 @@ cat environment/unix/os/arch-linux/provision/arch-gui.sh >> project/provision/pr
 cp environment/unix/config-files/espanso.yml project/provision/
 cat environment/unix/provision/docker.sh >> project/provision/provision.sh
 cat environment/unix/provision/custom.sh >> project/provision/provision.sh
+
+cp environment/unix/config-files/data.updateProvision.js project/provision
+cp environment/unix/config-files/updateProvision.js project/provision
 
 sed -i 's|___SSH___|[VM]|' project/provision/provision.sh
 

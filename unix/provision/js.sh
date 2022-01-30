@@ -73,6 +73,91 @@ sed -i 's|import public|import from type public|' ~/.vim/bundle/vim-javascript-s
 echo "Changed vim javascript syntax"
 EOF
 
+# coc
+
+## ctrl-w,ctrl-p: move to floating window
+## To remove an extension after installed, comment lines and then:
+##    :CocUninstall coc-name
+
+install_vim_package neoclide/coc.nvim
+install_vim_package josa42/coc-sh
+install_vim_package neoclide/coc-snippets
+
+cat >> ~/.vimrc <<"EOF"
+function! GetColorInCursor()
+  echo synIDattr(synID(line("."), col("."), 1), "name")
+endfunction
+
+let g:coc_global_extensions = []
+nnoremap <silent> K :call CocAction('doHover')<CR>
+
+inoremap <expr> <c-j> pumvisible() ? "<C-n>" :"j"
+inoremap <expr> <c-k> pumvisible() ? "<C-p>" : "k"
+
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gr <Plug>(coc-references)
+nmap <silent> g[ <Plug>(coc-diagnostic-prev)
+nmap <silent> g] <Plug>(coc-diagnostic-next)
+nmap <leader>do <Plug>(coc-codeaction)
+" nmap <leader>rn <Plug>(coc-rename)
+nnoremap <silent> <leader>dd :<C-u>CocList diagnostics<cr>
+
+nnoremap <leader>dc :CocEnable<cr>
+nnoremap <leader>dC :CocDisable<cr>
+nnoremap <leader>ds :CocCommand<cr>
+nnoremap <leader>da :CocAction<cr>
+
+call add(g:coc_global_extensions, 'coc-snippets')
+call add(g:coc_global_extensions, 'coc-sh')
+
+imap <C-l> <Plug>(coc-snippets-expand-jump)
+smap <C-l> <Plug>(coc-snippets-expand-jump)
+let g:coc_snippet_next = '<c-d>'
+
+nnoremap <nowait><expr> <C-g> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+nnoremap <nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+inoremap <nowait><expr> <C-g> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
+inoremap <nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
+EOF
+
+cat >> ~/.vim/colors.vim <<"EOF"
+highlight CocErrorFloat ctermfg=black
+highlight CocFloating ctermbg=lightcyan
+highlight CocInfoFloat ctermfg=black
+highlight CocWarningFloat ctermfg=black
+highlight CocHighlightRead ctermfg=black ctermbg=none
+highlight CocHighlightWrite ctermfg=black ctermbg=none
+highlight CocErrorLine ctermfg=black ctermbg=none
+highlight CocWarningLine ctermfg=black ctermbg=none
+highlight CocInfoLine ctermfg=black ctermbg=none
+highlight CocErrorSign ctermfg=white ctermbg=darkred
+highlight CocWarningSign ctermfg=white ctermbg=darkred
+EOF
+
+cat > "$HOME"/.vim/coc-settings.json <<"EOF"
+{
+  "diagnostic.enableHighlightLineNumber": false,
+  "coc.preferences.jumpCommand": "tab drop",
+  "coc.preferences.enableFloatHighlight": false,
+  "coc.preferences.colorSupport": false,
+  "snippets.userSnippetsDirectory": "/home/igncp/.vim-snippets",
+  "diagnostic.errorSign": "E",
+  "diagnostic.warningSign": "W",
+  "diagnostic.infoSign": "I",
+  "list.normalMappings": {
+    "<C-j>": "command:CocNext",
+    "<C-k>": "command:CocPrev"
+  }
+}
+EOF
+
+install_vim_package neoclide/coc-json
+
+cat >> ~/.vimrc <<"EOF"
+call add(g:coc_global_extensions, 'coc-json')
+EOF
+
 # not installing vim-javascript as it doesn't work with rainbow
 install_vim_package ternjs/tern_for_vim "cd ~/.vim/bundle/tern_for_vim; npm i"
 install_vim_package jelera/vim-javascript-syntax "sh /tmp/clean-vim-js-syntax.sh"

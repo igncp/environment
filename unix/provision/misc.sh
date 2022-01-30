@@ -162,7 +162,7 @@ EOF
 
 # Automatic clone - Update for different providers / directories
   clone_dev_github_repo() {
-    DIR_NAME="$HOME/dev/$1";
+    DIR_NAME="$HOME/development/$1";
 
     if [ ! -d "$DIR_NAME" ]; then
       git clone "git@github.com:igncp/$1.git" "$DIR_NAME"

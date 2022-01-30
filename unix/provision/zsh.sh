@@ -24,7 +24,7 @@ echo "alias ShellChangeToZsh='chsh -s /bin/zsh; exit'" >> ~/.shellrc
 
 cat >> ~/.zshrc <<"EOF"
 # https://upload.wikimedia.org/wikipedia/commons/1/15/Xterm_256color_chart.svg
-export ZSH="/home/igncp/.oh-my-zsh"
+export ZSH="$HOME/.oh-my-zsh"
 CASE_SENSITIVE="true"
 DISABLE_UNTRACKED_FILES_DIRTY="true"
 plugins=(
@@ -90,7 +90,7 @@ backward-kill-dir () {
 zle -N backward-kill-dir
 bindkey '\C-h' backward-kill-dir
 
-SOCKET_NAME="$(echo $TMUX | cut -f1 -d',' | sed 's|/tmp/tmux-1000/||')"
+SOCKET_NAME="$(echo $TMUX | cut -f1 -d',' | sed -E 's|(/private)?/tmp/tmux-[0-9]*/||')"
 if [[ "$SOCKET_NAME" == "default" ]]; then
   tmux set-option status off
 else
