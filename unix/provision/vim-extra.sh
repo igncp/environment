@@ -22,7 +22,7 @@ fi
 install_system_package neovim nvim
 
 if [ ! -f ~/.check-files/neovim ] ; then
-  pip install neovim
+  pip3 install neovim
   mkdir -p ~/.config
   rm -rf ~/.config/nvim
   rm -rf ~/.vim/init.vim

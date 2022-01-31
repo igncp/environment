@@ -141,7 +141,7 @@ cat > "$HOME"/.vim/coc-settings.json <<"EOF"
   "coc.preferences.jumpCommand": "tab drop",
   "coc.preferences.enableFloatHighlight": false,
   "coc.preferences.colorSupport": false,
-  "snippets.userSnippetsDirectory": "/home/igncp/.vim-snippets",
+  "snippets.userSnippetsDirectory": "$HOME/.vim-snippets",
   "diagnostic.errorSign": "E",
   "diagnostic.warningSign": "W",
   "diagnostic.infoSign": "I",

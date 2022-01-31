@@ -46,9 +46,6 @@ if [ ! -f /usr/local/bin/git-extras ]; then
   cd ~ && rm -rf ~/.git-extras
 fi
 
-# to mute/unmute in GUI press M
-install_system_package alsa-utils alsamixer # for audio
-
 install_system_package curl
 install_system_package jq
 install_system_package lsof
@@ -65,7 +62,9 @@ install_system_package wget
 install_system_package zip
 
 if [ ! -f ~/.git-prompt ]; then
-  sudo pacman -S --noconfirm bash-completion
+  if type pacman > /dev/null 2>&1 ; then
+    sudo pacman -S --noconfirm bash-completion
+  fi
   curl -o ~/.git-prompt \
     https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh
 fi
@@ -488,22 +487,6 @@ if ! type asdf > /dev/null 2>&1 ; then
   eval "$SOURCE_ASDF_COMPLETION"
 fi
 
-# ufw
-install_system_package ufw
-if [[ ! -z $(sudo ufw status | grep inactive) ]]; then
-  sudo ufw enable
-fi
-cat >> ~/.shell_aliases <<"EOF"
-# if server / VM
-  # sudo ufw limit ssh
-# else-if host
-  # sudo ufw deny ssh
-  # sudo ufw insert 1 limit from LOCAL_IP to any port 22
-  # sudo ufw limit from 10.0.2.2 to any port 22 # for VM
-# sudo ufw logging medium # /var/log/ufw.log
-alias UfwStatus='sudo ufw status numbered' # numbered is useful for insert / delete
-EOF
-
 echo 'complete -cf sudo' >> ~/.bashrc
 
 install_system_package task
@@ -511,10 +494,15 @@ cat > ~/.taskrc <<"EOF"
 # This file is generated from ~/project/provision/provision.sh
 # Use the command 'task show' to see all defaults and overrides
 data.location=~/.task
-include /usr/share/doc/task/rc/no-color.theme
 alias.d=done
 alias.a=add
 EOF
+if [ "$PROVISION_OS" == "LINUX" ]; then
+  echo 'include /usr/share/doc/task/rc/no-color.theme' >> ~/.taskrc
+elif [ "$PROVISION_OS" == "MAC" ]; then
+  THEME_PATH=$(find /opt/homebrew/Cellar/task -type f -name "no-color.theme")
+  echo "include $THEME_PATH" >> ~/.taskrc
+fi
 echo 'source "$HOME"/.oh-my-zsh/plugins/taskwarrior/taskwarrior.plugin.zsh' >> ~/.zshrc
 
 # only for bash, zsh uses `dirs -v` and `cd -[tab]`
@@ -524,7 +512,28 @@ if [ ! -f ~/.acd_func ]; then
 fi
 echo 'source "$HOME"/.acd_func' >> ~/.bashrc
 
-echo 'LANG=en_US.UTF-8' > /tmp/locale.conf
-sudo mv /tmp/locale.conf /etc/locale.conf
+if [ "$PROVISION_OS" == "LINUX" ]; then
+  echo 'LANG=en_US.UTF-8' > /tmp/locale.conf
+  sudo mv /tmp/locale.conf /etc/locale.conf
+
+  # to mute/unmute in GUI press M
+  install_system_package alsa-utils alsamixer # for audio
+
+  # ufw
+  install_system_package ufw
+  if [[ ! -z $(sudo ufw status | grep inactive) ]]; then
+    sudo ufw enable
+  fi
+  cat >> ~/.shell_aliases <<"EOF"
+  # if server / VM
+    # sudo ufw limit ssh
+  # else-if host
+    # sudo ufw deny ssh
+    # sudo ufw insert 1 limit from LOCAL_IP to any port 22
+    # sudo ufw limit from 10.0.2.2 to any port 22 # for VM
+  # sudo ufw logging medium # /var/log/ufw.log
+  alias UfwStatus='sudo ufw status numbered' # numbered is useful for insert / delete
+EOF
+fi
 
 # general END

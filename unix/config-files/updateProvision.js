@@ -74,6 +74,7 @@ fs.readdirSync(PROVISION_DIR)
 
 const diffCommand =
   "diff --color=always -r " +
+  "-x data.updateProvision.js " + // this file should be different per project
   PROVISION_DIR +
   " " +
   TMP_PROVISION_DIR +
