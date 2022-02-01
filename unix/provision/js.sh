@@ -42,27 +42,8 @@ fi
 
 install_node_modules http-server yarn
 
-cat >> ~/.vimrc <<"EOF"
-  function! DisplayPrettyFlowType()
-    let column = col('.')
-    let line = line(".")
-    let file_path = expand('%:p')
-
-    let cmd = "printf '// @flow\n\n' > /tmp/flow_type.js"
-    let cmd = cmd . "; ./node_modules/.bin/flow type-at-pos  " . file_path . " " . line . " " . column . " >> /tmp/flow_type.js"
-    let cmd = cmd . "; sed -i '$ d' /tmp/flow_type.js"
-    let cmd = cmd . "; prettier --write --parser flow /tmp/flow_type.js"
-
-    call system(cmd)
-    execute ":-tabnew /tmp/flow_type.js"
-  endfunction
-  autocmd filetype javascript :exe 'nnoremap <leader>jd :call DisplayPrettyFlowType()<cr>'
-EOF
-
 cat >> ~/.shell_aliases <<"EOF"
 Serve() { PORT="$2"; http-server -c-1 -p "${PORT:=9000}" $1; }
-# Fix coloring of mocha in some windows terminals
-alias Mocha="./node_modules/.bin/mocha -c $@ > >(perl -pe 's/\x1b\[90m/\x1b[92m/g') 2> >(perl -pe 's/\x1b\[90m/\x1b[92m/g' 1>&2)"
 EOF
 
 cat > /tmp/clean-vim-js-syntax.sh <<"EOF"
@@ -159,9 +140,7 @@ call add(g:coc_global_extensions, 'coc-json')
 EOF
 
 # not installing vim-javascript as it doesn't work with rainbow
-install_vim_package ternjs/tern_for_vim "cd ~/.vim/bundle/tern_for_vim; npm i"
 install_vim_package jelera/vim-javascript-syntax "sh /tmp/clean-vim-js-syntax.sh"
-install_vim_package samuelsimoes/vim-jsx-utils
 
 cat >> ~/.vimrc <<"EOF"
 " quick console.log (maybe used by typescript later on)
@@ -171,11 +150,6 @@ cat >> ~/.vimrc <<"EOF"
   autocmd filetype javascript,typescript,typescriptreact,vue :exe ConsoleMappingA
   autocmd filetype javascript,typescript,typescriptreact,vue :exe ConsoleMappingB
   autocmd filetype javascript,typescript,typescriptreact,vue :exe ConsoleMappingC
-
-" term
-  let g:tern_show_argument_hints = 'on_hold'
-  let g:tern_show_signature_in_pum = 1
-  autocmd FileType javascript nnoremap <silent> <buffer> gb :TernDef<CR><Paste>
 
 " run eslint or prettier over file
   autocmd filetype javascript,vue :exe "nnoremap <silent> <leader>kb :!eslint_d --fix %<cr>:e<cr>"
@@ -188,9 +162,6 @@ cat >> ~/.vimrc <<"EOF"
   autocmd filetype markdown :exe "nnoremap <silent> <leader>kB :!npx prettier --write --tab-width 4 %<cr>:e<cr>"
   autocmd filetype json :exe "nnoremap <silent> <leader>kB :!npx prettier --write --tab-width 2 %<cr>:e<cr>"
 
-" jsx utils
-  nnoremap <leader>jx $i<left><space><cr><up><c-c>:call JSXEachAttributeInLine()<CR>:%s/\s\+$<CR><c-o>A<cr><tab>
-
 " convert json to jsonc to allow comments
   augroup JsonToJsonc
     autocmd! FileType json set filetype=jsonc
@@ -202,24 +173,7 @@ cat >> ~/.shell_aliases <<"EOF"
 alias MarkdownTocRecursive='find . ! -path "*.git*" -name "*.md" | xargs -I {} markdown-toc -i {}'
 EOF
 
-cat > ~/.js-tests-specs-displayer <<"EOF"
-#!/usr/bin/env bash
-# this file is generated from the provision, changes will be overwritten
-FILE_PATH="$1";
-source ~/hhighlighter/h.sh
-export H_COLORS_FG="green,blue"
-grep -E "it\(|describe\(|it\.only\(|describe\.only\(" "$FILE_PATH" |
-  sed -r 's| \(\) => \{$||; s| async$||; s|,$||; s|it.only\(|it(|; s|describe\.only\(|describe(|' |
-  h "describe\((.*)" "it\((.*)" |
-  sed "s|describe(||; s|it(||;" > /tmp/tests-specs
-sed -i '1i'"$FILE_PATH\n" /tmp/tests-specs
-echo "" >> /tmp/tests-specs
-less -r /tmp/tests-specs
-EOF
-chmod +x ~/.js-tests-specs-displayer
 cat >> ~/.vimrc <<"EOF"
-  autocmd filetype javascript :exe 'nnoremap <leader>zt :-tabnew\|te ~/.js-tests-specs-displayer <c-r>=expand("%:p")<cr><cr>'
-
   function! ToggleItOnly()
     execute "normal! ?it(\\|it.only(\<cr>\<right>\<right>"
     let current_char = nr2char(strgetchar(getline('.')[col('.') - 1:], 0))
@@ -230,12 +184,10 @@ cat >> ~/.vimrc <<"EOF"
     endif
     execute "normal! \<c-o>"
   endfunction
-  autocmd filetype javascript :exe 'nnoremap <leader>zo :call ToggleItOnly()<cr>'
+  autocmd filetype javascript,typescript,typescriptreact :exe 'nnoremap <leader>zo :call ToggleItOnly()<cr>'
 
   nnoremap <leader>BT :let g:Fast_grep_opts='--exclude-dir="__tests__" --exclude-dir="__integration__" -i'<left>
 EOF
-
-echo "./node_modules/.bin/jest">> ~/.bookmarked-commands
 
 cat >> ~/.vimrc <<"EOF"
 function! g:RunCtrlPWithFilterInNewTab(query)
@@ -253,7 +205,6 @@ add_special_vim_map "ctde" $'? describe(<cr>V$%y$%o<cr><c-c>Vpf(2l' 'test copy d
 add_special_vim_map "eeq" $'iXexpectEqual<c-o>:call feedkeys("<c-l>", "t")<cr>' 'test expect toEqual'
 add_special_vim_map "sjsfun" "v/[^,] {<cr><right>%" "select js function"
 add_special_vim_map "djsfun" "v/[^,] {<cr><right>%d" "cut js function"
-add_special_vim_map "jsjmi" "a.mockImplementation(() => )<left>" "jest mock implementation"
 add_special_vim_map 'tjmvs' 'I<c-right><right><c-c>viwy?describe(<cr>olet <c-c>pa;<c-c><c-o><left>v_<del>' \
   'jest move variable outside of it'
 add_special_vim_map "titr" $'_ciwconst<c-c>/from<cr>ciw= require(<del><c-c>$a)<c-c>V:<c-u>%s/\%V\C;//g<cr>' \
@@ -261,10 +212,7 @@ add_special_vim_map "titr" $'_ciwconst<c-c>/from<cr>ciw= require(<del><c-c>$a)<c
 add_special_vim_map "jimc" "a.mock.calls<c-c>" "jest instert mock calls"
 add_special_vim_map "jimi" "a.mockImplementation(() => )<left>" "jest instert mock implementation"
 add_special_vim_map "jirv" "a.mockReturnValue()<left>" "jest instert mock return value"
-add_special_vim_map "ftmakeexact" $'_f{a\|<c-c><left>%i\|' 'flowtype make exact type'
-add_special_vim_map "ftshowerrors" $':-tabnew\|te flow <c-r>=expand("%")<cr> --color always \| less -r<cr>' 'flowtype display errors'
 add_special_vim_map 'ftcrefuntype' 'viwyi<c-right><left>: <c-c>pviwyO<c-c>Otype <c-c>pa = () => <c-c>4hi' 'typescript create function type'
-add_special_vim_map 'ftcasttoany' 'gvdi()<c-c><left>pa: any<c-c>' 'flowtype cast to any'
 add_special_vim_map "jrct" "gv:<c-u>%s/\%V\C+//ge<cr>:<c-u>%s/\%V\CObject //ge<cr>:<c-u>%s/\%V\CArray //ge<cr>:<c-u>%s/\%V\C\[Fun.*\]/expect.any(Function)/ge<cr>" \
   "jest replace copied text from terminal"
 
@@ -320,16 +268,6 @@ EOF
 
 install_vim_package prettier/vim-prettier
 
-install_node_modules diff2html-cli
-
-cat >> ~/.shell_aliases <<"EOF"
-Diff2Html() {
-  mkdir -p /tmp/diff-result
-  # Serve is only useful in VM where there is no automatic open
-  diff2html -F /tmp/diff-result/index.html "$@" && Serve /tmp/diff-result
-}
-EOF
-
 if [ ! -f ~/.npm-completion ]; then
   npm completion > ~/.npm-completion
 fi
@@ -352,7 +290,6 @@ if [ ! -d ~/.vim/bundle/coc.nvim/node_modules ]; then
 fi
 
 install_vim_package neoclide/coc-html
-install_vim_package iamcco/coc-tailwindcss
 
 cat >> ~/.zshrc <<"EOF"
 export NODE_DISABLE_COLORS=1
@@ -368,7 +305,6 @@ fi
 
 cat >> ~/.vimrc <<"EOF"
 call add(g:coc_global_extensions, 'coc-html')
-call add(g:coc_global_extensions, 'coc-tailwindcss')
 EOF
 
 sed -i '$ d' ~/.vim/coc-settings.json

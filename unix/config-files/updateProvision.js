@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const { execSync } = require("child_process");
 
 const {
   ENVIRONMENT_DIR,
@@ -51,15 +52,17 @@ const TMP_PROVISION_DIR = "/tmp/provision";
 const RESULT_PROVISION = path.join(TMP_PROVISION_DIR, "/provision.sh");
 const DIFF_FILE_PATH = "/tmp/diff_provision.sh";
 
-if (!fs.existsSync(TMP_PROVISION_DIR)) {
-  fs.mkdirSync(TMP_PROVISION_DIR);
+if (fs.existsSync(TMP_PROVISION_DIR)) {
+  execSync("rm -rf " + TMP_PROVISION_DIR);
 }
+
+fs.mkdirSync(TMP_PROVISION_DIR);
 
 fs.writeFileSync(RESULT_PROVISION, provisionFileContent);
 
-const configurationFiles = fs.readdirSync(
-  path.join(ENVIRONMENT_DIR, "/unix/config-files")
-);
+const configurationFiles = fs
+  .readdirSync(path.join(ENVIRONMENT_DIR, "/unix/config-files"))
+  .filter((file) => !file.includes("data.updateProvision.js"));
 
 fs.readdirSync(PROVISION_DIR)
   .filter((file) => {
@@ -74,7 +77,7 @@ fs.readdirSync(PROVISION_DIR)
 
 const diffCommand =
   "diff --color=always -r " +
-  "-x data.updateProvision.js " + // this file should be different per project
+  "-x data.updateProvision.js " +
   PROVISION_DIR +
   " " +
   TMP_PROVISION_DIR +

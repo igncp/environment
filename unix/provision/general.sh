@@ -120,7 +120,7 @@ else
   TMUX_PREFIX_A="\$(getCNumberWithTmux) " && TMUX_PREFIX_B=""
 fi
 get_jobs_prefix() {
-  JOBS=$(jobs | wc -l)
+  JOBS=$(jobs | wc -l | sed 's|\s*||')
   if [ "$JOBS" -eq "0" ]; then echo ""; else echo "$JOBS "; fi
 }
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
@@ -424,15 +424,17 @@ alias HTopCPU='htop -s PERCENT_CPU -d 6000'
 alias HTopMem='htop -s PERCENT_MEM -d 6000'
 EOF
 
-if [ ! -f ~/.dircolors ]; then
-  dircolors -p > ~/.dircolors
-  COLOR_ITEMS=(FIFO OTHER_WRITABLE STICKY_OTHER_WRITABLE CAPABILITY SETGID SETUID ORPHAN CHR BLK)
-  for COLOR_ITEM in "${COLOR_ITEMS[@]}"; do
-    sed -i 's|^'"$COLOR_ITEM"' .* #|'"$COLOR_ITEM"' 01;35 #|' ~/.dircolors
-  done
-fi
+if [ "$PROVISION_OS" == "LINUX" ]; then
+  if [ ! -f ~/.dircolors ]; then
+    dircolors -p > ~/.dircolors
+    COLOR_ITEMS=(FIFO OTHER_WRITABLE STICKY_OTHER_WRITABLE CAPABILITY SETGID SETUID ORPHAN CHR BLK)
+    for COLOR_ITEM in "${COLOR_ITEMS[@]}"; do
+      sed -i 's|^'"$COLOR_ITEM"' .* #|'"$COLOR_ITEM"' 01;35 #|' ~/.dircolors
+    done
+  fi
 
-echo 'eval "$(dircolors ~/.dircolors)"' >> ~/.shellrc
+  echo 'eval "$(dircolors ~/.dircolors)"' >> ~/.shellrc
+fi
 
 cat > /tmp/tmux_choose_session.sh <<"EOF"
 #!/usr/bin/env bash

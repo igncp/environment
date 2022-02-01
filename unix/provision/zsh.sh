@@ -103,11 +103,22 @@ else
   TMUX_PREFIX_A='$(getCNumberWithTmux) ' && TMUX_PREFIX_B=''
 fi
 get_jobs_prefix() {
-  JOBS=$(jobs | wc -l)
+  JOBS=$(jobs | wc -l | sed 's|\s*||')
   if [ "$JOBS" -eq "0" ]; then echo ""; else echo "$JOBS "; fi
 }
+# Consider moving to .shellrc when testing bash
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
-  SSH_PS1_NOTICE="[VM] "
+  if [ ! -f ~/.check-files/ssh-notice ]; then
+    echo "~/.check-files/ssh-notice is missing, using the default"
+    SSH_PS1_NOTICE="[SSH] "
+  else
+    FILE_CONTENT="$(cat ~/.check-files/ssh-notice)"
+    if [ -z "$FILE_CONTENT" ]; then
+      SSH_PS1_NOTICE="[VM] "
+    else
+      SSH_PS1_NOTICE="[$FILE_CONTENT] "
+    fi
+  fi
 fi
 
 __get_next_task() {
@@ -137,7 +148,6 @@ setopt CDABLE_VARS                 # expand the expression (allows 'cd -2/tmp')
 autoload -U compinit && compinit   # load + start completion
 zstyle ':completion:*:directory-stack' list-colors '=(#b) #([0-9]#)*( *)==95=38;5;12'
 
-eval "$(dircolors /home/igncp/.dircolors)"
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 
 _zsh_cli_fg() {
@@ -147,6 +157,9 @@ _zsh_cli_fg() {
 zle -N _zsh_cli_fg
 bindkey '^X' _zsh_cli_fg
 EOF
+if [ "$PROVISION_OS" == "LINUX" ]; then
+  echo 'eval "$(dircolors /home/igncp/.dircolors)"' >> ~/.zshrc
+fi
 
 install_omzsh_plugin zsh-users/zsh-syntax-highlighting
 # https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/docs/highlighters/main.md
@@ -155,7 +168,7 @@ ZSH_HIGHLIGHT_STYLES[comment]='fg=yellow,bold'
 ZSH_HIGHLIGHT_STYLES[dollar-double-quoted-argument]='fg=green,bold'
 EOF
 
-if [ ! -f ~/.zsh/_git ]; then
+if [ ! -f ~/.zsh/_git ] && [ "$PROVISION_OS" == "LINUX" ]; then
   mkdir -p ~/.zsh
   curl -o ~/.zsh/_git \
     https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.zsh
