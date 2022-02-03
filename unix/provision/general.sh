@@ -1,5 +1,38 @@
 # general START
 
+cat >> ~/.shellrc <<"EOF"
+getTime() {
+  MINUTES=$(date +"%M"); HOURS=$(date +"%H")
+  echo $HOURS":"$MINUTES
+}
+getCNumberWithTmux() {
+  IDX=$(tmux display-message -p '#I'); echo "$IDX"
+}
+
+if [[ -z $TMUX ]]; then
+  TMUX_PREFIX_A="" && TMUX_PREFIX_B=" ·"
+else
+  TMUX_PREFIX_A='$(getCNumberWithTmux) ' && TMUX_PREFIX_B=''
+fi
+get_jobs_prefix() {
+  JOBS=$(jobs | wc -l | sed 's|\s*||')
+  if [ "$JOBS" -eq "0" ]; then echo ""; else echo "$JOBS "; fi
+}
+if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+  if [ ! -f ~/.check-files/ssh-notice ]; then
+    echo "~/.check-files/ssh-notice is missing, using the default"
+    SSH_PS1_NOTICE="[SSH] "
+  else
+    FILE_CONTENT="$(cat ~/.check-files/ssh-notice)"
+    if [ -z "$FILE_CONTENT" ]; then
+      SSH_PS1_NOTICE="[VM] "
+    else
+      SSH_PS1_NOTICE="[$FILE_CONTENT] "
+    fi
+  fi
+fi
+EOF
+
 if [ -d ~/project/scripts ]; then chmod -R +x ~/project/scripts; fi
 if [ -f ~/project/provision/provision.sh ]; then chmod +x ~/project/provision/provision.sh; fi
 
@@ -47,13 +80,14 @@ if [ ! -f /usr/local/bin/git-extras ]; then
 fi
 
 install_system_package curl
+install_system_package dnsutils dig
 install_system_package jq
 install_system_package lsof
 install_system_package moreutils vidir
 install_system_package ncdu
 install_system_package neofetch
 install_system_package net-tools netstat
-install_system_package dnsutils dig
+install_system_package nmap
 install_system_package ranger
 install_system_package rsync
 install_system_package tree
@@ -106,35 +140,14 @@ stty -ixon
 export HISTCONTROL=ignoreboth:erasedups
 export EDITOR=vim
 
-getTime() {
-  MINUTES=$(date +"%M"); HOURS=$(date +"%H")
-  echo $HOURS":"$MINUTES
-}
-getCNumberWithTmux() {
-  IDX=$(tmux display-message -p '#I'); echo "$IDX"
-}
-
-if [[ -z $TMUX ]]; then
-  TMUX_PREFIX_A="" && TMUX_PREFIX_B="·"
-else
-  TMUX_PREFIX_A="\$(getCNumberWithTmux) " && TMUX_PREFIX_B=""
-fi
-get_jobs_prefix() {
-  JOBS=$(jobs | wc -l | sed 's|\s*||')
-  if [ "$JOBS" -eq "0" ]; then echo ""; else echo "$JOBS "; fi
-}
-if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
-  SSH_PS1_NOTICE="___SSH___ "
-fi
+source ~/.shellrc
+source ~/.shell_sources
 
 PS1_BEGINNING="\n\n\[\e[33m\]$TMUX_PREFIX_A"
 PS1_NEXT="\[\e[36m\]$SSH_PS1_NOTICE\W\[\e[m\]"
 PS1_MIDDLE="\[\e[32m\]\$(__git_ps1)\[\e[m\]\[\e[33m\] \$(get_jobs_prefix)\[\e[m\]"
 PS1_END="\[\e[34m\]\$(getTime)\[\e[32m\]$TMUX_PREFIX_B\[\e[m\] "
 export PS1="$PS1_BEGINNING""$PS1_NEXT""$PS1_MIDDLE""$PS1_END"
-
-source ~/.shellrc
-source ~/.shell_sources
 EOF
 
 cat >> ~/.shellrc <<"EOF"
@@ -242,10 +255,11 @@ alias GitRebaseResetAuthorContinue='git commit --amend --reset-author --no-edit;
 alias GitStatus='git status -u'
 alias GitSubmodulesUpdate='git submodule update --init --recursive' # clones existing submodules
 
-alias RemoveAnsiColors="sed 's/\x1b\[[0-9;]*m//g'"
-alias Ports='sudo netstat -tulanp'
-alias Headers='curl -I' # e.g. Headers google.com
 alias ChModRX='chmod -R +x'
+alias Headers='curl -I' # e.g. Headers google.com
+alias NmapLocal='sudo nmap -sn 192.168.1.0/24 > /tmp/nmap-result && sed -i "s|Nmap|\nNmap|" /tmp/nmap-result && less /tmp/nmap-result'
+alias Ports='sudo netstat -tulanp'
+alias RemoveAnsiColors="sed 's/\x1b\[[0-9;]*m//g'"
 EOF
 
 cat > ~/.inputrc <<"EOF"
@@ -464,7 +478,7 @@ EOF
 fi
 
 cat >> ~/.shell_aliases <<"EOF"
-UpdateProvisionRepo() {
+ProvisionCommitRepo() {
   cd ~/project; git add -A .; git diff HEAD; git status
   read -p "If you are sure, press y: " -n 1 -r
   echo
@@ -473,6 +487,7 @@ UpdateProvisionRepo() {
   fi
   cd -
 }
+alias ProvisionGetDiff='node $HOME/project/provision/updateProvision.js && sh /tmp/diff_provision.sh'
 EOF
 
 SOURCE_ASDF='. $HOME/.asdf/asdf.sh'

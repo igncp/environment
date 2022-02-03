@@ -66,7 +66,10 @@ cat environment/unix/provision/custom.sh >> project/provision/provision.sh
 cp environment/unix/config-files/data.updateProvision.js project/provision
 cp environment/unix/config-files/updateProvision.js project/provision
 
-sed -i 's|___SSH___|[VM]|' project/provision/provision.sh
+if [ ! -f ~/.ssh/config ]; then
+  mkdir -p ~/.ssh
+  cp environment/unix/config-files/ssh-client-config ~/.ssh/config
+fi
 
 if [ ! -d ~/project/scripts/toolbox ]; then
   rsync -rhv --delete environment/unix/scripts/ ~/project/scripts/

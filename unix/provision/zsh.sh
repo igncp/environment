@@ -75,14 +75,6 @@ source $HOME/.shell_sources
 
 export WORDCHARS='*?_-.[]~=&;!#$%^(){}<>/|'
 
-getTime() {
-  MINUTES=$(date +"%M"); HOURS=$(date +"%H")
-  echo $HOURS":"$MINUTES
-}
-getCNumberWithTmux() {
-  IDX=$(tmux display-message -p '#I'); echo "$IDX"
-}
-
 backward-kill-dir () {
     local WORDCHARS=${WORDCHARS/\/}
     zle backward-kill-word
@@ -97,30 +89,6 @@ else
   tmux set-option status on
 fi
 
-if [[ -z $TMUX ]]; then
-  TMUX_PREFIX_A="" && TMUX_PREFIX_B=" ·"
-else
-  TMUX_PREFIX_A='$(getCNumberWithTmux) ' && TMUX_PREFIX_B=''
-fi
-get_jobs_prefix() {
-  JOBS=$(jobs | wc -l | sed 's|\s*||')
-  if [ "$JOBS" -eq "0" ]; then echo ""; else echo "$JOBS "; fi
-}
-# Consider moving to .shellrc when testing bash
-if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
-  if [ ! -f ~/.check-files/ssh-notice ]; then
-    echo "~/.check-files/ssh-notice is missing, using the default"
-    SSH_PS1_NOTICE="[SSH] "
-  else
-    FILE_CONTENT="$(cat ~/.check-files/ssh-notice)"
-    if [ -z "$FILE_CONTENT" ]; then
-      SSH_PS1_NOTICE="[VM] "
-    else
-      SSH_PS1_NOTICE="[$FILE_CONTENT] "
-    fi
-  fi
-fi
-
 __get_next_task() {
   ID=$(task next limit:1 2>&1 | grep -v 'No matches.' | tail -n +4 | head -n 1 | sed "s/^ //" | cut -d " " -f1 | grep .)
   if [ -z "$ID" ]; then
@@ -132,7 +100,7 @@ __get_next_task() {
 
 setopt PROMPT_SUBST
 PS1_BEGINNING="$TMUX_PREFIX_A"
-PS1_NEXT="$SSH_PS1_NOTICE%F{green}%1d"
+PS1_NEXT="%F{cyan}$SSH_PS1_NOTICE%F{green}%1d"
 PS1_MIDDLE='$(__git_ps1) $(get_jobs_prefix)'
 PS1_END='%F{blue}$(date +"%H:%M")$TMUX_PREFIX_B %F{reset_color}'
 NEXT_TASK='$(__get_next_task)'

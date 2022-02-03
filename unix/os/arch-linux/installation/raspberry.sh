@@ -34,12 +34,14 @@ if [ ! -d /home/alarm/.ssh/authorized_keys ]; then
 fi
 
 useradd igncp -m
+
 echo "Change alarm password"
 passwd alarm
 echo "Change root password"
 passwd
 echo "Change igncp password"
 passwd igncp
+
 rm -rf /home/igncp/.*
 cryptsetup -q -y -v luksFormat /dev/mmcblk0p3
 cryptsetup open /dev/mmcblk0p3 crypthome
@@ -72,7 +74,9 @@ pacman -S git --noconfirm
 pacman -S sudo --noconfirm
 pacman -S rsync --noconfirm
 pacman -S ufw --noconfirm
+
 ufw allow ssh
+
 systemctl enable systemd-timesyncd.service
 systemctl restart systemd-networkd
 systemctl enable ufw

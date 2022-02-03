@@ -307,11 +307,13 @@ cat >> ~/.vimrc <<"EOF"
 call add(g:coc_global_extensions, 'coc-html')
 EOF
 
+# The filetypes and probe is to disable on Markdown
 sed -i '$ d' ~/.vim/coc-settings.json
 cat >> ~/.vim/coc-settings.json <<"EOF"
   ,
   "eslint.autoFixOnSave": true,
   "eslint.filetypes": ["javascript", "javascriptreact", "typescript", "typescriptreact", "vue"],
+  "eslint.probe": ["javascript", "javascriptreact", "typescript", "typescriptreact", "vue"],
   "javascript.suggestionActions.enabled": false,
   "prettier.disableSuccessMessage": true
 }

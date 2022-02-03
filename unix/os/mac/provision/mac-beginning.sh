@@ -23,7 +23,26 @@ fi
 
 if [ ! -f ~/.check-files/coreutils ]; then
   brew install coreutils
+  brew install gnu-sed # sed with same options as in linux
+  brew install diffutils # for diff
   mkdir -p ~/.check-files && touch ~/.check-files/coreutils
 fi
+
+cat >> ~/.shellrc <<"EOF"
+eval "$(/opt/homebrew/bin/brew shellenv)"
+export PATH="/opt/homebrew/opt/gnu-sed/libexec/gnubin:$PATH"
+export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
+EOF
+
+cat >> ~/.shell_aliases <<"EOF"
+alias MacDisks='diskutil list'
+alias MacFeatures='system_profiler > /tmp/features.txt && echo "/tmp/features.txt written" && less /tmp/features.txt'
+EOF
+
+cat >> ~/.zshrc <<"EOF"
+# For chinese characters
+export LANG="en_US.UTF-8"
+export LC_ALL=en_US.utf-8
+EOF
 
 # mac-beginning END

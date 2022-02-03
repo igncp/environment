@@ -57,9 +57,14 @@ install_vim_package tpope/vim-repeat # https://github.com/tpope/vim-repeat
 install_vim_package tpope/vim-surround # https://github.com/tpope/vim-surround
 install_vim_package vim-scripts/AnsiEsc.vim # https://github.com/vim-scripts/AnsiEsc.vim
 install_vim_package github/copilot.vim # https://github.com/github/copilot.vim
+install_vim_package liuchengxu/vista.vim # https://github.com/liuchengxu/vista.vim
 
 cat >> ~/.vimrc <<"EOF"
 execute pathogen#infect()
+
+" vista
+  let g:vista_default_executive = 'coc'
+  let vista_sidebar_width = 100
 
 " incsearch.vim
   map /  <Plug>(incsearch-forward)
@@ -199,7 +204,7 @@ execute pathogen#infect()
   nmap ga <Plug>(EasyAlign)
 
 " limelight
-  let g:limelight_conceal_ctermfg = 'white'
+  let g:limelight_conceal_ctermfg = 'LightGray'
   let g:limelight_bop = '^'
   let g:limelight_eop = '$'
   nnoremap <leader>zl :Limelight!!<cr>
@@ -210,6 +215,10 @@ execute pathogen#infect()
 
 let g:peekaboo_window='vert bo new'
 EOF
+
+if [ "$ENVIRONMENT_THEME" == "dark" ]; then
+  sed -i 's|let g:limelight_conceal_ctermfg =.*|let g:limelight_conceal_ctermfg = "DarkGray"|' ~/.vimrc
+fi
 
 cat >> ~/.shellrc <<"EOF"
 export EDITOR=nvim
