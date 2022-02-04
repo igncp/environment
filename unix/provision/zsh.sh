@@ -83,10 +83,11 @@ zle -N backward-kill-dir
 bindkey '\C-h' backward-kill-dir
 
 SOCKET_NAME="$(echo $TMUX | cut -f1 -d',' | sed -E 's|(/private)?/tmp/tmux-[0-9]*/||')"
-if [[ "$SOCKET_NAME" == "default" ]]; then
-  tmux set-option status off
+if [[ "$SOCKET_NAME" == "default" ]] || [ -z "$SOCKET_NAME" ]; then
+  tmux -L default set-option status off
 else
-  tmux set-option status on
+  echo "tmux socket: $SOCKET_NAME"
+  tmux -L "$SOCKET_NAME" set-option status on
 fi
 
 __get_next_task() {
