@@ -7,6 +7,7 @@ set -x
 
 # Download Arch Linux ISO image
 # https://archlinux.org/download/
+# ARM: https://pkgbuild.com/~tpowa/archboot-images
 
 # Setup bridged adaptor network to make things easier
 

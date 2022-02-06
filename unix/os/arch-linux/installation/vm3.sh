@@ -13,7 +13,7 @@ echo 'Remember to review the provisions in this file before running'
 
 read -p "Do you want to continue? (yY) " -n 1 -r; echo ''; if ! [[ $REPLY =~ ^[Yy]$  ]]; then exit; fi
 
-if [ ! -d ~/environment ]; then
+if [ ! -d environment ]; then
   echo 'Send the environment directory via rsync'
   # From the host:
     # rsync -r ./ igncp@192.168.1.X:/home/igncp/environment
@@ -22,49 +22,45 @@ if [ ! -d ~/environment ]; then
   exit 1
 fi
 
-cd /home/igncp
+mkdir -p ~/project/provision
+mkdir -p ~/project/scripts
 
-mkdir -p project
-
-mkdir -p /home/igncp/project/provision
-mkdir -p /home/igncp/project/scripts
-
-if [ -f /home/igncp/project/provision/provision.sh ]; then
-  cp /home/igncp/project/provision/provision.sh /home/igncp/project/provision/provision_backup.sh
+if [ -f ~/project/provision/provision.sh ]; then
+  cp ~/project/provision/provision.sh ~/project/provision/provision_backup.sh
 fi
 
 cp environment/unix/scripts/create_vim_snippets.sh ~/project/scripts
 
-cp environment/unix/provision/top.sh project/provision/provision.sh
-cat environment/unix/os/arch-linux/provision/arch-beginning.sh >> project/provision/provision.sh
-cat environment/unix/provision/zsh.sh >> project/provision/provision.sh
-cat environment/unix/provision/general.sh >> project/provision/provision.sh
-cp environment/unix/config-files/htoprc project/provision/
-cat environment/unix/provision/linux.sh >> project/provision/provision.sh
-cat environment/unix/provision/python.sh >> project/provision/provision.sh
-cat environment/unix/provision/vim-base.sh >> project/provision/provision.sh
-cat environment/unix/provision/vim-extra.sh >> project/provision/provision.sh
-cat environment/unix/provision/vim-root.sh >> project/provision/provision.sh
-cat environment/unix/provision/js.sh >> project/provision/provision.sh
-cat environment/unix/provision/ts.sh >> project/provision/provision.sh
+cp environment/unix/provision/top.sh ~/project/provision/provision.sh
+cat environment/unix/os/arch-linux/provision/arch-beginning.sh >> ~/project/provision/provision.sh
+cat environment/unix/provision/zsh.sh >> ~/project/provision/provision.sh
+cat environment/unix/provision/general.sh >> ~/project/provision/provision.sh
+cp environment/unix/config-files/htoprc ~/project/provision/
+cat environment/unix/provision/linux.sh >> ~/project/provision/provision.sh
+cat environment/unix/provision/python.sh >> ~/project/provision/provision.sh
+cat environment/unix/provision/vim-base.sh >> ~/project/provision/provision.sh
+cat environment/unix/provision/vim-extra.sh >> ~/project/provision/provision.sh
+cat environment/unix/provision/vim-root.sh >> ~/project/provision/provision.sh
+cat environment/unix/provision/js.sh >> ~/project/provision/provision.sh
+cat environment/unix/provision/ts.sh >> ~/project/provision/provision.sh
 
-cat environment/unix/provision/gui-base.sh >> project/provision/provision.sh
-cat environment/unix/provision/gui-i3.sh >> project/provision/provision.sh
-cat environment/unix/provision/gui-common.sh >> project/provision/provision.sh
-cp environment/unix/config-files/fonts.conf project/provision/
-cp environment/unix/config-files/alacritty.yml project/provision/
-cp environment/unix/config-files/i3-config project/provision/
-cp environment/unix/config-files/i3-status-config project/provision/
-cp environment/unix/config-files/picom.conf project/provision/
-cp environment/unix/config-files/rime-config.yaml project/provision/
+cat environment/unix/provision/gui-base.sh >> ~/project/provision/provision.sh
+cat environment/unix/provision/gui-i3.sh >> ~/project/provision/provision.sh
+cat environment/unix/provision/gui-common.sh >> ~/project/provision/provision.sh
+cp environment/unix/config-files/fonts.conf ~/project/provision/
+cp environment/unix/config-files/alacritty.yml ~/project/provision/
+cp environment/unix/config-files/i3-config ~/project/provision/
+cp environment/unix/config-files/i3-status-config ~/project/provision/
+cp environment/unix/config-files/picom.conf ~/project/provision/
+cp environment/unix/config-files/rime-config.yaml ~/project/provision/
 
-cat environment/unix/os/arch-linux/provision/arch-gui.sh >> project/provision/provision.sh
-cp environment/unix/config-files/espanso.yml project/provision/
-cat environment/unix/provision/docker.sh >> project/provision/provision.sh
-cat environment/unix/provision/custom.sh >> project/provision/provision.sh
+cat environment/unix/os/arch-linux/provision/arch-gui.sh >> ~/project/provision/provision.sh
+cp environment/unix/config-files/espanso.yml ~/project/provision/
+cat environment/unix/provision/docker.sh >> ~/project/provision/provision.sh
+cat environment/unix/provision/custom.sh >> ~/project/provision/provision.sh
 
-cp environment/unix/config-files/data.updateProvision.js project/provision
-cp environment/unix/config-files/updateProvision.js project/provision
+cp environment/unix/config-files/data.updateProvision.js ~/project/provision
+cp environment/unix/config-files/updateProvision.js ~/project/provision
 
 if [ ! -f ~/.ssh/config ]; then
   mkdir -p ~/.ssh

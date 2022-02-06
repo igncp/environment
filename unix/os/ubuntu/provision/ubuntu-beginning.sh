@@ -1,10 +1,11 @@
 # ubuntu-beginning START
 
-# remove the second instance of this function
 install_system_package() {
   PACKAGE="$1"
   if [ "$PACKAGE" == "task" ]; then
     PACKAGE="taskwarrior"
+  elif [ "$PACKAGE" == "the_silver_searcher" ]; then
+    PACKAGE="silversearcher-ag"
   fi
   if [ ! -z "$2" ]; then CMD_CHECK="$2"; else CMD_CHECK="$1"; fi
   if ! type "$CMD_CHECK" > /dev/null 2>&1 ; then
@@ -13,38 +14,25 @@ install_system_package() {
   fi
 }
 
-exit_if_failed_check() {
-  if [ -n "$UBUNTU_CHECKS" ]; then
-    echo "$1"
-    echo "ERROR"; exit 1
-  fi
-}
-
-UBUNTU_CHECKS="$(grep -ni "the_silver"_searcher ~/project/provision/provision.sh || true)"
-if [ -n "$UBUNTU_CHECKS" ]; then
-  sed -i 's|the_silver''_searcher|silversearcher-ag|' ~/project/provision/provision.sh
-fi
-exit_if_failed_check "Found wrong silver searcher installer. Automatically replaced. Run again."
-
-UBUNTU_CHECKS="$(grep -ni "install_pac""man_package" ~/project/provision/provision.sh || true)"
-if [ -n "$UBUNTU_CHECKS" ]; then
-  sed -i 's|install_''pac''man_package|install_system_package|' ~/project/provision/provision.sh
-fi
-exit_if_failed_check "Found wrong installation functions. Automatically replaced. Run again."
-
-UBUNTU_CHECKS="$(grep -ni "pac""man" ~/project/provision/provision.sh || true)"
-exit_if_failed_check "$UBUNTU_CHECKS"
-
 # this disables the * when typing a password
 if [ -f /etc/sudoers.d/0pwfeedback ]; then
   sudo mv  /etc/sudoers.d/0pwfeedback.disabled
 fi
 
 if ! type nvim > /dev/null 2>&1 ; then
-  cd /tmp && rm -rf nvim-linux* && wget https://github.com/neovim/neovim/releases/download/v0.6.1/nvim-linux64.tar.gz
-  tar -xf ./nvim-linux64.tar.gz
-  mv nvim-linux64 ~/nvim
-  cd ~
+  if [ -n "$ARM_ARCH" ]; then
+    cd ~ ; rm -rf nvim-repo ; git clone https://github.com/neovim/neovim.git nvim-repo --depth 1 --branch release-0.6 ; cd nvim-repo
+    # https://github.com/neovim/neovim/wiki/Building-Neovim#build-prerequisites
+    sudo apt-get install -y ninja-build gettext libtool libtool-bin autoconf automake cmake g++ pkg-config unzip curl doxygen
+    make CMAKE_BUILD_TYPE=Release
+    make CMAKE_INSTALL_PREFIX=$HOME/nvim install
+    cd ~ ; rm -rf nvim-repo
+  else
+    cd /tmp && rm -rf nvim-linux* && wget https://github.com/neovim/neovim/releases/download/v0.6.1/nvim-linux64.tar.gz
+    tar -xf ./nvim-linux64.tar.gz
+    mv nvim-linux64 ~/nvim
+    cd ~
+  fi
 fi
 cat >> ~/.shellrc <<"EOF"
 export PATH="$PATH:/home/igncp/nvim/bin"
@@ -54,6 +42,7 @@ cat >> ~/.shell_aliases <<"EOF"
 alias SystemListInstalled='apt list --installed'
 alias AptLog='tail -f /var/log/apt/term.log'
 alias UbuntuVersion='lsb_release -a'
+alias UbuntuFindPackageByFile="dpkg-query -S" # e.g. UbuntuFindPackageByFile '/usr/bin/ag'
 EOF
 
 install_system_package python3

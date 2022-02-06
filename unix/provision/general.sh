@@ -1,5 +1,9 @@
 # general START
 
+if [ ! -f ~/.check-files/ssh-notice-color ]; then
+  echo 'cyan' > ~/.check-files/ssh-notice-color
+fi
+
 cat >> ~/.shellrc <<"EOF"
 getTime() {
   MINUTES=$(date +"%M"); HOURS=$(date +"%H")
@@ -18,6 +22,7 @@ get_jobs_prefix() {
   JOBS=$(jobs | wc -l | sed 's|\s*||')
   if [ "$JOBS" -eq "0" ]; then echo ""; else echo "$JOBS "; fi
 }
+SSH_PS1_NOTICE_COLOR="$(cat ~/.check-files/ssh-notice-color)"
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
   if [ ! -f ~/.check-files/ssh-notice ]; then
     echo "~/.check-files/ssh-notice is missing, using the default"
