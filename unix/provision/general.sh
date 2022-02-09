@@ -571,15 +571,4 @@ if [ "$PROVISION_OS" == "LINUX" ]; then
 EOF
 fi
 
-if ! type dasel > /dev/null 2>&1 ; then
-  if [ "$PROVISION_OS" == "MAC" ]; then
-    brew install dasel
-  elif [ "$PROVISION_OS" == "LINUX" ]; then
-    FILTER_OPT="linux_amd64"
-    DASEL_URL="$(curl -sSLf https://api.github.com/repos/tomwright/dasel/releases/latest | grep browser_download_url | grep "$FILTER_OPT" | cut -d\" -f 4)"
-    curl -sSLf "$DASEL_URL" -L -o dasel && chmod +x dasel
-    sudo mv ./dasel /usr/local/bin/dasel
-  fi
-fi
-
 # general END
