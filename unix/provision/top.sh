@@ -27,6 +27,7 @@ if [ ! -f ~/.check-files/theme ]; then
 fi
 ENVIRONMENT_THEME="$(cat ~/.check-files/theme)" # light | dark
 PROVISION_OS=''
+ARM_ARCH="$(uname -m | grep arm)"
 
 case "$(uname -s)" in
    Darwin)
