@@ -20,14 +20,20 @@ fi
   fi
 
 # wp-cli
+  if ! type wp > /dev/null 2>&1 ; then
+    sudo curl -o /usr/local/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+    sudo chmod +x /usr/local/bin/wp
+  fi
+  if [ ! -f ~/wp-completion ]; then
+    curl https://raw.githubusercontent.com/wp-cli/wp-cli/v1.5.1/utils/wp-completion.bash -o ~/wp-completion
+  fi
+  echo 'source_if_exists ~/wp-completion' >> ~/.shell_sources
 
-if ! type wp > /dev/null 2>&1 ; then
-  sudo curl -o /usr/local/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-  sudo chmod +x /usr/local/bin/wp
-fi
-if [ ! -f ~/wp-completion ]; then
-  curl https://raw.githubusercontent.com/wp-cli/wp-cli/v1.5.1/utils/wp-completion.bash -o ~/wp-completion
-fi
-echo 'source_if_exists ~/wp-completion' >> ~/.shell_sources
+# phpactor
+  cd ~
+  git clone https://github.com/phpactor/phpactor.git --depth 1 .phpactor ; cd .phpactor
+  composer install
+  sudo ln -s "$(pwd)/bin/phpactor" /usr/local/bin/phpactor
+  cd ~
 
 # php-extras END
