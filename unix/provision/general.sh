@@ -197,6 +197,7 @@ VisudoUser() { sudo env EDITOR=vim visudo -f /etc/sudoers.d/$1; }
 VidirFind() { find $@ | vidir -v -; }
 Vidir() { vidir -v -; }
 SedLines() { if [ "$#" -eq 1 ]; then sed -n "$1,$1p"; else sed -n "$1,$2p"; fi; }
+RandomFile() { find "$1" -type f | shuf -n 1; }
 RandomLine() { sort -R "$1" | head -n 1; }
 # will not catch `'` so can wrap generated texts with single quotes
 RandomStrGenerator() { tr -dc 'A-Za-z0-9!"#$%&()*+,-./:;<=>?@[\]^_`{|}~' </dev/urandom | head -c "$1"; echo; }
