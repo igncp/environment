@@ -96,4 +96,8 @@ if ! type zramd > /dev/null 2>&1 ; then
   sudo systemctl enable --now zramd
 fi
 
+cat >> ~/.shell_aliases <<"EOF"
+alias GPGPinentryList='pacman -Ql pinentry | grep /usr/bin/'
+EOF
+
 # arch-beginning END

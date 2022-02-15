@@ -86,7 +86,10 @@ install_system_package flameshot # for annotations in images
 install_system_package discord
 install_system_package lxappearance # gnome themes
 install_system_package tigervnc vncsession # vnc client
-install_system_package x11vnc # vnc server, uses 5900 port by default
+
+if [ -f ~/.check-files/vnc-server ]; then
+  install_system_package x11vnc # vnc server, uses 5900 port by default
+fi
 
 # remember to put the theme inside `/boot` if encrypted disk
 # needs root access to start

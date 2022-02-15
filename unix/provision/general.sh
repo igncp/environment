@@ -572,4 +572,27 @@ if [ "$PROVISION_OS" == "LINUX" ]; then
 EOF
 fi
 
+# GnuPG https://wiki.archlinux.org/title/GnuPG
+
+install_system_package gnupg gpg
+
+cat >> ~/.shell_aliases <<"EOF"
+alias GPGCreateKey='gpg --full-gen-key'
+alias GPGDetachSign='gpg --detach-sign --armor'
+alias GPGEncryptSymmetric='gpg --armor --symmetric --no-symkey-cache' # just passphrase
+alias GPGExportASCIIKey='gpg --export-secret-keys --armor'
+alias GPGImportKey='gpg --import' # e.g. GPGImportKey public.key
+alias GPGInfo='gpg --version '
+alias GPGListKeys='gpg --list-keys'
+alias GPGListSecretKeys='gpg --list-secret-keys'
+alias GPGReloadAgent='gpg-connect-agent reloadagent /bye'
+alias GPGSignature='gpg --clearsign'
+alias GPGVerify='gpg --verify'
+EOF
+
+mkdir -p ~/.gnupg
+cat > ~/.gnupg/gpg-agent.conf <<"EOF"
+pinentry-program /usr/bin/pinentry-tty
+EOF
+
 # general END
