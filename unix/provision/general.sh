@@ -579,6 +579,7 @@ install_system_package gnupg gpg
 cat >> ~/.shell_aliases <<"EOF"
 alias GPGCreateKey='gpg --full-gen-key'
 alias GPGDetachSign='gpg --detach-sign --armor'
+alias GPGEditKey='gpg --edit-key' # type `help` for a list of commands
 alias GPGEncryptSymmetric='gpg --armor --symmetric --no-symkey-cache' # just passphrase
 alias GPGExportASCIIKey='gpg --export-secret-keys --armor'
 alias GPGImportKey='gpg --import' # e.g. GPGImportKey public.key
