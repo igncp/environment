@@ -49,6 +49,15 @@ install_system_package copyq
     echo '[~/.check-files/copyq-shortcut]: add ctrl + shift + 1 as shortcut to display copyq menu and remove this message'
   fi
 sed -i '1isleep 10s && copyq 2>&1 > /dev/null &' ~/.xinitrc
+cat >> ~/.shell_aliases <<"EOF"
+CopyQReadN() {
+  for i in {0..$1}; do
+    echo "$i"
+    copyq read "$i"
+    echo ""; echo ""
+  done
+}
+EOF
 
 # notifications handler (notify-send)
 if ! type dunst > /dev/null 2>&1 ; then

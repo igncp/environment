@@ -2,6 +2,9 @@
 
 cat >> ~/.shell_aliases <<"EOF"
 alias HongKongTimezone='sudo timedatectl set-timezone Asia/Hong_Kong'
+alias LinuxLsCPU='lscpu'
+alias LinuxLsDrivers='lscpi'
+alias LinuxLsKernelModules='lsmod'
 alias MadridTimezone='sudo timedatectl set-timezone Europe/Madrid'
 alias SystemFailed='systemctl --failed'
 alias SystemFailedClear='systemctl reset-failed'

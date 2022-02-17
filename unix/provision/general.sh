@@ -582,6 +582,7 @@ alias GPGDetachSign='gpg --detach-sign --armor'
 alias GPGEditKey='gpg --edit-key' # type `help` for a list of commands
 alias GPGEncryptSymmetric='gpg --armor --symmetric --no-symkey-cache' # just passphrase
 alias GPGExportASCIIKey='gpg --export-secret-keys --armor'
+alias GPGExportPublic='gpg --export --armor --export-options export-minimal'
 alias GPGImportKey='gpg --import' # e.g. GPGImportKey public.key
 alias GPGInfo='gpg --version '
 alias GPGListKeys='gpg --list-keys'
