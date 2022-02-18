@@ -190,7 +190,6 @@ alias tree="tree -a"
 
 DisplayFilesConcatenated(){ xargs tail -n +1 | sed "s|==>|\n\n\n\n\n$1==>|; s|<==|<==\n|" | $EDITOR -; }
 Diff() { diff --color=always "$@" | less -r; }
-Find() { find "$@" ! -path "*node_modules*" ! -path "*.git*"; }
 GetProcessUsingPort(){ fuser $1/tcp 2>&1 | grep -oE '[0-9]*$'; }
 GetProcessUsingPortAndKill(){ fuser $1/tcp 2>&1 | grep -oE '[0-9]*$' | xargs -I {} kill {}; }
 VisudoUser() { sudo env EDITOR=vim visudo -f /etc/sudoers.d/$1; }
@@ -215,7 +214,6 @@ alias SSHCopyId='ssh-copy-id -i '
 
 alias AliasesReload='source ~/.shell_aliases'
 alias CleanNCurses='stty sane;clear;'
-alias DevicesPCI='lspci'
 alias EditProvision="$EDITOR ~/project/provision/provision.sh && provision.sh"
 alias FDisk='sudo fdisk /dev/sda'
 alias FilterLeaf=$'sort -r | awk \'a!~"^"$0{a=$0;print}\' | sort'
@@ -229,7 +227,7 @@ alias Sudo='sudo -E ' # this preserves aliases and environment in root
 alias Visudo='sudo env EDITOR=vim visudo'
 alias Xargs='xargs -I{}'
 
-GitAdd() { git add -A $@; GitStatus; }
+GitAdd() { git add -A $@; git status -u; }
 GitFilesAddedDiff() {
   GitAddAll 2>&1 > /dev/null;
   R_PATH="$(git rev-parse --show-toplevel)";
@@ -261,9 +259,6 @@ GitFilesByAuthorLatestGrep() {
   GitFilesByAuthorLatest "${@:2}" | grep -i "$1" | grep -o '^[^ ]* '
 }
 
-# Git Real Path - Intended to use in a pipe, optionally when using `git diff --name-status`
-alias GRP="sed 's|^[AMD]\t||' | xargs -I '{}' realpath --relative-to=. "'$(git rev-parse --show-toplevel)'"/'{}'"
-
 alias GitAddAll='GitAdd .'
 alias GitBranchOrder='git branch -r --sort=creatordate --format "%(creatordate:relative);%(committername);%(refname)" | sed "s|refs/remotes/origin/||" | grep -v ";HEAD$" | column -s ";" -t | tac | less'
 alias GitCommit='git commit -m'
@@ -271,10 +266,11 @@ alias GitEditorCommit='git commit -v'
 alias GitListConflictFiles='git diff --name-only --relative --diff-filter=U'
 alias GitListFilesChangedHistory='git log --pretty=format: --name-only | sort | uniq -c | sort -rg' # can add `--author Foo`, --since, or remove files
 alias GitRebaseResetAuthorContinue='git commit --amend --reset-author --no-edit; git rebase --continue'
-alias GitStatus='git status -u'
+alias GitStashApply='git stash apply' # can also use name here
+alias GitStashList='git stash list'
+alias GitStashName='git stash push -m'
 alias GitSubmodulesUpdate='git submodule update --init --recursive' # clones existing submodules
 
-alias ChModRX='chmod -R +x'
 alias Headers='curl -I' # e.g. Headers google.com
 alias NmapLocal='sudo nmap -sn 192.168.1.0/24 > /tmp/nmap-result && sed -i "s|Nmap|\nNmap|" /tmp/nmap-result && less /tmp/nmap-result'
 alias Ports='sudo netstat -tulanp'
@@ -418,7 +414,7 @@ EOF
     fzf --height 100% --border -m --ansi --no-sort --reverse --multi --bind 'ctrl-s:toggle-sort' --header 'Press CTRL-S to toggle sort'
   }
   __FZFScripts() {
-    $(find ~/project/scripts -type f ! -name "*.md" |
+    $(find ~/project/scripts -type f ! -name "*.md" | grep -v node_modules |
     fzf --height 100% --border -m -q "'" --ansi --no-sort --reverse --multi --bind 'ctrl-s:toggle-sort' --header 'Press CTRL-S to toggle sort')
   }
 EOF
@@ -433,7 +429,6 @@ EOF
 
 cat > ~/.bookmarked-commands <<"EOF"
 GitEditorCommit
-GitStatus
 GitAddAll
 GitDiff HEAD -- ':!*package-lock.json' ':!*yarn.lock' | less -r
 git fetch
