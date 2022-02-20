@@ -30,7 +30,7 @@ if [ ! -f ~/.check-files/no-auto-i3 ]; then
 fi
 
 cat >> ~/.shell_aliases <<"EOF"
-I3Setup() {
+I3VMSetup() {
   /usr/bin/VBoxClient-all;
   # Run `xrandr` to see the available outputs and modes:
     # xrandr --output Virtual-1 --mode 1280x768

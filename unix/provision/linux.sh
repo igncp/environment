@@ -3,7 +3,7 @@
 cat >> ~/.shell_aliases <<"EOF"
 alias HongKongTimezone='sudo timedatectl set-timezone Asia/Hong_Kong'
 alias LinuxLsCPU='lscpu'
-alias LinuxLsHardware='lscpi'
+alias LinuxLsHardware='lspci'
 alias LinuxLsKernelModules='lsmod'
 alias MadridTimezone='sudo timedatectl set-timezone Europe/Madrid'
 alias SystemFailed='systemctl --failed'
@@ -30,16 +30,16 @@ EOF
 
 if [ -n "$(grep 1 /proc/sys/kernel/nmi_watchdog)" ] && [ -z "$(grep watchdog /boot/grub/grub.cfg)" ]; then
   if [ ! -f ~/.check-files/watchdog ]; then
-    echo "[~/.check-files/watchdog] Add 'nmi_watchdog=0' to grub opts to disable watchdog or hide this message"
+    echo "[~/.check-files/watchdog]: Add 'nmi_watchdog=0' to grub opts to disable watchdog and hide this message"
   fi
 fi
 
 if [ -z "$(grep noatime /etc/fstab)" ] && [ ! -f ~/.check-files/noatime ]; then
-  echo "[~/.check-files/noatime] Replace relatime with noatime in fstab or hide this message"
+  echo "[~/.check-files/noatime]: Replace relatime with noatime in fstab and hide this message"
 fi
 
 if [ ! -f ~/.check-files/swappiness ]; then
-  echo "[~/.check-files/swappiness] Decide wheather to use SwappinessUpdate and hide this message"
+  echo "[~/.check-files/swappiness]: Decide wheather to use SwappinessUpdate and hide this message"
 fi
 
 cat >> ~/.shell_aliases <<"EOF"

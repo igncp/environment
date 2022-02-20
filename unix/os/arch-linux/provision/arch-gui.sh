@@ -43,10 +43,10 @@ install_system_package copyq
   # Create two items, one for the password manager and one for Entry
   # Click: "Show Advance", then click "Advanced" tab and put text on "Window" input (instead of "Password")
   if [ ! -f "$HOME"/.check-files/copyq-passwords ]; then
-    echo '[~/.check-files/copyq-passwords]: add and test command to filter out copied passwords and remove this message'
+    echo '[~/.check-files/copyq-passwords]: Add and test command to filter out copied passwords and remove this message'
   fi
   if [ ! -f "$HOME"/.check-files/copyq-shortcut ]; then
-    echo '[~/.check-files/copyq-shortcut]: add ctrl + shift + 1 as shortcut to display copyq menu and remove this message'
+    echo '[~/.check-files/copyq-shortcut]: Add ctrl + shift + 1 as shortcut to display copyq menu and remove this message'
   fi
 sed -i '1isleep 10s && copyq 2>&1 > /dev/null &' ~/.xinitrc
 cat >> ~/.shell_aliases <<"EOF"
@@ -86,7 +86,7 @@ echo $(("$(cat /sys/class/backlight/intel_backlight/brightness)" + "$1")) | tee 
 EOF
 chmod +x /home/igncp/change_brightness.sh
 if [ ! -f ~/.check-files/brightness-sudo ]; then
-  echo "[~/.check-files/brightness-sudo]: use 'sudo EDITOR=vim visudo' to add 'igncp archlinux = (root) NOPASSWD: /home/igncp/change_brightness.sh'"
+  echo "[~/.check-files/brightness-sudo]: Use 'sudo EDITOR=vim visudo' to add 'igncp archlinux = (root) NOPASSWD: /home/igncp/change_brightness.sh'"
 fi
 install_system_package xbindkeys
 cat > ~/.xbindkeysrc <<"EOF"
@@ -124,28 +124,34 @@ EOF
 echo 'alias XbindkeysMultikey="xbindkeys --multikey"' >> ~/.shell_aliases
 
 # nvidia
-  install_system_package nvidia nvidia-smi
-  install_system_package nvidia-settings
-  echo "alias NvidiaSettings='nvidia-settings'" >> ~/.shell_aliases
-  if [ ! -f ~/.check-files/nvidia ]; then
-    sudo pacman -S --noconfirm \
-      nvidia-utils \
-      mesa
-    mkdir -p ~/.check-files && touch ~/.check-files/nvidia
-  fi
-  cat > ~/.nvidia-config.sh <<"EOF"
-  #!/usr/bin/env bash
-  if [ ! -f /home/igncp/.nvidia-settings-rc ]; then
-    nvidia-settings 2>&1 > /dev/null &
-  fi
+if [ -f ~/.check-files/nvidia ]; then
+  if [ "$(cat ~/.check-files/nvidia)" == "yes" ]; then
+    install_system_package nvidia nvidia-smi
+    install_system_package nvidia-settings
+    echo "alias NvidiaSettings='nvidia-settings'" >> ~/.shell_aliases
+    if [ ! -f ~/.check-files/nvidia-installed ]; then
+      sudo pacman -S --noconfirm \
+        nvidia-utils \
+        mesa
+      mkdir -p ~/.check-files && touch ~/.check-files/nvidia-installed
+    fi
+    cat > ~/.nvidia-config.sh <<"EOF"
+#!/usr/bin/env bash
+if [ ! -f /home/igncp/.nvidia-settings-rc ]; then
+  nvidia-settings 2>&1 > /dev/null &
+fi
 
-  sed -i 's|Brightness=.*|Brightness=-0.710000|g' /home/igncp/.nvidia-settings-rc
-  sed -i 's|Contrast=.*|Contrast=-0.710000|g' /home/igncp/.nvidia-settings-rc
-  sed -i 's|Gamma=.*|Gamma=0.774667|g' /home/igncp/.nvidia-settings-rc
+sed -i 's|Brightness=.*|Brightness=-0.710000|g' /home/igncp/.nvidia-settings-rc
+sed -i 's|Contrast=.*|Contrast=-0.710000|g' /home/igncp/.nvidia-settings-rc
+sed -i 's|Gamma=.*|Gamma=0.774667|g' /home/igncp/.nvidia-settings-rc
 
-  nvidia-settings --load-config-only
+nvidia-settings --load-config-only
 EOF
-  sed -i '1isleep 5s && sh /home/igncp/.nvidia-config.sh' ~/.xinitrc
+    sed -i '1isleep 5s && sh /home/igncp/.nvidia-config.sh' ~/.xinitrc
+  fi
+else
+  echo "[~/.check-files/nvidia]: file is missing, add it with 'yes' or 'no' to install nvidia packages"
+fi
 
 install_with_yay skypeforlinux-stable-bin skypeforlinux
 

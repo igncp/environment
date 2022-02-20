@@ -98,6 +98,7 @@ fi
   # [Arch]: sudo pacman -Syu ; pip install neovim
 
 # Update display with xrandr
+  # Custom resolution: https://askubuntu.com/a/377944
   mkdir -p ~/.displays
   cat > ~/.displays/laptop.sh <<"EOF"
 #!/usr/bin/env bash
