@@ -104,4 +104,9 @@ if type dunst > /dev/null 2>&1 ; then
     'Enable Notifications'
 fi
 
+add_desktop_common \
+  '/home/igncp/wallpaper-update.sh' \
+  'wallpaper-update' \
+  'Wallpaper Update'
+
 # gui-i3 END

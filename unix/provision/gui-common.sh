@@ -85,6 +85,7 @@ install_system_package peek # for gif generation
 install_system_package flameshot # for annotations in images
 install_system_package discord
 install_system_package lxappearance # gnome themes
+install_system_package arandr # xrandr frontend
 install_system_package tigervnc vncsession # vnc client
 
 if [ -f ~/.check-files/vnc-server ]; then

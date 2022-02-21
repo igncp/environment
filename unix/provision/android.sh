@@ -51,7 +51,8 @@ cat >> ~/.shell_aliases <<"EOF"
 alias AdbOpenDeeplink='adb shell am start -d'
 EOF
 
-cat >> /tmp/android-studio.desktop <<"EOF"
+if [ "$PROVISION_OS" == "LINUX" ]; then
+  cat >> /tmp/android-studio.desktop <<"EOF"
 [Desktop Entry]
 Version=1.0
 Name=Android Studio
@@ -61,7 +62,8 @@ StartupNotify=true
 Terminal=false
 Type=Application
 EOF
-sudo mv /tmp/android-studio.desktop /usr/share/applications/
+  sudo mv /tmp/android-studio.desktop /usr/share/applications/
+fi
 
 # if running emulator on I3, move to floating mode
 

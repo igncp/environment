@@ -39,7 +39,7 @@ if [ -z "$(grep noatime /etc/fstab)" ] && [ ! -f ~/.check-files/noatime ]; then
 fi
 
 if [ ! -f ~/.check-files/swappiness ]; then
-  echo "[~/.check-files/swappiness]: Decide wheather to use SwappinessUpdate and hide this message"
+  echo "[~/.check-files/swappiness]: Decide whether to use SwappinessUpdate and hide this message"
 fi
 
 cat >> ~/.shell_aliases <<"EOF"
