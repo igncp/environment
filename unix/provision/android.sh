@@ -1,6 +1,6 @@
 # android START
 
-if [ ! -d ~/android-sdk ] && [ ! -d ~/android-studio ]; then
+if [ ! -d ~/android-sdk ] && [ ! -d ~/android-studio ] && [ ! -d ~/Library/Android/sdk ]; then
   echo 'Download android CLI tools (or Studio if necessary, not both)'
   echo 'Android CLI: structure should be ~/android-sdk/cmdline-tools/tools/bin/sdkmanager'
   echo 'Android Studio: ~/android-studio . To uncompress: tar xvzf FILE_NAME.tar.gz'
@@ -9,7 +9,7 @@ if [ ! -d ~/android-sdk ] && [ ! -d ~/android-studio ]; then
 fi
 
 if [ ! -f "$HOME"/.check-files/android-path ]; then
-  echo '[~/.check-files/android-path]: Update to the correct path inside ~/.check-files/android-path.'
+  echo '[~/.check-files/android-path]: Update to the correct path inside ~/.check-files/android-path'
   echo 'If using studio, remember to first open it and download the CLI tools from Menu > Tools > SDK Manager'
 fi
 

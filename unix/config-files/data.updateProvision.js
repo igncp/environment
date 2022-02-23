@@ -18,6 +18,7 @@ const items = [
   ["gui-common", "unix/provision/gui-common.sh"],
   ["arch-gui", "unix/os/arch-linux/provision/arch-gui.sh"],
   ["android", "unix/provision/android.sh"],
+  ["cli-tools", "unix/provision/cli-tools.sh"],
   ["docker", "unix/provision/docker.sh"],
   ["vscode", "unix/provision/vscode.sh"],
   // ...
