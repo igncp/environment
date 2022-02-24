@@ -240,6 +240,8 @@ install_with_yay google-chrome google-chrome-stable
 
 install_with_yay lxqt-sudo-git lxqt-sudo # for rofi
 
+if [ -f ~/.check-files/figma ]; then install_system_package figma; fi
+
 install_with_yay espanso
 check_file_exists ~/project/provision/espanso.yml
 touch ~/project/provision/espansoCustom.yml

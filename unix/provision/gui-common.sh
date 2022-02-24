@@ -83,14 +83,14 @@ install_system_package obs-studio obs # for video recording
 install_system_package libreoffice-fresh libreoffice
 install_system_package peek # for gif generation
 install_system_package flameshot # for annotations in images
-install_system_package discord
 install_system_package lxappearance # gnome themes
 install_system_package arandr # xrandr frontend
 install_system_package tigervnc vncsession # vnc client
 
-if [ -f ~/.check-files/vnc-server ]; then
-  install_system_package x11vnc # vnc server, uses 5900 port by default
-fi
+# vnc server, uses 5900 port by default
+if [ -f ~/.check-files/vnc-server ]; then install_system_package x11vnc; fi
+
+if [ -f ~/.check-files/discord ]; then install_system_package discord; fi
 
 # remember to put the theme inside `/boot` if encrypted disk
 # needs root access to start

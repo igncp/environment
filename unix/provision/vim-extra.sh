@@ -438,4 +438,15 @@ endfunction
 imap <silent><script><nowait><expr> <C-]> CustomDismiss() . "\<C-]>"
 EOF
 
+# LOCAL: current branch, BASE: original file, REMOTE: file in opposite branch
+cat >> ~/.gitconfig <<"EOF"
+[merge]
+  tool = vimdiff
+[mergetool]
+  prompt = true
+  keepBackup = false
+[mergetool "vimdiff"]
+  cmd = "$EDITOR" -p $MERGED $LOCAL $BASE $REMOTE
+EOF
+
 # vim-extra END
