@@ -34,7 +34,7 @@ if [ ! -f ~/.check-files/postgresql ]; then
   sudo -u postgres createdb igncp
   sudo -u postgres psql -c 'ALTER USER igncp WITH SUPERUSER;'
   sudo systemctl restart postgresql
-  mkdir -p ~/.check-files && touch ~/.check-files/postgresql
+  touch ~/.check-files/postgresql
 fi
 cat >> ~/.shell_aliases <<"EOF"
 alias PostgresSQLRestart='sudo systemctl restart postgresql.service'
@@ -50,7 +50,7 @@ if [ ! -f ~/.check-files/pgadmin ]; then
   sudo chown -R igncp /usr/lib/python3.5/site-packages/pgadmin4/
   sudo mkdir -p /var/log/pgadmin4
   sudo chown -R igncp /var/log/pgadmin4
-  mkdir -p ~/.check-files && touch ~/.check-files/pgadmin
+  touch ~/.check-files/pgadmin
 fi
 cat > /usr/lib/python3.5/site-packages/pgadmin4/config_local.py <<"EOF"
 SERVER_MODE = True

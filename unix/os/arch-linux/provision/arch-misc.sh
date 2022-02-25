@@ -7,7 +7,7 @@
     # https://wiki.archlinux.org/index.php/Apache_HTTP_Server#PHP
     sudo sh -c "echo '<?php phpinfo(); ?>' > /srv/http/php.php"
     sudo systemctl restart httpd.service
-    mkdir -p ~/.check-files && touch ~/.check-files/php-apache
+    touch ~/.check-files/php-apache
   fi
   sudo grep -qF -- "LoadModule php7_module modules/libphp7.so" /etc/httpd/conf/httpd.conf || \
     echo "LoadModule php7_module modules/libphp7.so" | sudo tee -a /etc/httpd/conf/httpd.conf > /dev/null
@@ -32,7 +32,7 @@
     sudo usermod -a -G libvirt $(whoami)
     newgrp libvirt
     sudo systemctl enable --now libvirtd.service
-    mkdir -p ~/check-files; touch ~/.check-files/kvm
+    touch ~/.check-files/kvm
   fi
 
 # rust code coverage

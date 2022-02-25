@@ -10,7 +10,7 @@ if [ ! -f ~/.check-files/pulseaudio ]; then
   sudo usermod -a -G lp igncp
   sudo gpasswd -a igncp audio
 
-  mkdir -p ~/.check-files && touch ~/.check-files/pulseaudio
+  touch ~/.check-files/pulseaudio
 fi
 cat >> ~/.shell_aliases <<"EOF"
 alias PAListSinks="pacmd list-sinks | grep name: | grep -o '<.*>' | sed  's|[<>]||g'"
@@ -31,11 +31,11 @@ if [ ! -f ~/.check-files/bluetooth ]; then
   sudo pacman -S --noconfirm pulseaudio-bluetooth
   sudo systemctl enable --now bluetooth.service
 
-  mkdir -p ~/.check-files && touch ~/.check-files/bluetooth
+  touch ~/.check-files/bluetooth
 fi
 
 # backups with GUI (timeshift-gtk)
-install_with_yay timeshift
+if [ -f ~/project/.config/timeshift ]; then install_with_yay timeshift; fi
 
 # clipboard manager
 install_system_package copyq
@@ -124,8 +124,8 @@ EOF
 echo 'alias XbindkeysMultikey="xbindkeys --multikey"' >> ~/.shell_aliases
 
 # nvidia
-if [ -f ~/.check-files/nvidia ]; then
-  if [ "$(cat ~/.check-files/nvidia)" == "yes" ]; then
+if [ -f ~/project/.config/nvidia ]; then
+  if [ "$(cat ~/project/.config/nvidia)" == "yes" ]; then
     install_system_package nvidia nvidia-smi
     install_system_package nvidia-settings
     echo "alias NvidiaSettings='nvidia-settings'" >> ~/.shell_aliases
@@ -133,7 +133,7 @@ if [ -f ~/.check-files/nvidia ]; then
       sudo pacman -S --noconfirm \
         nvidia-utils \
         mesa
-      mkdir -p ~/.check-files && touch ~/.check-files/nvidia-installed
+      touch ~/.check-files/nvidia-installed
     fi
     cat > ~/.nvidia-config.sh <<"EOF"
 #!/usr/bin/env bash
@@ -150,16 +150,16 @@ EOF
     sed -i '1isleep 5s && sh /home/igncp/.nvidia-config.sh' ~/.xinitrc
   fi
 else
-  echo "[~/.check-files/nvidia]: file is missing, add it with 'yes' or 'no' to install nvidia packages"
+  echo "[~/project/.config/nvidia]: file is missing, add it with 'yes' or 'no' to install nvidia packages"
 fi
 
-install_with_yay skypeforlinux-stable-bin skypeforlinux
+if [ -f ~/project/.config/skype  ]; then install_with_yay skypeforlinux-stable-bin skypeforlinux; fi
 
-install_with_yay slack-desktop slack
+if [ -f ~/project/.config/slack  ]; then install_with_yay slack-desktop slack; fi
 
-install_with_yay postman-bin postman
+if [ -f ~/project/.config/postman ]; then install_with_yay postman-bin postman; fi
 
-# dropbox
+if [ -f ~/project/.config/dropbox ]; then
   # Once installed, run `dropbox` and a URL will be opened
   if ! type dropbox > /dev/null 2>&1 ; then
     # https://aur.archlinux.org/packages/dropbox/#pinned-676597
@@ -167,10 +167,11 @@ install_with_yay postman-bin postman
   fi
   install_with_yay dropbox
   sed -i '1isleep 15s && dropbox 2>&1 > /dev/null &' ~/.xinitrc
+fi
 
 # https://zoom.us/download?os=linux
 # sudo pacman -U ./zoom_x86_64.pkg.tar.xz
-install_with_yay zoom
+if [ -f ~/project/.config/zoom ]; then install_with_yay zoom; fi
 
 # desktop magnifier: https://github.com/stuartlangridge/magnus
 install_with_yay magnus
@@ -207,7 +208,7 @@ if [ ! -f ~/.check-files/arch-fonts ]; then
     noto-fonts-emoji \
     ttf-font-awesome \
     otf-ipafont
-  mkdir -p ~/.check-files && touch ~/.check-files/arch-fonts
+  touch ~/.check-files/arch-fonts
 fi
 
 if [ ! -f ~/.check-files/lightdm ]; then
@@ -217,7 +218,7 @@ if [ ! -f ~/.check-files/lightdm ]; then
 
   # sudo pacman -S --noconfirm accountsservice # to fix a journalctl error
 
-  mkdir -p ~/.check-files && touch ~/.check-files/lightdm
+  touch ~/.check-files/lightdm
 fi
 rm -rf ~/.xprofile
 ln -s ~/.xinitrc ~/.xprofile
@@ -229,7 +230,7 @@ if [ ! -f ~/.check-files/nerd-fonts ]; then
   # https://github.com/ryanoasis/vim-devicons
   install_with_yay nerd-fonts-source-code-pro
 
-  mkdir -p ~/.check-files && touch ~/.check-files/nerd-fonts
+  touch ~/.check-files/nerd-fonts
 fi
 
 # set colors off
@@ -240,7 +241,7 @@ install_with_yay google-chrome google-chrome-stable
 
 install_with_yay lxqt-sudo-git lxqt-sudo # for rofi
 
-if [ -f ~/.check-files/figma ]; then install_with_yay figma-linux; fi
+if [ -f ~/project/.config/figma ]; then install_with_yay figma-linux; fi
 
 install_with_yay espanso
 check_file_exists ~/project/provision/espanso.yml

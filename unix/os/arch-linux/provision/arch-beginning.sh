@@ -5,7 +5,7 @@ if [ ! -f ~/.check-files/basic-packages ]; then
   sudo pacman -Syu --noconfirm
   sudo pacman -S --noconfirm bash-completion
 
-  mkdir -p ~/.check-files && touch ~/.check-files/basic-packages
+  touch ~/.check-files/basic-packages
 fi
 
 install_system_package() {

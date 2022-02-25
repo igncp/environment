@@ -2,7 +2,7 @@
   if [ ! -f ~/.check-files/japanese ]; then
     sudo pacman -S --noconfirm adobe-source-han-sans-jp-fonts otf-ipafont
     sudo pacman -S --noconfirm uim anthy
-    mkdir -p ~/.check-files && touch ~/.check-files/japanese
+    touch ~/.check-files/japanese
   fi
   cp ~/.xinitrc /tmp/.xinitrc
   cat > ~/.xinitrc <<"EOF"

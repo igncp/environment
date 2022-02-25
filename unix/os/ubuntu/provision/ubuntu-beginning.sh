@@ -55,7 +55,7 @@ fi
 if [ ! -f ~/.check-files/ubuntu-dev ]; then
   # used by other provisions like rust
   sudo apt-get install -y pkg-config libssl-dev
-  mkdir -p ~/.check-files; touch ~/.check-files/ubuntu-dev
+  touch ~/.check-files/ubuntu-dev
 fi
 
 # ubuntu-beginning END

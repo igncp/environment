@@ -21,11 +21,13 @@ echo '# This file was generated from ~/project/provision/provision.sh' > ~/.inpu
 
 rm -rf /tmp/expected-vscode-extensions
 
-if [ ! -f ~/.check-files/theme ]; then
-  mkdir -p ~/.check-files
-  echo 'light' > ~/.check-files/theme
+mkdir -p ~/project/.config
+mkdir -p ~/.check-files
+
+if [ ! -f ~/project/.config/theme ]; then
+  echo 'light' > ~/project/.config/theme
 fi
-ENVIRONMENT_THEME="$(cat ~/.check-files/theme)" # light | dark
+ENVIRONMENT_THEME="$(cat ~/project/.config/theme)" # light | dark
 PROVISION_OS=''
 ARM_ARCH="$(uname -m | grep arm || true)"
 

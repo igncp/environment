@@ -1,6 +1,6 @@
 # cli-tools START
 
-if [ -f ~/.check-files/cli-go-jira ]; then
+if [ -f ~/project/.config/cli-go-jira ]; then
   # https://github.com/go-jira/jira/releases
   if ! type jira > /dev/null 2>&1 ; then
     cd ~; rm -rf go_jira; mkdir -p go_jira; cd go_jira
@@ -11,7 +11,7 @@ if [ -f ~/.check-files/cli-go-jira ]; then
   fi
 fi
 
-if [ -f ~/.check-files/cli-openvpn ]; then
+if [ -f ~/project/.config/cli-openvpn ]; then
   install_system_package openvpn
   mkdir -p ~/.openvpn
   cat > ~/.openvpn/vpn_setup.sh <<"EOF"
@@ -29,7 +29,7 @@ alias VPNLondon='sh ~/.openvpn/vpn_setup.sh London.ovpn'
 EOF
 fi
 
-if [ -f ~/.check-files/cli-gh ]; then
+if [ -f ~/project/.config/cli-gh ]; then
   if ! type gh > /dev/null 2>&1 ; then
     cd ~; rm -rf gh_cli; mkdir -p gh_cli; cd gh_cli
     if [ "$PROVISION_OS" == "MAC" ]; then
@@ -60,7 +60,7 @@ alias GHAuthLogin="gh auth login"
 EOF
 fi
 
-if [ -f  ~/.check-files/cli-googler ]; then
+if [ -f  ~/project/.config/cli-googler ]; then
   # https://github.com/jarun/googler/releases
   if ! type googler > /dev/null 2>&1 ; then
     sudo curl -o /usr/local/bin/googler \
@@ -77,7 +77,7 @@ if [ -f  ~/.check-files/cli-googler ]; then
 EOF
 fi
 
-if [ -f ~/.check-files/cli-aws ]; then
+if [ -f ~/project/.config/cli-aws ]; then
   # https://docs.aws.amazon.com/cli/latest/reference/
   if ! type aws > /dev/null 2>&1 ; then
     mkdir -p /tmp/misc

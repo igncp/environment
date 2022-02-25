@@ -24,7 +24,7 @@ if [ ! -f ~/.check-files/gui ]; then
   echo "installing gui"
   install_system_package xorg
   install_system_package xorg-xinit
-  mkdir -p ~/.check-files && touch ~/.check-files/gui
+  touch ~/.check-files/gui
 fi
 
 # GTK

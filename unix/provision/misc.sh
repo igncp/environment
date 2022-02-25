@@ -48,7 +48,7 @@ EOF
   sudo sed -i "s|#PrintLastLog no|PrintLastLog no|" /etc/ssh/sshd_config
   if [ ! -f ~/.check-files/ssh ]; then
     sudo systemctl restart sshd.service
-    mkdir -p ~/.check-files && touch ~/.check-files/ssh
+    touch ~/.check-files/ssh
   fi
   cat >> ~/.shell_sources <<"EOF"
 echo ""
@@ -241,6 +241,7 @@ if [ ! -f ~/.check-files/hp-printer ]; then
     # - As model can choose `IPP Everywhere`
   # - At this point the printer should be able to print a test page
   # - In Chrome, when choosing print, need to click in `"See more"` the first time
+  touch ~/.check-files/hp-printer
 fi
 
 # misc END

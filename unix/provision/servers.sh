@@ -16,7 +16,7 @@ if [ ! -f ~/.check-files/apache-ssl ]; then
   sudo openssl req -new -sha256 -key server.key -out server.csr -subj "/C=GB/ST=London/L=London/O=Global Security/OU=IT Department/CN=localhost"
   sudo openssl x509 -req -days 1095 -in server.csr -signkey server.key -out server.crt
   sudo apachectl restart
-  mkdir -p ~/.check-files && touch ~/.check-files/apache-ssl
+  touch ~/.check-files/apache-ssl
 fi
 
 cat >> ~/.shell_aliases <<"EOF"

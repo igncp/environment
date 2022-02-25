@@ -7,7 +7,7 @@ if [ ! -f ~/.check-files/docker ]; then
   sudo usermod -a -G docker "$USER" # may need reboot
   sudo systemctl enable --now docker
 
-  mkdir -p ~/.check-files && touch ~/.check-files/docker
+  touch ~/.check-files/docker
 fi
 
 echo 'export PATH=$PATH:/usr/local/lib/docker/bin' >> ~/.shellrc

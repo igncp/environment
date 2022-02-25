@@ -89,7 +89,7 @@ install_system_package gnucash
 if [ ! -f ~/.check-files/gnucash ]; then
   sudo pacman -S --noconfirm gnucash-docs
 
-  mkdir -p ~/.check-files && touch ~/.check-files/gnucash
+  touch ~/.check-files/gnucash
 fi
 
 # EBooks

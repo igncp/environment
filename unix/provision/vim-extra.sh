@@ -28,7 +28,7 @@ if [ ! -f ~/.check-files/neovim ] ; then
   rm -rf ~/.vim/init.vim
   ln -s ~/.vim ~/.config/nvim
   ln -s ~/.vimrc ~/.config/nvim/init.vim
-  mkdir -p ~/.check-files && touch ~/.check-files/neovim
+  touch ~/.check-files/neovim
 fi
 git config --global core.editor nvim # faster than sed
 

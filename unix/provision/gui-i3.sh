@@ -25,7 +25,7 @@ EOF
 fi
 
 echo 'sh ~/.keyboard-config.sh' >> ~/.xinitrc
-if [ ! -f ~/.check-files/no-auto-i3 ]; then
+if [ ! -f ~/project/.config/no-auto-i3 ]; then
   echo 'exec i3' >> ~/.xinitrc
 fi
 
@@ -62,7 +62,7 @@ if [ "$ENVIRONMENT_THEME" == "dark" ]; then
 fi
 
 # picom: can be disabled due performance
-  if [ ! -f ~/.check-files/without-picom ]; then
+  if [ ! -f ~/project/.config/without-picom ]; then
     install_system_package picom
     cp ~/project/provision/picom.conf ~/.config/picom.conf
     check_file_exists ~/project/provision/picom.conf

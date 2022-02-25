@@ -288,7 +288,7 @@ EOF
 # coc-eslint can be disabled due performance
 # To remove: `CocUninstall coc-eslint`
 # Confirm with: `CocList`
-if [ ! -f ~/.check-files/without-coc-eslint ]; then
+if [ ! -f ~/project/.config/without-coc-eslint ]; then
   install_vim_package neoclide/coc-eslint
   cat >> ~/.vimrc <<"EOF"
   call add(g:coc_global_extensions, 'coc-eslint')

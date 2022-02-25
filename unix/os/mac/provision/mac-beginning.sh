@@ -25,7 +25,7 @@ if [ ! -f ~/.check-files/coreutils ]; then
   brew install coreutils
   brew install gnu-sed # sed with same options as in linux
   brew install diffutils # for diff
-  mkdir -p ~/.check-files && touch ~/.check-files/coreutils
+  touch ~/.check-files/coreutils
 fi
 
 cat >> ~/.shellrc <<"EOF"

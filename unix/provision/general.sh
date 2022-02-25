@@ -1,7 +1,7 @@
 # general START
 
-if [ ! -f ~/.check-files/ssh-notice-color ]; then
-  echo 'cyan' > ~/.check-files/ssh-notice-color
+if [ ! -f ~/project/.config/ssh-notice-color ]; then
+  echo 'cyan' > ~/project/.config/ssh-notice-color
 fi
 
 cat >> ~/.shellrc <<"EOF"
@@ -22,13 +22,13 @@ get_jobs_prefix() {
   JOBS=$(jobs | wc -l | sed 's|\s*||')
   if [ "$JOBS" -eq "0" ]; then echo ""; else echo "$JOBS "; fi
 }
-SSH_PS1_NOTICE_COLOR="$(cat ~/.check-files/ssh-notice-color)"
+SSH_PS1_NOTICE_COLOR="$(cat ~/project/.config/ssh-notice-color)"
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
-  if [ ! -f ~/.check-files/ssh-notice ]; then
-    echo "~/.check-files/ssh-notice is missing, using the default"
+  if [ ! -f ~/project/.config/ssh-notice ]; then
+    echo "~/project/.config/ssh-notice is missing, using the default"
     SSH_PS1_NOTICE="[SSH] "
   else
-    FILE_CONTENT="$(cat ~/.check-files/ssh-notice)"
+    FILE_CONTENT="$(cat ~/project/.config/ssh-notice)"
     if [ -z "$FILE_CONTENT" ]; then
       SSH_PS1_NOTICE="[VM] "
     else
@@ -275,6 +275,7 @@ alias GitSubmodulesUpdate='git submodule update --init --recursive' # clones exi
 alias Headers='curl -I' # e.g. Headers google.com
 alias NmapLocal='sudo nmap -sn 192.168.1.0/24 > /tmp/nmap-result && sed -i "s|Nmap|\nNmap|" /tmp/nmap-result && less /tmp/nmap-result'
 alias Ports='sudo netstat -tulanp'
+alias NetstatConnections='netstat -nputw'
 alias RemoveAnsiColors="sed 's/\x1b\[[0-9;]*m//g'"
 EOF
 

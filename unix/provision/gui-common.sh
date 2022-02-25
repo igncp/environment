@@ -88,9 +88,9 @@ install_system_package arandr # xrandr frontend
 install_system_package tigervnc vncsession # vnc client
 
 # vnc server, uses 5900 port by default
-if [ -f ~/.check-files/vnc-server ]; then install_system_package x11vnc; fi
+if [ -f ~/project/.config/vnc-server ]; then install_system_package x11vnc; fi
 
-if [ -f ~/.check-files/discord ]; then install_system_package discord; fi
+if [ -f ~/project/.config/discord ]; then install_system_package discord; fi
 
 # remember to put the theme inside `/boot` if encrypted disk
 # needs root access to start
