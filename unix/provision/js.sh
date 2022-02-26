@@ -78,16 +78,20 @@ inoremap <expr> <c-k> pumvisible() ? "<C-p>" : "k"
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gr <Plug>(coc-references)
+nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> g[ <Plug>(coc-diagnostic-prev)
 nmap <silent> g] <Plug>(coc-diagnostic-next)
-nmap <leader>do <Plug>(coc-codeaction)
-" nmap <leader>rn <Plug>(coc-rename)
-nnoremap <silent> <leader>dd :<C-u>CocList diagnostics<cr>
 
+nnoremap <silent> <leader>dd :<C-u>CocList diagnostics<cr>
 nnoremap <leader>dc :CocEnable<cr>
 nnoremap <leader>dC :CocDisable<cr>
 nnoremap <leader>ds :CocCommand<cr>
 nnoremap <leader>da :CocAction<cr>
+nnoremap <leader>df <Plug>(coc-fix-current)
+nnoremap <leader>dl <Plug>(coc-codelens-action)
+nnoremap <leader>do <Plug>(coc-codeaction)
+nnoremap <leader>dr <Plug>(coc-rename)
+command! -nargs=? Fold :call CocAction('fold', <f-args>)
 
 call add(g:coc_global_extensions, 'coc-snippets')
 call add(g:coc_global_extensions, 'coc-sh')
@@ -310,6 +314,9 @@ cat >> ~/.vim/coc-settings.json <<"EOF"
   "prettier.disableSuccessMessage": true
 }
 EOF
+if [ -f ~/project/.config/coc-eslint-no-fix-on-save ]; then
+  sed -i 's|"eslint.autoFixOnSave": true,$|"eslint.autoFixOnSave": false,|' ~/.vim/coc-settings.json
+fi
 
 cat >> /tmp/expected-vscode-extensions <<"EOF"
 dbaeumer.vscode-eslint

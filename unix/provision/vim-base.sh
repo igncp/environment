@@ -79,7 +79,6 @@ let mapleader = "\<Space>"
   nnoremap <leader>fr :set foldmethod=manual<cr>
   nnoremap <leader>fR :set foldmethod=indent<cr>
   vnoremap <leader>ft <c-c>:set foldmethod=manual<cr>mlmk`<kmk`>jmlggvG$zd<c-c>'kVggzf'lVGzfgg<down>
-  nnoremap <leader>r zR
   nnoremap <leader>; za
   onoremap <leader>; <C-C>za
   vnoremap <leader>; zf
@@ -387,8 +386,6 @@ if !exists('g:lasttab')
 endif
 nmap <leader>zt :exe "tabn ".g:lasttab<CR>
 au TabLeave * let g:lasttab = tabpagenr()
-
-nmap <leader>r :tabn g:lasttab<cr>
 EOF
 
 cat >> ~/.vimrc <<"EOF"
