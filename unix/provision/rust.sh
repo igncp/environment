@@ -79,15 +79,4 @@ if ! type "$CMD_CHECK" > /dev/null 2>&1 ; then
   cargo install bindgen
 fi
 
-install_vim_package neoclide/coc-rls
-cat >> ~/.vimrc <<"EOF"
-call add(g:coc_global_extensions, 'coc-rls')
-EOF
-sed -i '$ d' ~/.vim/coc-settings.json
-cat >> ~/.vim/coc-settings.json <<"EOF"
-  ,
-  "rust.clippy_preference": "on"
-}
-EOF
-
 # rust END

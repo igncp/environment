@@ -3,8 +3,6 @@
 # Dependencies:
 # - after: js.sh
 
-install_vim_package neoclide/coc-tsserver
-
 cat >> ~/.vimrc <<"EOF"
 autocmd FileType typescript :exe ConsoleMappingA
 autocmd FileType typescript :exe ConsoleMappingB
@@ -15,17 +13,6 @@ autocmd FileType typescript :exe ConsoleMappingB
   autocmd filetype typescript :exe "inoremap <silent> <c-a> <c-c>:update<cr>:!eslint --fix %<cr>:e<cr>"
   autocmd filetype typescript :exe "nnoremap <silent> <leader>kB :!npx prettier --write %<cr>:e<cr>"
   autocmd filetype typescript :exe "vnoremap <silent> <leader>kB :'<,'>PrettierFragment<cr>"
-
-call add(g:coc_global_extensions, 'coc-tsserver')
-
-autocmd BufNewFile,BufRead *.tsx,*.jsx set filetype=typescriptreact
-EOF
-
-sed -i '$ d' ~/.vim/coc-settings.json
-cat >> ~/.vim/coc-settings.json <<"EOF"
-  ,
-  "typescript.suggestionActions.enabled": false
-}
 EOF
 
 cat > /tmp/colors.vim <<"EOF"

@@ -43,6 +43,7 @@ cat environment/unix/provision/vim-extra.sh >> ~/project/provision/provision.sh
 cat environment/unix/provision/vim-root.sh >> ~/project/provision/provision.sh
 cat environment/unix/provision/js.sh >> ~/project/provision/provision.sh
 cat environment/unix/provision/ts.sh >> ~/project/provision/provision.sh
+cat environment/unix/provision/vim-coc.sh >> ~/project/provision/provision.sh
 
 cat environment/unix/provision/gui-base.sh >> ~/project/provision/provision.sh
 cat environment/unix/provision/gui-i3.sh >> ~/project/provision/provision.sh
