@@ -177,6 +177,9 @@ au BufNewFile,BufRead *.ejs set filetype=html
 " move up/down from the beginning/end of lines
   set ww+=<,>
 
+" always open file in new tab
+  nnoremap gf='<c-w>gf'
+
 nnoremap <leader>kv :%s/\t/  /g<cr>
 vnoremap <F4> :sort<cr>
 inoremap <c-e> <esc>A

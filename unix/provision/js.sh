@@ -181,8 +181,6 @@ nnoremap <leader>jsW :let g:SpecialImports_Cmd='<c-r>=g:SpecialImports_Cmd_Rel_D
 nnoremap <leader>kpt :let g:ctrlp_default_input='__tests__'<cr>:CtrlP<cr>:let g:ctrlp_default_input=''<cr>
 EOF
 
-install_vim_package prettier/vim-prettier
-
 if [ ! -f ~/.npm-completion ]; then
   npm completion > ~/.npm-completion
 fi

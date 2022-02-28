@@ -23,6 +23,7 @@ rm -rf /tmp/expected-vscode-extensions
 
 mkdir -p ~/project/.config
 mkdir -p ~/.check-files
+mkdir -p ~/.scripts
 
 if [ ! -f ~/project/.config/theme ]; then
   echo 'light' > ~/project/.config/theme

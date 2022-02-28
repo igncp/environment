@@ -74,18 +74,19 @@ EOF
 
 cat > "$HOME"/.vim/coc-settings.json <<"EOF"
 {
-  "diagnostic.enableHighlightLineNumber": false,
-  "coc.preferences.jumpCommand": "tab drop",
-  "coc.preferences.enableFloatHighlight": false,
   "coc.preferences.colorSupport": false,
-  "snippets.userSnippetsDirectory": "$HOME/.vim-snippets",
+  "coc.preferences.enableFloatHighlight": false,
+  "coc.preferences.jumpCommand": "tab drop",
+  "diagnostic.enableHighlightLineNumber": false,
   "diagnostic.errorSign": "E",
-  "diagnostic.warningSign": "W",
   "diagnostic.infoSign": "I",
+  "diagnostic.warningSign": "W",
+  "git.enableGutters": false,
   "list.normalMappings": {
     "<C-j>": "command:CocNext",
     "<C-k>": "command:CocPrev"
-  }
+  },
+  "snippets.userSnippetsDirectory": "$HOME/.vim-snippets"
 }
 EOF
 
@@ -110,6 +111,17 @@ if [ ! -f ~/project/.config/without-coc-eslint ]; then
   cat >> ~/.vimrc <<"EOF"
   call add(g:coc_global_extensions, 'coc-eslint')
 EOF
+fi
+
+if [ -f ~/project/.config/coc-prettier ]; then
+  install_vim_package neoclide/coc-prettier
+  sed -i '$ d' ~/.vim/coc-settings.json
+  cat >> ~/.vim/coc-settings.json <<"EOF"
+,
+"coc.preferences.formatOnSaveFiletypes": ["typescriptreact", "typescript", "javascript"]
+}
+EOF
+  echo "call add(g:coc_global_extensions, 'coc-prettier')" >> ~/.vimrc
 fi
 
 cat >> ~/.vimrc <<"EOF"

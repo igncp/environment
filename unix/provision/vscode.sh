@@ -160,6 +160,11 @@ VSCodeInstallExpectedExtensions() {
 }
 EOF
 
+[[ $(type -t add_desktop_common) == function ]] && add_desktop_common \
+  '/usr/bin/code' \
+  'open_vscode' \
+  'Visual Studio VSCode'
+
 # For rofi - add inside custom section
 # add_desktop_common \
   # '/usr/bin/code' \

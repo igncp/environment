@@ -53,14 +53,17 @@ alias TimeManualUnset='sudo systemctl restart systemd-timesyncd.service'
 EOF
 
 cat >> ~/.shell_aliases <<"EOF"
+
 alias PacmanFindPackageOfFile='pacman -Qo'
 alias PacmanListExplicitPackages='pacman -Qe'
+alias PacmanListFilesOfPackage='pacman -Ql'
 alias PacmanListInstalledPackages='sudo pacman -Qs'
 alias PacmanListPackagesByDate='expac --timefmt='%Y-%m-%d %T' '%l\t%n' | sort'
 alias PacmanSearchPackage='pacman -F'
 alias PacmanUpdateRepos='sudo pacman -Sy'
 alias SystemClean='sudo pacman -Sc'
 alias SystemUpgrade='sudo pacman -Syu && yay -Syu --noconfirm'
+
 EOF
 
 install_system_package expac

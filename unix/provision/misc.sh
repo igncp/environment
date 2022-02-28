@@ -4,12 +4,6 @@ if [ ! -d ~/english-words ]; then
   git clone https://github.com/dwyl/english-words ~/english-words
 fi
 
-# cron job
-  # https://crontab.guru
-  crontab <<"EOF"
-*/15 * * * * ~/project/scripts/MyScript.sh
-EOF
-
 # ssh keys
   # sudo chmod 600 ~/.ssh/*
   cat >> ~/.shellrc <<"EOF"
@@ -208,16 +202,6 @@ cat >> ~/.shell_aliases <<"EOF"
 alias PrinterIP='sudo nmap -sn 192.168.1.0/24 > /tmp/nmap-result && grep PRINTER_NAME /tmp/nmap-result --before 2'
 EOF
 
-# coc-prettier
-install_vim_package neoclide/coc-prettier
-sed -i '$ d' ~/.vim/coc-settings.json
-cat >> ~/.vim/coc-settings.json <<"EOF"
-,
-"coc.preferences.formatOnSaveFiletypes": ["typescriptreact", "typescript", "javascript"]
-}
-EOF
-echo "call add(g:coc_global_extensions, 'coc-prettier')" >> ~/.vimrc
-
 # prettier on save using autocommand instead of coc-prettier
 cat >> ~/.vimrc <<"EOF"
 autocmd BufWritePost *.tsx,*.js silent!
@@ -243,5 +227,16 @@ if [ ! -f ~/.check-files/hp-printer ]; then
   # - In Chrome, when choosing print, need to click in `"See more"` the first time
   touch ~/.check-files/hp-printer
 fi
+
+# bluetooth headphones
+  cat > ~/.scripts/bluetooth_headphones_connect.sh <<"EOF"
+#!/usr/bin/env bash
+bluetoothctl power on; bluetoothctl connect "$(cat ~/project/.config/bluetooth-headphones-mac.txt)"
+EOF
+  chmod +x ~/.scripts/bluetooth_headphones_connect.sh
+  add_desktop_common \
+    '/home/igncp/.scripts/bluetooth_headphones_connect.sh' \
+    'bluetooth_headphones_connect' \
+    'Bluetooth Headphones Connect'
 
 # misc END
