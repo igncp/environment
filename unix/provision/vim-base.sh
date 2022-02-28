@@ -172,7 +172,6 @@ vnoremap <leader>ku y:%s/\C<c-r>"//gn<cr>
 
 nnoremap <leader>ku viwy:%s/\C<c-r>"//gn<cr>
 nnoremap <leader>x :set binary<cr>:set noeol<cr>:w<cr>:set nobinary<cr>:set eol<cr>
-nnoremap <leader>ko :mksession! ~/mysession.vim<cr>:qa<cr>
 au BufNewFile,BufRead *.ejs set filetype=html
 
 " move up/down from the beginning/end of lines

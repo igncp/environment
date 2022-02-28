@@ -1,8 +1,9 @@
 # vim-coc START
 
 ## ctrl-w,ctrl-p: move to floating window
-## To remove an extension after installed, comment lines and then:
-##    :CocUninstall coc-name
+# - To remove an extension after installed, comment lines and then: :CocUninstall coc-name
+# - To open multiple references at once: enter in visual mode inside the quickfix window and select multiple
+#   - Press `t` to open each case in new tab, press `enter` to open each file (unless already opened) in new tab
 
 install_vim_package neoclide/coc.nvim
 install_vim_package josa42/coc-sh
@@ -29,11 +30,14 @@ nmap <silent> g[ <Plug>(coc-diagnostic-prev)
 nmap <silent> g] <Plug>(coc-diagnostic-next)
 
 nnoremap <silent> <leader>dd :<C-u>CocList diagnostics<cr>
-nnoremap <leader>dc :CocEnable<cr>
-nnoremap <leader>dC :CocDisable<cr>
+nnoremap <leader>dc :CocList commands<cr>
+nnoremap <leader>de :CocEnable<cr>
+nnoremap <leader>dE :CocDisable<cr>
 nnoremap <leader>ds :CocCommand<cr>
 nnoremap <leader>da :CocAction<cr>
+vnoremap <leader>da :CocAction<cr>
 nnoremap <leader>df <Plug>(coc-fix-current)
+vnoremap <leader>df <Plug>(coc-fix-current)
 nnoremap <leader>dl <Plug>(coc-codelens-action)
 nnoremap <leader>do <Plug>(coc-codeaction)
 nnoremap <leader>dr <Plug>(coc-rename)

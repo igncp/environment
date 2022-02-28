@@ -105,4 +105,7 @@ cat >> ~/.shell_aliases <<"EOF"
 alias GPGPinentryList='pacman -Ql pinentry | grep /usr/bin/'
 EOF
 
+# Used by coc-tsserver for some of the refactors
+install_with_yay watchman
+
 # arch-beginning END
