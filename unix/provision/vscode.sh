@@ -165,10 +165,4 @@ EOF
   'open_vscode' \
   'Visual Studio VSCode'
 
-# For rofi - add inside custom section
-# add_desktop_common \
-  # '/usr/bin/code' \
-  # 'open_vscode' \
-  # 'Visual Studio VSCode'
-
 # vscode END

@@ -178,7 +178,7 @@ au BufNewFile,BufRead *.ejs set filetype=html
   set ww+=<,>
 
 " always open file in new tab
-  nnoremap gf='<c-w>gf'
+  nnoremap gf <c-w>gf
 
 nnoremap <leader>kv :%s/\t/  /g<cr>
 vnoremap <F4> :sort<cr>
