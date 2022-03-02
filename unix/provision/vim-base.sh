@@ -542,6 +542,28 @@ endfunction
 map <leader>cf :call ShowHexColorUnderCursor()<CR>
 EOF
 
+# Open an existing tab using FZF
+cat >> ~/.vimrc <<"EOF"
+" http://ericnode.info/post/fzf_jump_to_tab_in_vim/
+function TabName(n)
+  let buflist = tabpagebuflist(a:n)
+  let winnr = tabpagewinnr(a:n)
+  return fnamemodify(bufname(buflist[winnr - 1]), ':t')
+endfunction
+
+function! s:JumpToTab(line)
+  let pair = split(a:line, ' ')
+  let cmd = pair[0].'gt'
+  execute 'normal' cmd
+endfunction
+
+nnoremap <silent> e :call fzf#run({
+\   'source':  reverse(map(range(1, tabpagenr('$')), 'v:val." "." ".TabName(v:val)')),
+\   'sink':    function('<sid>JumpToTab'),
+\   'down':    tabpagenr('$') + 2
+\ })<CR>
+EOF
+
 # vim-extra available
 
 # vim-base END

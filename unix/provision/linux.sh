@@ -10,20 +10,26 @@ EOF
 fi
 
 cat >> ~/.shell_aliases <<"EOF"
-alias HongKongTimezone='sudo timedatectl set-timezone Asia/Hong_Kong'
 alias JournalctlDiskUsage='sudo journalctl --disk-usage'
 alias LinuxLsCPU='lscpu'
 alias LinuxLsHardware='sudo lshw'
 alias LinuxLsHardwarePCI='lspci'
 alias LinuxLsKernelModules='lsmod'
-alias MadridTimezone='sudo timedatectl set-timezone Europe/Madrid'
 alias SystemFailed='systemctl --failed'
-alias SystemFailedClear='systemctl reset-failed'
+alias SystemFailedReset='systemctl reset-failed'
 alias SystemJournalErrors='sudo journalctl -p 3 -xb'
-alias TimeRestartService='sudo systemctl restart systemd-timesyncd.service'
-alias TokyoTimezone='sudo timedatectl set-timezone Asia/Tokyo'
 
 SystemdFindReference() { sudo grep -r "$1" /usr/lib/systemd/system/; }
+EOF
+
+cat >> ~/.shell_aliases <<"EOF"
+alias HongKongTimezone='sudo timedatectl set-timezone Asia/Hong_Kong'
+alias MadridTimezone='sudo timedatectl set-timezone Europe/Madrid'
+alias TimeSyncRestart='sudo systemctl restart systemd-timesyncd.service'
+alias TimeSyncShow='timedatectl show-timesync --all'
+alias TimeSyncStatus='timedatectl timesync-status'
+alias TimezoneShow='timedatectl status'
+alias TokyoTimezone='sudo timedatectl set-timezone Asia/Tokyo'
 EOF
 
 cat >> ~/.shell_aliases <<"EOF"

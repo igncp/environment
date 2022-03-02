@@ -77,6 +77,7 @@ pacman -S ufw --noconfirm
 
 ufw allow ssh
 
+# https://archlinuxarm.org/forum/viewtopic.php?f=57&t=15463#p67275
 systemctl enable systemd-timesyncd.service
 systemctl restart systemd-networkd
 systemctl enable ufw
