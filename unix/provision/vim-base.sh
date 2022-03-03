@@ -548,7 +548,8 @@ cat >> ~/.vimrc <<"EOF"
 function TabName(n)
   let buflist = tabpagebuflist(a:n)
   let winnr = tabpagewinnr(a:n)
-  return fnamemodify(bufname(buflist[winnr - 1]), ':t')
+  let name = bufname(buflist[winnr - 1])
+  return fnamemodify(name, ':h') . '/' . fnamemodify(name, ':t')
 endfunction
 
 function! s:JumpToTab(line)
