@@ -33,6 +33,18 @@ let mapleader = "\<Space>"
     let @@ = temp
   endf
 
+" useful maps for macros
+  nnoremap Q @q
+  nnoremap <leader>E :tabnew ~/project/provision/vim-macros-custom<cr>
+  nnoremap <leader>ze _v$hy:let @="<c-r>""<C-home><right><right><right><right><right>
+  " if adding to a register, use doube quotes and replace with:
+    " \<C-[> => \<esc>
+    " \<C-M> => \<cr>
+    " b  => \<esc>
+    "  => \<esc>
+    " k => \<bs>
+    " <fd>V => \<C-Right>
+
 " replace in selection
   vnoremap <leader>zr :<bs><bs><bs><bs><bs>%s/\%V\C//g<left><left><left>
   vnoremap <leader>zR :<bs><bs><bs><bs><bs>%s/\%V\C<c-r>"//g<left><left>

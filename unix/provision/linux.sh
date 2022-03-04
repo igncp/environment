@@ -11,13 +11,18 @@ fi
 
 cat >> ~/.shell_aliases <<"EOF"
 alias JournalctlDiskUsage='sudo journalctl --disk-usage'
+alias JournalctlKernel='sudo journalctl -k'
+alias JournalctlLsBoots='sudo journalctl --list-boots'
+alias JournalctlSystemErrors='sudo journalctl -p 3 -x'
+alias JournalctlUnit='sudo journalctl -u' # e.g. JournalctlUnit ufw -b
+alias JournalctlUser='sudo journalctl _UID=' # find with `id USER_NAME`
+
 alias LinuxLsCPU='lscpu'
 alias LinuxLsHardware='sudo lshw'
 alias LinuxLsHardwarePCI='lspci'
 alias LinuxLsKernelModules='lsmod'
 alias SystemFailed='systemctl --failed'
 alias SystemFailedReset='systemctl reset-failed'
-alias SystemJournalErrors='sudo journalctl -p 3 -xb'
 
 SystemdFindReference() { sudo grep -r "$1" /usr/lib/systemd/system/; }
 EOF

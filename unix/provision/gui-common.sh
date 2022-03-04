@@ -92,8 +92,6 @@ if [ -f ~/project/.config/vnc-server ]; then install_system_package x11vnc; fi
 
 if [ -f ~/project/.config/discord ]; then install_system_package discord; fi
 
-# remember to put the theme inside `/boot` if encrypted disk
-# needs root access to start
-install_system_package grub-customizer
+if [ -f ~/project/.config/gedit ]; then install_system_package gedit; fi
 
 # gui-common END

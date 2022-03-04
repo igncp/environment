@@ -119,18 +119,6 @@ execute pathogen#infect()
     let g:CustomZPDir=getcwd()
   endif
 
-" useful maps for macros
-  nnoremap W @q
-  nnoremap <leader>E :tabnew ~/project/provision/vim-macros-custom<cr>
-  nnoremap <leader>ze _v$hy:let @="<c-r>""<C-home><right><right><right><right><right>
-  " if adding to a register, use doube quotes and replace with:
-    " \<C-[> => \<esc>
-    " \<C-M> => \<cr>
-    " b  => \<esc>
-    "  => \<esc>
-    " k => \<bs>
-    " <fd>V => \<C-Right>
-
 " save file shortcuts
   nnoremap <leader>ks :silent exec "!mkdir -p <c-R>=expand("%:p:h")<cr>"<cr>:w<cr>:silent exec ":CtrlPClearAllCaches"<cr>
 

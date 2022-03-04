@@ -3,12 +3,18 @@
 # AddKeysToAgent yes # Only input passphrase once per agent
 
 Host foo
-  User bar # Automatically use a certain user
-  StrictHostKeyChecking no # Don't check for existing record
-  UserKnownHostsFile /dev/null # Don't save host in record after connecting
+  # Automatically use a certain user
+  User bar
+
+  # Don't check for existing record
+  StrictHostKeyChecking no
+
+  # Don't save host in record after connecting
+  UserKnownHostsFile /dev/null
 
   # Use a specific SSH key
   IdentitiesOnly yes
   IdentityFile /home/igncp/.ssh/foo
 
-  ServerAliveInterval 240 # Helps to not freeze connection when idle
+  # Helps to not freeze connection when idle
+  ServerAliveInterval 240

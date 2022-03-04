@@ -22,13 +22,6 @@ EOF
   # In case there are many keys, can use this for specific cases:
   # git config core.sshCommand "ssh -i ~/.ssh/KEY_NAME -o 'IdentitiesOnly yes'"
 
-# convenient alias to expand (ctrl-alt-e)
-  mkdir -p ~/diffs
-  cat >> ~/.shell_aliases <<"EOF"
-alias GD='git diff > ~/diffs/'
-alias GA='git apply ~/diffs/'
-EOF
-
 # ssh greeting and session message
   cat >> ~/.shell_aliases <<"EOF"
 alias SSHRestart='sudo systemctl restart sshd.service'
@@ -49,17 +42,6 @@ echo ""
 echo "  -> task list"
 task list
 EOF
-
-# geeknote: requires python2
-if ! type geeknote > /dev/null 2>&1 ; then
-  cd ~; sudo rm -rf geeknote
-  git clone https://github.com/jeffkowalski/geeknote
-  pip install lxml proxyenv
-  cd geeknote
-  sudo python2 setup.py install
-  cd ~; sudo rm -rf geeknote
-  geeknote settings --editor "$EDITOR"
-fi
 
 # useful fonts: https://github.com/ryanoasis/nerd-fonts#patched-fonts
   # using monofur at the moment
@@ -196,12 +178,6 @@ UmountEncryptedDeviceNAME() {
 }
 EOF
 
-# Ping Local Network (for grep)
-echo 'Replace PRINTER_NAME with the model number (e.g. HP) and remove this message'
-cat >> ~/.shell_aliases <<"EOF"
-alias PrinterIP='sudo nmap -sn 192.168.1.0/24 > /tmp/nmap-result && grep PRINTER_NAME /tmp/nmap-result --before 2'
-EOF
-
 # prettier on save using autocommand instead of coc-prettier
 cat >> ~/.vimrc <<"EOF"
 autocmd BufWritePost *.tsx,*.js silent!
@@ -233,10 +209,22 @@ fi
 #!/usr/bin/env bash
 bluetoothctl power on; bluetoothctl connect "$(cat ~/project/.config/bluetooth-headphones-mac.txt)"
 EOF
-  chmod +x ~/.scripts/bluetooth_headphones_connect.sh
+  cat > ~/.scripts/bluetooth_headphones_disconnect.sh <<"EOF"
+#!/usr/bin/env bash
+bluetoothctl disconnect "$(cat ~/project/.config/bluetooth-headphones-mac.txt)"
+EOF
+  cat >> ~/.shell_aliases <<"EOF"
+alias BluetoothHeadphonesConnect="bash ~/.scripts/bluetooth_headphones_connect.sh"
+alias BluetoothHeadphonesDisconnect="bash ~/.scripts/bluetooth_headphones_disconnect.sh"
+EOF
+  chmod +x ~/.scripts/bluetooth_headphones_connect.sh ~/.scripts/bluetooth_headphones_disconnect.sh
   add_desktop_common \
     '/home/igncp/.scripts/bluetooth_headphones_connect.sh' \
     'bluetooth_headphones_connect' \
     'Bluetooth Headphones Connect'
+  add_desktop_common \
+    '/home/igncp/.scripts/bluetooth_headphones_disconnect.sh' \
+    'bluetooth_headphones_disconnect' \
+    'Bluetooth Headphones Disconnect'
 
 # misc END
