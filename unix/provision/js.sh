@@ -81,6 +81,9 @@ cat >> ~/.vimrc <<"EOF"
   augroup JsonToJsonc
     autocmd! FileType json set filetype=jsonc
   augroup END
+
+" add return to JS function (e.g. in arrow function)
+  vnoremap <leader>er di{}<c-c>i<cr>return <c-c>p
 EOF
 
 install_node_modules markdown-toc

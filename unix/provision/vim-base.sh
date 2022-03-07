@@ -102,7 +102,7 @@ let mapleader = "\<Space>"
 " reload all saved files without warnings
   set autoread
   autocmd FocusGained * checktime
-  nnoremap <leader>e :checktime<cr>
+  nnoremap <leader>ee :checktime<cr>
 
 " open url under cursor
   nnoremap <silent> gx :execute 'silent! !xdg-open ' . shellescape(expand('<cWORD>'), 1)<cr>
