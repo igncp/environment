@@ -94,19 +94,13 @@ install_system_package rofi
 
 if type dunst > /dev/null 2>&1 ; then
   add_desktop_common \
-    'dunstctl set-paused true' \
-    'disable_notifications' \
-    'Disable Notifications'
+    'dunstctl set-paused true' 'disable_notifications' 'Disable Notifications'
 
   add_desktop_common \
-    'dunstctl set-paused false; notify-send "Time"' \
-    'enable_notifications' \
-    'Enable Notifications'
+    'dunstctl set-paused false; notify-send "Time"' 'enable_notifications' 'Enable Notifications'
 fi
 
 add_desktop_common \
-  '/home/igncp/wallpaper-update.sh' \
-  'wallpaper-update' \
-  'Wallpaper Update'
+  '/home/igncp/wallpaper-update.sh' 'wallpaper-update' 'Wallpaper Update'
 
 # gui-i3 END

@@ -35,7 +35,8 @@ let mapleader = "\<Space>"
 
 " useful maps for macros
   nnoremap Q @q
-  nnoremap <leader>E :tabnew ~/project/provision/vim-macros-custom<cr>
+  nnoremap <leader>eE :tabnew ~/project/provision/vim-macros-custom<cr>
+  nnoremap <leader>ee :tabnew ~/.vim-macros
   nnoremap <leader>ze _v$hy:let @="<c-r>""<C-home><right><right><right><right><right>
   " if adding to a register, use doube quotes and replace with:
     " \<C-[> => \<esc>
@@ -102,7 +103,7 @@ let mapleader = "\<Space>"
 " reload all saved files without warnings
   set autoread
   autocmd FocusGained * checktime
-  nnoremap <leader>ee :checktime<cr>
+  nnoremap <leader>ec :checktime<cr>
 
 " open url under cursor
   nnoremap <silent> gx :execute 'silent! !xdg-open ' . shellescape(expand('<cWORD>'), 1)<cr>

@@ -123,31 +123,28 @@ xbindkeys
 EOF
 echo 'alias XbindkeysMultikey="xbindkeys --multikey"' >> ~/.shell_aliases
 
-# nvidia
 if [ -f ~/project/.config/nvidia ]; then
   if [ "$(cat ~/project/.config/nvidia)" == "yes" ]; then
     install_system_package nvidia nvidia-smi
     install_system_package nvidia-settings
-    echo "alias NvidiaSettings='nvidia-settings'" >> ~/.shell_aliases
     if [ ! -f ~/.check-files/nvidia-installed ]; then
-      sudo pacman -S --noconfirm \
-        nvidia-utils \
-        mesa
+      sudo pacman -S --noconfirm nvidia-utils mesa
       touch ~/.check-files/nvidia-installed
     fi
-    cat > ~/.nvidia-config.sh <<"EOF"
+    cat > ~/.scripts/nvidia-config.sh <<"EOF"
 #!/usr/bin/env bash
 if [ ! -f /home/igncp/.nvidia-settings-rc ]; then
-  nvidia-settings 2>&1 > /dev/null &
+  exit
 fi
-
 sed -i 's|Brightness=.*|Brightness=-0.710000|g' /home/igncp/.nvidia-settings-rc
 sed -i 's|Contrast=.*|Contrast=-0.710000|g' /home/igncp/.nvidia-settings-rc
-sed -i 's|Gamma=.*|Gamma=0.774667|g' /home/igncp/.nvidia-settings-rc
-
+sed -i 's|Gamma=.*|Gamma=1.087667|g' /home/igncp/.nvidia-settings-rc
 nvidia-settings --load-config-only
 EOF
-    sed -i '1isleep 5s && sh /home/igncp/.nvidia-config.sh' ~/.xinitrc
+    if [ ! -f /home/igncp/.nvidia-settings-rc ]; then
+      echo "/home/igncp/.nvidia-settings-rc doesn't exist. Run 'nvidia-settings' to generate it"
+    fi
+    sed -i '1isleep 5s && sh /home/igncp/.scripts/nvidia-config.sh' ~/.xinitrc
   fi
 else
   echo "[~/project/.config/nvidia]: file is missing, add it with 'yes' or 'no' to install nvidia packages"
@@ -195,7 +192,7 @@ fi
 # */1 * * * * /home/igncp/.battery-warning.sh
 
 if ! type virtualbox > /dev/null 2>&1 ; then
-  install_system_package virtualbox-host-modules-arch virtualbox
+  install_system_package virtualbox-host-modules-arch
   install_system_package virtualbox
 fi
 
@@ -214,7 +211,7 @@ fi
 if [ ! -f ~/.check-files/lightdm ]; then
   sudo pacman -S --noconfirm lightdm lightdm-gtk-greeter
 
-  sudo systemctl enable lightdm.service
+  sudo systemctl enable --now lightdm.service
 
   # sudo pacman -S --noconfirm accountsservice # to fix a journalctl error
 

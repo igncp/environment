@@ -65,6 +65,17 @@ EOF
   sudo mv /tmp/android-studio.desktop /usr/share/applications/
 fi
 
+if [[ $(type -t add_desktop_common) == function ]]; then
+  cat > ~/.scripts/open_chrome_inspect_devices.sh <<"EOF"
+#!/usr/bin/env bash
+echo 'chrome://inspect/#devices' | xclip -selection clipboard
+i3-msg 'workspace e; exec google-chrome-stable --new-window'
+EOF
+  chmod +x ~/.scripts/open_chrome_inspect_devices.sh
+  add_desktop_common \
+    '/home/igncp/.scripts/open_chrome_inspect_devices.sh' 'inspect_devices' 'Inspect Devices'
+fi
+
 # if running emulator on I3, move to floating mode
 
 # android END
