@@ -46,8 +46,8 @@ cat environment/unix/provision/ts.sh >> ~/project/provision/provision.sh
 cat environment/unix/provision/vim-coc.sh >> ~/project/provision/provision.sh
 
 cat environment/unix/provision/gui-base.sh >> ~/project/provision/provision.sh
-cat environment/unix/provision/gui-i3.sh >> ~/project/provision/provision.sh
 cat environment/unix/provision/gui-common.sh >> ~/project/provision/provision.sh
+cat environment/unix/provision/gui-i3.sh >> ~/project/provision/provision.sh
 cp environment/unix/config-files/fonts.conf ~/project/provision/
 cp environment/unix/config-files/alacritty.yml ~/project/provision/
 cp environment/unix/config-files/i3-config ~/project/provision/
