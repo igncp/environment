@@ -72,25 +72,7 @@ fi
 
 echo 'exec /home/igncp/wallpaper-update.sh' >> ~/.config/i3/config
 
-mkdir -p ~/.rofi_scripts
-
-add_desktop_common() {
-  CMD="$1"; FILE_NAME="$2"; NAME="$3"
-  echo "$CMD" > ~/.rofi_scripts/"$FILE_NAME".sh
-  chmod +x ~/.rofi_scripts/"$FILE_NAME".sh
-  printf "[Desktop Entry]\nName=$NAME\nExec=/home/igncp/.rofi_scripts/$FILE_NAME.sh\nType=Application" > /tmp/"$FILE_NAME".desktop
-  sudo mv /tmp/"$FILE_NAME".desktop /usr/share/applications/
-}
-  # For example:
-  # add_desktop_common \
-    # '/usr/bin/xdg-open /foo/bar.odt' \
-    # 'open_foo_bar' \
-    # 'Open Foo Bar'
-  # Other command: google-chrome-stable https://foo.com
-
 # I3 needs terminal emulator (e.g. terminator from gui-common) and may require custom fonts (e.g. arch-gui)
-
-install_system_package rofi
 
 if type dunst > /dev/null 2>&1 ; then
   add_desktop_common \
@@ -99,8 +81,5 @@ if type dunst > /dev/null 2>&1 ; then
   add_desktop_common \
     'dunstctl set-paused false; notify-send "Time"' 'enable_notifications' 'Enable Notifications'
 fi
-
-add_desktop_common \
-  '/home/igncp/wallpaper-update.sh' 'wallpaper-update' 'Wallpaper Update'
 
 # gui-i3 END

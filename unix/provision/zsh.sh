@@ -125,6 +125,8 @@ _zsh_cli_fg() {
 }
 zle -N _zsh_cli_fg
 bindkey '^X' _zsh_cli_fg
+
+alias HistoryDisable='unset HISTFILE'
 EOF
 if [ "$PROVISION_OS" == "LINUX" ]; then
   echo 'eval "$(dircolors /home/igncp/.dircolors)"' >> ~/.zshrc

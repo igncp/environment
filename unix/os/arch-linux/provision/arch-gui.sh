@@ -59,22 +59,23 @@ CopyQReadN() {
 }
 EOF
 
-# notifications handler (notify-send)
-if ! type dunst > /dev/null 2>&1 ; then
-  echo "Installing Dunst"
-  (cd ~ \
-    && rm -rf dunst \
-    && git clone https://github.com/dunst-project/dunst.git \
-    && cd dunst \
-    && make && sudo make install)
-  (mkdir -p ~/.config/dunst \
-    && cp ~/dunst/dunstrc ~/.config/dunst/ \
-    && rm -rf ~/dunst)
+if [ -z "$ARM_ARCH" ]; then
+  if ! type dunst > /dev/null 2>&1 ; then
+    echo "Installing Dunst"
+    (cd ~ \
+      && rm -rf dunst \
+      && git clone https://github.com/dunst-project/dunst.git \
+      && cd dunst \
+      && make && sudo make install)
+    (mkdir -p ~/.config/dunst \
+      && cp ~/dunst/dunstrc ~/.config/dunst/ \
+      && rm -rf ~/dunst)
+  fi
+  sed -i 's| history =|#history =|' ~/.config/dunst/dunstrc
+  sed -i 's|font = .*$|font = Monospace 12|' ~/.config/dunst/dunstrc
+  sed -i 's|geometry = .*$|geometry = "500x5-30+20"|' ~/.config/dunst/dunstrc
+  sed -i '1isleep 5s && dunst &' ~/.xinitrc
 fi
-sed -i 's| history =|#history =|' ~/.config/dunst/dunstrc
-sed -i 's|font = .*$|font = Monospace 12|' ~/.config/dunst/dunstrc
-sed -i 's|geometry = .*$|geometry = "500x5-30+20"|' ~/.config/dunst/dunstrc
-sed -i '1isleep 5s && dunst &' ~/.xinitrc
 
 # Keys handling (for host)
 # For Brightness: update intel_backlight with the correct card
@@ -191,11 +192,6 @@ fi
 # crontab -e
 # */1 * * * * /home/igncp/.battery-warning.sh
 
-if ! type virtualbox > /dev/null 2>&1 ; then
-  install_system_package virtualbox-host-modules-arch
-  install_system_package virtualbox
-fi
-
 if [ ! -f ~/.check-files/arch-fonts ]; then
   sudo pacman -S --noconfirm \
     adobe-source-han-sans-jp-fonts \
@@ -207,18 +203,6 @@ if [ ! -f ~/.check-files/arch-fonts ]; then
     otf-ipafont
   touch ~/.check-files/arch-fonts
 fi
-
-if [ ! -f ~/.check-files/lightdm ]; then
-  sudo pacman -S --noconfirm lightdm lightdm-gtk-greeter
-
-  sudo systemctl enable --now lightdm.service
-
-  # sudo pacman -S --noconfirm accountsservice # to fix a journalctl error
-
-  touch ~/.check-files/lightdm
-fi
-rm -rf ~/.xprofile
-ln -s ~/.xinitrc ~/.xprofile
 
 install_with_yay pdfsam # PDF manipulation
 install_with_yay variety-git variety # Wallpapers
@@ -234,29 +218,47 @@ fi
 install_system_package irssi
 echo 'alias Irssi="irssi"' >> ~/.shell_aliases
 
-install_with_yay google-chrome google-chrome-stable
-
 install_with_yay lxqt-sudo-git lxqt-sudo # for rofi
 
 if [ -f ~/project/.config/figma ]; then install_with_yay figma-linux; fi
 
-install_with_yay espanso
-check_file_exists ~/project/provision/espanso.yml
-touch ~/project/provision/espansoCustom.yml
-cat > /tmp/espanso_cp_config.sh <<"EOF"
+if [ -z "$ARM_ARCH" ]; then
+  if ! type virtualbox > /dev/null 2>&1 ; then
+    install_system_package virtualbox-host-modules-arch
+    install_system_package virtualbox
+  fi
+
+  if [ ! -f ~/.check-files/lightdm ]; then
+    sudo pacman -S --noconfirm lightdm lightdm-gtk-greeter
+
+    sudo systemctl enable --now lightdm.service
+
+    # sudo pacman -S --noconfirm accountsservice # to fix a journalctl error
+
+    touch ~/.check-files/lightdm
+  fi
+  rm -rf ~/.xprofile
+  ln -s ~/.xinitrc ~/.xprofile
+
+  install_with_yay google-chrome google-chrome-stable
+
+  install_with_yay espanso
+  check_file_exists ~/project/provision/espanso.yml
+  touch ~/project/provision/espansoCustom.yml
+  cat > /tmp/espanso_cp_config.sh <<"EOF"
 set -e
 cp ~/project/provision/espanso.yml ~/.config/espanso/default.yml
 cat ~/project/provision/espansoCustom.yml >> ~/.config/espanso/default.yml
 EOF
-sh /tmp/espanso_cp_config.sh
-if ! type modulo > /dev/null 2>&1 ; then
-  cd /tmp; rm -rf ~/modulo
-  git clone https://aur.archlinux.org/modulo.git
-  cd modulo
-  makepkg -si --noconfirm
-  cd /tmp; rm -rf ~/modulo
-fi
-cat >> ~/.shell_aliases <<"EOF"
+  sh /tmp/espanso_cp_config.sh
+  if ! type modulo > /dev/null 2>&1 ; then
+    cd /tmp; rm -rf ~/modulo
+    git clone https://aur.archlinux.org/modulo.git
+    cd modulo
+    makepkg -si --noconfirm
+    cd /tmp; rm -rf ~/modulo
+  fi
+  cat >> ~/.shell_aliases <<"EOF"
 alias EspansoDisable='killall espanso'
 alias EspansoEnable='espanso daemon &'
 EspansoConfigure() {
@@ -265,5 +267,6 @@ EspansoConfigure() {
   echo Copied espanso config
 }
 EOF
+fi
 
 # arch-gui END

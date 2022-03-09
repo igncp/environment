@@ -204,27 +204,4 @@ if [ ! -f ~/.check-files/hp-printer ]; then
   touch ~/.check-files/hp-printer
 fi
 
-# bluetooth headphones
-  cat > ~/.scripts/bluetooth_headphones_connect.sh <<"EOF"
-#!/usr/bin/env bash
-bluetoothctl power on; bluetoothctl connect "$(cat ~/project/.config/bluetooth-headphones-mac.txt)"
-EOF
-  cat > ~/.scripts/bluetooth_headphones_disconnect.sh <<"EOF"
-#!/usr/bin/env bash
-bluetoothctl disconnect "$(cat ~/project/.config/bluetooth-headphones-mac.txt)"
-EOF
-  cat >> ~/.shell_aliases <<"EOF"
-alias BluetoothHeadphonesConnect="bash ~/.scripts/bluetooth_headphones_connect.sh"
-alias BluetoothHeadphonesDisconnect="bash ~/.scripts/bluetooth_headphones_disconnect.sh"
-EOF
-  chmod +x ~/.scripts/bluetooth_headphones_connect.sh ~/.scripts/bluetooth_headphones_disconnect.sh
-  add_desktop_common \
-    '/home/igncp/.scripts/bluetooth_headphones_connect.sh' \
-    'bluetooth_headphones_connect' \
-    'Bluetooth Headphones Connect'
-  add_desktop_common \
-    '/home/igncp/.scripts/bluetooth_headphones_disconnect.sh' \
-    'bluetooth_headphones_disconnect' \
-    'Bluetooth Headphones Disconnect'
-
 # misc END
