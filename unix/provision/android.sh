@@ -11,6 +11,7 @@ fi
 if [ ! -f "$HOME"/project/.config/android-path ]; then
   echo '[~/project/.config/android-path]: Update to the correct path inside ~/project/.config/android-path'
   echo 'If using studio, remember to first open it and download the CLI tools from Menu > Tools > SDK Manager'
+  echo 'Example for android-path when using studio: /home/igncp/Android/Sdk'
 fi
 
 cat >> ~/.shellrc <<"EOF"
@@ -37,6 +38,7 @@ EOF
 cat >> ~/.shell_aliases <<"EOF"
 alias AndroidStudioExit='studio.sh & exit'
 alias AndroidAVDManagerListAVD='avdmanager list avd'
+alias AndroidSdkListInstalled='sdkmanager --list_installed' # pass --verbose to see more
 alias EmulatorLaunch='emulator -avd'
 EOF
 
