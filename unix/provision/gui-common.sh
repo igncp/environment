@@ -165,4 +165,8 @@ add_desktop_common \
 add_desktop_common \
   '/home/igncp/.scripts/bluetooth_headphones_disconnect.sh' 'bluetooth_headphones_disconnect' 'Bluetooth Headphones Disconnect'
 
+install_with_yay xbindkeys_config-gtk2 xbindkeys_config
+add_desktop_common \
+  '/usr/bin/xbindkeys_config' 'xbindkeys_config' 'XBindKeys Config'
+
 # gui-common END
