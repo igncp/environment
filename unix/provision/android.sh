@@ -50,7 +50,11 @@ if ! type adb > /dev/null 2>&1 ; then
 fi
 
 cat >> ~/.shell_aliases <<"EOF"
-alias AdbOpenDeeplink='adb shell am start -d'
+alias AdbOpenDeeplink='adb shell am start -d' # for query strings, encode with `encodeURIComponent`
+alias AdbLogcat='adb shell logcat'
+alias AdbAPKs='adb shell pm list packages -f'
+alias AdbShutdown='adb shell reboot -p'
+alias AdbForceStop='adb shell am force-stop' # pass package name
 EOF
 
 if [ "$PROVISION_OS" == "LINUX" ]; then
