@@ -10,6 +10,12 @@ syntax off
 set number
 filetype plugin indent on
 let mapleader = "\<Space>"
+set mouse-=a
+vnoremap <Del> "_d
+nnoremap <Del> "_d
+nnoremap Q @q
+nnoremap r gt
+nnoremap R gT
 EOF
 sudo mv /tmp/.vimrc /root/.vimrc
 
