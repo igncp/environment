@@ -82,6 +82,14 @@ EOF
     '/home/igncp/.scripts/open_chrome_inspect_devices.sh' 'inspect_devices' 'Inspect Devices'
 fi
 
+cat >> ~/.shell_aliases <<"EOF"
+alias GradleProjects='./gradlew projects'
+alias GradleTasks='./gradlew tasks'
+alias GradleTasksAll='./gradlew tasks --all'
+alias GradleHelpTask='./gradlew -q help --task' # example: GradleHelpTask 'assemble'
+alias GradleDependencies='./gradlew -q buildEnvironment'
+EOF
+
 # if running emulator on I3, move to floating mode
 
 # android END

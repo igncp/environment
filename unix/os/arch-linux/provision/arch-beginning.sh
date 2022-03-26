@@ -109,10 +109,4 @@ cat >> ~/.shell_aliases <<"EOF"
 alias GPGPinentryList='pacman -Ql pinentry | grep /usr/bin/'
 EOF
 
-# It doesn't compile in Raspberry Pi
-if [ -z "$ARM_ARCH" ]; then
-  # Used by coc-tsserver for some of the refactors
-  install_with_yay watchman
-fi
-
 # arch-beginning END
