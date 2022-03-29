@@ -22,6 +22,4 @@ vscjava.vscode-java-test
 vscjava.vscode-maven
 EOF
 
-# jvm-extras available
-
 # jvm END

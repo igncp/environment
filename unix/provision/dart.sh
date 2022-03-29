@@ -1,7 +1,5 @@
 # dart START
 
-# Check jvm-extras for Android Studio configuration
-
 cat >> ~/.bashrc <<"EOF"
 export PATH="$PATH:$HOME/flutter/bin"
 export PATH="$PATH:$HOME/flutter/bin/cache/dart-sdk/bin"
