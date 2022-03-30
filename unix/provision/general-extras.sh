@@ -1,7 +1,5 @@
 # general-extras START
 
-set -e
-
 install_system_package at
 install_system_package ctags
 install_system_package strace
@@ -20,15 +18,6 @@ cat > ~/.ctags <<"EOF"
 --regex-markdown=/^#[ \t]+(.*)/\1/h,Heading_L1/
 --regex-markdown=/^##[ \t]+(.*)/\1/i,Heading_L2/
 --regex-markdown=/^###[ \t]+(.*)/\1/k,Heading_L3/
-EOF
-
-install_system_package task
-cat >> ~/.shell_aliases <<"EOF"
-alias t='task'
-EOF
-cat >> ~/.shell_sources <<"EOF"
-source_if_exists /usr/share/doc/task/scripts/bash/task.sh # to have _task available
-complete -o nospace -F _task t
 EOF
 
 install_system_package shellcheck
