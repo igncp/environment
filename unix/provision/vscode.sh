@@ -44,7 +44,7 @@ cat > /tmp/vscode-settings.json <<"EOF"
         "statusBar.noFolderBackground": "#222225",
         "statusBar.debuggingBackground": "#511f1f",
     },
-    "workbench.colorTheme": "Visual Studio Light",
+    "workbench.colorTheme": "Default High Contrast",
     "workbench.editor.enablePreview": false,
     "workbench.startupEditor": "newUntitledFile",
     "workbench.statusBar.visible": true,
