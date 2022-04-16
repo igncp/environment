@@ -12,6 +12,10 @@ fi
 cat >> /tmp/expected-vscode-extensions <<"EOF"
 felixfbecker.php-debug
 EOF
+cat >> ~/.vimrc <<"EOF"
+" https://github.com/prettier/plugin-php#configuration
+autocmd filetype php :exe "nnoremap <silent> <leader>kB :!npx prettier --write %<cr>:e<cr>"
+EOF
 
 # composer
   if ! type composer > /dev/null 2>&1 ; then
