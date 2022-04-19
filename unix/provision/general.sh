@@ -221,6 +221,7 @@ alias HierarchyManual='man hier'
 alias LastColumn="awk '{print "'$NF'"}'"
 alias PathShow='echo $PATH | tr ":" "\n" | sort | uniq | less'
 alias RsyncDelete='rsync -rhv --delete' # remember to add a slash at the end of source (dest doesn't matter)
+alias SHA256='openssl sha256'
 alias ShellChangeToBash='chsh -s /bin/bash; exit'
 alias SocketSearch='sudo ss -lntup'
 alias Sudo='sudo -E ' # this preserves aliases and environment in root
