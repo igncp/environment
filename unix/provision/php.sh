@@ -15,6 +15,10 @@ EOF
 cat >> ~/.vimrc <<"EOF"
 " https://github.com/prettier/plugin-php#configuration
 autocmd filetype php :exe "nnoremap <silent> <leader>kB :!npx prettier --write %<cr>:e<cr>"
+
+nmap <leader>ll viw"iy:silent exec "!npx open-cli https://developer.wordpress.org/reference/functions/" . '<c-r>i' . " &"<CR>
+nmap <leader>lh viw"iy:silent exec "!npx open-cli https://developer.wordpress.org/reference/hooks/" . '<c-r>i' . " &"<CR>
+nmap <leader>lf viw"iy:silent exec "!npx open-cli https://www.php.net/manual/en/function." . substitute("<c-r>i", "_", "-", "g") . ".php &"<CR>
 EOF
 
 # composer
