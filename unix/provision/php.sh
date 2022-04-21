@@ -21,12 +21,13 @@ nmap <leader>lh viw"iy:silent exec "!npx open-cli https://developer.wordpress.or
 nmap <leader>lf viw"iy:silent exec "!npx open-cli https://www.php.net/manual/en/function." . substitute("<c-r>i", "_", "-", "g") . ".php &"<CR>
 EOF
 
-# composer
+if [ ! -f ~/project/.config/no-composer ]; then
   if ! type composer > /dev/null 2>&1 ; then
     curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
   fi
+fi
 
-# wp-cli
+if [ -f ~/project/.config/wp-cli ]; then
   if ! type wp > /dev/null 2>&1 ; then
     sudo curl -o /usr/local/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
     sudo chmod +x /usr/local/bin/wp
@@ -35,8 +36,9 @@ EOF
     curl https://raw.githubusercontent.com/wp-cli/wp-cli/v1.5.1/utils/wp-completion.bash -o ~/.wp-completion
   fi
   echo 'source_if_exists ~/.wp-completion' >> ~/.shell_sources
+fi
 
-# phpactor
+if [ -f ~/project/.config/phpactor ]; then
   if ! type phpactor > /dev/null 2>&1 ; then
     rm -rf ~/.phpactor
     git clone https://github.com/phpactor/phpactor.git --depth 1 ~/.phpactor ; cd ~/.phpactor
@@ -44,5 +46,6 @@ EOF
     sudo ln -s "$(pwd)/bin/phpactor" /usr/local/bin/phpactor
     cd ~
   fi
+fi
 
 # php END

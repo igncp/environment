@@ -137,6 +137,7 @@ cat >> /tmp/expected-vscode-extensions <<"EOF"
 waderyan.gitblame
 ms-vscode-remote.remote-ssh
 ms-vscode-remote.remote-ssh-edit
+GitHub.copilot
 EOF
 
 cat >> ~/.shell_aliases <<"EOF"
