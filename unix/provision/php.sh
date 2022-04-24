@@ -19,6 +19,12 @@ autocmd filetype php :exe "nnoremap <silent> <leader>kB :!npx prettier --write %
 nmap <leader>ll viw"iy:silent exec "!npx open-cli https://developer.wordpress.org/reference/functions/" . '<c-r>i' . " &"<CR>
 nmap <leader>lh viw"iy:silent exec "!npx open-cli https://developer.wordpress.org/reference/hooks/" . '<c-r>i' . " &"<CR>
 nmap <leader>lf viw"iy:silent exec "!npx open-cli https://www.php.net/manual/en/function." . substitute("<c-r>i", "_", "-", "g") . ".php &"<CR>
+
+nmap <leader>lp :!php -l %<cr>
+EOF
+
+cat >> ~/.vimrc <<"EOF"
+call add(g:coc_global_extensions, 'coc-phpls')
 EOF
 
 if [ ! -f ~/project/.config/no-composer ]; then
