@@ -21,13 +21,18 @@ alias DockerCleanContainers='docker stop $(docker ps -aq); docker rm $(docker ps
 DComposeConvertJson(){ docker compose "$@" convert --format json; } # DComposeConvertJson -f ./foo.yml
 DComposeTop(){ docker compose "$@" top | less -S; } # DComposeTop -f ./foo.yml
 DComposeLogs(){ docker compose "$@" logs -f; } # DComposeLogs -f ./foo.yml
+DComposeLogsNew(){ docker compose "$@" logs -f --since 0s; } # DComposeLogsNew -f ./foo.yml
 DComposeFullRestart(){
   docker compose "${@: 2}" stop "$1"
-  docker compose "${@: 2}" rm "$2" --force
-  docker compose "${@: 2}" up "$2" -d --build
+  docker compose "${@: 2}" rm "$1" --force
+  docker compose "${@: 2}" up "$1" -d --build
 }
 
-DockerBashImage() { docker run -it $1 /bin/bash; }
+alias DockerSystemSpace='docker system df --verbose'
+alias DockerPruneAll='docker system prune --volumes --all'
+
+DockerBashRun() { docker run -it $1 /bin/bash; }
+DockerBashExec() { docker exec -it $1 /bin/bash; }
 EOF
 
 # docker END
