@@ -30,6 +30,7 @@ DComposeFullRestart(){
 
 alias DockerSystemSpace='docker system df --verbose'
 alias DockerPruneAll='docker system prune --volumes --all'
+alias DockerCommit='docker commit -m'
 
 DockerBashRun() { docker run -it $1 /bin/bash; }
 DockerBashExec() { docker exec -it $1 /bin/bash; }
