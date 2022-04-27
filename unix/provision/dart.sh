@@ -1,6 +1,6 @@
 # dart START
 
-cat >> ~/.bashrc <<"EOF"
+cat >> ~/.shellrc <<"EOF"
 export PATH="$PATH:$HOME/flutter/bin"
 export PATH="$PATH:$HOME/flutter/bin/cache/dart-sdk/bin"
 export PATH="$PATH:$HOME/.pub-cache/bin"
