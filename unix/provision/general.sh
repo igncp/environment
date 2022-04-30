@@ -220,6 +220,7 @@ alias FilterLeaf=$'sort -r | awk \'a!~"^"$0{a=$0;print}\' | sort'
 alias HierarchyManual='man hier'
 alias LastColumn="awk '{print "'$NF'"}'"
 alias PathShow='echo $PATH | tr ":" "\n" | sort | uniq | less'
+alias PsTree='pstree -pTUl | less -S'
 alias RsyncDelete='rsync -rhv --delete' # remember to add a slash at the end of source (dest doesn't matter)
 alias SHA256='openssl sha256'
 alias ShellChangeToBash='chsh -s /bin/bash; exit'
