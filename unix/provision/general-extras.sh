@@ -159,4 +159,6 @@ EOF
 
 install_system_package pandoc # document conversion
 
+install_system_package rink # calculations and units conversion
+
 # general-extras END
