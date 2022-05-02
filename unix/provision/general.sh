@@ -226,6 +226,7 @@ alias SHA256='openssl sha256'
 alias ShellChangeToBash='chsh -s /bin/bash; exit'
 alias SocketSearch='sudo ss -lntup'
 alias Sudo='sudo -E ' # this preserves aliases and environment in root
+alias TreeDir='tree -d'
 alias Visudo='sudo env EDITOR=vim visudo'
 alias Xargs='xargs -I{}'
 
