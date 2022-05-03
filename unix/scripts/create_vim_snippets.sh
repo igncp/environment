@@ -327,6 +327,16 @@ EOF
 cp /tmp/c-and-cpp-snippets ~/.vim-snippets/c.snippets
 cp /tmp/c-and-cpp-snippets ~/.vim-snippets/cpp.snippets
 
+cat > ~/.vim-snippets/php.snippets <<"EOF"
+snippet xLogStdOut
+// LOG ---
+$new_log_abc = fopen('php://stdout', 'w'); fputs($new_log_abc, "\n${0}\n\n");
+fclose($new_log_abc);
+// LOG ---
+
+endsnippet
+EOF
+
 if [ ! -f ~/project/scripts/custom_create_vim_snippets.sh ]; then
   touch ~/project/scripts/custom_create_vim_snippets.sh
 fi
