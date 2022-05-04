@@ -335,6 +335,15 @@ fclose($new_log_abc);
 // LOG ---
 
 endsnippet
+
+snippet xVarDumpPre
+// VAR DUMP ---
+echo '<pre>';
+var_dump(${0});
+echo '</pre>';
+// VAR DUMP ---
+
+endsnippet
 EOF
 
 if [ ! -f ~/project/scripts/custom_create_vim_snippets.sh ]; then
