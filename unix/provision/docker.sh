@@ -17,6 +17,7 @@ cat >> ~/.shell_aliases <<"EOF"
 alias DockerAttachLastContainer='docker start  `docker ps -q -l`; docker attach `docker ps -q -l`'
 alias DockerCleanAll='docker stop $(docker ps -aq); docker rm $(docker ps -aq); docker rmi $(docker images -q)'
 alias DockerCleanContainers='docker stop $(docker ps -aq); docker rm $(docker ps -aq)'
+alias DockerInfo='docker info | less -S'
 
 DComposeConvertJson(){ docker compose "$@" convert --format json; } # DComposeConvertJson -f ./foo.yml
 DComposeTop(){ docker compose "$@" top | less -S; } # DComposeTop -f ./foo.yml
