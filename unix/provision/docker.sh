@@ -29,12 +29,13 @@ DComposeFullRestart(){
   docker compose "${@: 2}" up "$1" -d --build
 }
 
-alias DockerSystemSpace='docker system df --verbose'
-alias DockerPruneAll='docker system prune --volumes --all'
 alias DockerCommit='docker commit -m'
+alias DockerPruneAll='docker system prune --volumes --all'
+alias DockerSystemSpace='docker system df --verbose'
 
-DockerBashRun() { docker run -it $1 /bin/bash; }
 DockerBashExec() { docker exec -it $1 /bin/bash; }
+DockerBashRun() { docker run -it $1 /bin/bash; }
+DockerHistory() { docker history --no-trunc $1 | less -S; }
 EOF
 
 # docker END
