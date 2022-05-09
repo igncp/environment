@@ -311,6 +311,7 @@ set-window-option -g xterm-keys on
 set -g status off
 set -g status-right ""
 set -g status-left ' [#(echo "$TMUX" | cut -f1 -d"," | sed -E "s|(/private)?/tmp/tmux-[0-9]*/||")]'
+set -g status-left-length 50
 set -g window-status-current-format ''
 set -g window-status-format ''
 set status-utf8 on
