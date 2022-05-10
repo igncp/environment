@@ -29,6 +29,7 @@ DComposeFullRestart(){
   docker compose "${@: 2}" up "$1" -d --build
 }
 
+alias DComposeConfig='docker compose config' # Prints the config after pre-processing
 alias DockerCommit='docker commit -m'
 alias DockerPruneAll='docker system prune --volumes --all'
 alias DockerSystemSpace='docker system df --verbose'
