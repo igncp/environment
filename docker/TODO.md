@@ -19,8 +19,6 @@
 - Magento2
 - MongoDB
 - MongoDB Client
-- MySQL
-- Neo4j
 - PhpMyAdmin
 - PostgreSQL
 - pgAdmin
