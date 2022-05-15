@@ -15,4 +15,20 @@ sudo apt-get update
 # For xrandr
 sudo apt-get install -y x11-xserver-utils
 
+# For starting over SSH
+sudo apt-get install -y xinit
+
 sudo apt-get install -y silversearcher-ag
+
+# Add this to: /etc/network/interfaces for automatic lan and
+    # auto eth0
+    # iface eth0 inet dhcp
+
+# For wifi, needs to setup the configuration file
+    # auto wlan0
+    # iface wlan0 inet dhcp
+    # wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
+
+# Disable default VNC in raspi-config
+
+# Disable emulationstation autologin in retropie-config

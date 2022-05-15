@@ -128,8 +128,8 @@ VNCServerStart() {
 }
 VNCServerStorePassword() { x11vnc -storepasswd; }
 EOF
-  # Don't enable, just manually start orstop
-  # systemctl daemon-reload
+  # Don't enable, just manually start or stop
+  # Until reboot, have to: `systemctl --user daemon-reload`
   mkdir -p ~/.config/systemd/user/
   cat > ~/.config/systemd/user/x11vnc.service <<"EOF"
 [Unit]
