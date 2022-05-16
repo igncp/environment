@@ -271,4 +271,12 @@ EspansoConfigure() {
 EOF
 fi
 
+if [ ! -f ~/.check-files/safeeyes ]; then
+  install_with_yay safeeyes
+  sudo pacman -S xprintidle # Required by the idle plugin
+  pip install croniter # Required by the stats plugin
+  touch ~/.check-files/safeeyes
+fi
+sed -i '1isleep 2s && safeeyes -e &' ~/.xinitrc
+
 # arch-gui END
