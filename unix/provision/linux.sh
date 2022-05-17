@@ -24,6 +24,12 @@ alias LinuxLsKernelModules='lsmod'
 alias SystemFailed='systemctl --failed'
 alias SystemFailedReset='systemctl reset-failed'
 
+alias SystemAnalyzeCriticalChain='systemd-analyze critical-chain'
+alias SystemAnalyzePlot='systemd-analyze plot > /tmp/plot.svg && echo "/tmp/plot.svg generated"'
+alias SystemAnalyzeTimes='systemd-analyze blame'
+
+alias LsBlkNoLoop='lsblk -e7' # Excludes loop devices, which can accumulate when using snaps: https://askubuntu.com/a/1142405
+
 SystemdFindReference() { sudo grep -r "$1" /usr/lib/systemd/system/; }
 EOF
 

@@ -271,6 +271,22 @@ EspansoConfigure() {
 EOF
 fi
 
+if [ -f ~/.config/snap ]; then
+  if ! type modulo > /dev/null 2>&1 ; then
+    cd ~; rm -rf snapd
+    git clone https://aur.archlinux.org/snapd.git
+    cd snapd
+    makepkg -si
+    cd ~; rm -rf snapd
+    sudo systemctl enable --now snapd.socket
+  fi
+
+  cat >> ~/.shell_aliases <<"EOF"
+alias SnapRemove='snap remove'
+alias SnapList='snap list'
+EOF
+fi
+
 if [ ! -f ~/.check-files/safeeyes ]; then
   install_with_yay safeeyes
   sudo pacman -S xprintidle # Required by the idle plugin
