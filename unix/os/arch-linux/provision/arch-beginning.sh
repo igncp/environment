@@ -109,4 +109,9 @@ cat >> ~/.shell_aliases <<"EOF"
 alias GPGPinentryList='pacman -Ql pinentry | grep /usr/bin/'
 EOF
 
+# https://wiki.archlinux.org/title/Google_Authenticator
+if [ -f ~/project/.config/gauth-pam ]; then
+  install_system_package libpam-google-authenticator google-authenticator
+fi
+
 # arch-beginning END

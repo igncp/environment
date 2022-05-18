@@ -37,19 +37,20 @@ fi
 # backups with GUI (timeshift-gtk)
 if [ -f ~/project/.config/timeshift ]; then install_with_yay timeshift; fi
 
-# clipboard manager
-install_system_package copyq
-# https://copyq.readthedocs.io/en/latest/faq.html#how-to-omit-storing-text-copied-from-specific-windows-like-a-password-manager
-  # Create two items, one for the password manager and one for Entry
-  # Click: "Show Advance", then click "Advanced" tab and put text on "Window" input (instead of "Password")
-  if [ ! -f "$HOME"/.check-files/copyq-passwords ]; then
-    echo '[~/.check-files/copyq-passwords]: Add and test command to filter out copied passwords and remove this message'
-  fi
-  if [ ! -f "$HOME"/.check-files/copyq-shortcut ]; then
-    echo '[~/.check-files/copyq-shortcut]: Add ctrl + shift + 1 as shortcut to display copyq menu and remove this message'
-  fi
-sed -i '1isleep 10s && copyq 2>&1 > /dev/null &' ~/.xinitrc
-cat >> ~/.shell_aliases <<"EOF"
+if [ -f ~/project/.config/copyq ]; then
+  # clipboard manager
+  install_system_package copyq
+  # https://copyq.readthedocs.io/en/latest/faq.html#how-to-omit-storing-text-copied-from-specific-windows-like-a-password-manager
+    # Create two items, one for the password manager and one for Entry
+    # Click: "Show Advance", then click "Advanced" tab and put text on "Window" input (instead of "Password")
+    if [ ! -f "$HOME"/.check-files/copyq-passwords ]; then
+      echo '[~/.check-files/copyq-passwords]: Add and test command to filter out copied passwords and remove this message'
+    fi
+    if [ ! -f "$HOME"/.check-files/copyq-shortcut ]; then
+      echo '[~/.check-files/copyq-shortcut]: Add ctrl + shift + 1 as shortcut to display copyq menu and remove this message'
+    fi
+  sed -i '1isleep 10s && copyq 2>&1 > /dev/null &' ~/.xinitrc
+  cat >> ~/.shell_aliases <<"EOF"
 CopyQReadN() {
   for i in {0..$1}; do
     echo "$i"
@@ -58,6 +59,7 @@ CopyQReadN() {
   done
 }
 EOF
+fi
 
 if [ -z "$ARM_ARCH" ]; then
   if ! type dunst > /dev/null 2>&1 ; then
@@ -77,20 +79,21 @@ if [ -z "$ARM_ARCH" ]; then
   sed -i '1isleep 5s && dunst &' ~/.xinitrc
 fi
 
-# Keys handling (for host)
-# For Brightness: update intel_backlight with the correct card
-if [ -f /sys/class/backlight/intel_backlight/brightness ]; then
-  sudo chown igncp /sys/class/backlight/intel_backlight/brightness
-fi
-cat > /home/igncp/change_brightness.sh <<"EOF"
+if [ -f ~/project/.config/arch-key-mapping ]; then
+  # Keys handling (for host)
+  # For Brightness: update intel_backlight with the correct card
+  if [ -f /sys/class/backlight/intel_backlight/brightness ]; then
+    sudo chown igncp /sys/class/backlight/intel_backlight/brightness
+  fi
+  cat > /home/igncp/change_brightness.sh <<"EOF"
 echo $(("$(cat /sys/class/backlight/intel_backlight/brightness)" + "$1")) | tee /sys/class/backlight/intel_backlight/brightness
 EOF
-chmod +x /home/igncp/change_brightness.sh
-if [ ! -f ~/.check-files/brightness-sudo ]; then
-  echo "[~/.check-files/brightness-sudo]: Use 'sudo EDITOR=vim visudo' to add 'igncp archlinux = (root) NOPASSWD: /home/igncp/change_brightness.sh'"
-fi
-install_system_package xbindkeys
-cat > ~/.xbindkeysrc <<"EOF"
+  chmod +x /home/igncp/change_brightness.sh
+  if [ ! -f ~/.check-files/brightness-sudo ]; then
+    echo "[~/.check-files/brightness-sudo]: Use 'sudo EDITOR=vim visudo' to add 'igncp archlinux = (root) NOPASSWD: /home/igncp/change_brightness.sh'"
+  fi
+  install_system_package xbindkeys
+  cat > ~/.xbindkeysrc <<"EOF"
 # Docs
 # - https://wiki.archlinux.org/index.php/Xbindkeys#Installation
 # - https://wiki.archlinux.org/index.php/Backlight#xbacklight
@@ -117,12 +120,13 @@ cat > ~/.xbindkeysrc <<"EOF"
 "amixer set Master 1+ toggle"
   XF86AudioMute
 EOF
-cat >> ~/.bashrc <<"EOF"
+  cat >> ~/.bashrc <<"EOF"
 IS_XBINDKEYS_RUNNING="$(ps aux | grep xbindkeys | grep -v grep)"
 if [ -n "$IS_XBINDKEYS_RUNNING" ]; then killall xbindkeys; fi
 xbindkeys
 EOF
-echo 'alias XbindkeysMultikey="xbindkeys --multikey"' >> ~/.shell_aliases
+  echo 'alias XbindkeysMultikey="xbindkeys --multikey"' >> ~/.shell_aliases
+fi
 
 if [ -f ~/project/.config/nvidia ]; then
   if [ "$(cat ~/project/.config/nvidia)" == "yes" ]; then
@@ -176,7 +180,7 @@ if [ -f ~/project/.config/mysql-workbench ]; then install_system_package mysql-w
 # desktop magnifier: https://github.com/stuartlangridge/magnus
 install_with_yay magnus
 
-# acpi warning
+if [ -f ~/project/.config/acpi_warning ]; then
   install_system_package acpi
   echo 'alias BatteryRemaningTime="acpi"' >> ~/.shell_aliases
   cat > ~/.battery-warning.sh <<"EOF"
@@ -187,12 +191,13 @@ if [[ `echo $BATTINFO | grep Discharging` && `echo $BATTINFO | cut -f 5 -d " "` 
     DISPLAY=:0.0 /usr/bin/notify-send "[cronjob] low battery" "$BATTINFO"
 fi
 EOF
-chmod +x ~/.battery-warning.sh
-if [ ! -f "$HOME"/.check-files/battery-warning-cronie ]; then
-  echo '[~/.check-files/battery-warning-cronie]: add this to cronie and remove message'
+  chmod +x ~/.battery-warning.sh
+  if [ ! -f "$HOME"/.check-files/battery-warning-cronie ]; then
+    echo '[~/.check-files/battery-warning-cronie]: add this to cronie and remove message'
+  fi
+  # crontab -e
+  # */1 * * * * /home/igncp/.battery-warning.sh
 fi
-# crontab -e
-# */1 * * * * /home/igncp/.battery-warning.sh
 
 if [ ! -f ~/.check-files/arch-fonts ]; then
   sudo pacman -S --noconfirm \
@@ -216,9 +221,11 @@ if [ ! -f ~/.check-files/nerd-fonts ]; then
   touch ~/.check-files/nerd-fonts
 fi
 
-# set colors off
-install_system_package irssi
-echo 'alias Irssi="irssi"' >> ~/.shell_aliases
+if [ -f ~/project/.config/irssi ]; then
+  # set colors off
+  install_system_package irssi
+  echo 'alias Irssi="irssi"' >> ~/.shell_aliases
+fi
 
 install_with_yay lxqt-sudo-git lxqt-sudo # for rofi
 
