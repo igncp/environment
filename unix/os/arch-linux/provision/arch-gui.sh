@@ -5,6 +5,8 @@ install_system_package pulseaudio
 install_with_yay paman
 install_system_package pavucontrol # for audio settings
 install_with_yay pa-applet-git pa-applet
+install_system_package pulsemixer # TUI mixer (simple)
+install_with_yay ncpamixer # TUI mixer (live pavucontrol)
 if [ ! -f ~/.check-files/pulseaudio ]; then
   sudo pacman -S --noconfirm pulseaudio-alsa
   sudo usermod -a -G lp igncp
