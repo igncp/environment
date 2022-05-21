@@ -508,6 +508,7 @@ ProvisionCommitRepo() {
   cd -
 }
 alias ProvisionGetDiff='node $HOME/project/provision/updateProvision.js && sh /tmp/diff_provision.sh'
+alias ProvisionListPossibleConfig="cat ~/project/provision/provision.sh | ag 'project\/\.config\/[.a-zAZ-]*' -o | sort -V | uniq | less"
 EOF
 
 SOURCE_ASDF='. $HOME/.asdf/asdf.sh'
