@@ -4,6 +4,7 @@ if [ ! -d ~/android-sdk ] && [ ! -d ~/android-studio ] && [ ! -d ~/Library/Andro
   echo 'Download android CLI tools (or Studio if necessary, not both)'
   echo 'Android CLI: structure should be ~/android-sdk/cmdline-tools/tools/bin/sdkmanager'
   echo 'Android Studio: ~/android-studio . To uncompress: tar xvzf FILE_NAME.tar.gz'
+  echo '  In Arch Linux, when one user: yay -S --noconfirm android-sdk ; sudo chown -R igncp:igncp /opt/android-sdk'
   echo 'And setup the ANDROID_HOME to correct one'
   echo 'https://developer.android.com/studio/index.html#downloads'
 fi

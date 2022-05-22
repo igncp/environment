@@ -37,12 +37,15 @@ install_vim_package andrewRadev/splitjoin.vim # gS, gJ
 install_vim_package bogado/file-line # https://github.com/bogado/file-line
 install_vim_package ctrlpvim/ctrlp.vim # https://github.com/ctrlpvim/ctrlp.vim
 install_vim_package elzr/vim-json # https://github.com/elzr/vim-json
-install_vim_package junegunn/vim-peekaboo # https://github.com/junegunn/vim-peekaboo
+install_vim_package github/copilot.vim # https://github.com/github/copilot.vim
+install_vim_package google/vim-searchindex # https://github.com/google/vim-searchindex
 install_vim_package haya14busa/incsearch.vim # https://github.com/haya14busa/incsearch.vim
 install_vim_package honza/vim-snippets "find ~/.vim/bundle/vim-snippets/snippets/ -type f | xargs sed -i 's|:\${VISUAL}||'"
 install_vim_package jiangmiao/auto-pairs # https://github.com/jiangmiao/auto-pairs
 install_vim_package junegunn/limelight.vim # https://github.com/junegunn/limelight.vim
 install_vim_package junegunn/vim-easy-align # https://github.com/junegunn/vim-easy-align
+install_vim_package junegunn/vim-peekaboo # https://github.com/junegunn/vim-peekaboo
+install_vim_package liuchengxu/vista.vim # https://github.com/liuchengxu/vista.vim
 install_vim_package mbbill/undotree # https://github.com/mbbill/undotree
 install_vim_package milkypostman/vim-togglelist # https://github.com/milkypostman/vim-togglelist
 install_vim_package ntpeters/vim-better-whitespace # https://github.com/ntpeters/vim-better-whitespace
@@ -56,8 +59,6 @@ install_vim_package tpope/vim-fugitive # https://github.com/tpope/vim-fugitive
 install_vim_package tpope/vim-repeat # https://github.com/tpope/vim-repeat
 install_vim_package tpope/vim-surround # https://github.com/tpope/vim-surround
 install_vim_package vim-scripts/AnsiEsc.vim # https://github.com/vim-scripts/AnsiEsc.vim
-install_vim_package github/copilot.vim # https://github.com/github/copilot.vim
-install_vim_package liuchengxu/vista.vim # https://github.com/liuchengxu/vista.vim
 
 cat >> ~/.vimrc <<"EOF"
 execute pathogen#infect()

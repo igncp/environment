@@ -48,9 +48,6 @@ if [ -f ~/project/.config/copyq ]; then
     if [ ! -f "$HOME"/.check-files/copyq-passwords ]; then
       echo '[~/.check-files/copyq-passwords]: Add and test command to filter out copied passwords and remove this message'
     fi
-    if [ ! -f "$HOME"/.check-files/copyq-shortcut ]; then
-      echo '[~/.check-files/copyq-shortcut]: Add ctrl + shift + 1 as shortcut to display copyq menu and remove this message'
-    fi
   sed -i '1isleep 10s && copyq 2>&1 > /dev/null &' ~/.xinitrc
   cat >> ~/.shell_aliases <<"EOF"
 CopyQReadN() {
@@ -253,23 +250,25 @@ if [ -z "$ARM_ARCH" ]; then
 
   install_with_yay google-chrome google-chrome-stable
 
-  install_with_yay espanso
-  check_file_exists ~/project/provision/espanso.yml
-  touch ~/project/provision/espansoCustom.yml
-  cat > /tmp/espanso_cp_config.sh <<"EOF"
+  if [ -f ~/project/.config/espanso ]; then
+    install_with_yay espanso
+    check_file_exists ~/project/provision/espanso.yml
+    touch ~/project/provision/espansoCustom.yml
+    mkdir -p ~/.config/espanso
+    cat > /tmp/espanso_cp_config.sh <<"EOF"
 set -e
 cp ~/project/provision/espanso.yml ~/.config/espanso/default.yml
 cat ~/project/provision/espansoCustom.yml >> ~/.config/espanso/default.yml
 EOF
-  sh /tmp/espanso_cp_config.sh
-  if ! type modulo > /dev/null 2>&1 ; then
-    cd /tmp; rm -rf ~/modulo
-    git clone https://aur.archlinux.org/modulo.git
-    cd modulo
-    makepkg -si --noconfirm
-    cd /tmp; rm -rf ~/modulo
-  fi
-  cat >> ~/.shell_aliases <<"EOF"
+    sh /tmp/espanso_cp_config.sh
+    if ! type modulo > /dev/null 2>&1 ; then
+      cd /tmp; rm -rf ~/modulo
+      git clone https://aur.archlinux.org/modulo.git
+      cd modulo
+      makepkg -si --noconfirm
+      cd /tmp; rm -rf ~/modulo
+    fi
+    cat >> ~/.shell_aliases <<"EOF"
 alias EspansoDisable='killall espanso'
 alias EspansoEnable='espanso daemon &'
 EspansoConfigure() {
@@ -278,6 +277,7 @@ EspansoConfigure() {
   echo Copied espanso config
 }
 EOF
+  fi
 fi
 
 if [ -f ~/.config/snap ]; then
@@ -298,7 +298,7 @@ fi
 
 if [ ! -f ~/.check-files/safeeyes ]; then
   install_with_yay safeeyes
-  sudo pacman -S xprintidle # Required by the idle plugin
+  sudo pacman -S --noconfirm xprintidle # Required by the idle plugin
   pip install croniter # Required by the stats plugin
   touch ~/.check-files/safeeyes
 fi

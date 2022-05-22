@@ -4,14 +4,14 @@
 # Follow VM installation, adding here only the different parts
 
 # Windows: Use UUI to setup a Live USB: https://www.pendrivelinux.com/universal-usb-installer-easy-as-1-2-3/
-# Arch: Use dd: https://wiki.archlinux.org/index.php/USB_flash_installation_media
+# Linux: Use dd: https://wiki.archlinux.org/index.php/USB_flash_installation_media
     # e.g.: dd bs=4M if=path/to/arch.iso of=/dev/sdb conv=fsync oflag=direct status=progress
-
-# Check the machine BIOS key
 
 # Can connect to WIFI after partitioning disks so you can save the password in file in disk
 # If you have an additional USB port and stick, or additional internal drive, can copy it there:
     # iwctl --passphrase=PASS station DEVICE connect SSID
+
+# Check the machine BIOS key
 
 # Manage partitions
     # Use cfdisk /dev/nvme0n1 # if using other type of drive
@@ -51,7 +51,7 @@ pacman -S --noconfirm grub efibootmgr dosfstools os-prober mtools
 pacman -S --noconfirm netctl dialog wpa_supplicant dhcpcd # for wifi-menu
 # don't enable dhcpcd.service as it doesn't work well with netctl
 
-grub-install /dev/DEVICE --target=x86_64-efi --bootloader-id=grub_uefi --recheck --efi-directory=/boot # replace DEVICE
+grub-install /dev/DEVICE --target=x86_64-efi --bootloader-id=grub_uefi --recheck --efi-directory=/boot # replace DEVICE, e.g. /dev/sda
 grub-mkconfig -o /boot/grub/grub.cfg
 # If installing a multi-boot Linux, the last EFI run is the one that will be used
 
