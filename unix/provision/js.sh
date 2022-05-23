@@ -199,6 +199,11 @@ cat >> /tmp/expected-vscode-extensions <<"EOF"
 dbaeumer.vscode-eslint
 EOF
 
+cat >> ~/.vimrc <<"EOF"
+" Copy selected string encoded into clipboard
+vnoremap <leader>jz y:!node -e "console.log(encodeURIComponent('<c-r>"'))" > /tmp/vim-encode.txt<cr>:let @+ = join(readfile("/tmp/vim-encode.txt"), "\n")<cr><cr>
+EOF
+
 # js-extras available
 # js-vue available
 # ts available
