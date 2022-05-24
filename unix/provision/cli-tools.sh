@@ -15,14 +15,12 @@ if [ -f ~/project/.config/cli-openvpn ]; then
   install_system_package openvpn
   mkdir -p ~/.openvpn
   cat > ~/.openvpn/vpn_setup.sh <<"EOF"
-  VpnConnect() {
     cat >> /tmp/resolv.conf <<"FOOMSG"
 nameserver 8.8.8.8
 nameserver 8.8.4.4
 FOOMSG
-    sudo mv /tmp/resolv.conf /etc
-    sudo openvpn --config ~/.openvpn/"$1"
-  }
+sudo mv /tmp/resolv.conf /etc
+sudo openvpn --config ~/.openvpn/"$1" ${@:2}
 EOF
   cat >> ~/.shell_aliases <<"EOF"
 alias VPNLondon='sh ~/.openvpn/vpn_setup.sh London.ovpn'
