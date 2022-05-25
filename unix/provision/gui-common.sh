@@ -158,6 +158,7 @@ EOF
 cat >> ~/.shell_aliases <<"EOF"
 alias BluetoothHeadphonesConnect="bash ~/.scripts/bluetooth_headphones_connect.sh"
 alias BluetoothHeadphonesDisconnect="bash ~/.scripts/bluetooth_headphones_disconnect.sh"
+alias AudioTest='arecord -f cd - | tee /tmp/output.wav | aplay -'
 EOF
 chmod +x ~/.scripts/bluetooth_headphones_connect.sh ~/.scripts/bluetooth_headphones_disconnect.sh
 add_desktop_common \
