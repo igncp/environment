@@ -280,6 +280,8 @@ alias NmapLocal='sudo nmap -sn 192.168.1.0/24 > /tmp/nmap-result && sed -i "s|Nm
 alias Ports='sudo netstat -tulanp'
 alias NetstatConnections='netstat -nputw'
 alias RemoveAnsiColors="sed 's/\x1b\[[0-9;]*m//g'"
+
+WorktreeClone() { git clone --bare "$1" .bare; echo "gitdir: ./.bare" > .git; }
 EOF
 
 cat > ~/.inputrc <<"EOF"
