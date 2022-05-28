@@ -61,7 +61,7 @@ cat environment/unix/provision/cli-tools.sh >> ~/project/provision/cli-tools.sh
 cat environment/unix/provision/docker.sh >> ~/project/provision/provision.sh
 cat environment/unix/provision/custom.sh >> ~/project/provision/provision.sh
 
-cp environment/unix/config-files/data.updateProvision.js ~/project/provision
+cp environment/unix/os/arch-linux/config-files/data.updateProvision.js ~/project/provision
 cp environment/unix/config-files/updateProvision.js ~/project/provision
 
 if [ ! -f ~/.ssh/config ]; then

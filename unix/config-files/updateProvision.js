@@ -9,7 +9,7 @@ const {
 } = require("./data.updateProvision");
 
 if (PROVISION_DIR.slice(-3) === ".sh") {
-  consol.log("PROVISION_DIR should be a directory");
+  console.log("PROVISION_DIR should be a directory");
   process.exit(1);
 }
 
@@ -18,7 +18,7 @@ let provisionFileContent = fs.readFileSync(
   "utf-8"
 );
 
-const updateItem = ([name, itemPath]) => {
+const updateItem = ([name, itemPath], itemIndex, itemsArr) => {
   // it should fail on unexpected dir
   let toUpdateContent = fs.readFileSync(
     path.join(ENVIRONMENT_DIR, itemPath),
@@ -36,12 +36,24 @@ const updateItem = ([name, itemPath]) => {
 
   const regexpStr = "# " + name + " START(.|\n)*# " + name + " END";
 
-  provisionFileContent = provisionFileContent.replace(
-    new RegExp(regexpStr, "m"),
-    () => {
-      return toUpdateContent.trim();
-    }
-  );
+  if (new RegExp(regexpStr, "m").test(provisionFileContent) === false) {
+    const previousItemName = itemsArr[itemIndex - 1][0];
+    const previousRegexpStr = "^# " + previousItemName + " END$";
+
+    provisionFileContent = provisionFileContent.replace(
+      new RegExp(previousRegexpStr, "m"),
+      () => {
+        return "# " + previousItemName + " END\n\n" + toUpdateContent.trim();
+      }
+    );
+  } else {
+    provisionFileContent = provisionFileContent.replace(
+      new RegExp(regexpStr, "m"),
+      () => {
+        return toUpdateContent.trim();
+      }
+    );
+  }
 
   console.log("Updated: " + name);
 };
