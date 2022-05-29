@@ -510,7 +510,14 @@ ProvisionCommitRepo() {
   cd -
 }
 alias ProvisionGetDiff='node $HOME/project/provision/updateProvision.js && sh /tmp/diff_provision.sh'
-alias ProvisionListPossibleConfig="cat ~/project/provision/provision.sh | ag 'project\/\.config\/[-.a-zA-Z0-9]*' -o | sort -V | uniq | less"
+ProvisionListPossibleConfig() {
+  cat ~/project/provision/provision.sh | ag 'project\/\.config\/[-.a-zA-Z0-9]*' -o \
+    | sed 's|^|/home/igncp/|' | sort | uniq > /tmp/config_all;
+  mkdir -p ~/project/.config; find ~/project/.config -type f | sort > /tmp/config_used
+  echo "# Used" > /tmp/config_printed ; cat /tmp/config_used >> /tmp/config_printed ; printf '\n\n' >> /tmp/config_printed
+  echo "# Not used" >> /tmp/config_printed; comm -23 /tmp/config_all /tmp/config_used >> /tmp/config_printed
+  less /tmp/config_printed
+}
 EOF
 
 SOURCE_ASDF='. $HOME/.asdf/asdf.sh'

@@ -53,7 +53,14 @@ pacman -S --noconfirm netctl dialog wpa_supplicant dhcpcd # for wifi-menu
 
 grub-install /dev/DEVICE --target=x86_64-efi --bootloader-id=grub_uefi --recheck --efi-directory=/boot # replace DEVICE, e.g. /dev/sda
 grub-mkconfig -o /boot/grub/grub.cfg
-# If installing a multi-boot Linux, the last EFI run is the one that will be used
+# If installing a multi-boot Linux, the last EFI run is the one that will be
+# used. Best is to run it three times, once per OS (2) and finally again for the
+# first one (3rd one)
+
+# If dual-boot Windows and Arch, before running `grub-mkconfig` from Linux, in
+# `/etc/default/grub` uncomment the line where `GRUB_DISABLE_OS_PROBER=false`.
+# After that, it should add an entry for the Windows bootloader.
+# https://wiki.archlinux.org/title/GRUB#Detecting_other_operating_systems
 
 # Disable laptop beep sound
 echo 'blacklist pcspkr' > /tmp/nobeep.conf; mv /tmp/nobeep.conf /etc/modprobe.d/nobeep.conf

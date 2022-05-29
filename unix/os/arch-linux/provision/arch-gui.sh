@@ -24,8 +24,11 @@ sed -i '1isleep 15s && pa-applet 2>&1 > /dev/null &' ~/.xinitrc
 
 # bluetooth
 # for dual boot:
-    # - copy the key in /var/lib/bluetooth/MAC/DEVICE_MAC/info
-    # - power off the device after pairing with the 1st OS, copy it in the 2nd,
+    # - Copy the key in /var/lib/bluetooth/MAC/DEVICE_MAC/info
+      # - If the other OS is Windows, use PSExec64 to extract it into a .reg
+      #   file, then remove the commas and convert to upper case
+      # https://wiki.archlinux.org/title/bluetooth#For_Windows
+    # - Power off the device after pairing with the 1st OS, copy it in the 2nd,
     #   reboot (without reboot, it didn't work), and only then power on device
 if [ ! -f ~/.check-files/bluetooth ]; then
   sudo pacman -S --noconfirm bluez-utils
@@ -303,5 +306,9 @@ if [ ! -f ~/.check-files/safeeyes ]; then
   touch ~/.check-files/safeeyes
 fi
 sed -i '1isleep 2s && safeeyes -e &' ~/.xinitrc
+
+install_with_yay xbindkeys_config-gtk2 xbindkeys_config
+add_desktop_common \
+  '/usr/bin/xbindkeys_config' 'xbindkeys_config' 'XBindKeys Config'
 
 # arch-gui END

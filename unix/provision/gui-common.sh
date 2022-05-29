@@ -78,17 +78,19 @@ if [ "$ENVIRONMENT_THEME" == "dark" ]; then
   sed -i 's|yellow: .*|yellow: "#feffc7"|' ~/.config/alacritty/alacritty.yml
 fi
 
-install_system_package gimp
-
 install_system_package imagemagick import # for screenshots with import
 install_system_package feh # image preview
-install_system_package nautilus # drag-n-drop files
-install_system_package libreoffice-fresh libreoffice
-install_system_package peek # for gif generation
-install_system_package flameshot # for annotations in images
-install_system_package lxappearance # gnome themes
-install_system_package arandr # xrandr frontend
-install_system_package tigervnc vncsession # vnc client
+
+if [ ! -f ~/project/.config/common-gui-light ]; then
+  install_system_package gimp
+  install_system_package nautilus # drag-n-drop files
+  install_system_package libreoffice-fresh libreoffice
+  install_system_package peek # for gif generation
+  install_system_package flameshot # for annotations in images
+  install_system_package lxappearance # gnome themes
+  install_system_package arandr # xrandr frontend
+  install_system_package tigervnc vncsession # vnc client
+fi
 
 if [ -f ~/project/.config/obs-studio ]; then install_system_package obs-studio obs; fi # for video recording
 
@@ -165,9 +167,5 @@ add_desktop_common \
   '/home/igncp/.scripts/bluetooth_headphones_connect.sh' 'bluetooth_headphones_connect' 'Bluetooth Headphones Connect'
 add_desktop_common \
   '/home/igncp/.scripts/bluetooth_headphones_disconnect.sh' 'bluetooth_headphones_disconnect' 'Bluetooth Headphones Disconnect'
-
-install_with_yay xbindkeys_config-gtk2 xbindkeys_config
-add_desktop_common \
-  '/usr/bin/xbindkeys_config' 'xbindkeys_config' 'XBindKeys Config'
 
 # gui-common END

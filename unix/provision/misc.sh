@@ -4,24 +4,6 @@ if [ ! -d ~/english-words ]; then
   git clone https://github.com/dwyl/english-words ~/english-words
 fi
 
-# ssh keys
-  # sudo chmod 600 ~/.ssh/*
-  cat >> ~/.shellrc <<"EOF"
-    if [ -z "$(ps aux | { grep ssh-agent || true; } | { grep -v grep || true; })" ]; then
-      rm -rf "$HOME"/.ssh/agent.env
-      eval `ssh-agent -s | tee "$HOME"/.ssh/agent.env` > /dev/null 2>&1
-    else
-      source "$HOME"/.ssh/agent.env > /dev/null
-    fi
-EOF
-  add_ssh() {
-    echo "if [ -f ~/.ssh/$1 ]; then ssh-add ~/.ssh/$1 > /dev/null 2>&1; fi" >> ~/.shellrc
-  }
-  # add_ssh foo
-
-  # In case there are many keys, can use this for specific cases:
-  # git config core.sshCommand "ssh -i ~/.ssh/KEY_NAME -o 'IdentitiesOnly yes'"
-
 # ssh greeting and session message
   cat >> ~/.shell_aliases <<"EOF"
 alias SSHRestart='sudo systemctl restart sshd.service'

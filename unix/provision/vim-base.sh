@@ -6,6 +6,7 @@ filetype plugin indent on
 syntax on
 set sessionoptions+=globals
 let mapleader = "\<Space>"
+syntax off " This is removed in update_vim_colors_theme, in case an error in provision
 
 " disable mouse to be able to select + copy
   set mouse-=a
@@ -475,6 +476,7 @@ cp ~/.vimrc ~/.base-vimrc
 
 # https://static.wikia.nocookie.net/vim/images/1/16/Xterm-color-table.png
 update_vim_colors_theme() {
+  sed -i '/syntax off/d' ~/.vimrc
   if [ "$ENVIRONMENT_THEME" == 'light' ]; then return; fi
   swap_colors() {
     COLOR1="$1"; COLOR2="$2"

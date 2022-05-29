@@ -2,7 +2,7 @@
 
 # to start it: startx
 if ! type i3 > /dev/null 2>&1 ; then
-  install_system_package i3-gaps
+  if [ -f ~/project/.config/standard-i3 ]; then install_system_package i3; else install_system_package i3-gaps; fi
   install_system_package i3status
   install_system_package i3lock
 
@@ -44,9 +44,7 @@ alias I3Poweroff='systemctl poweroff'
 alias I3Start='startx'
 I3Configure() {
   $EDITOR -p ~/project/provision/i3-config ~/project/provision/i3-status-config
-  cp ~/project/provision/i3-config ~/.config/i3/config
-  cp ~/project/provision/i3-status-config ~/.config/i3status/config
-  echo Copied I3 configs
+  provision.sh
 }
 EOF
 mkdir -p ~/.config/i3
@@ -56,6 +54,9 @@ check_file_exists ~/project/provision/i3-status-config
 mkdir -p ~/.config/i3 ~/.config/i3status
 cp ~/project/provision/i3-config ~/.config/i3/config
 cp ~/project/provision/i3-status-config ~/.config/i3status/config
+if [ -f ~/project/.config/standard-i3 ]; then
+  sed -i '/gaps/d' ~/.config/i3/config
+fi
 if [ "$ENVIRONMENT_THEME" == "dark" ]; then
   sed -i 's|background #.*|background #333333|' ~/.config/i3/config
   sed -i 's|statusline #.*|statusline #ffffff|' ~/.config/i3/config
