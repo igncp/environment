@@ -96,4 +96,10 @@ if [ ! -f ~/.check-files/oomd ] && [ -n "$(systemctl list-units --full -all | gr
   touch ~/.check-files/oomd
 fi
 
+# Disable the PC loud beep
+if [ ! -f /etc/modprobe.d/nobeep.conf ]; then
+  echo 'blacklist pcspkr' > /tmp/nobeep.conf
+  sudo mv /tmp/nobeep.conf /etc/modprobe.d/
+fi
+
 # linux END
