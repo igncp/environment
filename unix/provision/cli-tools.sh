@@ -94,6 +94,22 @@ complete -C '/usr/local/bin/aws_completer' aws
 EOF
 fi
 
+if [ -f ~/project/.config/cli-scc ]; then
+  if ! type scc > /dev/null 2>&1 ; then
+    (cd ~ && \
+      curl -s https://api.github.com/repos/boyter/scc/releases/latest \
+        | grep unknown-linux \
+        | grep browser \
+        | grep 86_64 \
+        | cut -d : -f 2,3 \
+        | tr -d \" \
+        | xargs wget
+      unzip scc*64*.zip
+      rm scc*.zip
+      sudo mv scc /usr/bin)
+  fi
+fi
+
 # Potential installs:
 # - https://github.com/firebase/firebase-tools
 # - https://support.crowdin.com/cli-tool/

@@ -73,21 +73,6 @@ execute 'vnoremap <leader>hl y' . s:LanguageToolMap
 execute 'nnoremap <leader>hl ggVGy<c-o>' . s:LanguageToolMap
 EOF
 
-# scc: performant cloc with extra info
-if ! type scc > /dev/null 2>&1 ; then
-  (cd ~ && \
-    curl -s https://api.github.com/repos/boyter/scc/releases/latest \
-      | grep unknown-linux \
-      | grep browser \
-      | grep 86_64 \
-      | cut -d : -f 2,3 \
-      | tr -d \" \
-      | xargs wget
-    unzip scc*64*.zip
-    rm scc*.zip
-    sudo mv scc /usr/bin)
-fi
-
 install_system_package pdfgrep
 
 # latex
