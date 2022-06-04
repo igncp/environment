@@ -2,20 +2,36 @@
 
 # This file is intended only for Linux
 
-if [ -z "$ARM_ARCH" ]; then
-  # spanish, japanese, pinyin and jyutping IME using ibus-rime
-  mv ~/.xinitrc /tmp/.xinit_after
-  cat > ~/.xinitrc <<"EOF"
+if [ "$PROVISION_OS" == 'LINUX' ]; then
+  cat > ~/.scripts/start_ibus.sh <<"EOF"
+#!/usr/bin/env bash
 export GTK_IM_MODULE=ibus
 export XMODIFIERS=@im=ibus
 export QT_IM_MODULE=ibus
 export QT4_IM_MODULE=ibus
-GTK_THEME=Menta ibus-daemon -drx
+GTK_THEME=Menta ibus-daemon -rx
 EOF
+  chmod +x ~/.scripts/start_ibus.sh
+  mkdir -p ~/.config/systemd/user/
+  cat > ~/.config/systemd/user/ibus.service <<"EOF"
+[Unit]
+Description=Ibus Service
+
+[Service]
+ExecStart=/home/igncp/.scripts/start_ibus.sh
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=default.target
+EOF
+  if [ ! -f /home/igncp/.config/systemd/user/default.target.wants/ibus.service ]; then
+    systemctl --user daemon-reload
+    systemctl enable --now --user ibus
+  fi
   if [ ! -d /usr/share/themes/Menta ]; then
     install_system_package mate-themes
   fi
-  cat /tmp/.xinit_after >> ~/.xinitrc ; rm /tmp/.xinit_after
   if ! type rime_deployer > /dev/null 2>&1 ; then
     install_system_package ibus
     install_system_package ibus-rime

@@ -10,3 +10,8 @@
     # sudo rsync --progress ~/Downloads/Win11_EnglishInternational_x64v1.iso /mnt
       # Takes around 5 minutes in USB3
     # sudo umount /mnt
+
+# IME
+    # Download and install: https://rime.im/
+    # Right click in bottom right, package manager > Install `rime-cantonese`
+    # F4 for settings
