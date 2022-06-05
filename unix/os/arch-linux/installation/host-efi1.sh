@@ -5,11 +5,11 @@
 
 # Windows: Use UUI to setup a Live USB: https://www.pendrivelinux.com/universal-usb-installer-easy-as-1-2-3/
 # Linux: Use dd: https://wiki.archlinux.org/index.php/USB_flash_installation_media
-    # e.g.: dd bs=4M if=path/to/arch.iso of=/dev/sdb conv=fsync oflag=direct status=progress
+    # e.g.: sudo dd bs=4M if=path/to/arch.iso of=/dev/sdb conv=fsync oflag=direct status=progress
 
 # Can connect to WIFI after partitioning disks so you can save the password in file in disk
 # If you have an additional USB port and stick, or additional internal drive, can copy it there:
-    # iwctl --passphrase=PASS station DEVICE connect SSID
+    # iwctl --passphrase=PASS station DEVICE connect SSID ; sleep 5 ; ping archlinux.org
 
 # Check the machine BIOS key
 

@@ -4,6 +4,7 @@ if [ ! -f ~/.check-files/basic-packages ]; then
   echo "installing basic packages"
   sudo pacman -Syu --noconfirm
   sudo pacman -S --noconfirm bash-completion
+  sudo pacman -S --noconfirm xscreensaver libxss # Required by dunst
 
   touch ~/.check-files/basic-packages
 fi
@@ -59,7 +60,7 @@ alias PacmanFindPackageOfFile='pacman -Qo'
 alias PacmanListExplicitPackages='pacman -Qe'
 alias PacmanListFilesOfPackage='pacman -Ql'
 alias PacmanListInstalledPackages='sudo pacman -Qs'
-alias PacmanListPackagesByDate='expac --timefmt='%Y-%m-%d %T' '%l\t%n' | sort'
+alias PacmanListPackagesByDate="expac --timefmt='%Y-%m-%d %T' '%l\t%n' | sort"
 alias PacmanSearchPackage='pacman -F'
 alias PacmanUpdateRepos='sudo pacman -Sy'
 

@@ -2,6 +2,8 @@
 
 install_system_package build-essential make
 
+install_system_package update-manager
+
 cat >> ~/.shell_aliases <<"EOF"
 alias WifiConnect='nmtui'
 EOF
@@ -69,5 +71,8 @@ if [ ! -f ~/.check-files/adobe-font ]; then
   rm -rf source-code-pro{,.zip}
   touch ~/.check-files/adobe-font
 fi
+
+echo "/usr/lib/update-notifier/apt-check --human-readable | head -1 | awk '{print "'$1'";}'" > ~/.scripts/polybar_updates.sh
+echo "lxqt-sudo update-manager" > ~/.scripts/polybar_updates_click.sh
 
 # ubuntu-gui END

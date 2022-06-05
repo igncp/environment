@@ -17,8 +17,7 @@ set -x
   # ip a | grep -i 192 ; passwd
 
 # From the host
-  # sed -i '/192.168.1.X/d' ~/.ssh/known_hosts
-  # ssh root@192.168.1.X # to confirm
+  # sed -i '/192.168.1.X/d' ~/.ssh/known_hosts ; ssh root@192.168.1.X # to confirm
   # rsync -rhv ./unix/os/arch-linux/installation/ root@192.168.1.X:/root/
       # If using windows, you can use scp
   # ssh root@192.168.1.X
@@ -63,7 +62,7 @@ mkdir -p /mnt/etc /mnt/boot /mnt/home
 # mount /boot, /home, or others if necessary
 genfstab -U /mnt >> /mnt/etc/fstab
 
-pacstrap /mnt base linux linux-firmware vim # downloads ~300 MB
+pacstrap /mnt base linux linux-firmware vim perl # downloads ~300 MB (vim needs perl)
 cp -r /root/* /root/.vimrc /mnt/root/
 
 cat > /mnt/root/init.sh <<"EOF"

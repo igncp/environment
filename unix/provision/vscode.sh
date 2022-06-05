@@ -120,6 +120,7 @@ if [ -f ~/.config/Code/User/settings.json ]; then
     echo "$SETTINGS_DIFF"
   fi
 else
+  mkdir -p ~/.config/Code/User/
   cp /tmp/vscode-settings.json ~/.config/Code/User/settings.json
 fi
 

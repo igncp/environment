@@ -311,4 +311,9 @@ install_with_yay xbindkeys_config-gtk2 xbindkeys_config
 add_desktop_common \
   '/usr/bin/xbindkeys_config' 'xbindkeys_config' 'XBindKeys Config'
 
+echo 'sudo pacman -Syu ; yay -Syu --noconfirm ; echo "Finished"; sleep 100' > ~/.scripts/update_system_polybar.sh
+chmod +x ~/.scripts/update_system_polybar.sh
+echo 'pacman -Sup | wc -l' > ~/.scripts/polybar_updates.sh
+echo 'alacritty -e /home/igncp/.scripts/update_system_polybar.sh' > ~/.scripts/polybar_updates_click.sh
+
 # arch-gui END

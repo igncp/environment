@@ -51,13 +51,15 @@ cat environment/unix/provision/gui-i3.sh >> ~/project/provision/provision.sh
 cp environment/unix/config-files/fonts.conf ~/project/provision/
 cp environment/unix/config-files/alacritty.yml ~/project/provision/
 cp environment/unix/config-files/i3-config ~/project/provision/
-cp environment/unix/config-files/i3-status-config ~/project/provision/
+cp environment/unix/config-files/polybar.ini ~/project/provision/
 cp environment/unix/config-files/picom.conf ~/project/provision/
 cp environment/unix/config-files/rime-config.yaml ~/project/provision/
 
 cat environment/unix/os/arch-linux/provision/arch-gui.sh >> ~/project/provision/provision.sh
 cp environment/unix/config-files/espanso.yml ~/project/provision/
-cat environment/unix/provision/cli-tools.sh >> ~/project/provision/cli-tools.sh
+cat environment/unix/provision/cli-tools.sh >> ~/project/provision/provision.sh
+cat environment/unix/provision/android.sh >> ~/project/provision/provision.sh
+cat environment/unix/provision/vscode.sh >> ~/project/provision/provision.sh
 cat environment/unix/provision/docker.sh >> ~/project/provision/provision.sh
 cat environment/unix/provision/custom.sh >> ~/project/provision/provision.sh
 

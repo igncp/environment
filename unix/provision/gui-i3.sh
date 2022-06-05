@@ -3,7 +3,6 @@
 # to start it: startx
 if ! type i3 > /dev/null 2>&1 ; then
   if [ -f ~/project/.config/standard-i3 ]; then install_system_package i3; else install_system_package i3-gaps; fi
-  install_system_package i3status
   install_system_package i3lock
 
   cat > ~/i3lock.service <<"EOF"
@@ -43,17 +42,14 @@ alias I3DetectAppName="xprop | grep WM_NAME"
 alias I3Poweroff='systemctl poweroff'
 alias I3Start='startx'
 I3Configure() {
-  $EDITOR -p ~/project/provision/i3-config ~/project/provision/i3-status-config
+  $EDITOR ~/project/provision/i3-config
   provision.sh
 }
 EOF
 mkdir -p ~/.config/i3
 touch ~/init.sh # this file is not overridden so it can be changed manually
 check_file_exists ~/project/provision/i3-config
-check_file_exists ~/project/provision/i3-status-config
-mkdir -p ~/.config/i3 ~/.config/i3status
 cp ~/project/provision/i3-config ~/.config/i3/config
-cp ~/project/provision/i3-status-config ~/.config/i3status/config
 if [ -f ~/project/.config/standard-i3 ]; then
   sed -i '/gaps/d' ~/.config/i3/config
 fi
@@ -61,6 +57,37 @@ if [ "$ENVIRONMENT_THEME" == "dark" ]; then
   sed -i 's|background #.*|background #333333|' ~/.config/i3/config
   sed -i 's|statusline #.*|statusline #ffffff|' ~/.config/i3/config
 fi
+
+# polybar
+  install_system_package polybar
+  mkdir -p ~/.config/polybar
+  check_file_exists ~/project/provision/polybar.ini
+  cp ~/project/provision/polybar.ini ~/.config/polybar/config.ini
+  echo "echo 0" > ~/.scripts/polybar_updates.sh
+  echo "" > ~/.scripts/polybar_updates_click.sh
+  cat > ~/.config/polybar/launch.sh <<"EOF"
+#!/usr/bin/env bash
+polybar --config=/home/igncp/.config/polybar/config.ini main
+EOF
+  chmod +x ~/.config/polybar/launch.sh
+  sed -i '1isleep 5s && /home/igncp/.config/polybar/launch.sh &' ~/.xinitrc
+  cat >> ~/.shell_aliases <<"EOF"
+PolybarConfigure() {
+  $EDITOR ~/project/provision/polybar.ini
+  provision.sh
+}
+alias PolybarRestart='killall polybar; nohup /home/igncp/.config/polybar/launch.sh >/dev/null 2>&1 &'
+EOF
+  if [ -f ~/project/.config/polybar-small ]; then
+    sed -i 's|height =.*|height = 20pt|' ~/.config/polybar/config.ini
+    sed -i 's|size=.*;|size=14;|' ~/.config/polybar/config.ini
+    sed -i 's|tray-offset-y =.*|tray-offset-y = -20pt|' ~/.config/polybar/config.ini
+  fi
+  if [ -f ~/.check-files/polybar-interface ]; then
+    sed -i "s|interface =.*|interface = $(cat ~/.check-files/polybar-interface)|" ~/.config/polybar/config.ini
+  else
+    echo '[~/.check-files/polybar-interface]: Add the interface for polybar (use `ip a`), e.g. wlo1'
+  fi
 
 # picom: can be disabled due performance
   if [ ! -f ~/project/.config/without-picom ]; then
