@@ -159,4 +159,35 @@ if [ ! -f ~/.check-files/hp-printer ]; then
   touch ~/.check-files/hp-printer
 fi
 
+if ! type sr > /dev/null 2>&1 ; then
+  cd ~; rm -rf sr-tmp
+  git clone https://github.com/igncp/sr.git sr-tmp --depth 1
+  cd sr-tmp
+  make
+  sudo mv build/bin/sr /usr/bin
+  cd ~ ; rm -rf sr-tmp
+fi
+
+install_system_package at
+install_system_package ctags
+
+cat > ~/.ctags <<"EOF"
+--regex-make=/^([^# \t]*):/\1/t,target/
+--langdef=markdown
+--langmap=markdown:.mkd
+--regex-markdown=/^#[ \t]+(.*)/\1/h,Heading_L1/
+--regex-markdown=/^##[ \t]+(.*)/\1/i,Heading_L2/
+--regex-markdown=/^###[ \t]+(.*)/\1/k,Heading_L3/
+EOF
+
+install_system_package shellcheck
+echo 'SHELLCHECK_IGNORES="SC1090"' >> ~/.bashrc
+add_shellcheck_ignores() {
+  for DIRECTIVE in "$@"; do
+    echo 'SHELLCHECK_IGNORES="$SHELLCHECK_IGNORES,SC'"$DIRECTIVE"'"' >> ~/.bashrc
+  done
+}
+add_shellcheck_ignores 2016 2028 2046 2059 2086 2088 2143 2164 2181 1117
+echo 'export SHELLCHECK_OPTS="-e $SHELLCHECK_IGNORES"' >> ~/.bashrc
+
 # misc END

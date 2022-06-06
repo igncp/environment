@@ -110,6 +110,17 @@ if [ -f ~/project/.config/cli-scc ]; then
   fi
 fi
 
+# hhighlighter: `h` command
+if [ ! -f ~/hhighlighter/h.sh ] > /dev/null 2>&1 ; then
+  rm -rf ~/hhighlighter
+  git clone --depth 1 https://github.com/paoloantinori/hhighlighter.git ~/hhighlighter
+fi
+echo 'source_if_exists ~/hhighlighter/h.sh' >> ~/.shell_sources
+install_system_package ack # Required by hhighlighter
+
+install_system_package pandoc # document conversion
+install_system_package graphviz dot
+
 # Potential installs:
 # - https://github.com/firebase/firebase-tools
 # - https://support.crowdin.com/cli-tool/

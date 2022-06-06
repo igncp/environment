@@ -96,10 +96,20 @@ if [ ! -f ~/.check-files/oomd ] && [ -n "$(systemctl list-units --full -all | gr
   touch ~/.check-files/oomd
 fi
 
+if [ -f ~/project/.config/netdata ]; then
+  install_system_package netdata
+  if [ ! -f ~/.check-files/netdata ]; then
+    sudo systemctl enable --now netdata
+    touch ~/.check-files/netdata
+  fi
+fi
+
 # Disable the PC loud beep
 if [ ! -f /etc/modprobe.d/nobeep.conf ]; then
   echo 'blacklist pcspkr' > /tmp/nobeep.conf
   sudo mv /tmp/nobeep.conf /etc/modprobe.d/
 fi
+
+install_system_package strace
 
 # linux END
