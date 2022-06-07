@@ -46,8 +46,8 @@ localectl set-locale LANG=en_US.UTF-8
 # alternative: sudo journalctl --vacuum-size=500M
 journalctl --vacuum-time=10d
 
-cp /root/.vimrc /home/igncp/.vimrc
-chown -R igncp:igncp /home/igncp/.vimrc
+cp /root/.vimrc /home/igncp/.vimrc || true
+chown -R igncp:igncp /home/igncp/.vimrc || true
 
 echo 'exit'
 echo 'umount -a'
