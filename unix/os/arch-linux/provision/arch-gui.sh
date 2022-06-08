@@ -18,9 +18,21 @@ cat >> ~/.shell_aliases <<"EOF"
 alias PAListSinks="pacmd list-sinks | grep name: | grep -o '<.*>' | sed  's|[<>]||g'"
 alias PASetSink="pacmd set-default-sink"
 EOF
-sed -i '1isleep 15s && pa-applet 2>&1 > /dev/null &' ~/.xinitrc
-# to fix application without sound
-# killall pulseaudio ; rm -r ~/.config/pulse/* ; rm -r ~/.pulse*
+cat > ~/.config/systemd/user/pa-applet.service <<"EOF"
+[Unit]
+Description=PA Applet
+
+[Service]
+ExecStart=/usr/bin/pa-applet
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=default.target
+EOF
+if [ ! -f /home/igncp/.config/systemd/user/default.target.wants/pa-applet.service ]; then
+  systemctl --user daemon-reload ; systemctl --user enable --now pa-applet
+fi
 
 # bluetooth
 # for dual boot:
@@ -311,9 +323,16 @@ install_with_yay xbindkeys_config-gtk2 xbindkeys_config
 add_desktop_common \
   '/usr/bin/xbindkeys_config' 'xbindkeys_config' 'XBindKeys Config'
 
-echo 'sudo pacman -Syu ; yay -Syu --noconfirm ; echo "Finished"; sleep 100' > ~/.scripts/update_system_polybar.sh
-chmod +x ~/.scripts/update_system_polybar.sh
-echo 'pacman -Sup | wc -l' > ~/.scripts/polybar_updates.sh
-echo 'alacritty -e /home/igncp/.scripts/update_system_polybar.sh' > ~/.scripts/polybar_updates_click.sh
+# polybar
+if [ -f ~/project/provision/polybar.ini ]; then
+  echo 'sudo pacman -Syu ; yay -Syu --noconfirm ; echo "Finished"; sleep 100' > ~/.scripts/update_system_polybar.sh
+  chmod +x ~/.scripts/update_system_polybar.sh
+  cat > /tmp/polybar_updates.sh <<"EOF"
+pacman -Sy > /dev/null
+pacman -Sup | wc -l
+EOF
+  sudo bash -c 'cat /tmp/polybar_updates.sh > /home/igncp/.scripts/polybar_updates.sh' ; rm -rf /tmp/polybar_updates.sh
+  echo 'alacritty -e /home/igncp/.scripts/update_system_polybar.sh' > ~/.scripts/polybar_updates_click.sh
+fi
 
 # arch-gui END

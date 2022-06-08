@@ -63,14 +63,32 @@ fi
   mkdir -p ~/.config/polybar
   check_file_exists ~/project/provision/polybar.ini
   cp ~/project/provision/polybar.ini ~/.config/polybar/config.ini
-  echo "echo 0" > ~/.scripts/polybar_updates.sh
+  sudo bash -c 'echo "echo 0" > /home/igncp/.scripts/polybar_updates.sh'
+  if [ -z "$(sudo cat /etc/sudoers | grep 'polybar_updates')" ]; then
+    sudo sed -i -e '$aigncp ALL=NOPASSWD:/home/igncp/.scripts/polybar_updates.sh' /etc/sudoers
+  fi
+  sudo chmod 500 /home/igncp/.scripts/polybar_updates.sh
   echo "" > ~/.scripts/polybar_updates_click.sh
   cat > ~/.config/polybar/launch.sh <<"EOF"
 #!/usr/bin/env bash
 polybar --config=/home/igncp/.config/polybar/config.ini main
 EOF
   chmod +x ~/.config/polybar/launch.sh
-  sed -i '1isleep 5s && /home/igncp/.config/polybar/launch.sh &' ~/.xinitrc
+  cat > ~/.config/systemd/user/polybar.service <<"EOF"
+[Unit]
+Description=Polybar
+
+[Service]
+ExecStart=/home/igncp/.config/polybar/launch.sh
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=default.target
+EOF
+  if [ ! -f /home/igncp/.config/systemd/user/default.target.wants/polybar.service ]; then
+    systemctl --user daemon-reload ; systemctl --user enable --now polybar
+  fi
   cat >> ~/.shell_aliases <<"EOF"
 PolybarConfigure() {
   $EDITOR ~/project/provision/polybar.ini

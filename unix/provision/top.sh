@@ -47,4 +47,8 @@ case "$(uname -s)" in
      ;;
 esac
 
+if [ "$PROVISION_OS" == "LINUX" ]; then
+  mkdir -p ~/.config/systemd/user
+fi
+
 # top END

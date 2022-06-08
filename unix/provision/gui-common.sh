@@ -9,10 +9,24 @@ export GTK_IM_MODULE=ibus
 export XMODIFIERS=@im=ibus
 export QT_IM_MODULE=ibus
 export QT4_IM_MODULE=ibus
-GTK_THEME=Menta ibus-daemon -rxd
+GTK_THEME=Menta ibus-daemon -rx
 EOF
   chmod +x ~/.scripts/start_ibus.sh
-  sed -i '1isleep 5s && /home/igncp/.scripts/start_ibus.sh &' ~/.xinitrc
+  cat > ~/.config/systemd/user/ibus.service <<"EOF"
+[Unit]
+Description=IBus
+
+[Service]
+ExecStart=/home/igncp/.scripts/start_ibus.sh
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=default.target
+EOF
+  if [ ! -f /home/igncp/.config/systemd/user/default.target.wants/ibus.service ]; then
+    systemctl --user daemon-reload ; systemctl --user enable --now ibus
+  fi
   if [ ! -d /usr/share/themes/Menta ]; then
     install_system_package mate-themes
   fi
@@ -132,7 +146,6 @@ VNCServerStorePassword() { x11vnc -storepasswd; }
 EOF
   # Don't enable, just manually start or stop
   # Until reboot, have to: `systemctl --user daemon-reload`
-  mkdir -p ~/.config/systemd/user/
   cat > ~/.config/systemd/user/x11vnc.service <<"EOF"
 [Unit]
 Description=VNC Server for X11

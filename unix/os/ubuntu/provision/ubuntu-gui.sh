@@ -30,7 +30,6 @@ if [ -f ~/project/.config/dropbox ]; then
   cat >> ~/.shellrc <<"EOF"
 export PATH="$PATH:/home/igncp/.dropbox-dist"
 EOF
-  mkdir -p ~/.config/systemd/user/
   cat > ~/.config/systemd/user/dropbox.service <<"EOF"
 [Unit]
 Description=Dropbox Service
@@ -38,14 +37,13 @@ Description=Dropbox Service
 [Service]
 ExecStart=/home/igncp/.dropbox-dist/dropboxd
 Restart=always
-RestartSec=2
+RestartSec=5
 
 [Install]
 WantedBy=default.target
 EOF
   if [ ! -f /home/igncp/.config/systemd/user/default.target.wants/dropbox.service ]; then
-    systemctl --user daemon-reload
-    systemctl enable --now --user dropbox
+    systemctl --user daemon-reload ; systemctl enable --now --user dropbox
   fi
 fi
 

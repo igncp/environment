@@ -66,6 +66,8 @@ EndSection
 EOF
 sudo mv /tmp/90-custom-kbd.conf /etc/X11/xorg.conf.d/
 
+sed -i '1ish /etc/X11/xinit/xinitrc.d/50-systemd-user.sh' ~/.xinitrc
+
 # gui-i3 available
 # gui-common available
 # gui-extras available
