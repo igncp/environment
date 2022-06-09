@@ -94,6 +94,7 @@ install_system_package cronie crontab
 install_system_package arch-install-scripts genfstab
 install_system_package base-devel make
 install_system_package nmap
+install_system_package lftp
 
 if ! type pkgfile > /dev/null 2>&1 ; then
   sudo pacman -S --noconfirm pkgfile
