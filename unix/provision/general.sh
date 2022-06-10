@@ -608,4 +608,8 @@ cat > ~/.gnupg/gpg-agent.conf <<"EOF"
 pinentry-program /usr/bin/pinentry-tty
 EOF
 
+cat >> ~/.shell_aliases <<"EOF"
+MsgFmtPo() { FILE_NO_EXT="$(echo $1 | sed 's|.po$||')" ; msgfmt -o "$1".mo "$1".po ; }
+EOF
+
 # general END
