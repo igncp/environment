@@ -89,6 +89,18 @@ EOF
   if [ ! -f /home/igncp/.config/systemd/user/default.target.wants/polybar.service ]; then
     systemctl --user daemon-reload ; systemctl --user enable --now polybar
   fi
+  cat > ~/.config/polybar/task_polybar.sh <<"EOF"
+#!/bin/bash
+
+most_urgent_desc=`task rc.verbose: rc.report.next.columns:description rc.report.next.labels:1 limit:1 next`
+most_urgent_id=`task rc.verbose: rc.report.next.columns:id rc.report.next.labels:1 limit:1 next`
+echo "$most_urgent_id" > /tmp/tw_polybar_id
+if [ -z "$most_urgent_desc" ]; then
+  echo ""
+else
+  echo "$most_urgent_desc ✅"
+fi
+EOF
   cat >> ~/.shell_aliases <<"EOF"
 PolybarConfigure() {
   $EDITOR ~/project/provision/polybar.ini

@@ -329,7 +329,12 @@ if [ -f ~/project/provision/polybar.ini ]; then
   chmod +x ~/.scripts/update_system_polybar.sh
   cat > /tmp/polybar_updates.sh <<"EOF"
 pacman -Sy > /dev/null
-pacman -Sup | wc -l
+UPDATES="$(pacman -Sup | wc -l)"
+if [ "$UPDATES" == "0" ]; then
+  echo "🍹"
+else
+  echo "♻️ $UPDATES"
+fi
 EOF
   sudo bash -c 'cat /tmp/polybar_updates.sh > /home/igncp/.scripts/polybar_updates.sh' ; rm -rf /tmp/polybar_updates.sh
   echo 'alacritty -e /home/igncp/.scripts/update_system_polybar.sh' > ~/.scripts/polybar_updates_click.sh
