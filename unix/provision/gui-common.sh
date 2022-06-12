@@ -3,12 +3,16 @@
 # This file is intended only for Linux
 
 if [ "$PROVISION_OS" == 'LINUX' ]; then
-  cat > ~/.scripts/start_ibus.sh <<"EOF"
-#!/usr/bin/env bash
+  cat > /tmp/.xinitrc <<"EOF"
 export GTK_IM_MODULE=ibus
 export XMODIFIERS=@im=ibus
 export QT_IM_MODULE=ibus
 export QT4_IM_MODULE=ibus
+EOF
+  cat ~/.xinitrc >> /tmp/.xinitrc
+  mv /tmp/.xinitrc ~/.xinitrc
+  cat > ~/.scripts/start_ibus.sh <<"EOF"
+#!/usr/bin/env bash
 GTK_THEME=Menta ibus-daemon -rx
 EOF
   chmod +x ~/.scripts/start_ibus.sh
@@ -46,7 +50,7 @@ EOF
   # On RIME, press F4 to switch
   # On IBusSettings, add English and Chinese - RIME
   if [ ! -f "$HOME"/.check-files/ibus-shortcut-log ]; then
-    echo '[~/.check-files/ibus-shortcut-log]: In ibus settings, remove the default Super+Space shortcut to switch IM, replace it by Shift+F9'
+    echo '[~/.check-files/ibus-shortcut-log]: In ibus settings, change the default Super+Space shortcut to switch IM to Alt+l (language)'
   fi
   cat >> ~/.shell_aliases <<"EOF"
 alias IBusDaemon='ibus-daemon -drx'
