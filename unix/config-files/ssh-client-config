@@ -2,6 +2,9 @@
 
 # AddKeysToAgent yes # Only input passphrase once per agent
 
+# Host *
+# Host 192.168.1.*
+
 Host foo
   # Automatically use a certain user
   User bar
