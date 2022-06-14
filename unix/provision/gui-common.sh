@@ -11,17 +11,14 @@ export QT4_IM_MODULE=ibus
 EOF
   cat ~/.xinitrc >> /tmp/.xinitrc
   mv /tmp/.xinitrc ~/.xinitrc
-  cat > ~/.scripts/start_ibus.sh <<"EOF"
-#!/usr/bin/env bash
-GTK_THEME=Menta ibus-daemon -rx
-EOF
-  chmod +x ~/.scripts/start_ibus.sh
   cat > ~/.config/systemd/user/ibus.service <<"EOF"
 [Unit]
 Description=IBus
 
 [Service]
-ExecStart=/home/igncp/.scripts/start_ibus.sh
+Environment="GTK_THEME=Menta"
+ExecStartPre=sh -c '(test ! -f /tmp/waited-ibus && sleep 2 && touch /tmp/waited-ibus) || true'
+ExecStart=/usr/bin/ibus-daemon -rx
 Restart=always
 RestartSec=5
 
