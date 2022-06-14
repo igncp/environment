@@ -182,7 +182,22 @@ if [ -f ~/project/.config/dropbox ]; then
     gpg --recv-keys 1C61A2656FB57B7E4DE0F4C1FC918B335044912E
   fi
   install_with_yay dropbox
-  sed -i '1isleep 15s && dropbox 2>&1 > /dev/null &' ~/.xinitrc
+  cat > ~/.config/systemd/user/dropbox.service <<"EOF"
+[Unit]
+Description=Dropbox
+
+[Service]
+ExecStartPre=sh -c '(test ! -f /tmp/waited-dropbox && sleep 2 && touch /tmp/waited-dropbox) || true'
+ExecStart=/usr/bin/dropbox
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=default.target
+EOF
+  if [ ! -f /home/igncp/.config/systemd/user/default.target.wants/dropbox.service ]; then
+    systemctl --user daemon-reload ; systemctl --user enable --now dropbox
+  fi
 fi
 
 # https://zoom.us/download?os=linux
