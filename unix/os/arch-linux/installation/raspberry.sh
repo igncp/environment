@@ -5,6 +5,7 @@ set -e
 # Setup SD Card:
     # - Raspberry Pi 4: https://archlinuxarm.org/platforms/armv8/broadcom/raspberry-pi-4
         # Choose arm64 for better docker support
+        # Run this to see the progress of the `sync` command: `sudo watch -n 1 grep -e Dirty: /proc/meminfo`
     # - Raspberry Pi 3: https://archlinuxarm.org/platforms/armv6/raspberry-pi
 
 # Create volume for home directory, which will be encrypted and not mounted during boot
