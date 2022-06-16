@@ -1,7 +1,6 @@
 # php START
 
 # * requires
-# - be placed after apache provision
 # - be placed after mysql provision (if used)
 
 install_system_package php

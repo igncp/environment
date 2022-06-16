@@ -140,6 +140,10 @@ if [ -n "$IS_XBINDKEYS_RUNNING" ]; then killall xbindkeys; fi
 xbindkeys
 EOF
   echo 'alias XbindkeysMultikey="xbindkeys --multikey"' >> ~/.shell_aliases
+
+  install_with_yay xbindkeys_config-gtk2 xbindkeys_config
+  add_desktop_common \
+    '/usr/bin/xbindkeys_config' 'xbindkeys_config' 'XBindKeys Config'
 fi
 
 if [ -f ~/project/.config/nvidia ]; then
@@ -326,17 +330,15 @@ alias SnapList='snap list'
 EOF
 fi
 
-if [ ! -f ~/.check-files/safeeyes ]; then
-  install_with_yay safeeyes
-  sudo pacman -S --noconfirm xprintidle # Required by the idle plugin
-  pip install croniter # Required by the stats plugin
-  touch ~/.check-files/safeeyes
+if [ -f ~/project/.config/safeeyes ]; then
+  if [ ! -f ~/.check-files/safeeyes ]; then
+    install_with_yay safeeyes
+    sudo pacman -S --noconfirm xprintidle # Required by the idle plugin
+    pip install croniter # Required by the stats plugin
+    touch ~/.check-files/safeeyes
+  fi
+  sed -i '1isleep 2s && safeeyes -e &' ~/.xinitrc
 fi
-sed -i '1isleep 2s && safeeyes -e &' ~/.xinitrc
-
-install_with_yay xbindkeys_config-gtk2 xbindkeys_config
-add_desktop_common \
-  '/usr/bin/xbindkeys_config' 'xbindkeys_config' 'XBindKeys Config'
 
 # polybar
 if [ -f ~/project/provision/polybar.ini ]; then
@@ -353,6 +355,39 @@ fi
 EOF
   sudo bash -c 'cat /tmp/polybar_updates.sh > /home/igncp/.scripts/polybar_updates.sh' ; rm -rf /tmp/polybar_updates.sh
   echo 'alacritty -e /home/igncp/.scripts/update_system_polybar.sh' > ~/.scripts/polybar_updates_click.sh
+fi
+
+if [ -f ~/projeect/.config/headless-xorg ]; then
+  if [ ! -f ~/.check-files/xf86-video-dummy ]; then sudo pacman -S xf86-video-dummy; touch ~/.check-files/xf86-video-dummy; fi
+  cat > /tmp/10-headless.conf <<"EOF"
+Section "Monitor"
+        Identifier "dummy_monitor"
+        HorizSync 28.0-80.0
+        VertRefresh 48.0-75.0
+        Modeline "1920x1080" 172.80 1920 2040 2248 2576 1080 1081 1084 1118
+EndSection
+
+Section "Device"
+        Identifier "dummy_card"
+        VideoRam 256000
+        Driver "dummy"
+EndSection
+
+Section "Screen"
+        Identifier "dummy_screen"
+        Device "dummy_card"
+        Monitor "dummy_monitor"
+        SubSection "Display"
+        EndSubSection
+EndSection
+EOF
+  sudo mv /tmp/10-headless.conf /etc/X11/xorg.conf.d/
+  cat > /tmp/Xwrapper.config <<"EOF"
+allowed_users = anybody
+EOF
+  sudo mv /tmp/Xwrapper.config  /etc/X11/
+  echo 'alias HeadlessStart="startx"' >> ~/.shell_aliases
+  echo 'alias HeadlessXRandr="DISPLAY=:0 xrandr --output DUMMY0 --mode 1920x1080"' >> ~/.shell_aliases
 fi
 
 # arch-gui END
