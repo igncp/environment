@@ -390,4 +390,6 @@ EOF
   echo 'alias HeadlessXRandr="DISPLAY=:0 xrandr --output DUMMY0 --mode 1920x1080"' >> ~/.shell_aliases
 fi
 
+install_with_yay inxi
+
 # arch-gui END

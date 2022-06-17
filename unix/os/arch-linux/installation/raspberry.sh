@@ -21,6 +21,10 @@ set -e
 
 # Run this as root
 
+## If connected to the TV, add in `/boot/config.txt`
+    # hdmi_mode=64
+    # hdmi_group=1
+
 echo 'Remember to update the disk to encrypt before running'
 
 read -p "Do you want to continue? (yY) " -n 1 -r; echo ''; if ! [[ $REPLY =~ ^[Yy]$  ]]; then exit; fi
