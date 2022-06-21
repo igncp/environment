@@ -5,9 +5,6 @@ if [ ! -d ~/english-words ]; then
 fi
 
 # ssh greeting and session message
-  cat >> ~/.shell_aliases <<"EOF"
-alias SSHRestart='sudo systemctl restart sshd.service'
-EOF
   cat > /tmp/greeting.txt <<"EOF"
 
   你好!
@@ -112,26 +109,6 @@ EOF
     # echo 'synclient MaxTapTime=0' >> ~/.bashrc
     # echo 'synclient VertEdgeScroll=0' >> ~/.bashrc
     # echo 'synclient VertTwoFingerScroll=0' >> ~/.bashrc
-
-# For encrypted devices
-cat >> ~/.shell_aliases <<"EOF"
-MountEncryptedDeviceNAME() {
-  CRYPT_NAME="CRYPT_NAME"
-  DEVICE_PATH="/dev/sdaX"
-  MOUNT_POINT="$HOME/POINT"
-
-  sudo cryptsetup open "$DEVICE_PATH" "$CRYPT_NAME"
-  mkdir -p "$MOUNT_POINT"
-  sudo mount "/dev/mapper/$CRYPT_NAME" "$MOUNT_POINT"
-}
-UmountEncryptedDeviceNAME() {
-  CRYPT_NAME="CRYPT_NAME"
-  MOUNT_POINT="$HOME/POINT"
-
-  sudo umount "$MOUNT_POINT"
-  sudo cryptsetup close "$CRYPT_NAME"
-}
-EOF
 
 # prettier on save using autocommand instead of coc-prettier
 cat >> ~/.vimrc <<"EOF"

@@ -189,23 +189,27 @@ alias r="ranger"
 alias rm="rm -rf"
 alias tree="tree -a"
 
-DisplayFilesConcatenated(){ xargs tail -n +1 | sed "s|==>|\n\n\n\n\n$1==>|; s|<==|<==\n|" | $EDITOR -; }
 Diff() { diff --color=always "$@" | less -r; }
+DisplayFilesConcatenated(){ xargs tail -n +1 | sed "s|==>|\n\n\n\n\n$1==>|; s|<==|<==\n|" | $EDITOR -; }
+FindLinesJustInFirstFile() { comm -23 <(sort "$1") <(sort "$2"); }
+FindSortDate() { find "$@" -printf "%T@ %Tc %p\n" | sort -nr; }
 GetProcessUsingPort(){ fuser $1/tcp 2>&1 | grep -oE '[0-9]*$'; }
 GetProcessUsingPortAndKill(){ fuser $1/tcp 2>&1 | grep -oE '[0-9]*$' | xargs -I {} kill {}; }
-VisudoUser() { sudo env EDITOR=vim visudo -f /etc/sudoers.d/$1; }
-VidirFind() { find $@ | vidir -v -; }
-Vidir() { vidir -v -; }
-SedLines() { if [ "$#" -eq 1 ]; then sed -n "$1,$1p"; else sed -n "$1,$2p"; fi; }
+KillPsAux() { awk '{ print $2 }' | xargs -I{} kill "$@" {}; }
+LsofDir() { lsof +D $1; } # It uses `+` instead of `-`
+LsofNetwork() { lsof -i; }
+LsofPort() { lsof -i TCP:$1; }
+LsofProcess() { lsof -p $1; } # It expects the PID
 RandomFile() { find "$1" -type f | shuf -n 1; }
 RandomLine() { sort -R "$1" | head -n 1; }
 # will not catch `'` so can wrap generated texts with single quotes
 RandomStrGenerator() { tr -dc 'A-Za-z0-9!"#$%&()*+,-./:;<=>?@[\]^_`{|}~' </dev/urandom | head -c "$1"; echo; }
-TopMemory() { ps aux | sort -nr -k 4 | head "$@" | sed -e 'G;G;'; } # e.g. TopMemory -n 5 | less -S
+SedLines() { if [ "$#" -eq 1 ]; then sed -n "$1,$1p"; else sed -n "$1,$2p"; fi; }
 TopCPU()    { ps aux | sort -nr -k 3 | head "$@" | sed -e 'G;G;'; } # e.g. TopCPU -n 5 | less -S
-FindLinesJustInFirstFile() { comm -23 <(sort "$1") <(sort "$2"); }
-FindSortDate() { find "$@" -printf "%T@ %Tc %p\n" | sort -nr; }
-KillPsAux() { awk '{ print $2 }' | xargs -I{} kill "$@" {}; }
+TopMemory() { ps aux | sort -nr -k 4 | head "$@" | sed -e 'G;G;'; } # e.g. TopMemory -n 5 | less -S
+Vidir() { vidir -v -; }
+VidirFind() { find $@ | vidir -v -; }
+VisudoUser() { sudo env EDITOR=vim visudo -f /etc/sudoers.d/$1; }
 
 SSHGeneratePemPublicKey() { FILE=$1; ssh-keygen -f "$FILE" -e -m pem; }
 alias SSHNoKey='ssh -o PubkeyAuthentication=no'
