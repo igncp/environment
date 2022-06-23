@@ -314,6 +314,10 @@ EOF
   fi
 fi
 
+if [ -n "$ARM_ARCH" ]; then
+  install_with_yay chromium
+fi
+
 if [ -f ~/.config/snap ]; then
   if ! type modulo > /dev/null 2>&1 ; then
     cd ~; rm -rf snapd
@@ -357,7 +361,7 @@ EOF
   echo 'alacritty -e /home/igncp/.scripts/update_system_polybar.sh' > ~/.scripts/polybar_updates_click.sh
 fi
 
-if [ -f ~/projeect/.config/headless-xorg ]; then
+if [ -f ~/project/.config/headless-xorg ]; then
   if [ ! -f ~/.check-files/xf86-video-dummy ]; then sudo pacman -S xf86-video-dummy; touch ~/.check-files/xf86-video-dummy; fi
   cat > /tmp/10-headless.conf <<"EOF"
 Section "Monitor"
