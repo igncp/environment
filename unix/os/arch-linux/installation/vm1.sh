@@ -21,7 +21,6 @@ set -x
   # rsync -rhv ./unix/os/arch-linux/installation/ root@192.168.1.X:/root/
       # If using windows, you can use scp
   # ssh root@192.168.1.X
-  # echo 'syntax off' > /root/.vimrc ; echo 'set mouse-=a' >> /root/.vimrc
 
 # If LVM already exists, can remove some of them, for example: lvremove /dev/mapper/arch-lvroot
 
@@ -63,6 +62,7 @@ mkdir -p /mnt/etc /mnt/boot /mnt/home
 genfstab -U /mnt >> /mnt/etc/fstab
 
 pacstrap /mnt base linux linux-firmware vim perl # downloads ~300 MB (vim needs perl)
+echo 'syntax off' > /root/.vimrc ; echo 'set mouse-=a' >> /root/.vimrc
 cp -r /root/* /root/.vimrc /mnt/root/
 
 cat > /mnt/root/init.sh <<"EOF"

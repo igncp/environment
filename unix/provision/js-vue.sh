@@ -1,5 +1,7 @@
 # js-vue START
 
+# This should be after 'coc-vim' (not after 'js')
+
 install_vim_package posva/vim-vue
 install_vim_package neoclide/coc-vetur
 

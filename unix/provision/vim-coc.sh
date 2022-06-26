@@ -34,10 +34,8 @@ nnoremap <leader>dc :CocList commands<cr>
 nnoremap <leader>de :CocEnable<cr>
 nnoremap <leader>dE :CocDisable<cr>
 nnoremap <leader>ds :CocCommand<cr>
-nnoremap <leader>da :CocAction<cr>
-vnoremap <leader>da :CocAction<cr>
-nnoremap <leader>df <Plug>(coc-fix-current)
-vnoremap <leader>df <Plug>(coc-fix-current)
+nnoremap <leader>da <Plug>(coc-codeaction-selected)<cr>
+vnoremap <leader>da <Plug>(coc-codeaction-selected)<cr>
 nnoremap <leader>dl <Plug>(coc-codelens-action)
 nnoremap <leader>do <Plug>(coc-codeaction)
 nnoremap <leader>dr <Plug>(coc-rename)

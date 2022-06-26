@@ -283,6 +283,13 @@ if [ -z "$ARM_ARCH" ]; then
   ln -s ~/.xinitrc ~/.xprofile
 
   install_with_yay google-chrome google-chrome-stable
+  echo '' > ~/.config/chrome-flags.conf
+  if [ "$ENVIRONMENT_THEME" == "dark" ]; then
+    cat >> ~/.config/chrome-flags.conf <<"EOF"
+--force-dark-mode
+--enable-features=WebUIDarkMode
+EOF
+  fi
 
   if [ -f ~/project/.config/espanso ]; then
     install_with_yay espanso
