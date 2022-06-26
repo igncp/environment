@@ -184,15 +184,17 @@ if [ -f ~/project/.config/dropbox ]; then
   if ! type dropbox > /dev/null 2>&1 ; then
     # https://aur.archlinux.org/packages/dropbox/#pinned-676597
     gpg --recv-keys 1C61A2656FB57B7E4DE0F4C1FC918B335044912E
+    sudo pacman -Sy python-gpgme # https://wiki.archlinux.org/title/dropbox#Required_packages
   fi
   install_with_yay dropbox
+  # When running /usr/bin/dropboxd the process doesn't stay in the foreground
+  # which is necessary for the service
   cat > ~/.config/systemd/user/dropbox.service <<"EOF"
 [Unit]
 Description=Dropbox
 
 [Service]
-ExecStartPre=sh -c '(test ! -f /tmp/waited-dropbox && sleep 2 && touch /tmp/waited-dropbox) || true'
-ExecStart=/usr/bin/dropbox
+ExecStart=/home/igncp/.dropbox-dist/dropboxd
 Restart=always
 RestartSec=5
 
