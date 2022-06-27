@@ -188,8 +188,6 @@ gaps outer -8
 
 bindsym $mod+Tab workspace back_and_forth
 
-exec --no-startup-id espanso daemon
-
 bindsym Super_L exec --no-startup-id "/usr/bin/polybar-msg cmd show"
 bindsym --release Super_L exec --no-startup-id "/usr/bin/polybar-msg cmd hide"
 bindsym --release Mod1+o exec --no-startup-id "/usr/bin/polybar-msg cmd toggle"

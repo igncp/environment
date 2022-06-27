@@ -118,6 +118,8 @@ EOF
   else
     echo '[~/.check-files/polybar-interface]: Add the interface for polybar (use `ip a`), e.g. wlo1'
   fi
+  install_system_package stalonetray # In Polybar the system tray is disabled due to rendering issues
+  echo 'alias TrayIcons="stalonetray --dockapp-mode simple"' >> ~/.shell_aliases
 
 # picom: can be disabled due performance
   if [ ! -f ~/project/.config/without-picom ]; then

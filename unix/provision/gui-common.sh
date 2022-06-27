@@ -93,6 +93,15 @@ if [ "$ENVIRONMENT_THEME" == "dark" ]; then
   sed -i 's|yellow: .*|yellow: "#feffc7"|' ~/.config/alacritty/alacritty.yml
 fi
 
+mkdir -p ~/.config/gtk-3.0/
+echo '[Settings]' > ~/.config/gtk-3.0/settings.ini
+if [ "$ENVIRONMENT_THEME" == "dark" ]; then
+  cat >> ~/.config/gtk-3.0/settings.ini <<"EOF"
+gtk-application-prefer-dark-theme = true
+gtk-theme-name=BlackMATE
+EOF
+fi
+
 install_system_package imagemagick import # for screenshots with import
 install_system_package feh # image preview
 

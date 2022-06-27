@@ -405,4 +405,9 @@ fi
 
 install_with_yay inxi
 
+if [ -f ~/project/.config/autokey ]; then
+  install_with_yay autokey autokey-run
+  install_with_yay autokey-gtk
+fi
+
 # arch-gui END
