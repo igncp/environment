@@ -49,9 +49,9 @@ cat environment/unix/provision/gui-base.sh >> ~/project/provision/provision.sh
 cat environment/unix/provision/gui-common.sh >> ~/project/provision/provision.sh
 cat environment/unix/provision/gui-i3.sh >> ~/project/provision/provision.sh
 cp environment/unix/config-files/fonts.conf ~/project/provision/
+cp environment/unix/config-files/i3blocks.sh ~/project/provision/
 cp environment/unix/config-files/alacritty.yml ~/project/provision/
 cp environment/unix/config-files/i3-config ~/project/provision/
-cp environment/unix/config-files/polybar.ini ~/project/provision/
 cp environment/unix/config-files/picom.conf ~/project/provision/
 cp environment/unix/config-files/rime-config.yaml ~/project/provision/
 

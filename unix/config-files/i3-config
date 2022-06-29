@@ -188,6 +188,25 @@ gaps outer -8
 
 bindsym $mod+Tab workspace back_and_forth
 
-bindsym Super_L exec --no-startup-id "/usr/bin/polybar-msg cmd show"
-bindsym --release Super_L exec --no-startup-id "/usr/bin/polybar-msg cmd hide"
-bindsym --release Mod1+o exec --no-startup-id "/usr/bin/polybar-msg cmd toggle"
+bar {
+  binding_mode_indicator no # otherwise it shows as urgent when changing mode
+  font pango:Cantarell 8
+  mode hide
+  status_command i3blocks
+  modifier Mod4
+  separator_symbol " | "
+  strip_workspace_numbers yes
+  tray_padding 3
+
+  colors {
+    separator #444444
+    background #eeeeee
+    statusline #333333
+    focused_workspace #cecece #333333 #f1f1f1
+    active_workspace #333333 #333333 #888888
+    inactive_workspace #cecece #cecece #000000
+    urgent_workspace #eb709b #eb709b #ffffff
+  }
+}
+
+bindsym Mod4+Shift+c exec --no-startup-id "i3-msg bar mode toggle"

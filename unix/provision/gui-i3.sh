@@ -4,6 +4,7 @@
 if ! type i3 > /dev/null 2>&1 ; then
   if [ -f ~/project/.config/standard-i3 ]; then install_system_package i3; else install_system_package i3-gaps; fi
   install_system_package i3lock
+  install_system_package i3block
 
   cat > ~/i3lock.service <<"EOF"
 [Unit]
@@ -42,7 +43,7 @@ alias I3DetectAppName="xprop | grep WM_NAME"
 alias I3Poweroff='systemctl poweroff'
 alias I3Start='startx'
 I3Configure() {
-  $EDITOR ~/project/provision/i3-config
+  $EDITOR -p ~/project/provision/i3-config ~/project/provision/i3blocks.sh
   provision.sh
 }
 EOF
@@ -58,68 +59,7 @@ if [ "$ENVIRONMENT_THEME" == "dark" ]; then
   sed -i 's|statusline #.*|statusline #ffffff|' ~/.config/i3/config
 fi
 
-# polybar
-  install_system_package polybar
-  mkdir -p ~/.config/polybar
-  check_file_exists ~/project/provision/polybar.ini
-  cp ~/project/provision/polybar.ini ~/.config/polybar/config.ini
-  sudo bash -c 'echo "echo 0" > /home/igncp/.scripts/polybar_updates.sh'
-  if [ -z "$(sudo cat /etc/sudoers | grep 'polybar_updates')" ]; then
-    sudo sed -i -e '$aigncp ALL=NOPASSWD:/home/igncp/.scripts/polybar_updates.sh' /etc/sudoers
-  fi
-  sudo chmod 500 /home/igncp/.scripts/polybar_updates.sh
-  echo "" > ~/.scripts/polybar_updates_click.sh
-  cat > ~/.config/polybar/launch.sh <<"EOF"
-#!/usr/bin/env bash
-polybar --config=/home/igncp/.config/polybar/config.ini main
-EOF
-  chmod +x ~/.config/polybar/launch.sh
-  cat > ~/.config/systemd/user/polybar.service <<"EOF"
-[Unit]
-Description=Polybar
-
-[Service]
-ExecStart=/home/igncp/.config/polybar/launch.sh
-Restart=always
-RestartSec=5
-
-[Install]
-WantedBy=default.target
-EOF
-  if [ ! -f /home/igncp/.config/systemd/user/default.target.wants/polybar.service ]; then
-    systemctl --user daemon-reload ; systemctl --user enable --now polybar
-  fi
-  cat > ~/.config/polybar/task_polybar.sh <<"EOF"
-#!/bin/bash
-
-most_urgent_desc=`task rc.verbose: rc.report.next.columns:description rc.report.next.labels:1 limit:1 next`
-most_urgent_id=`task rc.verbose: rc.report.next.columns:id rc.report.next.labels:1 limit:1 next`
-echo "$most_urgent_id" > /tmp/tw_polybar_id
-if [ -z "$most_urgent_desc" ]; then
-  echo ""
-else
-  echo "$most_urgent_desc ✅"
-fi
-EOF
-  cat >> ~/.shell_aliases <<"EOF"
-PolybarConfigure() {
-  $EDITOR ~/project/provision/polybar.ini
-  provision.sh
-}
-alias PolybarRestart='killall polybar; nohup /home/igncp/.config/polybar/launch.sh >/dev/null 2>&1 &'
-EOF
-  if [ -f ~/project/.config/polybar-small ]; then
-    sed -i 's|height =.*|height = 20pt|' ~/.config/polybar/config.ini
-    sed -i '/font-0/s|size=.*;|size=14;|' ~/.config/polybar/config.ini
-    sed -i 's|tray-offset-y =.*|tray-offset-y = -20pt|' ~/.config/polybar/config.ini
-  fi
-  if [ -f ~/.check-files/polybar-interface ]; then
-    sed -i "s|interface =.*|interface = $(cat ~/.check-files/polybar-interface)|" ~/.config/polybar/config.ini
-  else
-    echo '[~/.check-files/polybar-interface]: Add the interface for polybar (use `ip a`), e.g. wlo1'
-  fi
-  install_system_package stalonetray # In Polybar the system tray is disabled due to rendering issues
-  echo 'alias TrayIcons="stalonetray --dockapp-mode simple"' >> ~/.shell_aliases
+sh ~/project/provision/i3blocks.sh
 
 # picom: can be disabled due performance
   if [ ! -f ~/project/.config/without-picom ]; then
