@@ -1,5 +1,8 @@
 mkdir -p ~/.config/i3blocks
 
+# @TODO: Conditional separators
+
+# @TODO: Move this to the arch-only config
 cat > ~/.scripts/i3blocks_updates.sh <<"EOF"
 pacman -Sy > /dev/null
 UPDATES="$(pacman -Sup | wc -l)"

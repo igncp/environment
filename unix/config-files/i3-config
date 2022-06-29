@@ -190,7 +190,7 @@ bindsym $mod+Tab workspace back_and_forth
 
 bar {
   binding_mode_indicator no # otherwise it shows as urgent when changing mode
-  font pango:Cantarell 8
+  font pango:Cantarell 10
   mode hide
   status_command i3blocks
   modifier Mod4
