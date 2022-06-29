@@ -7,7 +7,7 @@ cat > ~/.scripts/i3blocks_updates.sh <<"EOF"
 pacman -Sy > /dev/null
 UPDATES="$(pacman -Sup | wc -l)"
 if [ "$UPDATES" == "0" ]; then
-  echo "🍹"
+  echo "🍹  |"
 else
   echo "♻️ $UPDATES  |"
 fi
