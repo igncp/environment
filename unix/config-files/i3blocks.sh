@@ -19,7 +19,7 @@ ip a | grep '192.*24 ' -o | sed 's-/24-   |-' | sed 's|^|🌐 |'
 EOF
 chmod +x ~/.scripts/i3blocks_ip.sh
 
-cat > ~/.scripts/i3blocks_battery.sh <<"EOF"
+cat > ~/.scripts/i3blocks_battery <<"EOF"
 #!/usr/bin/env python3
 #
 # Copyright (C) 2016 James Murphy
@@ -101,7 +101,7 @@ print(fulltext + ' <span color="white">  |</span>')
 if percentleft < 10:
     exit(33)
 EOF
-chmod +x ~/.scripts/i3blocks_battery.sh
+chmod +x ~/.scripts/i3blocks_battery
 
 cat > ~/.config/i3blocks/config <<"EOF"
 separator=false
@@ -116,7 +116,7 @@ command="/home/igncp/.scripts/i3blocks_ip.sh"
 interval=10
 
 [battery]
-command="/home/igncp/.scripts/i3blocks_battery.sh"
+command="/home/igncp/.scripts/i3blocks_battery"
 markup=pango
 interval=10
 
