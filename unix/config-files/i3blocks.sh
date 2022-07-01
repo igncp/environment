@@ -14,6 +14,16 @@ fi
 EOF
 chmod +x ~/.scripts/i3blocks_updates.sh
 
+cat > ~/.scripts/i3blocks_memory.sh <<"EOF"
+free -h | ag 'Mem' | awk '{ print "🪣 "$4"  |"; }'
+EOF
+chmod +x ~/.scripts/i3blocks_memory.sh
+
+cat > ~/.scripts/i3blocks_disk.sh <<"EOF"
+df -h / | tail -n 1 | awk '{ print "💿 / "$5"  |"; }'
+EOF
+chmod +x ~/.scripts/i3blocks_disk.sh
+
 cat > ~/.scripts/i3blocks_ip.sh <<"EOF"
 ip a | grep '192.*24 ' -o | sed 's-/24-   |-' | sed 's|^|🌐 |'
 EOF
@@ -109,6 +119,14 @@ separator_block_width=7
 
 [updates]
 command="/home/igncp/.scripts/i3blocks_updates.sh"
+interval=10
+
+[disk]
+command="/home/igncp/.scripts/i3blocks_disk.sh"
+interval=10
+
+[memory]
+command="/home/igncp/.scripts/i3blocks_memory.sh"
 interval=10
 
 [ip]

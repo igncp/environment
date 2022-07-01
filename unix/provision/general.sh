@@ -191,6 +191,7 @@ alias tree="tree -a"
 
 Diff() { diff --color=always "$@" | less -r; }
 DisplayFilesConcatenated(){ xargs tail -n +1 | sed "s|==>|\n\n\n\n\n$1==>|; s|<==|<==\n|" | $EDITOR -; }
+FileSizeCreate() { head -c "$1" /dev/urandom > "$2"; } # For example: FileSizeCreate 1GB /tmp/foo
 FindLinesJustInFirstFile() { comm -23 <(sort "$1") <(sort "$2"); }
 FindSortDate() { find "$@" -printf "%T@ %Tc %p\n" | sort -nr; }
 GetProcessUsingPort(){ fuser $1/tcp 2>&1 | grep -oE '[0-9]*$'; }
