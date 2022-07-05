@@ -38,7 +38,7 @@ syntax off " This is removed in update_vim_colors_theme, in case an error in pro
   nnoremap Q @q
   nnoremap <leader>eE :tabnew ~/project/provision/vim-macros-custom<cr>
   nnoremap <leader>ee :tabnew ~/.vim-macros<cr>
-  nnoremap <leader>ze _v$hy:let @="<c-r>""<C-home><right><right><right><right><right>
+  nnoremap <leader>ez _v$hy:let @="<c-r>""<C-home><right><right><right><right><right>
   " if adding to a register, use doube quotes and replace with:
     " \<C-[> => \<esc>
     " \<C-M> => \<cr>
