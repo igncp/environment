@@ -25,7 +25,6 @@ cat > /tmp/vscode-settings.json <<"EOF"
     "editor.formatOnSave": false,
     "editor.lightbulb.enabled": false,
     "editor.minimap.enabled": false,
-    "editor.renderIndentGuides": false,
     "editor.renderLineHighlight": "none",
     "editor.scrollbar.horizontal": "hidden",
     "editor.scrollbar.vertical": "hidden",
@@ -60,7 +59,8 @@ cat > /tmp/vscode-settings.json <<"EOF"
     "java.configuration.checkProjectSettingsExclusions": false,
     "editor.suggestSelection": "first",
     "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
-    "telemetry.enableTelemetry": false
+    "telemetry.enableTelemetry": false,
+    "editor.guides.indentation": false
 }
 EOF
 # Remove the last line-break

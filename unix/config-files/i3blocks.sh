@@ -7,25 +7,25 @@ cat > ~/.scripts/i3blocks_updates.sh <<"EOF"
 pacman -Sy > /dev/null
 UPDATES="$(pacman -Sup | wc -l)"
 if [ "$UPDATES" == "0" ]; then
-  echo "🍹  |"
+  echo "🍹 |"
 else
-  echo "♻️ $UPDATES  |"
+  echo "♻️ $UPDATES |"
 fi
 EOF
 chmod +x ~/.scripts/i3blocks_updates.sh
 
 cat > ~/.scripts/i3blocks_memory.sh <<"EOF"
-free -h | ag 'Mem' | awk '{ print "🪣 "$4"  |"; }'
+free -h | ag 'Mem' | awk '{ print "🪣 "$4" |"; }'
 EOF
 chmod +x ~/.scripts/i3blocks_memory.sh
 
 cat > ~/.scripts/i3blocks_disk.sh <<"EOF"
-df -h / | tail -n 1 | awk '{ print "💿 / "$5"  |"; }'
+df -h / | tail -n 1 | awk '{ print "💿 / "$5" |"; }'
 EOF
 chmod +x ~/.scripts/i3blocks_disk.sh
 
 cat > ~/.scripts/i3blocks_ip.sh <<"EOF"
-ip a | grep '192.*24 ' -o | sed 's-/24-   |-' | sed 's|^|🌐 |'
+ip a | grep '192.*24 ' -o | sed 's-/24- |-' | sed 's|^|🌐 |'
 EOF
 chmod +x ~/.scripts/i3blocks_ip.sh
 
@@ -106,12 +106,18 @@ else:
     fulltext += form.format(color(percentleft), percentleft)
     fulltext += timeleft
 
-print(fulltext + ' <span color="white">  |</span>')
+print(fulltext + ' <span color="white"> |</span>')
 
 if percentleft < 10:
     exit(33)
 EOF
 chmod +x ~/.scripts/i3blocks_battery
+
+cat > ~/.scripts/i3blocks_microphone.sh <<"EOF"
+VOLUME=$(pacmd list-sources | ag '\*' --after=10 | ag 'volume:' | ag -v base | ag -r '[0-9]+%' -o | head -n 1)
+echo "🎙️ $VOLUME |"
+EOF
+chmod +x ~/.scripts/i3blocks_microphone.sh
 
 cat > ~/.config/i3blocks/config <<"EOF"
 separator=false
@@ -119,6 +125,10 @@ separator_block_width=7
 
 [updates]
 command="/home/igncp/.scripts/i3blocks_updates.sh"
+interval=10
+
+[microphone]
+command="/home/igncp/.scripts/i3blocks_microphone.sh"
 interval=10
 
 [disk]
@@ -139,6 +149,6 @@ markup=pango
 interval=10
 
 [epoch]
-command=echo "🕒 $(date +'%Y-%m-%d %H:%M')  |"
+command=echo "🕒 $(date +'%Y-%m-%d %H:%M:%S') |"
 interval=1
 EOF
