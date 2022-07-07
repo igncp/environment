@@ -114,8 +114,14 @@ EOF
 chmod +x ~/.scripts/i3blocks_battery
 
 cat > ~/.scripts/i3blocks_microphone.sh <<"EOF"
-VOLUME=$(pacmd list-sources | ag '\*' --after=10 | ag 'volume:' | ag -v base | ag -r '[0-9]+%' -o | head -n 1)
-echo "🎙️ $VOLUME |"
+VOLUME_PER=$(pacmd list-sources | ag "\\*" --after=10 | ag "volume:" | ag -v base | ag -r "[0-9]+%" -o | head -n 1)
+VOLUME=${VOLUME_PER::-1};
+if [[ "$(( $VOLUME >= 70 ))" == "1" ]]; then
+  VOLUME_STR="$VOLUME_PER"
+else
+  VOLUME_STR='<span color="#ffacae">'"$VOLUME_PER</span>"
+fi
+echo "🎙️ $VOLUME_STR |"
 EOF
 chmod +x ~/.scripts/i3blocks_microphone.sh
 
@@ -125,11 +131,12 @@ separator_block_width=7
 
 [updates]
 command="/home/igncp/.scripts/i3blocks_updates.sh"
-interval=10
+interval=30
 
 [microphone]
 command="/home/igncp/.scripts/i3blocks_microphone.sh"
-interval=10
+markup=pango
+interval=30
 
 [disk]
 command="/home/igncp/.scripts/i3blocks_disk.sh"
