@@ -93,59 +93,6 @@ if [ -z "$ARM_ARCH" ]; then
   sed -i '1isleep 5s && dunst &' ~/.xinitrc
 fi
 
-if [ -f ~/project/.config/arch-key-mapping ]; then
-  # Keys handling (for host)
-  # For Brightness: update intel_backlight with the correct card
-  if [ -f /sys/class/backlight/intel_backlight/brightness ]; then
-    sudo chown igncp /sys/class/backlight/intel_backlight/brightness
-  fi
-  cat > /home/igncp/change_brightness.sh <<"EOF"
-echo $(("$(cat /sys/class/backlight/intel_backlight/brightness)" + "$1")) | tee /sys/class/backlight/intel_backlight/brightness
-EOF
-  chmod +x /home/igncp/change_brightness.sh
-  if [ ! -f ~/.check-files/brightness-sudo ]; then
-    echo "[~/.check-files/brightness-sudo]: Use 'sudo EDITOR=vim visudo' to add 'igncp archlinux = (root) NOPASSWD: /home/igncp/change_brightness.sh'"
-  fi
-  install_system_package xbindkeys
-  cat > ~/.xbindkeysrc <<"EOF"
-# Docs
-# - https://wiki.archlinux.org/index.php/Xbindkeys#Installation
-# - https://wiki.archlinux.org/index.php/Backlight#xbacklight
-# refresh:
-# - stop (all) xbindkeys process(es)
-# - run: xbindkeys
-# get key name: xbindkeys --multikey # don't use tmux and run `xbindkeys` first
-# generate default config: xbindkeys -d > ~/.xbindkeysrc
-
-# specify a mouse button
-"amixer set Master 10%-"
-  XF86AudioLowerVolume
-
-"amixer set Master 10%+"
-  XF86AudioRaiseVolume
-
-# https://unix.stackexchange.com/a/385116
-"sudo /home/igncp/change_brightness.sh 2000"
-  XF86MonBrightnessUp
-
-"sudo /home/igncp/change_brightness.sh -2000"
-  XF86MonBrightnessDown
-
-"amixer set Master 1+ toggle"
-  XF86AudioMute
-EOF
-  cat >> ~/.bashrc <<"EOF"
-IS_XBINDKEYS_RUNNING="$(ps aux | grep xbindkeys | grep -v grep)"
-if [ -n "$IS_XBINDKEYS_RUNNING" ]; then killall xbindkeys; fi
-xbindkeys
-EOF
-  echo 'alias XbindkeysMultikey="xbindkeys --multikey"' >> ~/.shell_aliases
-
-  install_with_yay xbindkeys_config-gtk2 xbindkeys_config
-  add_desktop_common \
-    '/usr/bin/xbindkeys_config' 'xbindkeys_config' 'XBindKeys Config'
-fi
-
 if [ -f ~/project/.config/nvidia ]; then
   if [ "$(cat ~/project/.config/nvidia)" == "yes" ]; then
     install_system_package nvidia nvidia-smi

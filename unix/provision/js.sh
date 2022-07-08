@@ -40,7 +40,10 @@ if [ ! -d ~/.nvm ] && ! type node > /dev/null 2>&1 ; then
   asdf global nodejs "$NODE_VERSION"
 fi
 
-install_node_modules http-server yarn
+install_node_modules http-server yarn zx
+
+# https://github.com/sgentle/caniuse-cmd
+install_node_modules caniuse-cmd
 
 cat >> ~/.shell_aliases <<"EOF"
 Serve() { PORT="$2"; http-server -c-1 -p "${PORT:=9000}" $1; }
