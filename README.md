@@ -1,11 +1,11 @@
 # Environment
 
-This repo contains my personal environment configurations and some dev notes
+This repo contains my personal environment configurations and some dev notes.
 
-It is composed of mmostly bash scripts and configuration files
+It is composed of mostly bash scripts and configuration files.
 
 It tries to automate the most number of tasks and make the updates as fast as
-possible
+possible.
 
 The focus is in:
 
@@ -21,6 +21,8 @@ Some of the principles in the repository:
     - One file eases editing and search
 - Having code duplication in toolbox scripts
     - No interdependencies between scripts, very simple maintainability
+- Running the whole provision script should be very quick (less than five seconds)
+    - Have fast checks to confirm if related files or directories already exist
 
 ## License
 
