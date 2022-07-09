@@ -26,6 +26,10 @@ set -e
     # hdmi_mode=64
     # hdmi_group=1
 
+## For bluetooth, in aarm64, add this to `/boot/config.txt`
+    # dtparam=krnbt=on
+    ## To comnect to a audio device may have to start x11
+
 echo 'Remember to update the disk to encrypt before running'
 
 read -p "Do you want to continue? (yY) " -n 1 -r; echo ''; if ! [[ $REPLY =~ ^[Yy]$  ]]; then exit; fi
