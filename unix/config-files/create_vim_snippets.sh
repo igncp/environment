@@ -330,8 +330,8 @@ cp /tmp/c-and-cpp-snippets ~/.vim-snippets/cpp.snippets
 cat > ~/.vim-snippets/php.snippets <<"EOF"
 snippet xLogStdOut
 // LOG ---
-$new_log_abc = fopen('php://stdout', 'w'); fputs($new_log_abc, "\n${0}\n\n");
-fclose($new_log_abc);
+\$new_log_abc = fopen('php://stdout', 'w'); fputs(\$new_log_abc, "\n${0}\n\n");
+fclose(\$new_log_abc);
 // LOG ---
 
 endsnippet
@@ -346,8 +346,8 @@ echo '</pre>';
 endsnippet
 EOF
 
-if [ ! -f ~/project/scripts/custom_create_vim_snippets.sh ]; then
-  touch ~/project/scripts/custom_create_vim_snippets.sh
+if [ ! -f ~/project/provision/custom_create_vim_snippets.sh ]; then
+  touch ~/project/provision/custom_create_vim_snippets.sh
 fi
 
-sh ~/project/scripts/custom_create_vim_snippets.sh
+sh ~/project/provision/custom_create_vim_snippets.sh

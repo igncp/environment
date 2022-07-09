@@ -127,6 +127,7 @@ zle -N _zsh_cli_fg
 bindkey '^X' _zsh_cli_fg
 
 alias HistoryDisable='unset HISTFILE'
+alias ProvisionUpdate='node ~/project/provision/updateProvision.js; print -S "# cp /tmp/provision/* ~/project/provision/ ; provision.sh"; print -S "sh /tmp/diff_provision.sh"'
 EOF
 if [ "$PROVISION_OS" == "LINUX" ]; then
   echo 'eval "$(dircolors /home/igncp/.dircolors)"' >> ~/.zshrc

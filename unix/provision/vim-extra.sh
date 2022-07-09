@@ -310,14 +310,14 @@ add_special_vim_map "showabsolutepath" $':echo expand("%:p")<cr>' 'show absolute
 add_special_vim_map "showrelativepath" $':echo @%<cr>' 'show relative path of file'
 
 cat >> ~/.shell_aliases <<"EOF"
-alias VimSnippetsModify='nvim ~/project/scripts/create_vim_snippets.sh && provision.sh'
-alias VimCustomSnippetsModify='nvim ~/project/scripts/custom_create_vim_snippets.sh && provision.sh'
+alias VimSnippetsModify='nvim ~/project/provision/create_vim_snippets.sh && provision.sh'
+alias VimCustomSnippetsModify='nvim ~/project/provision/custom_create_vim_snippets.sh && provision.sh'
 EOF
 
-if [ -f ~/project/scripts/create_vim_snippets.sh ]; then
-  sh ~/project/scripts/create_vim_snippets.sh
+if [ -f ~/project/provision/create_vim_snippets.sh ]; then
+  sh ~/project/provision/create_vim_snippets.sh
 else
-  echo "~/project/scripts/create_vim_snippets.sh file missing"
+  echo "~/project/provision/create_vim_snippets.sh file missing"
 fi
 
 ## vim-textobj START

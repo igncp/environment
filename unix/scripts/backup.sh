@@ -30,6 +30,6 @@ echo "Input password for zip file"
 zip -q -e -r ~/backups/"$BACKUP_FILE" "$BACKUP_PATH"
 mv ~/backups/"$BACKUP_FILE" "$BACKUP_PATH"
 
-echo "Upload $BACKUP_PATH/$BACKUP_FILE to the cloud"
+echo "Remember to upload $BACKUP_PATH/$BACKUP_FILE to the cloud"
 
 echo "Backup finished successfully"

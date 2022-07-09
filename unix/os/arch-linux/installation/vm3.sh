@@ -29,7 +29,7 @@ if [ -f ~/project/provision/provision.sh ]; then
   cp ~/project/provision/provision.sh ~/project/provision/provision_backup.sh
 fi
 
-cp environment/unix/scripts/create_vim_snippets.sh ~/project/scripts
+cp environment/unix/config-files/create_vim_snippets.sh ~/project/provision
 
 cp environment/unix/provision/top.sh ~/project/provision/provision.sh
 cat environment/unix/os/arch-linux/provision/arch-beginning.sh >> ~/project/provision/provision.sh

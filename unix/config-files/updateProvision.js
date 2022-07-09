@@ -87,14 +87,23 @@ fs.readdirSync(PROVISION_DIR)
     );
   });
 
-const diffCommand =
+const diffCommand = [
   "diff --color=always -r " +
-  "-x data.updateProvision.js " +
-  PROVISION_DIR +
-  " " +
-  TMP_PROVISION_DIR +
-  " | sed 's/\\x1b[[36;]*m//g'" +
-  " | less -R"; // it is important to use -R (and not -r) for diffs
+    "-x data.updateProvision.js " +
+    PROVISION_DIR +
+    " " +
+    TMP_PROVISION_DIR +
+    " | sed 's/\\x1b[[36;]*m//g'" +
+    " > /tmp/_diff-output.txt",
+  "diff --color=always -r " +
+    PROVISION_DIR.replace("/provision", "/scripts/toolbox") +
+    " " +
+    ENVIRONMENT_DIR +
+    "/unix/scripts/toolbox" +
+    " | sed 's/\\x1b[[36;]*m//g'" +
+    " >> /tmp/_diff-output.txt",
+  "less -R /tmp/_diff-output.txt",
+].join("\n"); // it is important to use -R (and not -r) for diffs
 
 fs.writeFileSync(DIFF_FILE_PATH, diffCommand);
 
