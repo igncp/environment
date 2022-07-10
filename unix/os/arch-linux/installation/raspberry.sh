@@ -14,6 +14,8 @@ set -e
 # Before disconnecting the SD from computer:
     # - copy the wifi password inside the PI
 
+# Connecting the fan: https://www.freva.com/connecting-a-fan-to-a-raspberry-pi/
+
 # on the RP, connected via ethernet
 # ssh-copy-id -i ~/.ssh/local-asus alarm@raspberry
 # ssh alarm@raspberry # password: alarm

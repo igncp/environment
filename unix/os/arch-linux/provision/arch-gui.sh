@@ -284,6 +284,9 @@ if [ -f ~/.config/snap ]; then
     sudo systemctl enable --now snapd.socket
   fi
 
+  cat >> ~/.shellrc <<"EOF"
+export PATH="$PATH:/var/lib/snapd/snap/bin/"
+EOF
   cat >> ~/.shell_aliases <<"EOF"
 alias SnapRemove='snap remove'
 alias SnapList='snap list'
