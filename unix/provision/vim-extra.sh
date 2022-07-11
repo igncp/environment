@@ -37,7 +37,6 @@ install_vim_package andrewRadev/splitjoin.vim # gS, gJ
 install_vim_package bogado/file-line # https://github.com/bogado/file-line
 install_vim_package ctrlpvim/ctrlp.vim # https://github.com/ctrlpvim/ctrlp.vim
 install_vim_package elzr/vim-json # https://github.com/elzr/vim-json
-install_vim_package github/copilot.vim # https://github.com/github/copilot.vim
 install_vim_package google/vim-searchindex # https://github.com/google/vim-searchindex
 install_vim_package haya14busa/incsearch.vim # https://github.com/haya14busa/incsearch.vim
 install_vim_package honza/vim-snippets "find ~/.vim/bundle/vim-snippets/snippets/ -type f | xargs sed -i 's|:\${VISUAL}||'"
@@ -59,6 +58,10 @@ install_vim_package tpope/vim-fugitive # https://github.com/tpope/vim-fugitive
 install_vim_package tpope/vim-repeat # https://github.com/tpope/vim-repeat
 install_vim_package tpope/vim-surround # https://github.com/tpope/vim-surround
 install_vim_package vim-scripts/AnsiEsc.vim # https://github.com/vim-scripts/AnsiEsc.vim
+
+if [ -f ~/project/.config/copilot ]; then
+  install_vim_package github/copilot.vim # https://github.com/github/copilot.vim
+fi
 
 cat >> ~/.vimrc <<"EOF"
 execute pathogen#infect()
@@ -412,9 +415,10 @@ add_special_vim_map "showtabnumber" $':echo tabpagenr()<cr>' 'show tab number'
 
 ## vim-textobj END
 
-# GH Copilot
-# This is due to the screen not cleaned when dismissing a suggestion
-cat >> ~/.vimrc <<"EOF"
+if [ -f ~/project/.config/copilot ]; then
+  # GH Copilot
+  # This is due to the screen not cleaned when dismissing a suggestion
+  cat >> ~/.vimrc <<"EOF"
 function! CustomDismiss() abort
   unlet! b:_copilot_suggestion b:_copilot_completion
   call copilot#Clear()
@@ -425,6 +429,7 @@ endfunction
 
 imap <silent><script><nowait><expr> <C-]> CustomDismiss() . "\<C-]>"
 EOF
+fi
 
 # LOCAL: current branch, BASE: original file, REMOTE: file in opposite branch
 cat >> ~/.gitconfig <<"EOF"

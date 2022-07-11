@@ -138,8 +138,11 @@ cat >> /tmp/expected-vscode-extensions <<"EOF"
 waderyan.gitblame
 ms-vscode-remote.remote-ssh
 ms-vscode-remote.remote-ssh-edit
-GitHub.copilot
 EOF
+
+if [ -f ~/project/.config/copilot ]; then
+  echo 'GitHub.copilot' >> /tmp/expected-vscode-extensions
+fi
 
 cat >> ~/.shell_aliases <<"EOF"
 alias VSCodeCopySettings="cp /tmp/vscode-settings.json ~/.config/Code/User/settings.json"
