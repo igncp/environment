@@ -70,10 +70,6 @@ cat >> ~/.vimrc <<"EOF"
 execute pathogen#infect()
 lua require("extra_beginning")
 
-" vista
-  let g:vista_default_executive = 'coc'
-  let vista_sidebar_width = 100
-
 " incsearch.vim
   map /  <Plug>(incsearch-forward)
   map ?  <Plug>(incsearch-backward)
@@ -161,10 +157,6 @@ lua require("extra_beginning")
   execute 'nnoremap <leader>bb vy' . g:FastGrep_fn
   execute 'nnoremap <leader>bf vy' . g:FastGrep_fn . '<c-left><left><left><bs>/<c-R>=expand("%:t")<cr>'
 
-" vim-expand-region
-  vmap v <Plug>(expand_region_expand)
-  vmap <c-v> <Plug>(expand_region_shrink)
-
 " don't have to press the extra key when exiting the terminal (nvim)
   augroup terminal
     autocmd!
@@ -177,44 +169,12 @@ lua require("extra_beginning")
   " autocmd Filetype EXTENSION setlocal softtabstop=4 tabstop=4 shiftwidth=4
   " autocmd BufRead,BufEnter /path/to/project/*.{js} setlocal softtabstop=4 tabstop=4 shiftwidth=4
 
-" undo tree
-  nnoremap <leader>mm :UndotreeShow<cr><c-w><left>
-
-" fzf maps
-  nnoremap <leader>ja :Ag!<cr>
-  nnoremap <leader>jb :Buffers!<cr>
-  nnoremap <leader>jc :Commands!<cr>
-  nnoremap <leader>jg :GFiles?<cr>
-  nnoremap <leader>jh :History:!<cr>
-  nnoremap <leader>jj :BLines!<cr>
-  nnoremap <leader>jl :Lines!<cr>
-  nnoremap <leader>jm :Marks!<cr>
-  nnoremap <leader>jM :Maps!<cr>
-  nnoremap <leader>jt :Tags!<cr>
-  nnoremap <leader>jw :Windows!<cr>
-  nnoremap <leader>jf :Filetypes!<cr>
-  nnoremap <leader>je :AnsiEsc<cr>
-
 " easy align
   xmap ga <Plug>(EasyAlign)
   nmap ga <Plug>(EasyAlign)
 
-" limelight
-  let g:limelight_conceal_ctermfg = 'LightGray'
-  let g:limelight_bop = '^'
-  let g:limelight_eop = '$'
-  nnoremap <leader>zl :Limelight!!<cr>
-  nnoremap <leader>zL :let g:limelight_paragraph_span = <left><right>
-
-" auto-pairs
-  let g:AutoPairsMultilineClose = 0
-
 let g:peekaboo_window='vert bo new'
 EOF
-
-if [ "$ENVIRONMENT_THEME" == "dark" ]; then
-  sed -i 's|let g:limelight_conceal_ctermfg =.*|let g:limelight_conceal_ctermfg = "DarkGray"|' ~/.vimrc
-fi
 
 cat >> ~/.shellrc <<"EOF"
 export EDITOR=nvim
@@ -462,6 +422,46 @@ require'nvim-treesitter.configs'.setup {
     additional_vim_regex_highlighting = false,
   },
 }
+
+-- Undo tree
+vim.api.nvim_set_keymap("n", "<leader>mm", ":UndotreeShow<cr><c-w><left>", { noremap = true })
+
+-- vim-expand-region
+vim.api.nvim_set_keymap("v", "v", "<Plug>(expand_region_expand)", {})
+vim.api.nvim_set_keymap("v", "<c-v>", "<Plug>(expand_region_shrink)", {})
+
+-- fzf maps
+vim.api.nvim_set_keymap("n", "<leader>ja", ":Ag!<cr>", { noremap = true })
+vim.api.nvim_set_keymap("n", "<leader>jb", ":Buffers!<cr>", { noremap = true })
+vim.api.nvim_set_keymap("n", "<leader>jc", ":Commands!<cr>", { noremap = true })
+vim.api.nvim_set_keymap("n", "<leader>jg", ":GFiles!<cr>", { noremap = true })
+vim.api.nvim_set_keymap("n", "<leader>jh", ":History!<cr>", { noremap = true })
+vim.api.nvim_set_keymap("n", "<leader>jj", ":BLines!<cr>", { noremap = true })
+vim.api.nvim_set_keymap("n", "<leader>jl", ":Lines!<cr>", { noremap = true })
+vim.api.nvim_set_keymap("n", "<leader>jm", ":Marks!<cr>", { noremap = true })
+vim.api.nvim_set_keymap("n", "<leader>jM", ":Maps!<cr>", { noremap = true })
+vim.api.nvim_set_keymap("n", "<leader>jt", ":Tags!<cr>", { noremap = true })
+vim.api.nvim_set_keymap("n", "<leader>jw", ":Windows!<cr>", { noremap = true })
+vim.api.nvim_set_keymap("n", "<leader>jf", ":Filetypes!<cr>", { noremap = true })
+vim.api.nvim_set_keymap("n", "<leader>je", ":AnsiEsc!<cr>", { noremap = true })
+
+-- Vista
+vim.g.vista_default_executive = 'coc'
+vim.g.vista_sidebar_width = 100
+
+-- limelight
+vim.g.limelight_conceal_ctermfg = 'LightGray'
+vim.g.limelight_bop = "^"
+vim.g.limelight_eop = "$"
+vim.api.nvim_set_keymap("n", "<leader>zl", ":Limelight!!<cr>", { noremap = true })
+vim.api.nvim_set_keymap("n", "<leader>zL", ":let g:limelight_paragraph_span = <left><right>", { noremap = true })
+
+-- auto-pairs
+vim.g.AutoPairsMultilineClose = 0
 EOF
+
+if [ "$ENVIRONMENT_THEME" == "dark" ]; then
+  sed -i 's|vim.g.limelight_conceal_ctermfg =.*|vim.g.limelight_conceal_ctermfg = "DarkGray"|' ~/.vim/lua/extra_beginning.lua
+fi
 
 # vim-extra END
