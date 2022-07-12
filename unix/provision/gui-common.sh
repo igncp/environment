@@ -191,4 +191,19 @@ add_desktop_common \
 add_desktop_common \
   '/home/igncp/.scripts/bluetooth_headphones_disconnect.sh' 'bluetooth_headphones_disconnect' 'Bluetooth Headphones Disconnect'
 
+# GPU monitoring
+cat >> ~/.shell_aliases <<"EOF"
+alias GPUInfo='sudo lshw -C display -short'
+alias GPUStat='gpustat -cp'
+EOF
+if [ -f ~/project/.config/nvidia ]; then
+  if [ "$(cat ~/project/.config/nvidia)" == "yes" ]; then
+    if ! type gpustat > /dev/null 2>&1 ; then
+      pip install gpustat
+    fi
+    install_system_package nvtop
+  fi
+fi
+install_system_package mesa-utils glxgears
+
 # gui-common END

@@ -2,6 +2,9 @@
 
 # - depends on 'python' provision
 
+mkdir -p ~/.vim/lua
+echo '' > ~/.vim/lua/extra_beginning.lua
+
 install_vim_package() {
   REPO=$1
   DIR=$(echo $REPO | sed -r "s|.+/(.+)|\1|") # foo/bar => bar
@@ -440,6 +443,24 @@ cat >> ~/.gitconfig <<"EOF"
   keepBackup = false
 [mergetool "vimdiff"]
   cmd = "$EDITOR" -p $MERGED $LOCAL $BASE $REMOTE
+EOF
+
+# Run :TSUpdate
+# https://github.com/nvim-treesitter/nvim-treesitter#supported-languages
+# For example, :TSInstall bash
+# :checkhealth nvim-treesitter
+install_vim_package nvim-treesitter/nvim-treesitter
+
+cat >> ~/.vim/lua/extra_beginning.lua <<"EOF"
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = { "bash", "json" },
+  auto_install = true,
+  highlight = {
+    enable = true,
+    disable = {},
+    additional_vim_regex_highlighting = false,
+  },
+}
 EOF
 
 # vim-extra END
