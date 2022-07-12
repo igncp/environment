@@ -68,6 +68,7 @@ fi
 
 cat >> ~/.vimrc <<"EOF"
 execute pathogen#infect()
+lua require("extra_beginning")
 
 " vista
   let g:vista_default_executive = 'coc'
