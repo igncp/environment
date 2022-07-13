@@ -70,11 +70,6 @@ cat >> ~/.vimrc <<"EOF"
 execute pathogen#infect()
 lua require("extra_beginning")
 
-" incsearch.vim
-  map /  <Plug>(incsearch-forward)
-  map ?  <Plug>(incsearch-backward)
-  map g/ <Plug>(incsearch-stay)
-
 " format json
   command! -range -nargs=0 -bar JsonTool <line1>,<line2>!python -m json.tool
   nnoremap <leader>kz :JsonTool<cr>
@@ -85,16 +80,6 @@ lua require("extra_beginning")
     \ :hi Folded ctermbg=white ctermfg=white<cr>
   nnoremap <silent> <leader>N :GitGutterEnable<cr>:set laststatus=2<cr>
     \ :hi Folded ctermbg=236 ctermfg=236<cr>
-
-"  vim fugitive
-  set diffopt+=vertical
-  command Gb Git blame
-
-" nerdcommenter
-  let g:NERDSpaceDelims = 1
-
-" vim-json
-  let g:vim_json_syntax_conceal = 0
 
 " markdown
   let g:vim_markdown_auto_insert_bullets = 0
@@ -122,9 +107,6 @@ lua require("extra_beginning")
   if exists("g:CustomZPDir") == 0
     let g:CustomZPDir=getcwd()
   endif
-
-" save file shortcuts
-  nnoremap <leader>ks :silent exec "!mkdir -p <c-R>=expand("%:p:h")<cr>"<cr>:w<cr>:silent exec ":CtrlPClearAllCaches"<cr>
 
 " lines in files
   nnoremap <leader>kr :-tabnew\|te ( F(){ find $1 -type f \| xargs wc -l \| sort -rn \|
@@ -451,13 +433,31 @@ vim.g.vista_sidebar_width = 100
 
 -- limelight
 vim.g.limelight_conceal_ctermfg = 'LightGray'
-vim.g.limelight_bop = "^"
-vim.g.limelight_eop = "$"
+vim.g.limelight_bop = '^'
+vim.g.limelight_eop = '$'
 vim.api.nvim_set_keymap("n", "<leader>zl", ":Limelight!!<cr>", { noremap = true })
 vim.api.nvim_set_keymap("n", "<leader>zL", ":let g:limelight_paragraph_span = <left><right>", { noremap = true })
 
 -- auto-pairs
 vim.g.AutoPairsMultilineClose = 0
+
+-- incsearch.vim
+vim.api.nvim_set_keymap("n", "/", "<Plug>(incsearch-forward)", {})
+vim.api.nvim_set_keymap("n", "?", "<Plug>(incsearch-backward)", {})
+vim.api.nvim_set_keymap("n", "g/", "<Plug>(incsearch-stay)", {})
+
+-- nerdcommenter
+vim.g.NERDSpaceDelims = 1
+
+-- vim fugitive
+vim.cmd('set diffopt+=vertical')
+vim.cmd('command Gb Git blame')
+
+-- vim-json
+vim.g.vim_json_syntax_conceal = 0
+
+-- save file shortcuts
+vim.api.nvim_set_keymap("n", "<leader>ks", ':silent exec "!mkdir -p <c-R>=expand("%:p:h")<cr>"<cr>:w<cr>:silent exec ":CtrlPClearAllCaches"<cr>', { noremap = true })
 EOF
 
 if [ "$ENVIRONMENT_THEME" == "dark" ]; then

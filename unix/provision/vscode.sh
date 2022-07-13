@@ -20,7 +20,7 @@ cat > /tmp/vscode-settings.json <<"EOF"
 {
     "breadcrumbs.enabled": false,
     "editor.cursorBlinking": "solid",
-    "editor.cursorStyle": "line",
+    "editor.cursorStyle": "block",
     "editor.fontSize": 18,
     "editor.formatOnSave": false,
     "editor.lightbulb.enabled": false,
@@ -60,7 +60,8 @@ cat > /tmp/vscode-settings.json <<"EOF"
     "editor.suggestSelection": "first",
     "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
     "telemetry.enableTelemetry": false,
-    "editor.guides.indentation": false
+    "editor.guides.indentation": false,
+    "telemetry.telemetryLevel": "off"
 }
 EOF
 # Remove the last line-break
@@ -138,6 +139,7 @@ cat >> /tmp/expected-vscode-extensions <<"EOF"
 waderyan.gitblame
 ms-vscode-remote.remote-ssh
 ms-vscode-remote.remote-ssh-edit
+sleistner.vscode-fileutils
 EOF
 
 if [ -f ~/project/.config/copilot ]; then
