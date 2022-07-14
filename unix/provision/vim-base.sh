@@ -44,7 +44,7 @@ syntax off " This is removed in update_vim_colors_theme, in case an error in pro
     " \<C-M> => \<cr>
     " b  => \<esc>
     "  => \<esc>
-    " k => \<bs>
+    " kb => \<bs>
     " <fd>V => \<C-Right>
 
 " replace in selection

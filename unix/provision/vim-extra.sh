@@ -70,25 +70,11 @@ cat >> ~/.vimrc <<"EOF"
 execute pathogen#infect()
 lua require("extra_beginning")
 
-" format json
-  command! -range -nargs=0 -bar JsonTool <line1>,<line2>!python -m json.tool
-  nnoremap <leader>kz :JsonTool<cr>
-  vnoremap <leader>kz :'<,'>JsonTool<cr>
-
 " toggle distraction free mode
   nnoremap <silent> <leader>n :GitGutterDisable<cr>:set laststatus=0<cr>
     \ :hi Folded ctermbg=white ctermfg=white<cr>
   nnoremap <silent> <leader>N :GitGutterEnable<cr>:set laststatus=2<cr>
     \ :hi Folded ctermbg=236 ctermfg=236<cr>
-
-" markdown
-  let g:vim_markdown_auto_insert_bullets = 0
-  let g:vim_markdown_new_list_item_indent = 0
-  let g:vim_markdown_conceal = 0
-  let g:tex_conceal = ""
-  let g:vim_markdown_math = 1
-  let g:vim_markdown_folding_disabled = 1
-  autocmd Filetype markdown set conceallevel=0
 
 " ctrlp
   let g:ctrlp_map = '<c-p>'
@@ -112,10 +98,6 @@ lua require("extra_beginning")
   nnoremap <leader>kr :-tabnew\|te ( F(){ find $1 -type f \| xargs wc -l \| sort -rn \|
   \ sed "s\|$1\|\|" \| sed "1i _" \| sed "1i $1" \| sed "1i _" \| sed '4d' \| less; }
   \ && F <c-R>=expand("%:p:h")<cr>/ )<left><left>
-
-" color tree
-  nnoremap <leader>kt :-tabnew\|te tree -a -C <c-R>=expand("%:p:h")<cr> \|
-  \ less -r<c-left><c-left><c-left><left>
 
 " grep current file
   let g:GrepCF_fn = ':w! /tmp/current_vim<cr>:-tabnew\|te
@@ -154,8 +136,6 @@ lua require("extra_beginning")
 " easy align
   xmap ga <Plug>(EasyAlign)
   nmap ga <Plug>(EasyAlign)
-
-let g:peekaboo_window='vert bo new'
 EOF
 
 cat >> ~/.shellrc <<"EOF"
@@ -458,6 +438,22 @@ vim.g.vim_json_syntax_conceal = 0
 
 -- save file shortcuts
 vim.api.nvim_set_keymap("n", "<leader>ks", ':silent exec "!mkdir -p <c-R>=expand("%:p:h")<cr>"<cr>:w<cr>:silent exec ":CtrlPClearAllCaches"<cr>', { noremap = true })
+
+-- markdown
+vim.g.vim_markdown_auto_insert_bullets = 0
+vim.g.vim_markdown_new_list_item_indent = 0
+vim.g.vim_markdown_conceal = 0
+vim.g.tex_conceal = ""
+vim.g.vim_markdown_math = 1
+vim.g.vim_markdown_folding_disabled = 1
+vim.cmd 'autocmd Filetype markdown set conceallevel=0'
+
+-- format json
+vim.cmd 'command! -range -nargs=0 -bar JsonTool <line1>,<line2>!python -m json.tool'
+vim.api.nvim_set_keymap("n", "<leader>kz", ':JsonTool<cr>', { noremap = true })
+vim.api.nvim_set_keymap("v", "<leader>kz", ":'<,'>JsonTool<cr>", { noremap = true })
+
+vim.g.peekaboo_window='vert bo new'
 EOF
 
 if [ "$ENVIRONMENT_THEME" == "dark" ]; then

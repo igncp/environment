@@ -11,23 +11,7 @@ export QT4_IM_MODULE=ibus
 EOF
   cat ~/.xinitrc >> /tmp/.xinitrc
   mv /tmp/.xinitrc ~/.xinitrc
-  cat > ~/.config/systemd/user/ibus.service <<"EOF"
-[Unit]
-Description=IBus
-
-[Service]
-Environment="GTK_THEME=Menta"
-ExecStartPre=sh -c '(test ! -f /tmp/waited-ibus && sleep 2 && touch /tmp/waited-ibus) || true'
-ExecStart=/usr/bin/ibus-daemon -rx
-Restart=always
-RestartSec=5
-
-[Install]
-WantedBy=default.target
-EOF
-  if [ ! -f /home/igncp/.config/systemd/user/default.target.wants/ibus.service ]; then
-    systemctl --user daemon-reload ; systemctl --user enable --now ibus
-  fi
+  echo 'GTK_THEME=Menta /usr/bin/ibus-daemon -rxd' >> ~/.scripts/gui_daemons.sh
   if [ ! -d /usr/share/themes/Menta ]; then
     install_system_package mate-themes
   fi

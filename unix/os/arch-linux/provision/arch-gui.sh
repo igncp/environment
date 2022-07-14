@@ -18,21 +18,8 @@ cat >> ~/.shell_aliases <<"EOF"
 alias PAListSinks="pacmd list-sinks | grep name: | grep -o '<.*>' | sed  's|[<>]||g'"
 alias PASetSink="pacmd set-default-sink"
 EOF
-cat > ~/.config/systemd/user/pa-applet.service <<"EOF"
-[Unit]
-Description=PA Applet
-
-[Service]
-ExecStart=/usr/bin/pa-applet
-Restart=always
-RestartSec=5
-
-[Install]
-WantedBy=default.target
-EOF
-if [ ! -f /home/igncp/.config/systemd/user/default.target.wants/pa-applet.service ]; then
-  systemctl --user daemon-reload ; systemctl --user enable --now pa-applet
-fi
+echo 'killall pa-applet || true' >> ~/.scripts/gui_daemons.sh
+echo '/usr/bin/pa-applet &' >> ~/.scripts/gui_daemons.sh
 
 # bluetooth
 # for dual boot:
@@ -134,23 +121,7 @@ if [ -f ~/project/.config/dropbox ]; then
     sudo pacman -Sy python-gpgme # https://wiki.archlinux.org/title/dropbox#Required_packages
   fi
   install_with_yay dropbox
-  # When running /usr/bin/dropboxd the process doesn't stay in the foreground
-  # which is necessary for the service
-  cat > ~/.config/systemd/user/dropbox.service <<"EOF"
-[Unit]
-Description=Dropbox
-
-[Service]
-ExecStart=/home/igncp/.dropbox-dist/dropboxd
-Restart=always
-RestartSec=5
-
-[Install]
-WantedBy=default.target
-EOF
-  if [ ! -f /home/igncp/.config/systemd/user/default.target.wants/dropbox.service ]; then
-    systemctl --user daemon-reload ; systemctl --user enable --now dropbox
-  fi
+  echo '/home/igncp/.dropbox-dist/dropboxd &' >> ~/.scripts/gui_daemons.sh
 fi
 
 # https://zoom.us/download?os=linux
