@@ -2,18 +2,6 @@ mkdir -p ~/.config/i3blocks
 
 # @TODO: Conditional separators
 
-# @TODO: Move this to the arch-only config
-cat > ~/.scripts/i3blocks_updates.sh <<"EOF"
-pacman -Sy > /dev/null
-UPDATES="$(pacman -Sup | wc -l)"
-if [ "$UPDATES" == "0" ]; then
-  echo "🍹 |"
-else
-  echo "♻️ $UPDATES |"
-fi
-EOF
-chmod +x ~/.scripts/i3blocks_updates.sh
-
 cat > ~/.scripts/i3blocks_memory.sh <<"EOF"
 free -h | ag 'Mem' | awk '{ print "🪣 "$4" |"; }'
 EOF
@@ -128,10 +116,7 @@ chmod +x ~/.scripts/i3blocks_microphone.sh
 cat > ~/.config/i3blocks/config <<"EOF"
 separator=false
 separator_block_width=7
-
-[updates]
-command="/home/igncp/.scripts/i3blocks_updates.sh"
-interval=30
+# -- global config end
 
 [microphone]
 command="/home/igncp/.scripts/i3blocks_microphone.sh"

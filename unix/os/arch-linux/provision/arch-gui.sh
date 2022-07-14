@@ -314,4 +314,32 @@ if [ -f ~/project/.config/autokey ]; then
   install_with_yay autokey-gtk
 fi
 
+if [ -f ~/project/provision/i3blocks.sh ]; then
+  cat > /tmp/i3blocks_updates.sh <<"EOF"
+pacman -Sy > /dev/null
+UPDATES="$(pacman -Sup | wc -l)"
+if [ "$UPDATES" == "0" ]; then
+  echo "🍹 |"
+else
+  echo "♻️ $UPDATES |"
+fi
+EOF
+  sudo mv /tmp/i3blocks_updates.sh ~/.scripts/i3blocks_updates.sh
+  # This script can run any sudo code, so just allow r and x for user
+  sudo chmod 500 ~/.scripts/i3blocks_updates.sh
+  echo 'sudo /home/igncp/.scripts/i3blocks_updates.sh' > ~/.scripts/i3blocks_updates_sudo.sh
+  chmod +x ~/.scripts/i3blocks_updates_sudo.sh
+  cat > /tmp/i3blocks_updates.txt <<"EOF"
+
+[updates]
+command="/home/igncp/.scripts/i3blocks_updates_sudo.sh"
+interval=30
+EOF
+  sed -i '/global config end/r /tmp/i3blocks_updates.txt' ~/.config/i3blocks/config
+  rm -rf /tmp/i3blocks_updates.txt
+  if [ -z "$(sudo cat /etc/sudoers | grep i3blocks_updates.sh)" ]; then
+    sudo sh -c 'echo "igncp ALL=NOPASSWD:/home/igncp/.scripts/i3blocks_updates.sh" >> /etc/sudoers'
+  fi
+fi
+
 # arch-gui END

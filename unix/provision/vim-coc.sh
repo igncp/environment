@@ -10,6 +10,7 @@ install_vim_package josa42/coc-sh
 install_vim_package neoclide/coc-snippets
 install_vim_package neoclide/coc-git
 install_vim_package neoclide/coc-lists
+install_vim_package xiyaowong/coc-sumneko-lua
 
 cat >> ~/.vimrc <<"EOF"
 function! GetColorInCursor()
@@ -45,6 +46,7 @@ call add(g:coc_global_extensions, 'coc-snippets')
 call add(g:coc_global_extensions, 'coc-sh')
 call add(g:coc_global_extensions, 'coc-git')
 call add(g:coc_global_extensions, 'coc-lists')
+call add(g:coc_global_extensions, 'coc-sumneko-lua')
 
 imap <C-l> <Plug>(coc-snippets-expand-jump)
 smap <C-l> <Plug>(coc-snippets-expand-jump)
@@ -172,6 +174,14 @@ EOF
 }
 EOF
 fi
+
+  sed -i '$ d' ~/.vim/coc-settings.json
+  cat >> ~/.vim/coc-settings.json <<"EOF"
+,
+"sumneko-lua.enableNvimLuaDev": true,
+"Lua.telemetry.enable": false
+}
+EOF
 
 # To try:
 # - https://github.com/tjdevries/coc-zsh
