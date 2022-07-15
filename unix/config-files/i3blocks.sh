@@ -113,10 +113,25 @@ echo "🎙️ $VOLUME_STR |"
 EOF
 chmod +x ~/.scripts/i3blocks_microphone.sh
 
+cat > ~/.scripts/i3blocks_docker_containers.sh <<"EOF"
+if ! type docker > /dev/null 2>&1 ; then
+  exit 0
+fi
+RUNNING_CONTAINERS=$(docker ps -q | wc -l)
+if [[ "$(( $RUNNING_CONTAINERS > 0 ))" == "1" ]]; then
+  echo "🐋 $RUNNING_CONTAINERS |"
+fi
+EOF
+chmod +x ~/.scripts/i3blocks_docker_containers.sh
+
 cat > ~/.config/i3blocks/config <<"EOF"
 separator=false
 separator_block_width=7
 # -- global config end
+
+[docker_containers]
+command="/home/igncp/.scripts/i3blocks_docker_containers.sh"
+interval=30
 
 [microphone]
 command="/home/igncp/.scripts/i3blocks_microphone.sh"
