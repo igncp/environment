@@ -368,23 +368,7 @@ cat >> ~/.gitconfig <<"EOF"
   cmd = "$EDITOR" -p $MERGED $LOCAL $BASE $REMOTE
 EOF
 
-# Run :TSUpdate
-# https://github.com/nvim-treesitter/nvim-treesitter#supported-languages
-# For example, :TSInstall bash
-# :checkhealth nvim-treesitter
-install_vim_package nvim-treesitter/nvim-treesitter
-
 cat >> ~/.vim/lua/extra_beginning.lua <<"EOF"
-require'nvim-treesitter.configs'.setup {
-  ensure_installed = { "bash", "json" },
-  auto_install = true,
-  highlight = {
-    enable = true,
-    disable = {},
-    additional_vim_regex_highlighting = false,
-  },
-}
-
 -- Undo tree
 vim.api.nvim_set_keymap("n", "<leader>mm", ":UndotreeShow<cr><c-w><left>", { noremap = true })
 
