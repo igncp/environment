@@ -9,25 +9,17 @@ set -x
 # https://archlinux.org/download/
 # ARM: https://pkgbuild.com/~tpowa/archboot-images
 
-# Setup bridged adaptor network to make things easier
-
-# You can use automatic VM creation script
-
-# if possible connect via SSH from host (SSH is already enabled)
-  # ip a | grep -i 192 ; passwd
-
-# From the host
-  # sed -i '/192.168.1.X/d' ~/.ssh/known_hosts ; ssh root@192.168.1.X # to confirm
-  # rsync -rhv ./unix/os/arch-linux/installation/ root@192.168.1.X:/root/
-      # If using windows, you can use scp
-  # ssh root@192.168.1.X
+# You can use automatic VM creation script in unix/scripts/misc/create_vm_template.sh
 
 # If LVM already exists, can remove some of them, for example: lvremove /dev/mapper/arch-lvroot
 
 # Choose GPT type
 # - If BIOS, add a BIOS boot partition of 1M. If encrypting, create another one unencrypted for `/boot` with 500M. Can also be created later inside LVM, but don't forget to mount it before grub-install`
 # - If EFI, add an EFI partition (and format it to vfat) with 500M. Use this as `/boot` (not encrypted)
-cfdisk /dev/sda
+# cfdisk /dev/sda
+
+# Automated for BIOS VM
+echo -e "g\nn\n1\n\n+1M\nt\n4\nn\n2\n\n\np\nw"| fdisk /dev/sda
 
 read -p "Do you want to continue? (yY) " -n 1 -r; echo ''; if ! [[ $REPLY =~ ^[Yy]$  ]]; then exit; fi
 
@@ -48,17 +40,15 @@ read -p "Do you want to continue? (yY) " -n 1 -r; echo ''; if ! [[ $REPLY =~ ^[Y
   modprobe dm_mod
   # lvs are in /dev/arch/...
 
-mkfs.ext4 /dev/mapper/BLOCK_NAME
-mount /dev/mapper/BLOCK_NAME /mnt
-mkdir -p /mnt/etc /mnt/boot /mnt/home
-
 # Format and mount boot and home if necessary:
   mkfs.vfat /dev/sda1
   mkfs.ext4 /dev/mapper/BLOCK_NAME
-  mount /dev/sda1 /mnt/boot
-  mount /dev/mapper/BLOCK_NAME /mnt/home
 
-# mount /boot, /home, or others if necessary
+mkfs.ext4 /dev/mapper/BLOCK_NAME
+mount /dev/mapper/BLOCK_NAME /mnt
+mkdir -p /mnt/etc /mnt/boot /mnt/home
+mount /dev/sda1 /mnt/boot
+mount /dev/mapper/BLOCK_NAME /mnt/home
 genfstab -U /mnt >> /mnt/etc/fstab
 
 pacstrap /mnt base linux linux-firmware vim perl # downloads ~300 MB (vim needs perl)
@@ -74,7 +64,8 @@ set -x
 pacman -Syy
 pacman -S --noconfirm grub
 
-# if encryption or / and LVM
+# To complete when automating encryption: BLKID=$(blkid | grep -F '/dev/sda2' | grep '\bUUID=[^ ]*' -o)
+# If encryption or / and LVM
   # cryptdevice=UUID=device-UUID:cryptroot # retrieved from `blkid`
   # example for crypttab (not necessary if single encrypted partition):
     # 'crypthome         UUID=2f9a8428-ac69-478a-88a2-4aa458565431        none'
@@ -84,15 +75,11 @@ pacman -S --noconfirm grub
   pacman -S --noconfirm lvm2 # if LVM, should already run mkinitcpio below
   # mkinitcpio -p linux # only necessary if didn't run command above
 
-read -p "Do you want to continue? (yY) " -n 1 -r; echo ''; if ! [[ $REPLY =~ ^[Yy]$  ]]; then exit; fi
+grub-install /dev/sda
+grub-mkconfig -o /boot/grub/grub.cfg
 
-vim /root/vm2.sh # modify anything not necessary
-echo 'sh /root/vm2.sh'
-rm -rf /root/init.sh
+rm /root/init.sh /root/vm1.sh
+sh /root/vm2.sh
 EOF
 
-echo '/root/init.sh created'
-
-read -p "Do you want to continue? (yY) " -n 1 -r; echo ''; if ! [[ $REPLY =~ ^[Yy]$  ]]; then exit; fi
-
-arch-chroot /mnt
+arch-chroot /mnt bash -c 'sh /root/init.sh'

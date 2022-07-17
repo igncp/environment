@@ -342,4 +342,6 @@ EOF
   fi
 fi
 
+install_with_yay hardinfo
+
 # arch-gui END

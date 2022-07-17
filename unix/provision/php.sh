@@ -22,8 +22,11 @@ nmap <leader>lf viw"iy:silent exec "!npx open-cli https://www.php.net/manual/en/
 nmap <leader>lp :!php -l %<cr>
 EOF
 
+install_vim_package yaegassy/coc-phpstan 'cd ~/.vim/bundle/coc-phpstan && yarn install --frozen-lockfile'
+
 cat >> ~/.vimrc <<"EOF"
 call add(g:coc_global_extensions, 'coc-phpls')
+call add(g:coc_global_extensions, '@yaegassy/coc-phpstan')
 EOF
 
 if [ ! -f ~/project/.config/no-composer ]; then

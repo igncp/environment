@@ -56,7 +56,6 @@ cp environment/unix/config-files/picom.conf ~/project/provision/
 cp environment/unix/config-files/rime-config.yaml ~/project/provision/
 
 cat environment/unix/os/arch-linux/provision/arch-gui.sh >> ~/project/provision/provision.sh
-cp environment/unix/config-files/espanso.yml ~/project/provision/
 cat environment/unix/provision/cli-tools.sh >> ~/project/provision/provision.sh
 cat environment/unix/provision/android.sh >> ~/project/provision/provision.sh
 cat environment/unix/provision/vscode.sh >> ~/project/provision/provision.sh

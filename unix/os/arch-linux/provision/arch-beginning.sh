@@ -117,4 +117,7 @@ if [ -f ~/project/.config/gauth-pam ]; then
   install_system_package libpam-google-authenticator google-authenticator
 fi
 
+# Benchmarking
+install_with_yay sysbench
+
 # arch-beginning END

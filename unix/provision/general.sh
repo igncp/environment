@@ -575,7 +575,8 @@ if [ "$PROVISION_OS" == "LINUX" ]; then
   # ufw
   install_system_package ufw
   if [[ ! -z $(sudo ufw status | grep inactive) ]]; then
-    sudo ufw enable
+    sudo ufw allow ssh
+    sudo ufw --force enable
   fi
   cat >> ~/.shell_aliases <<"EOF"
   # if server / VM

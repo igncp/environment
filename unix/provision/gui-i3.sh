@@ -4,7 +4,7 @@
 if ! type i3 > /dev/null 2>&1 ; then
   if [ -f ~/project/.config/standard-i3 ]; then install_system_package i3; else install_system_package i3-gaps; fi
   install_system_package i3lock
-  install_system_package i3block
+  install_system_package i3blocks
 
   cat > ~/i3lock.service <<"EOF"
 [Unit]
