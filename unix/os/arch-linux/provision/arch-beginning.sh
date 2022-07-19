@@ -120,4 +120,9 @@ fi
 # Benchmarking
 install_with_yay sysbench
 
+install_system_package qrencode
+cat >> ~/.shell_aliases <<"EOF"
+alias QRTerminal='qrencode -t UTF8'
+EOF
+
 # arch-beginning END

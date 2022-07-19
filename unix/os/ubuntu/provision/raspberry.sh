@@ -11,6 +11,7 @@
     # docker pull pihole/pihole
     # sudo systemctl disable systemd-resolved.service
   mkdir -p ~/pi-hole
+  touch ./hosts ; sudo chown root hosts
   cat > ~/pi-hole/docker-compose.yml <<"EOF"
 version: "3"
 
@@ -29,6 +30,7 @@ services:
     volumes:
          - './etc-pihole/:/etc/pihole/'
          - './etc-dnsmasq.d/:/etc/dnsmasq.d/'
+         # - './hosts/:/etc/hosts' # Add this when copied from container
     dns:
         - 127.0.0.1
         - 1.1.1.1

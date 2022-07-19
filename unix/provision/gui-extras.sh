@@ -167,4 +167,10 @@ alias ChromiumIncognito='chromium -incognito & exit'
 alias Chromium='chromium & exit'
 EOF
 
+# https://github.com/kraanzu/termtyper
+if ! type termtyper > /dev/null 2>&1 ; then
+  pip install preferredsoundplayer
+  python3 -m pip install git+https://github.com/kraanzu/termtyper.git
+fi
+
 # gui-extras END
