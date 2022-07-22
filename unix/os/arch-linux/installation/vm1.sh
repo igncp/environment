@@ -24,6 +24,7 @@ echo -e "g\nn\n1\n\n+1M\nt\n4\nn\n2\n\n\np\nw"| fdisk /dev/sda
 read -p "Do you want to continue? (yY) " -n 1 -r; echo ''; if ! [[ $REPLY =~ ^[Yy]$  ]]; then exit; fi
 
 # Encryption: https://wiki.archlinux.org/index.php/Dm-crypt/Encrypting_an_entire_system
+  # Considering using a USB device to decrypt on boot: https://gist.github.com/da-n/4c77d09720f3e5989dd0f6de5fe3cbfb
   cryptsetup -y -v luksFormat /dev/sda3 # For LVM: VG_NAME-LVNAME
   # if want to change the password after: sudo cryptsetup luksChangeKey /dev/mapper/BLOCK_NAME
   cryptsetup open /dev/sda3 CRYPT_NAME
