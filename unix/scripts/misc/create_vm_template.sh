@@ -85,6 +85,7 @@ VBoxManage storageattach $VM_NAME \
 VBoxManage modifyvm $VM_NAME --boot1 dvd --boot2 disk --boot3 none --boot4 none
 
 VBoxManage modifyvm $VM_NAME --vrde on
+VBoxManage modifyvm $VM_NAME --usb on # Allow USB in VMs
 VBoxManage modifyvm $VM_NAME --vrdemulticon on --vrdeport 10001
 
 VBoxManage startvm "$VM_NAME" --type gui

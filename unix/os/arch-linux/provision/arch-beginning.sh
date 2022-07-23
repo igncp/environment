@@ -131,7 +131,7 @@ install_system_package usbutils lsusb
 # Rules https://github.com/USBGuard/usbguard/blob/master/doc/man/usbguard-rules.conf.5.adoc
 install_system_package usbguard
 cat >> ~/.shell_aliases <<"EOF"
-alias USBGuardInit() {
+function USBGuardInit() {
   sudo sed -i 's|IPCAllowedUsers=root|IPCAllowedUsers=root igncp|' /etc/usbguard/usbguard-daemon.conf
   sudo bash -c 'usbguard generate-policy > /etc/usbguard/rules.conf'
   sudo systemctl enable --now usbguard

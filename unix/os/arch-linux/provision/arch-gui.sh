@@ -188,6 +188,7 @@ if [ -z "$ARM_ARCH" ]; then
   if ! type virtualbox > /dev/null 2>&1 ; then
     install_system_package virtualbox-host-modules-arch
     install_system_package virtualbox
+    sudo usermod -a -G vboxusers igncp
   fi
 
   if [ ! -f ~/.check-files/lightdm ]; then
