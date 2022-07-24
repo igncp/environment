@@ -101,15 +101,15 @@ IP=$(VBoxManage guestproperty enumerate "$VM_NAME" | ag IP | ag -o '192.168.1.[0
 # To run over ssh
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
-sshpass -p root scp -o 'StrictHostKeyChecking=no' -o 'UserKnownHostsFile=/dev/null' "$SCRIPT_DIR/vm1.sh" "root@$IP":/root/
-sshpass -p root scp -o 'StrictHostKeyChecking=no' -o 'UserKnownHostsFile=/dev/null' "$SCRIPT_DIR/vm2.sh" "root@$IP":/root/
+sshpass -p root scp "$SCRIPT_DIR/vm1.sh" "root@$IP":/root/
+sshpass -p root scp "$SCRIPT_DIR/vm2.sh" "root@$IP":/root/
 if [ -f "$SCRIPT_DIR/vm3.sh" ]; then
-  sshpass -p root scp -o 'StrictHostKeyChecking=no' -o 'UserKnownHostsFile=/dev/null' "$SCRIPT_DIR/vm3.sh" "root@$IP":/root/
+  sshpass -p root scp "$SCRIPT_DIR/vm3.sh" "root@$IP":/root/
 fi
 
-sshpass -p root ssh -o "StrictHostKeyChecking=no" -o 'UserKnownHostsFile=/dev/null' "root@$IP" /root/vm1.sh
+sshpass -p root ssh "root@$IP" /root/vm1.sh
 
-sshpass -p root ssh -o "StrictHostKeyChecking=no" -o 'UserKnownHostsFile=/dev/null' "root@$IP" 'shutdown now'
+sshpass -p root ssh "root@$IP" 'shutdown now'
 
 echo "Waiting 20s until machine shuts down"
 sleep 20
@@ -128,10 +128,10 @@ done
 
 IP=$(VBoxManage guestproperty enumerate "$VM_NAME" | ag IP | ag -o '192.168.1.[0-9]*')
 
-sshpass -p igncp scp -o 'StrictHostKeyChecking=no' -o 'UserKnownHostsFile=/dev/null' \
+sshpass -p igncp scp \
   -r "$ENVIRONMENT_PATH" "igncp@$IP":/home/igncp/environment
 
-sshpass -p igncp ssh -o "StrictHostKeyChecking=no" -o 'UserKnownHostsFile=/dev/null' "igncp@$IP" << EOF
+sshpass -p igncp ssh "igncp@$IP" << EOF
 cd ~
 sh vm3.sh
 sh project/provision/provision.sh
