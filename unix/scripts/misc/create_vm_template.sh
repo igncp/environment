@@ -16,6 +16,10 @@ ENVIRONMENT_PATH="$HOME/development/environment"
 BRIDGE_ADAPTER="" # Find with `vboxmanage list vms -l | grep -i bridge`
 OS_TYPE=ArchLinux_64 # `vboxmanage list ostypes`
 
+# Optional, can be found with `vboxmanage list usbhost`
+  # USB_ID=$(vboxmanage list usbhost | ag -B 6 kingst | head -n 1 | awk '{ print $2; }')
+USB_ID=""
+
 if ! type sshpass > /dev/null 2>&1 ; then
   echo "sshpass is required"
   exit 1
@@ -127,6 +131,10 @@ while : ; do read -n 1 k <&1
 done
 
 IP=$(VBoxManage guestproperty enumerate "$VM_NAME" | ag IP | ag -o '192.168.1.[0-9]*')
+
+if [ -n "$USB_ID" ]; then
+  VBoxManage controlvm "$VM_NAME" usbattach "$USB_ID"
+fi
 
 sshpass -p igncp scp \
   -r "$ENVIRONMENT_PATH" "igncp@$IP":/home/igncp/environment
