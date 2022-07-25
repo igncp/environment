@@ -30,6 +30,8 @@ alias SystemAnalyzeTimes='systemd-analyze blame'
 
 alias LsBlkNoLoop='lsblk -e7' # Excludes loop devices, which can accumulate when using snaps: https://askubuntu.com/a/1142405
 
+alias LabelEXTPartition='sudo e2label' # For example: LabelEXTPartition /dev/sda2 FOO_NAME
+
 SystemdFindReference() { sudo grep -r "$1" /usr/lib/systemd/system/; }
 EOF
 
