@@ -619,4 +619,13 @@ cat >> ~/.shell_aliases <<"EOF"
 MsgFmtPo() { FILE_NO_EXT="$(echo $1 | sed 's|.po$||')" ; msgfmt -o "$1".mo "$1".po ; }
 EOF
 
+if [ -f ~/project/.config/inside ]; then
+  sudo sed -i -r 's|.?PasswordAuthentication.*|PasswordAuthentication yes|' /etc/ssh/sshd_config
+else
+  sudo sed -i -r 's|.?PermitRootLogin.*|PermitRootLogin no|' /etc/ssh/sshd_config
+  sudo sed -i -r 's|.?PasswordAuthentication.*|PasswordAuthentication no|' /etc/ssh/sshd_config
+  sudo sed -i -r 's|.?PermitEmptyPasswords.*|PermitEmptyPasswords no|' /etc/ssh/sshd_config
+  sudo systemctl restart sshd
+fi
+
 # general END

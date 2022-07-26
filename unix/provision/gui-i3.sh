@@ -82,4 +82,11 @@ if type dunst > /dev/null 2>&1 ; then
     'dunstctl set-paused false; notify-send "Time"' 'enable_notifications' 'Enable Notifications'
 fi
 
+# These require `polkit`, which is a dependency for example for `lightdm`
+if [ -f ~/project/.config/inside ]; then
+  sed -i -r '/mod\+Shift\+o/ s|exec ".*"|exec "systemctl suspend"|' ~/.config/i3/config
+else
+  sed -i -r '/mod\+Shift\+o/ s|exec ".*"|exec "systemctl poweroff"|' ~/.config/i3/config
+fi
+
 # gui-i3 END
