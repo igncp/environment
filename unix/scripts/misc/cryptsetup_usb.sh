@@ -7,6 +7,7 @@ set -e
 # https://tqdev.com/2022-luks-with-usb-unlock
 # https://gist.github.com/da-n/4c77d09720f3e5989dd0f6de5fe3cbfb
 # https://gist.github.com/firecat53/17b3d309ea54a0ed0cd4
+# https://github.com/chadymorra/chadymorra.github.io/blob/main/index.md
 
 dd if=/dev/urandom bs=1 count=256 > usbkey.lek
 cryptsetup luksAddKey /dev/sda3 usbkey.lek
