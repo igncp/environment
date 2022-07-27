@@ -32,8 +32,16 @@ alias LsBlkNoLoop='lsblk -e7' # Excludes loop devices, which can accumulate when
 alias LsInitRAMFS='lsinitcpio /boot/initramfs-linux.img'
 
 alias LabelEXTPartition='sudo e2label' # For example: LabelEXTPartition /dev/sda2 FOO_NAME
+LabelLuksPartition() { sudo cryptsetup config $1 --label $2; } # For example: LabelLuksPartition /dev/sda2 FOO_NAME
 
 SystemdFindReference() { sudo grep -r "$1" /usr/lib/systemd/system/; }
+
+# Example: TOTP ~/foo-topt.gpg
+TOTP() {
+  KEY=$(gpg -d --no-symkey-cache $1)
+  if [ -z "$KEY" ]; then echo "Invalid key"; return; fi
+  oathtool --totp -b "$KEY";
+}
 EOF
 
 cat >> ~/.shell_aliases <<"EOF"
