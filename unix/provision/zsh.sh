@@ -59,15 +59,22 @@ scriptsFull () {
   LBUFFER=${text_to_add}
   zle accept-line # enter
 }
+scriptsPrint () {
+  text_to_add="$(__FZFScriptsRaw)"
+  LBUFFER=${text_to_add}
+  zle accept-line # enter
+}
 zle -N bookmarksJustInput
 zle -N bookmarksFull
 zle -N scriptsJustInput
+zle -N scriptsPrint
 zle -N scriptsFull
 
 bindkey "\C-q\C-q" bookmarksJustInput
 bindkey "\C-q\C-w" bookmarksFull
 bindkey "\C-q\C-a" scriptsJustInput
 bindkey "\C-q\C-s" scriptsFull
+bindkey "\C-p" scriptsPrint
 bindkey "\C-k" edit-command-line
 
 source $HOME/.shellrc
@@ -128,6 +135,9 @@ bindkey '^X' _zsh_cli_fg
 
 alias HistoryDisable='unset HISTFILE'
 alias ProvisionUpdate='node ~/project/provision/updateProvision.js; print -S "# cp /tmp/provision/* ~/project/provision/ ; provision.sh"; print -S "sh /tmp/diff_provision.sh"'
+
+# Expand aliases on tab
+zstyle ':completion:*' completer _expand_alias _complete _ignored
 EOF
 if [ "$PROVISION_OS" == "LINUX" ]; then
   echo 'eval "$(dircolors /home/igncp/.dircolors)"' >> ~/.zshrc
