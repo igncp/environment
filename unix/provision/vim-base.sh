@@ -111,6 +111,8 @@ syntax off " This is removed in update_vim_colors_theme, in case an error in pro
 
 " copy to clipboard
   vnoremap <leader>i "+y
+  nnoremap <leader>i viw"+y
+  nnoremap <leader>I viW"+y
 
 " fold by section
   let g:markdown_folding = 1

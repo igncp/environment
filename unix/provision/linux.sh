@@ -38,7 +38,7 @@ SystemdFindReference() { sudo grep -r "$1" /usr/lib/systemd/system/; }
 
 # Example: TOTP ~/foo-topt.gpg
 TOTP() {
-  KEY=$(gpg -d --no-symkey-cache $1)
+  KEY=$(gpg -q -d --no-symkey-cache $1)
   if [ -z "$KEY" ]; then echo "Invalid key"; return; fi
   oathtool --totp -b "$KEY";
 }
