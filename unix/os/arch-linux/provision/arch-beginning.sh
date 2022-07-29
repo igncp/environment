@@ -70,6 +70,7 @@ alias SystemUpgrade='sudo pacman -Syu && yay -Syu --noconfirm'
 EOF
 
 install_system_package expac
+install_system_package age # https://github.com/FiloSottile/age
 
 # network
   cat >> ~/.shell_aliases <<"EOF"

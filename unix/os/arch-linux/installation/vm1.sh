@@ -24,7 +24,6 @@ echo -e "g\nn\n1\n\n+1M\nt\n4\nn\n2\n\n\np\nw"| fdisk /dev/sda
 read -p "Do you want to continue? (yY) " -n 1 -r; echo ''; if ! [[ $REPLY =~ ^[Yy]$  ]]; then exit; fi
 
 # Encryption: https://wiki.archlinux.org/index.php/Dm-crypt/Encrypting_an_entire_system
-  # Considering using a USB device to decrypt on boot with encrypted key: https://bbs.archlinux.org/viewtopic.php?pid=947805#p947805
   cryptsetup -y -v luksFormat /dev/sda3 # For LVM: VG_NAME-LVNAME
   # if want to change the password after: sudo cryptsetup luksChangeKey /dev/mapper/BLOCK_NAME
   cryptsetup open /dev/sda3 CRYPT_NAME
@@ -64,6 +63,14 @@ set -x
 
 pacman -Syy
 pacman -S --noconfirm grub
+
+# Consider adding USB encryption with './ssldec_*.sh'
+  # - Encrypt LUKS key: openssl aes256 -in usbkey.lek -out usbkey.lek.enc
+  # - Copy the `./ssldec_*.sh` files into their respective locations
+  # - Update `/etc/mkinitcpio.conf` `HOOKS` variable to include `ssldec` (before `encrypt`)
+  # - Update `/etc/default/grub` with the `ssldec` param, for example:
+    # - `cryptdevice=UUID=...:.. ssldec=/dev/disk/by-label/USB_KEY:ext4:/usbkey.lek.enc` (no need to use `cryptkey` in this case)
+  # - Run: `mkinitcpio -p linux`
 
 # To complete when automating encryption: BLKID=$(blkid | grep -F '/dev/sda2' | grep '\bUUID=[^ ]*' -o)
 # If encryption or / and LVM

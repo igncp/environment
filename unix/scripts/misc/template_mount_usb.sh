@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Copy this file into `~/project/scripts/custom/mount_NAME_usb.sh`
+# And replace the env vars
+
 set -e
 
 MOUNT_PATH=/mnt
