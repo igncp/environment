@@ -65,6 +65,9 @@ cat environment/unix/provision/custom.sh >> ~/project/provision/provision.sh
 cp environment/unix/os/arch-linux/config-files/data.updateProvision.js ~/project/provision
 cp environment/unix/config-files/updateProvision.js ~/project/provision
 
+mkdir ~/project/.config
+touch ~/project/.config/inside # Some settings depend on this, like SSH password auth
+
 if [ ! -f ~/.ssh/config ]; then
   mkdir -p ~/.ssh
   cp environment/unix/config-files/ssh-client-config ~/.ssh/config

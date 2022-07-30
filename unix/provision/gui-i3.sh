@@ -50,6 +50,11 @@ EOF
 mkdir -p ~/.config/i3
 touch ~/init.sh # this file is not overridden so it can be changed manually
 check_file_exists ~/project/provision/i3-config
+if [ -f ~/.config/i3/config ]; then
+  HAS_TO_RELOAD_I3=$(ag 'systemctl suspend' ~/.config/i3/config)
+else
+  HAS_TO_RELOAD_I3=''
+fi
 cp ~/project/provision/i3-config ~/.config/i3/config
 if [ -f ~/project/.config/standard-i3 ]; then
   sed -i '/gaps/d' ~/.config/i3/config
@@ -87,6 +92,7 @@ if [ -f ~/project/.config/inside ]; then
   sed -i -r '/mod\+Shift\+o/ s|exec ".*"|exec "systemctl suspend"|' ~/.config/i3/config
 else
   sed -i -r '/mod\+Shift\+o/ s|exec ".*"|exec "systemctl poweroff"|' ~/.config/i3/config
+  if [ -n "$HAS_TO_RELOAD_I3" ]; then i3-msg restart; fi
 fi
 
 # gui-i3 END

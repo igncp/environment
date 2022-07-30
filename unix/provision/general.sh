@@ -208,6 +208,7 @@ RandomStrGenerator() { tr -dc 'A-Za-z0-9!"#$%&()*+,-./:;<=>?@[\]^_`{|}~' </dev/u
 SedLines() { if [ "$#" -eq 1 ]; then sed -n "$1,$1p"; else sed -n "$1,$2p"; fi; }
 TopCPU()    { ps aux | sort -nr -k 3 | head "$@" | sed -e 'G;G;'; } # e.g. TopCPU -n 5 | less -S
 TopMemory() { ps aux | sort -nr -k 4 | head "$@" | sed -e 'G;G;'; } # e.g. TopMemory -n 5 | less -S
+USBClone() { if [ -z "$I" ] || [ -z "$O" ]; then echo "Missing params"; return; fi; dd if=$I of=$O bs=1G count=10 status=progress; } # Example: I=/dev/sdb O=/dev/sdc USBClone
 Vidir() { vidir -v -; }
 VidirFind() { find $@ | vidir -v -; }
 VisudoUser() { sudo env EDITOR=vim visudo -f /etc/sudoers.d/$1; }
@@ -228,7 +229,6 @@ alias LastColumn="awk '{print "'$NF'"}'"
 alias PathShow='echo $PATH | tr ":" "\n" | sort | uniq | less'
 alias PsTree='pstree -pTUl | less -S'
 alias RsyncDelete='rsync -rhv --delete' # remember to add a slash at the end of source (dest doesn't matter)
-alias SHA256='openssl sha256'
 alias ShellChangeToBash='chsh -s /bin/bash; exit'
 alias SocketSearch='sudo ss -lntup'
 alias Sudo='sudo -E ' # this preserves aliases and environment in root
@@ -591,6 +591,16 @@ if [ "$PROVISION_OS" == "LINUX" ]; then
   # sudo ufw logging medium # /var/log/ufw.log
   alias UfwStatus='sudo ufw status numbered' # numbered is useful for insert / delete
 EOF
+  if [ ! -f ~/project/.config/inside ]; then
+    if [ -n "$(sudo ufw status | ag '^[0-9]' | ag -v '\b22\b')" ]; then
+      sudo ufw --force reset
+      sudo ufw allow ssh
+      sudo ufw --force enable
+      sudo sh -c 'rm -rf /etc/ufw/before6.rules.* /etc/ufw/before.rules.* /etc/ufw/after.rules.* /etc/ufw/after6.rules.*'
+      sudo sh -c 'rm -rf /etc/ufw/user.rules.* /etc/ufw/user6.rules.*'
+      sudo chmod -R go-rwx /etc/ufw
+    fi
+  fi
 fi
 
 # GnuPG https://wiki.archlinux.org/title/GnuPG
@@ -599,6 +609,7 @@ install_system_package gnupg gpg
 
 cat >> ~/.shell_aliases <<"EOF"
 alias GPGCreateKey='gpg --full-gen-key'
+alias GPGDecryptSymmetric='gpg --decrypt --no-symkey-cache' # just passphrase
 alias GPGDetachSign='gpg --detach-sign --armor'
 alias GPGEditKey='gpg --edit-key' # type `help` for a list of commands
 alias GPGEncryptSymmetric='gpg --armor --symmetric --no-symkey-cache' # just passphrase

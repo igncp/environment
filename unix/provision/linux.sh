@@ -32,6 +32,7 @@ alias LsBlkNoLoop='lsblk -e7' # Excludes loop devices, which can accumulate when
 alias LsInitRAMFS='lsinitcpio /boot/initramfs-linux.img'
 
 alias LabelEXTPartition='sudo e2label' # For example: LabelEXTPartition /dev/sda2 FOO_NAME
+alias LabelFAT='sudo fatlabel' # For example: LabelFAT /dev/sda2 FOO_NAME
 LabelLuksPartition() { sudo cryptsetup config $1 --label $2; } # For example: LabelLuksPartition /dev/sda2 FOO_NAME
 
 SystemdFindReference() { sudo grep -r "$1" /usr/lib/systemd/system/; }
@@ -70,9 +71,9 @@ EOF
 
 ## Performance
 
-if [ -f /proc/sys/kernel/nmi_watchdog ] && [ -n "$(grep 1 /proc/sys/kernel/nmi_watchdog)" ] && [ -z "$(grep watchdog /boot/grub/grub.cfg)" ]; then
+if [ -f /proc/sys/kernel/nmi_watchdog ] && [ -n "$(grep 1 /proc/sys/kernel/nmi_watchdog)" ] && [ -f /boot/grub/grub.cfg ] && [ -z "$(grep watchdog /boot/grub/grub.cfg)" ]; then
   if [ ! -f ~/.check-files/watchdog ]; then
-    echo "[~/.check-files/watchdog]: Add 'nmi_watchdog=0' to grub opts to disable watchdog and hide this message"
+    echo "[~/.check-files/watchdog]: Add 'nmi_watchdog=0' to the kernel params in grub to disable watchdog or hide this message"
   fi
 fi
 

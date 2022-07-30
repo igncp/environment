@@ -345,4 +345,28 @@ fi
 
 install_with_yay hardinfo
 
+# It is started automatically with the desktop entry in `~/.config/autostart`
+install_with_yay arch-audit-gtk
+
+if [ ! -f ~/project/.config/no-dex ]; then
+  install_system_package dex
+  sed -i '1isleep 5s && dex -a &' ~/.xinitrc
+fi
+if [ ! -f ~/.check-files/apparmor-gui-config ]; then
+  pip install notify2
+  pip install psutil
+  mkdir -p ~/.config/autostart/
+  cat > ~/.config/autostart/apparmor-notify.desktop <<"EOF"
+[Desktop Entry]
+Type=Application
+Name=AppArmor Notify
+Comment=Receive on screen notifications of AppArmor denials
+TryExec=aa-notify
+Exec=aa-notify -p -s 1 -w 60 -f /var/log/audit/audit.log
+StartupNotify=false
+NoDisplay=true
+EOF
+  touch ~/.check-files/apparmor-gui-config
+fi
+
 # arch-gui END

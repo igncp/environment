@@ -4,21 +4,24 @@
 # Follow VM installation, adding here only the different parts
 
 # Windows: Use UUI to setup a Live USB: https://www.pendrivelinux.com/universal-usb-installer-easy-as-1-2-3/
-# Linux: Use dd: https://wiki.archlinux.org/index.php/USB_flash_installation_media
-    # e.g.: sudo dd bs=4M if=path/to/arch.iso of=/dev/sdb conv=fsync oflag=direct status=progress
+# Linux: Use `bsdtar`: https://wiki.archlinux.org/index.php/USB_flash_installation_media
+    # This allows to include the wifi script in the same usb
+    # Use a FAT partition of 1.5GB
+        # sudo sh -c 'mkfs.fat -F 32 /dev/sdXn ; mount /dev/sdXn /mnt'
+        # sudo bsdtar -x --exclude=syslinux/ -f /home/igncp/Downloades/archiso_NAME.iso -C /mnt
+        # sudo sh -c 'umount /mnt ; fatlabel /dev/sdXn ARCH_YYYYMM' # The unmount can take a while
 
 # Can connect to WIFI after partitioning disks so you can save the password in file in disk
-# If you have an additional USB port and stick, or additional internal drive, can copy it there:
+# Copy the script in the live USB (encrypt the file with gpg)
+    # Check the device with: `iwctl device list`
     # iwctl --passphrase=PASS station DEVICE connect SSID ; sleep 5 ; ping archlinux.org
+    # ip a | grep 192 ; echo 'Set password for SSH' ; passwd
+# Copy the netctl profile (encrypted) for once installed if available (the interface will be different)
 
 # Check the machine BIOS key
-
-# Manage partitions
-    # Use cfdisk /dev/nvme0n1 # if using other type of drive
-    # Choose to delete all
-    # Create a new one of type EFI System (500M).
-
-# If existing partitions, can just clear them
+# Create a new partition of type EFI System (500M), either in the computer or
+# in a separate USB flash drive.
+# If there are existing partitions, can just clear them
     # dd if=/dev/zero of=/dev/mapper/cryptroot bs=4096 status=progress
 
 # disable annoying bell
@@ -51,8 +54,15 @@ pacman -S --noconfirm grub efibootmgr dosfstools os-prober mtools
 pacman -S --noconfirm netctl dialog wpa_supplicant dhcpcd # for wifi-menu
 # don't enable dhcpcd.service as it doesn't work well with netctl
 
-grub-install /dev/DEVICE --target=x86_64-efi --bootloader-id=grub_uefi --recheck --efi-directory=/boot # replace DEVICE, e.g. /dev/sda
+# The `--removable` flag is important when mounting `/boot` in a separate USB
+# flash drive. If that is the case, `/dev/DEVICE` should still be the hard
+# drive in the computer (not the USB block device).
+grub-install /dev/DEVICE --removable --target=x86_64-efi --bootloader-id=grub_uefi \
+  --recheck --efi-directory=/boot # replace DEVICE, e.g. /dev/sda
 grub-mkconfig -o /boot/grub/grub.cfg
+# **Important** - If mounting `/boot` in a USB drive, may have to update
+# /boot/grub/grub.cfg , all `hd2` instances to `hd1`
+
 # If installing a multi-boot Linux, the last EFI run is the one that will be
 # used. Best is to run it three times, once per OS (2) and finally again for the
 # first one (3rd one)

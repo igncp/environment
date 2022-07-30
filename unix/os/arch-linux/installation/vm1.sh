@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
 
 set -e
-set -x
+# set -x
 
 # This file is intended to be copied, edited and run automatically
 
 # Download Arch Linux ISO image
-# https://archlinux.org/download/
-# ARM: https://pkgbuild.com/~tpowa/archboot-images
+    # https://archlinux.org/download/
+    # ARM: https://pkgbuild.com/~tpowa/archboot-images
+    # Use `sha256sum -c /tmp/file.txt` to confirm the iso file is valid
 
 # You can use automatic VM creation script in unix/scripts/misc/create_vm_template.sh
 
@@ -52,7 +53,9 @@ mount /dev/mapper/BLOCK_NAME /mnt/home
 genfstab -U /mnt >> /mnt/etc/fstab
 
 pacstrap /mnt base linux linux-firmware vim perl # downloads ~300 MB (vim needs perl)
+    # If there are issues with certificates, try: `pacman -S archlinux-keyring`
 echo 'syntax off' > /root/.vimrc ; echo 'set mouse-=a' >> /root/.vimrc
+# scp ./unix/os/arch-linux/installation/* root@192.168.1.X:/root/ # from the host
 cp -r /root/* /root/.vimrc /mnt/root/
 
 cat > /mnt/root/init.sh <<"EOF"
@@ -65,16 +68,19 @@ pacman -Syy
 pacman -S --noconfirm grub
 
 # Consider adding USB encryption with './ssldec_*.sh'
-  # - Encrypt LUKS key: openssl aes256 -in usbkey.lek -out usbkey.lek.enc
+  # - Encrypt LUKS key: `openssl aes256 -in usbkey.lek -out usbkey.lek.enc`
   # - Copy the `./ssldec_*.sh` files into their respective locations
+    # - `cp ./ssldec_hook.sh /lib/initcpio/hooks/ssldec ; cp ./ssldec_install.sh /lib/initcpio/install/ssldec`
   # - Update `/etc/mkinitcpio.conf` `HOOKS` variable to include `ssldec` (before `encrypt`)
   # - Update `/etc/default/grub` with the `ssldec` param, for example:
     # - `cryptdevice=UUID=...:.. ssldec=/dev/disk/by-label/USB_KEY:ext4:/usbkey.lek.enc` (no need to use `cryptkey` in this case)
+    # - With `ssldec` need to use a block device directly, can't use a filter like `UUID=...`
   # - Run: `mkinitcpio -p linux`
 
 # To complete when automating encryption: BLKID=$(blkid | grep -F '/dev/sda2' | grep '\bUUID=[^ ]*' -o)
 # If encryption or / and LVM
-  # cryptdevice=UUID=device-UUID:cryptroot # retrieved from `blkid`
+  # `cryptdevice=UUID=device-UUID:cryptroot` # retrieved from `blkid`
+  # apparmor kernel param: `lsm=landlock,lockdown,yama,integrity,apparmor,bpf`
   # example for crypttab (not necessary if single encrypted partition):
     # 'crypthome         UUID=2f9a8428-ac69-478a-88a2-4aa458565431        none'
   # these HOOKS are for LVM and encryption

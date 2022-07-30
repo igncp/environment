@@ -39,7 +39,6 @@ run_hook ()
         read -rsp "${prompt}" password
         openssl aes256 -pass pass:"${password}" -d -in "${encfile}" -out "${decfile}" >/dev/null 2>&1
         retcode="$?"
-        rm -f "${encfile}"
 
         if [ "${retcode}" != "0" ]; then
           sleep 2
@@ -49,6 +48,8 @@ run_hook ()
         else
           break
         fi
+
+        rm -f "${encfile}"
       done
     else
       echo "Encrypted keyfile could not be opened. Reverting to 'encrypt' hook."

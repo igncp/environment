@@ -71,6 +71,7 @@ EOF
 
 install_system_package expac
 install_system_package age # https://github.com/FiloSottile/age
+install_system_package arch-audit # When using GUI, there is a GTK tray icon to check for CVEs
 
 # network
   cat >> ~/.shell_aliases <<"EOF"
@@ -140,5 +141,23 @@ function USBGuardInit() {
 alias USBGuardBlocked='usbguard list-devices --blocked'
 alias USBGuardAllowPermanently='usbguard allow-device -p'
 EOF
+
+install_system_package oath-toolkit oathtool
+
+install_system_package apparmor apparmor_status
+if [ ! -f ~/.check-files/apparmor-config ]; then
+  sudo pacman -S --noconfirm audit
+  sudo systemctl enable --now apparmor
+  sudo groupadd -r audit || true
+  sudo gpasswd -a igncp audit || true
+  sudo sed -i 's|^log_group =.*|log_group = audit|' /etc/audit/auditd.conf
+  sudo systemctl enable --now auditd
+  touch ~/.check-files/apparmor-config
+fi
+
+# For example:
+  # - `sudo iostat /dev/sda1 1` # Monitors IO (read/write speeds) every second
+  # - `sudo iostat` # Stats for all devices
+install_system_package sysstat iostat
 
 # arch-beginning END
