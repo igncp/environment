@@ -633,13 +633,17 @@ cat >> ~/.shell_aliases <<"EOF"
 MsgFmtPo() { FILE_NO_EXT="$(echo $1 | sed 's|.po$||')" ; msgfmt -o "$1".mo "$1".po ; }
 EOF
 
-if [ -f ~/project/.config/inside ]; then
-  sudo sed -i -r 's|.?PasswordAuthentication.*|PasswordAuthentication yes|' /etc/ssh/sshd_config
-else
+if [ ! -f ~/project/.config/inside ]; then
   sudo sed -i -r 's|.?PermitRootLogin.*|PermitRootLogin no|' /etc/ssh/sshd_config
   sudo sed -i -r 's|.?PasswordAuthentication.*|PasswordAuthentication no|' /etc/ssh/sshd_config
   sudo sed -i -r 's|.?PermitEmptyPasswords.*|PermitEmptyPasswords no|' /etc/ssh/sshd_config
   sudo systemctl restart sshd
 fi
+
+if ! type crond > /dev/null 2>&1 ; then
+  install_system_package cronie crond
+  sudo systemctl enable --now cronie
+fi
+printf '' > /var/spool/cron/igncp
 
 # general END

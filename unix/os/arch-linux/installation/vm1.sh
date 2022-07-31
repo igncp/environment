@@ -53,7 +53,7 @@ mount /dev/mapper/BLOCK_NAME /mnt/home
 genfstab -U /mnt >> /mnt/etc/fstab
 
 pacstrap /mnt base linux linux-firmware vim perl # downloads ~300 MB (vim needs perl)
-    # If there are issues with certificates, try: `pacman -S archlinux-keyring`
+    # If there are issues with certificates, try: `pacman -Sy ; pacman -S archlinux-keyring --noconfirm`
 echo 'syntax off' > /root/.vimrc ; echo 'set mouse-=a' >> /root/.vimrc
 # scp ./unix/os/arch-linux/installation/* root@192.168.1.X:/root/ # from the host
 cp -r /root/* /root/.vimrc /mnt/root/

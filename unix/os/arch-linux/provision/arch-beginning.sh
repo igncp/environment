@@ -89,10 +89,6 @@ EOF
 complete -cf sudo
 EOF
 
-install_system_package cronie crontab
-# crontab -e
-# DISPLAY=:0.0 /usr/bin/notify-send "[cronjob] TITLE" "CONTENT" # to send notification
-
 install_system_package arch-install-scripts genfstab
 install_system_package base-devel make
 install_system_package nmap
@@ -159,5 +155,23 @@ fi
   # - `sudo iostat /dev/sda1 1` # Monitors IO (read/write speeds) every second
   # - `sudo iostat` # Stats for all devices
 install_system_package sysstat iostat
+
+# Power saving diagnostics
+install_system_package powertop
+
+if [ -f ~/project/.config/tlp ]; then
+  install_system_package tlp
+  install_system_package tlp-rdw
+
+  if [ ! -f ~/.check-files/tlp ]; then
+    sudo systemctl enable --now tlp
+    sudo systemctl mask systemd-rfkill.service
+    sudo systemctl mask systemd-rfkill.socket
+
+    touch ~/.check-files/tlp
+  fi
+fi
+
+install_system_package hwinfo
 
 # arch-beginning END

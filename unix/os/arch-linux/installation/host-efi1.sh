@@ -76,4 +76,7 @@ grub-mkconfig -o /boot/grub/grub.cfg
 echo 'blacklist pcspkr' > /tmp/nobeep.conf; mv /tmp/nobeep.conf /etc/modprobe.d/nobeep.conf
 rmmod pcspkr # only for current session
 
+# Fixed HDMI audio by adding the user to several groups (in addition to the
+# `audio` group): wheel, polkitd, lightdm. Also installed linux-lts
+
 sed -i 's|#HandleLidSwitchExternalPower=.*|HandleLidSwitchExternalPower=ignore|' /etc/systemd/logind.conf

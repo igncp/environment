@@ -190,4 +190,6 @@ if [ -f ~/project/.config/nvidia ]; then
 fi
 install_system_package mesa-utils glxgears
 
+install_system_package acpi
+
 # gui-common END

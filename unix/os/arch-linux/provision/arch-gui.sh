@@ -50,7 +50,7 @@ if [ -f ~/project/.config/copyq ]; then
     if [ ! -f "$HOME"/.check-files/copyq-passwords ]; then
       echo '[~/.check-files/copyq-passwords]: Add and test command to filter out copied passwords and remove this message'
     fi
-  sed -i '1isleep 10s && copyq 2>&1 > /dev/null &' ~/.xinitrc
+  sed -i '1i(sleep 10s && copyq 2>&1 > /dev/null) &' ~/.xinitrc
   cat >> ~/.shell_aliases <<"EOF"
 CopyQReadN() {
   for i in {0..$1}; do
@@ -77,7 +77,7 @@ if [ -z "$ARM_ARCH" ]; then
   sed -i 's| history =|#history =|' ~/.config/dunst/dunstrc
   sed -i 's|font = .*$|font = Monospace 12|' ~/.config/dunst/dunstrc
   sed -i 's|geometry = .*$|geometry = "500x5-30+20"|' ~/.config/dunst/dunstrc
-  sed -i '1isleep 5s && dunst &' ~/.xinitrc
+  sed -i '1i(sleep 5s && dunst) &' ~/.xinitrc
 fi
 
 if [ -f ~/project/.config/nvidia ]; then
@@ -133,25 +133,6 @@ if [ -f ~/project/.config/mysql-workbench ]; then install_system_package mysql-w
 # desktop magnifier: https://github.com/stuartlangridge/magnus
 install_with_yay magnus
 
-if [ -f ~/project/.config/acpi_warning ]; then
-  install_system_package acpi
-  echo 'alias BatteryRemaningTime="acpi"' >> ~/.shell_aliases
-  cat > ~/.battery-warning.sh <<"EOF"
-#!/bin/bash
-
-BATTINFO=`acpi -b`
-if [[ `echo $BATTINFO | grep Discharging` && `echo $BATTINFO | cut -f 5 -d " "` < 00:30:00 ]] ; then
-    DISPLAY=:0.0 /usr/bin/notify-send "[cronjob] low battery" "$BATTINFO"
-fi
-EOF
-  chmod +x ~/.battery-warning.sh
-  if [ ! -f "$HOME"/.check-files/battery-warning-cronie ]; then
-    echo '[~/.check-files/battery-warning-cronie]: add this to cronie and remove message'
-  fi
-  # crontab -e
-  # */1 * * * * /home/igncp/.battery-warning.sh
-fi
-
 if [ ! -f ~/.check-files/arch-fonts ]; then
   sudo pacman -S --noconfirm \
     adobe-source-han-sans-jp-fonts \
@@ -185,12 +166,15 @@ install_with_yay lxqt-sudo-git lxqt-sudo # for rofi
 if [ -f ~/project/.config/figma ]; then install_with_yay figma-linux; fi
 
 if [ -z "$ARM_ARCH" ]; then
-  if ! type virtualbox > /dev/null 2>&1 ; then
-    install_system_package virtualbox-host-modules-arch
-    install_system_package virtualbox
-    sudo usermod -a -G vboxusers igncp
+  if [ -f ~/project/.config/virtualbox-host ]; then
+    if ! type virtualbox > /dev/null 2>&1 ; then
+      install_system_package virtualbox-host-modules-arch
+      install_system_package virtualbox
+      sudo usermod -a -G vboxusers igncp
+    fi
   fi
 
+  # Enable autologin: https://wiki.archlinux.org/title/LightDM#Enabling_autologin
   if [ ! -f ~/.check-files/lightdm ]; then
     sudo pacman -S --noconfirm lightdm lightdm-gtk-greeter
 
@@ -272,7 +256,7 @@ if [ -f ~/project/.config/safeeyes ]; then
     pip install croniter # Required by the stats plugin
     touch ~/.check-files/safeeyes
   fi
-  sed -i '1isleep 2s && safeeyes -e &' ~/.xinitrc
+  sed -i '1i(sleep 2s && safeeyes -e) &' ~/.xinitrc
 fi
 
 if [ -f ~/project/.config/headless-xorg ]; then
@@ -350,7 +334,7 @@ install_with_yay arch-audit-gtk
 
 if [ ! -f ~/project/.config/no-dex ]; then
   install_system_package dex
-  sed -i '1isleep 5s && dex -a &' ~/.xinitrc
+  sed -i '1i(sleep 5s && dex -a) &' ~/.xinitrc
 fi
 if [ ! -f ~/.check-files/apparmor-gui-config ]; then
   pip install notify2
@@ -368,5 +352,24 @@ NoDisplay=true
 EOF
   touch ~/.check-files/apparmor-gui-config
 fi
+
+if [ -f ~/project/.config/tlp ]; then
+  install_with_yay tlpui
+fi
+
+cat > ~/.scripts/acpi_warning.sh <<"EOF"
+#!/bin/bash
+
+BATTINFO=$(acpi -b)
+IS_DISCHARGING=$(echo $BATTINFO | grep Discharging)
+
+if [[ "$IS_DISCHARGING" && $(echo "$BATTINFO" | cut -f 5 -d " ") < 00:30:00 ]] ; then
+  PRINTED=$(echo "$BATTINFO" | sed 's|Battery .: ||')
+  XDG_RUNTIME_DIR=/run/user/$(id -u) \
+    /usr/bin/notify-send -u critical "Low battery" "$PRINTED"
+fi
+EOF
+chmod +x ~/.scripts/acpi_warning.sh
+echo '*/4 * * * * /home/igncp/.scripts/acpi_warning.sh' >> /var/spool/cron/igncp
 
 # arch-gui END

@@ -6,7 +6,7 @@ echo 'exec startlxde' >> ~/.xinitrc
 
 echo 'pcmanfm -w "$1"' > ~/.set-background.sh
 chmod +x ~/.set-background.sh
-sed -i '1isleep 5s && /home/igncp/wallpaper-update.sh 2>&1 > /dev/null &' ~/.xinitrc
+sed -i '1i(sleep 5s && /home/igncp/wallpaper-update.sh 2>&1 > /dev/null) &' ~/.xinitrc
 
 if [ ! -f ~/.check-files/lxde-configure ]; then
   # https://github.com/jnsh/arc-theme
@@ -27,6 +27,7 @@ EOF
 fi
 cat >> ~/.shell_aliases <<"EOF"
 alias LXDEReload='echo "Remember to run in guest"; openbox-lxde --reconfigure'
+alias LXDEPanelRestart='lxpanelctl restart'
 EOF
 
 

@@ -137,7 +137,7 @@ install_with_yay speedread-git speedread
 
 # reduce blue light at night
 install_system_package redshift
-sed -i '1isleep 5s && redshift-gtk 2>&1 > /dev/null &' ~/.xinitrc
+sed -i '1i(sleep 5s && redshift-gtk 2>&1 > /dev/null) &' ~/.xinitrc
 mkdir -p "$HOME"/.config/redshift
 cat > "$HOME"/.config/redshift/redshift.conf <<"EOF"
 [redshift]
