@@ -154,6 +154,11 @@ RestartSec=2
 WantedBy=multi-user.target
 EOF
 fi
+if [ ! -f ~/project/.config/inside ] && [ -n $(systemctl --user is-active x11vnc.service | grep '\bactive\b' | true) ]; then
+  echo 'Stopping VNC server'
+  systemctl --user daemon-reload
+  systemctl --user stop x11vnc.service
+fi
 
 # Bluetooth headphones command and rofi script
 cat > ~/.scripts/bluetooth_headphones_connect.sh <<"EOF"

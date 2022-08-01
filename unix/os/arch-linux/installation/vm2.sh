@@ -12,7 +12,7 @@ pacman -S sudo --noconfirm
 echo "# igncp ALL=(ALL) ALL" >> /etc/sudoers
 echo "igncp ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers # For the initial installation
 echo "alias ll='ls -lah'" >> /home/igncp/.bashrc
-pacman -S --noconfirm dhcpcd cronie
+pacman -S --noconfirm dhcpcd
 pacman -S --noconfirm openssh rsync
 
 ssh-keygen -A
