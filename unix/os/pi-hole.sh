@@ -41,6 +41,7 @@ PiHoleInit() {
   docker compose exec -it pihole pihole logging off
   sudo sh -c "echo 'PRIVACYLEVEL=3' >> ./etc-pihole/pihole-FTL.conf"
   sudo sh -c "echo 'DBINTERVAL=60.0' >> ./etc-pihole/pihole-FTL.conf"
+  sudo unbound-control-setup
   sudo systemctl disable --now systemd-resolved.service
   sudo systemctl enable --now unbound
   docker compose down

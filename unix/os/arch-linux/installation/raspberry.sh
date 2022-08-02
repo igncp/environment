@@ -119,7 +119,6 @@ journalctl --vacuum-time=10d
     # Fixed: https://askubuntu.com/a/1171274
     # Fixed HDMI: install more alsa packages and add user to audio group: https://askubuntu.com/a/1173748
     # For HDMI, it needs to use the misi USB closest to the power
-    # sudo ufw allow 5900
   # RP Network
     # Network: sudo systemctl enable netctl@elcano.service (make sure is the only profile enabled)
   # Host clients

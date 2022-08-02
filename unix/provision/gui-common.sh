@@ -125,7 +125,11 @@ add_desktop_common() {
 add_desktop_common \
   '/home/igncp/wallpaper-update.sh' 'wallpaper-update' 'Wallpaper Update'
 
-# vnc server, uses 5900 port by default
+# VNC uses `5900` as the default port
+# But don't open the `5900` port on the server (e.g. with `ufw`)
+# Use SSH tunneling from the client instead:
+  # `ssh -fN -L 5900:localhost:5900 REMOTE_ADDRESS`
+# Then when using the VNC client, just connect to `127.0.0.1`
 if [ -f ~/project/.config/vnc-server ]; then
   install_system_package x11vnc
   cat >> ~/.shell_aliases <<"EOF"

@@ -218,6 +218,8 @@ alias SSHNoKey='ssh -o PubkeyAuthentication=no'
 SSHGenerateStrongKey() { FILE="$1"; ssh-keygen -t ed25519 -f "$FILE"; }
 SSHRemove192KnowHost() { if [ -z "$1" ]; then (echo "Missing IP num"; exit 1); else sed -i '/192.168.1.'"$1"'/d' ~/.ssh/known_hosts; fi; }
 alias SSHCopyId='ssh-copy-id -i '
+alias SSHListLocalForwardedPorts="lsof -i -n | egrep '\<ssh\>' | ag listen | ag ::1" # TODO: Improve to include the remote IP
+SSHForwardPortLocal() { ssh -fN -L "$1":localhost:"$1" ${@:2}; } # SSHForwardPort 1234 192.168.1.40
 
 alias AliasesReload='source ~/.shell_aliases'
 alias CleanNCurses='stty sane;clear;'
