@@ -56,11 +56,9 @@ alias TokyoTimezone='sudo timedatectl set-timezone Asia/Tokyo'
 EOF
 
 cat >> ~/.shell_aliases <<"EOF"
-GrubHideSetupSDA() {
+GrubHideSetupTimeout() {
   sudo sed -i 's|^GRUB_TIMEOUT=.*|GRUB_TIMEOUT=1|' /etc/default/grub
   sudo sed -i 's|^GRUB_TIMEOUT_STYLE=.*|GRUB_TIMEOUT_STYLE=hidden|' /etc/default/grub
-  sudo grub-install /dev/sda
-  sudo grub-mkconfig -o /boot/grub/grub.cfg
 }
 EOF
 

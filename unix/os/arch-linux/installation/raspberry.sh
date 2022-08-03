@@ -65,7 +65,7 @@ echo "alarm ALL=(ALL) ALL" >> /etc/sudoers
 echo "alias ll='ls -lah'" >> /home/igncp/.bashrc
 cp -r /home/alarm/.ssh /home/igncp/
 chown -R igncp:igncp /home/igncp
-sed -i 's|#PasswordAuthentication.*|PasswordAuthentication no|' /etc/ssh/sshd_config
+sed -i 's|^#PasswordAuthentication.*|PasswordAuthentication no|' /etc/ssh/sshd_config
 systemctl restart sshd
 
 cat > /home/alarm/mount_igncp.sh <<"EOF"

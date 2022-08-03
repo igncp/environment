@@ -79,16 +79,4 @@ fi
 
 echo "** Remove ~/vm3.sh if nothing to save **"
 
-printf "\n\n"
-echo 'Next steps:'
-echo "- GrubHideSetupSDA # command in unix/provision/linux.sh to extra configure grub"
-echo "    setup grub theme if host"
-echo '- sudo vim /etc/pacman.d/mirrorlist # select specific mirrors'
-echo '    - https://wiki.archlinux.org/index.php/mirrors'
-echo '- sudo vim /etc/profile.d/freetype2.sh # for font rendering'
-echo '- sudo vim /etc/ssh/sshd_config # disable password login by using ssh-copy-id -i ...'
-echo '- # allow ssh in ufw and enable it'
-
-printf "\n\n"
-
 echo "finished correctly"

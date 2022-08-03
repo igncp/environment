@@ -218,7 +218,7 @@ alias SSHNoKey='ssh -o PubkeyAuthentication=no'
 SSHGenerateStrongKey() { FILE="$1"; ssh-keygen -t ed25519 -f "$FILE"; }
 SSHRemove192KnowHost() { if [ -z "$1" ]; then (echo "Missing IP num"; exit 1); else sed -i '/192.168.1.'"$1"'/d' ~/.ssh/known_hosts; fi; }
 alias SSHCopyId='ssh-copy-id -i '
-alias SSHListLocalForwardedPorts="lsof -i -n | egrep '\<ssh\>' | ag listen | ag ::1" # TODO: Improve to include the remote IP
+alias SSHListLocalForwardedPorts='ps x -ww -o pid,command | ag ssh | grep --color=never localhost'
 SSHForwardPortLocal() { ssh -fN -L "$1":localhost:"$1" ${@:2}; } # SSHForwardPort 1234 192.168.1.40
 
 alias AliasesReload='source ~/.shell_aliases'
@@ -637,8 +637,8 @@ EOF
 
 if [ ! -f ~/project/.config/inside ]; then
   sudo sed -i -r 's|.?PermitRootLogin.*|PermitRootLogin no|' /etc/ssh/sshd_config
-  sudo sed -i -r 's|.?PasswordAuthentication.*|PasswordAuthentication no|' /etc/ssh/sshd_config
-  sudo sed -i -r 's|.?PermitEmptyPasswords.*|PermitEmptyPasswords no|' /etc/ssh/sshd_config
+  sudo sed -i -r 's|.?PasswordAuthentication yes|PasswordAuthentication no|' /etc/ssh/sshd_config
+  sudo sed -i -r 's|.?PermitEmptyPasswords yes|PermitEmptyPasswords no|' /etc/ssh/sshd_config
   sudo systemctl restart sshd
 fi
 
@@ -646,6 +646,8 @@ if ! type crond > /dev/null 2>&1 ; then
   install_system_package cronie crond
   sudo systemctl enable --now cronie
 fi
+sudo touch /var/spool/cron/igncp
+sudo chown igncp /var/spool/cron/igncp
 printf '' > /var/spool/cron/igncp
 
 # general END
