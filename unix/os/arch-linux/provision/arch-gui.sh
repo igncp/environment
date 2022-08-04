@@ -1,6 +1,5 @@
 # arch-gui START
 
-# pulseaudio: better audio support, including devices
 install_system_package pulseaudio
 install_with_yay paman
 install_system_package pavucontrol # for audio settings
@@ -42,7 +41,6 @@ fi
 if [ -f ~/project/.config/timeshift ]; then install_with_yay timeshift; fi
 
 if [ -f ~/project/.config/copyq ]; then
-  # clipboard manager
   install_system_package copyq
   # https://copyq.readthedocs.io/en/latest/faq.html#how-to-omit-storing-text-copied-from-specific-windows-like-a-password-manager
     # Create two items, one for the password manager and one for Entry
@@ -373,8 +371,16 @@ EOF
 chmod +x ~/.scripts/acpi_warning.sh
 echo '*/4 * * * * /home/igncp/.scripts/acpi_warning.sh' >> /var/spool/cron/igncp
 
-if [ -f ~/project/.config/no-idle-gui ]; then
-  echo "*/5 * * * * sh -c 'DISPLAY=:0 /usr/bin/xscreensaver-command -deactivate'" >> /var/spool/cron/igncp
+if [ -f ~/project/.config/remote ]; then
+  install_system_package playerctl
+  install_system_package xdotool
+  install_system_package xssstate
+
+  # Example to add in the "custom" section
+  # if [ -n "$(ps aux | grep -v '\bgrep\b' | grep '\bvlc\b' || true)" ]; then
+  #   # Check first that the user has been idle for more than 20 seconds
+  #   echo "*/9 * * * * sh -c '(($(DISPLAY=:0 xssstate -i) > 20000)) && DISPLAY=:0 xdotool mousemove 0 0 && sleep 0.2 && DISPLAY=:0 xdotool mousemove 10 10'" >> /var/spool/cron/
+  # fi
 fi
 
 # arch-gui END
