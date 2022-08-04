@@ -32,6 +32,9 @@ cat >> ~/.shell_aliases <<"EOF"
 alias PiHoleStart='(cd ~/.pi-hole/ && docker compose up -d)'
 alias PiHoleStop='(cd ~/.pi-hole/ && docker compose down)'
 alias PiHoleLogs='(cd ~/.pi-hole/ && docker compose logs -f pihole)'
+PiHoleWhitelistAdd() { cd ~/.pi-hole/ && docker compose exec pihole -w $1; }
+PiHoleWhitelistRemove() { cd ~/.pi-hole/ && docker compose exec pihole -w $1 -d; }
+alias PiHoleWhitelisted='(cd ~/.pi-hole/ && docker compose exec pihole -q .)'
 alias PiHolePassword='(cd ~/.pi-hole && docker compose exec pihole pihole -a -p)'
 alias PiHoleRepl='(cd ~/.pi-hole && docker compose exec pihole /bin/bash)'
 alias PiHoleUnboundUpdate=(sudo vim /etc/unbound/unbound.conf)
@@ -56,8 +59,12 @@ EOF
 # Clients:
   # Arch Linux:
     # Update `netctl` profile config to include the IP address
-    # DNS=('192.168.1.X')
+      # DNS=('192.168.1.X')
     # Update upstream DNS for pi-hole in: http://pi-hole-url/admin/settings.php?tab=dns
-        # Add logging: https://snippets.khromov.se/enable-logging-of-dns-queries-in-unbound-dns-resolver/
+      # Add logging: https://snippets.khromov.se/enable-logging-of-dns-queries-in-unbound-dns-resolver/
+    # To disable pi-hole:
+      # Remove DNS from `netctl` profile
+      # Restart netctl profile
+      # Remove records in `/etc/resolv.conf`
 
 # pi-hole END

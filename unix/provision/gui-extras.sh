@@ -82,7 +82,9 @@ if ! xhost >& /dev/null && [ -z "$SSH_CLIENT" ] && [ -z "$SSH_TTY" ]; then
 fi
 EOF
 
+# For example: DISPLAY=:0 vlc -f --audio-track 1 --start-time=180 --sub-delay 20 ...mkv
 install_system_package vlc
+
 install_system_package android-file-transfer
 
 install_system_package gnucash

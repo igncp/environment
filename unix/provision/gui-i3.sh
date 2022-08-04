@@ -95,4 +95,20 @@ else
   if [ -n "$HAS_TO_RELOAD_I3" ]; then i3-msg restart; fi
 fi
 
+# Quick VNC shortcut (replace NAME and HOST)
+  cat > ~/.scripts/quick_vnc_NAME.sh <<"EOF"
+set -e
+if [ -n "$(ps aux | ag localhost | ag -v '\bag\b' | ag -v HOST)" ]; then
+  MSG="$(ps aux | ag -v '\bag\b' | ag 5900 | awk '{ printf $2" "; for(i=11;i<=NF;++i) printf $i" "; }')"
+  i3-nagbar -t warning -m "There is a different tunnel in place: $MSG"
+  return
+fi
+if [ -z "$(ps aux | ag localhost | ag HOST)" ]; then
+  alacritty -e sh -c 'echo "Creating tunnel" ; ssh -Nf -L 5900:localhost:5900 HOST'
+fi
+vncviewer localhost
+EOF
+  add_desktop_common \
+    'sh /home/igncp/.scripts/quick_vnc_NAME.sh' 'quick_vnc_NAME' 'NAME VNC'
+
 # gui-i3 END

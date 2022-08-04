@@ -75,6 +75,7 @@ if [ -z "$ARM_ARCH" ]; then
       && rm -rf ~/dunst)
   fi
   sed -i 's| history =|#history =|' ~/.config/dunst/dunstrc
+  sed -i 's|max_icon_size =.*|max_icon_size = 32|' ~/.config/dunst/dunstrc
   sed -i 's|font = .*$|font = Monospace 12|' ~/.config/dunst/dunstrc
   sed -i 's|geometry = .*$|geometry = "500x5-30+20"|' ~/.config/dunst/dunstrc
   sed -i '1i(sleep 5s && dunst) &' ~/.xinitrc
@@ -371,5 +372,9 @@ fi
 EOF
 chmod +x ~/.scripts/acpi_warning.sh
 echo '*/4 * * * * /home/igncp/.scripts/acpi_warning.sh' >> /var/spool/cron/igncp
+
+if [ -f ~/project/.config/no-idle-gui ]; then
+  echo "*/5 * * * * sh -c 'DISPLAY=:0 /usr/bin/xscreensaver-command -deactivate'" >> /var/spool/cron/igncp
+fi
 
 # arch-gui END

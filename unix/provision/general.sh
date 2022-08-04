@@ -238,6 +238,9 @@ alias TreeDir='tree -d'
 alias Visudo='sudo env EDITOR=vim visudo'
 alias Xargs='xargs -I{}'
 
+alias CrontabUser='crontab -e'
+alias CrontabRoot='sudo EDITOR=vim crontab -e'
+
 GitAdd() { git add -A $@; git status -u; }
 GitFilesAddedDiff() {
   GitAddAll 2>&1 > /dev/null;
