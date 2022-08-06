@@ -68,6 +68,7 @@ pacman -Syy
 pacman -S --noconfirm grub
 
 # Consider adding USB encryption with './ssldec_*.sh'
+  # - Create the key to use if necessary: `dd bs=512 count=4 if=/dev/random of=usbkey.lek iflag=fullblock`
   # - Encrypt LUKS key: `openssl aes256 -in usbkey.lek -out usbkey.lek.enc`
   # - Copy the `./ssldec_*.sh` files into their respective locations
     # - `cp ./ssldec_hook.sh /lib/initcpio/hooks/ssldec ; cp ./ssldec_install.sh /lib/initcpio/install/ssldec`

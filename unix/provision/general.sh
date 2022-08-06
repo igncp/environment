@@ -217,6 +217,7 @@ SSHGeneratePemPublicKey() { FILE=$1; ssh-keygen -f "$FILE" -e -m pem; }
 alias SSHNoKey='ssh -o PubkeyAuthentication=no'
 SSHGenerateStrongKey() { FILE="$1"; ssh-keygen -t ed25519 -f "$FILE"; }
 SSHRemove192KnowHost() { if [ -z "$1" ]; then (echo "Missing IP num"; exit 1); else sed -i '/192.168.1.'"$1"'/d' ~/.ssh/known_hosts; fi; }
+alias SSHAgent='eval `ssh-agent`'
 alias SSHCopyId='ssh-copy-id -i '
 alias SSHListLocalForwardedPorts='ps x -ww -o pid,command | ag ssh | grep --color=never localhost'
 SSHForwardPortLocal() { ssh -fN -L "$1":localhost:"$1" ${@:2}; } # SSHForwardPort 1234 192.168.1.40
