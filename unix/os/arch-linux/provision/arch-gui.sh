@@ -127,7 +127,10 @@ fi
 # sudo pacman -U ./zoom_x86_64.pkg.tar.xz
 if [ -f ~/project/.config/zoom ]; then install_with_yay zoom; fi
 
-if [ -f ~/project/.config/mysql-workbench ]; then install_system_package mysql-workbench; fi
+if [ -f ~/project/.config/mysql-workbench ]; then
+  install_system_package mysql-workbench
+  install_system_package gnome-keyring
+fi
 
 # desktop magnifier: https://github.com/stuartlangridge/magnus
 install_with_yay magnus

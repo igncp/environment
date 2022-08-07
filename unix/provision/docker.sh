@@ -1,6 +1,8 @@
 # docker START
 
 install_system_package docker
+
+# TODO: option to set up https://github.com/chaifeng/ufw-docker
 install_system_package docker-compose
 
 if [ ! -f ~/.check-files/docker ]; then

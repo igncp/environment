@@ -123,7 +123,7 @@ add_desktop_common() {
   # Other command: google-chrome-stable https://foo.com
 
 add_desktop_common \
-  '/home/igncp/wallpaper-update.sh' 'wallpaper-update' 'Wallpaper Update'
+  '/home/igncp/.scripts/wallpaper_update.sh' 'wallpaper-update' 'Wallpaper Update'
 
 # VNC uses `5900` as the default port
 # But don't open the `5900` port on the server (e.g. with `ufw`)

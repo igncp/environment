@@ -5,15 +5,15 @@ feh --bg-fill "$1"
 cat ~/.fehbg | grep --color=never -o '\/home\/.*jpg' | sed 's|^|Image: |'
 EOF
 chmod +x ~/.set-background.sh
-cat > ~/wallpaper-update.sh <<"EOF"
+cat > ~/.scripts/wallpaper_update.sh <<"EOF"
 if [ -d /home/igncp/.config/variety/Downloaded ]; then
   find /home/igncp/.config/variety/Downloaded/ -type f -name *.jpg | shuf -n 1 | xargs -I {} sh ~/.set-background.sh {}
 fi
 EOF
+chmod +x ~/.scripts/wallpaper_update.sh
 cat >> ~/.shellrc <<"EOF"
 alias WallpaperPrintCurrent="cat ~/.fehbg | grep --color=never -o '\/home\/.*jpg'"
 EOF
-chmod +x ~/wallpaper-update.sh
 
 check_file_exists ~/project/provision/fonts.conf
 mkdir -p ~/.config/fontconfig

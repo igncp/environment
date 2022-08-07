@@ -2,10 +2,10 @@
 
 set -e
 
-mkdir -p /home/igncp/Desktop
+mkdir -p $HOME/Desktop
 
 TIME=$(date '+%Y-%m-%d_%H-%M-%S-%3N')
-TMP_FILE="/home/igncp/Desktop/screenshot.$TIME.png"
+TMP_FILE="$HOME/Desktop/screenshot.$TIME.png"
 
 import -silent "$TMP_FILE"
 

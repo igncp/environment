@@ -75,7 +75,7 @@ sh ~/project/provision/i3blocks.sh
     echo "alias PicomModify='$EDITOR ~/project/provision/picom.conf && cp ~/project/provision/picom.conf ~/.config/picom.conf'" >> ~/.shell_aliases
   fi
 
-echo 'exec /home/igncp/wallpaper-update.sh' >> ~/.config/i3/config
+echo 'exec /home/igncp/.scripts/wallpaper_update.sh' >> ~/.config/i3/config
 
 # I3 needs terminal emulator (e.g. terminator from gui-common) and may require custom fonts (e.g. arch-gui)
 
