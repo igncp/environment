@@ -3,8 +3,8 @@
 set -e
 
 # This script is intended to play a series of videos remotely, for example from
-# a SSH session. It allows more flexibility than a common playlist like
-# automating the audio track or the start time
+# a SSH session. It allows more flexibility than a common playlist, like
+# automating the selection of the audio track number or the start time
 
 # Update:
 # - PATH_TO_FILE
