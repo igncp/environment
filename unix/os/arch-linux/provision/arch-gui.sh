@@ -299,6 +299,7 @@ install_with_yay inxi
 if [ -f ~/project/.config/autokey ]; then
   install_with_yay autokey autokey-run
   install_with_yay autokey-gtk
+  sed -i 's|"date"|"date +%s"|' ~/.config/autokey/data/Sample\ Scripts/Insert\ Date.py
 fi
 
 if [ -f ~/project/provision/i3blocks.sh ]; then
