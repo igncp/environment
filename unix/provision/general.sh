@@ -587,15 +587,11 @@ if [ "$PROVISION_OS" == "LINUX" ]; then
     sudo ufw allow ssh
     sudo ufw --force enable
   fi
+  # sudo ufw default deny outgoing
+  # sudo ufw default deny incoming
   cat >> ~/.shell_aliases <<"EOF"
-  # if server / VM
-    # sudo ufw limit ssh
-  # else-if host
-    # sudo ufw deny ssh
-    # sudo ufw insert 1 limit from LOCAL_IP to any port 22
-    # sudo ufw limit from 10.0.2.2 to any port 22 # for VM
-  # sudo ufw logging medium # /var/log/ufw.log
-  alias UfwStatus='sudo ufw status numbered' # numbered is useful for insert / delete
+alias UfwStatus='sudo ufw status numbered' # numbered is useful for insert / delete
+UFWAllowOutIPPort() { sudo ufw allow out from any to $1 port $2; }
 EOF
   if [ ! -f ~/project/.config/inside ]; then
     if [ -n "$(sudo ufw status | ag '^[0-9]' | ag -v '\b22\b')" ]; then
@@ -643,6 +639,10 @@ if [ ! -f ~/project/.config/inside ]; then
   sudo sed -i -r 's|.?PermitRootLogin.*|PermitRootLogin no|' /etc/ssh/sshd_config
   sudo sed -i -r 's|.?PasswordAuthentication yes|PasswordAuthentication no|' /etc/ssh/sshd_config
   sudo sed -i -r 's|.?PermitEmptyPasswords yes|PermitEmptyPasswords no|' /etc/ssh/sshd_config
+
+  if [ -f ~/.ssh/authorized_keys ]; then sudo chmod 400 ~/.ssh/authorized_keys ; fi
+  if [ -f ~/.ssh/config ]; then sudo chmod 400 ~/.ssh/config ; fi
+
   sudo systemctl restart sshd
 fi
 
