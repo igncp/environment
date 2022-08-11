@@ -214,13 +214,10 @@ VidirFind() { find $@ | vidir -v -; }
 VisudoUser() { sudo env EDITOR=vim visudo -f /etc/sudoers.d/$1; }
 
 SSHGeneratePemPublicKey() { FILE=$1; ssh-keygen -f "$FILE" -e -m pem; }
-alias SSHNoKey='ssh -o PubkeyAuthentication=no'
 SSHGenerateStrongKey() { FILE="$1"; ssh-keygen -t ed25519 -f "$FILE"; }
-SSHRemove192KnowHost() { if [ -z "$1" ]; then (echo "Missing IP num"; exit 1); else sed -i '/192.168.1.'"$1"'/d' ~/.ssh/known_hosts; fi; }
-alias SSHAgent='eval `ssh-agent`'
-alias SSHCopyId='ssh-copy-id -i '
 alias SSHListLocalForwardedPorts='ps x -ww -o pid,command | ag ssh | grep --color=never localhost'
 SSHForwardPortLocal() { ssh -fN -L "$1":localhost:"$1" ${@:2}; } # SSHForwardPort 1234 192.168.1.40
+alias SSHDConfig='sudo sshd -T'
 
 alias AliasesReload='source ~/.shell_aliases'
 alias CleanNCurses='stty sane;clear;'
@@ -590,7 +587,9 @@ if [ "$PROVISION_OS" == "LINUX" ]; then
   # sudo ufw default deny outgoing
   # sudo ufw default deny incoming
   cat >> ~/.shell_aliases <<"EOF"
-alias UfwStatus='sudo ufw status numbered' # numbered is useful for insert / delete
+alias UFWStatus='sudo ufw status numbered' # numbered is useful for insert / delete
+alias UFWLogging='sudo ufw logging on'
+alias UFWDmsg="sudo dmesg | grep '\[UFW'"
 UFWAllowOutIPPort() { sudo ufw allow out from any to $1 port $2; }
 EOF
   if [ ! -f ~/project/.config/inside ]; then

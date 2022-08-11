@@ -380,11 +380,15 @@ if [ -f ~/project/.config/remote ]; then
   install_system_package xdotool
   install_system_package xssstate
 
-  # Example to add in the "custom" section
-  # if [ -n "$(ps aux | grep -v '\bgrep\b' | grep '\bvlc\b' || true)" ]; then
-  #   # Check first that the user has been idle for more than 20 seconds
-  #   echo "*/9 * * * * sh -c '(($(DISPLAY=:0 xssstate -i) > 20000)) && DISPLAY=:0 xdotool mousemove 0 0 && sleep 0.2 && DISPLAY=:0 xdotool mousemove 10 10'" >> /var/spool/cron/
-  # fi
+  if [ -f ~/project/.config/vlc_move_cursor ]; then
+    cat > ~/.scripts/vlc_move_cursor.sh <<"EOF"
+if [ -n "$(ps aux | grep -v '\bgrep\b' | grep '\bvlc\b' || true)" ]; then
+  sh -c '(($(DISPLAY=:0 xssstate -i) > 20000)) && DISPLAY=:0 xdotool mousemove 0 0 && sleep 0.2 && DISPLAY=:0 xdotool mousemove 10 10'
+fi
+EOF
+    chmod +x ~/.scripts/vlc_move_cursor.sh
+    echo "*/9 * * * * /home/igncp/.scripts/vlc_move_cursor.sh" >> /var/spool/cron/igncp
+  fi
 fi
 
 # arch-gui END
