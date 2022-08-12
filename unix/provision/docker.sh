@@ -41,4 +41,8 @@ DockerBashRun() { docker run -it $1 /bin/bash; }
 DockerHistory() { docker history --no-trunc $1 | less -S; }
 EOF
 
+cat >> ~/.vimrc <<"EOF"
+call add(g:coc_global_extensions, 'coc-yaml')
+EOF
+
 # docker END
