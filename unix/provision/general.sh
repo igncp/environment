@@ -23,7 +23,7 @@ get_jobs_prefix() {
   if [ "$JOBS" -eq "0" ]; then echo ""; else echo "$JOBS "; fi
 }
 SSH_PS1_NOTICE_COLOR="$(cat ~/project/.config/ssh-notice-color)"
-if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ] || [ -n "$SSH_CONNECTION" ]; then
   if [ ! -f ~/project/.config/ssh-notice ]; then
     echo "~/project/.config/ssh-notice is missing, using the default"
     SSH_PS1_NOTICE="[SSH] "
@@ -213,6 +213,7 @@ Vidir() { vidir -v -; }
 VidirFind() { find $@ | vidir -v -; }
 VisudoUser() { sudo env EDITOR=vim visudo -f /etc/sudoers.d/$1; }
 
+alias SSHAgent='eval `ssh-agent`'
 SSHGeneratePemPublicKey() { FILE=$1; ssh-keygen -f "$FILE" -e -m pem; }
 SSHGenerateStrongKey() { FILE="$1"; ssh-keygen -t ed25519 -f "$FILE"; }
 alias SSHListLocalForwardedPorts='ps x -ww -o pid,command | ag ssh | grep --color=never localhost'
@@ -225,6 +226,7 @@ alias EditProvision="$EDITOR ~/project/provision/provision.sh && provision.sh"
 alias FDisk='sudo fdisk /dev/sda'
 alias FilterLeaf=$'sort -r | awk \'a!~"^"$0{a=$0;print}\' | sort'
 alias HierarchyManual='man hier'
+alias IPPublic='curl ifconfig.co'
 alias LastColumn="awk '{print "'$NF'"}'"
 alias PathShow='echo $PATH | tr ":" "\n" | sort | uniq | less'
 alias PsTree='pstree -pTUl | less -S'
@@ -650,7 +652,9 @@ if ! type crond > /dev/null 2>&1 ; then
   sudo systemctl enable --now cronie
 fi
 sudo touch /var/spool/cron/igncp
+sudo touch /var/spool/cron/root
 sudo chown igncp /var/spool/cron/igncp
 printf '' > /var/spool/cron/igncp
+sudo sh -c "printf '' > /var/spool/cron/root"
 
 # general END

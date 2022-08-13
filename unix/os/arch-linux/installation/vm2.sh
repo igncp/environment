@@ -45,7 +45,9 @@ cp /root/.vimrc /home/igncp/.vimrc || true
 chown -R igncp:igncp /home/igncp/.vimrc || true
 
 # https://wiki.archlinux.org/title/security#Mount_options
-sudo chmod 700 /boot /etc/iptables
+chmod -R 700 /boot /etc/iptables
+
+echo 'FONT=latarcyrheb-sun32' > /etc/vconsole.conf
 
 cp /root/vm3.sh /home/igncp/
 chown -R igncp:igncp /home/igncp/

@@ -31,6 +31,8 @@ setterm -blength 0
 setfont /usr/share/kbd/consolefonts/ter-132n.psf.gz
 
 # troubleshoot network
+# First, try to set down the network:
+  ip link set $(cat /proc/net/wireless | perl -ne '/(\w+):/ && print $1') down
 rfkill list # if wifi is softblocked, try pressing the airplane key
 
 # connect to internet
