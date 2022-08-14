@@ -583,25 +583,22 @@ if [ "$PROVISION_OS" == "LINUX" ]; then
   # ufw
   install_system_package ufw
   if [[ ! -z $(sudo ufw status | grep inactive) ]]; then
-    sudo ufw allow ssh
     sudo ufw --force enable
   fi
-  # sudo ufw default deny outgoing
-  # sudo ufw default deny incoming
   cat >> ~/.shell_aliases <<"EOF"
 alias UFWStatus='sudo ufw status numbered' # numbered is useful for insert / delete
 alias UFWLogging='sudo ufw logging on'
+alias UFWDelete='sudo ufw status numbered ; sudo ufw --force delete'
 alias UFWDmsg="sudo dmesg | grep '\[UFW'"
 UFWAllowOutIPPort() { sudo ufw allow out from any to $1 port $2; }
+UFWInit() {
+  sudo ufw default deny outgoing; sudo ufw default deny incoming;
+  sudo ufw allow out to any port 80; sudo ufw allow out to any port 443;
+}
 EOF
   if [ ! -f ~/project/.config/inside ]; then
-    if [ -n "$(sudo ufw status | ag '^[0-9]' | ag -v '\b22\b')" ]; then
-      sudo ufw --force reset
-      sudo ufw allow ssh
-      sudo ufw --force enable
-      sudo sh -c 'rm -rf /etc/ufw/before6.rules.* /etc/ufw/before.rules.* /etc/ufw/after.rules.* /etc/ufw/after6.rules.*'
-      sudo sh -c 'rm -rf /etc/ufw/user.rules.* /etc/ufw/user6.rules.*'
-      sudo chmod -R go-rwx /etc/ufw
+    if [ -n "$(sudo systemctl status sshd | grep -F 'active (running) since' || true)" ]; then
+      sudo systemctl stop sshd
     fi
   fi
 fi
@@ -656,5 +653,21 @@ sudo touch /var/spool/cron/root
 sudo chown igncp /var/spool/cron/igncp
 printf '' > /var/spool/cron/igncp
 sudo sh -c "printf '' > /var/spool/cron/root"
+
+# /etc/motd is read by /etc/pam.d/system-login
+sudo rm -rf ~/.scripts/motd_update.sh
+cat > ~/.scripts/motd_update.sh <<"EOF"
+pacman -Sy > /dev/null
+UPDATES="$(pacman -Sup | wc -l)"
+echo "###" > /etc/motd
+echo "Message created in /home/igncp/.scripts/motd_update.sh" >> /etc/motd
+echo "Available pacman updates: $UPDATES" >> /etc/motd
+echo "###" >> /etc/motd
+echo "" >> /etc/motd
+EOF
+sudo chown root:root ~/.scripts/motd_update.sh
+sudo sh -c "echo '*/10 * * * * sh /home/igncp/.scripts/motd_update.sh' >> /var/spool/cron/root"
+sudo touch /etc/motd
+sudo chmod o+r /etc/motd
 
 # general END

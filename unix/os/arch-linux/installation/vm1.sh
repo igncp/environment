@@ -24,6 +24,9 @@ echo -e "g\nn\n1\n\n+1M\nt\n4\nn\n2\n\n\np\nw"| fdisk /dev/sda
 
 read -p "Do you want to continue? (yY) " -n 1 -r; echo ''; if ! [[ $REPLY =~ ^[Yy]$  ]]; then exit; fi
 
+# scp ./unix/os/arch-linux/installation/* root@192.168.1.X:/root/ # from the host
+echo 'syntax off' > /root/.vimrc ; echo 'set mouse-=a' >> /root/.vimrc
+
 # Encryption: https://wiki.archlinux.org/index.php/Dm-crypt/Encrypting_an_entire_system
   cryptsetup -y -v luksFormat /dev/sda3 # For LVM: VG_NAME-LVNAME
   # if want to change the password after: sudo cryptsetup luksChangeKey /dev/mapper/BLOCK_NAME
@@ -52,10 +55,8 @@ mount /dev/sda1 /mnt/boot
 mount /dev/mapper/BLOCK_NAME /mnt/home
 genfstab -U /mnt >> /mnt/etc/fstab
 
+pacman -Sy ; pacman -S archlinux-keyring --noconfirm
 pacstrap /mnt base linux linux-firmware vim perl # downloads ~300 MB (vim needs perl)
-    # If there are issues with certificates, try: `pacman -Sy ; pacman -S archlinux-keyring --noconfirm`
-echo 'syntax off' > /root/.vimrc ; echo 'set mouse-=a' >> /root/.vimrc
-# scp ./unix/os/arch-linux/installation/* root@192.168.1.X:/root/ # from the host
 cp -r /root/* /root/.vimrc /mnt/root/
 
 cat > /mnt/root/init.sh <<"EOF"

@@ -60,6 +60,8 @@ EOF
   # Arch Linux:
     # Update `netctl` profile config to include the IP address
       # DNS=('192.168.1.X')
+    # If inside a VM with a network using the bridge adapter
+      # Update: `/etc/resolv.conf.head` with `nameserver IP_OF_PI_HOLE` (replace by the real IP) which is used by dhcpcd
     # Update upstream DNS for pi-hole in: http://pi-hole-url/admin/settings.php?tab=dns
       # Add logging: https://snippets.khromov.se/enable-logging-of-dns-queries-in-unbound-dns-resolver/
     # To disable pi-hole:

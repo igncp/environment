@@ -185,20 +185,11 @@ install_system_package i7z
 install_system_package cpupower
 install_with_yay cpupower-gui
 
-# /etc/motd is read by /etc/pam.d/system-login
-sudo rm -rf ~/.scripts/motd_update.sh
-cat > ~/.scripts/motd_update.sh <<"EOF"
-pacman -Sy > /dev/null
-UPDATES="$(pacman -Sup | wc -l)"
-echo "###" > /etc/motd
-echo "Message created in /home/igncp/.scripts/motd_update.sh" >> /etc/motd
-echo "Available pacman updates: $UPDATES" >> /etc/motd
-echo "###" >> /etc/motd
-echo "" >> /etc/motd
-EOF
-sudo chown root:root ~/.scripts/motd_update.sh
-sudo sh -c "echo '*/10 * * * * sh /home/igncp/.scripts/motd_update.sh' >> /var/spool/cron/root"
-sudo touch /etc/motd
-sudo chmod o+r /etc/motd
+if [ -f ~/project/.config/tailscale ]; then
+  if [ ! -f ~/.check-files/tailscale ]; then
+    install_system_package tailscale
+    sudo systemctl enable --now tailscale
+  fi
+fi
 
 # arch-beginning END

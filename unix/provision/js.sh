@@ -1,7 +1,10 @@
 # js START
 
-# Dependencies:
+# Optional dependencies:
 # - after: vim-extra.sh
+
+declare -F "install_vim_package" > /dev/null || install_vim_package() { return; }
+declare -F "add_special_vim_map" > /dev/null || add_special_vim_map() { return; }
 
 # don't use asdf if NVM is set up as they can create conflict
 if [ -d "$HOME"/.nvm ]; then

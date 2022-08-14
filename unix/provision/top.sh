@@ -26,7 +26,7 @@ mkdir -p ~/.check-files
 mkdir -p ~/.scripts
 
 if [ ! -f ~/project/.config/theme ]; then
-  echo 'light' > ~/project/.config/theme
+  echo 'dark' > ~/project/.config/theme
 fi
 ENVIRONMENT_THEME="$(cat ~/project/.config/theme)" # light | dark
 PROVISION_OS=''
