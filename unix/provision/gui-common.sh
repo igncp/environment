@@ -97,7 +97,7 @@ if [ ! -f ~/project/.config/common-gui-light ]; then
   install_system_package flameshot # for annotations in images
   install_system_package lxappearance # gnome themes
   install_system_package arandr # xrandr frontend
-  install_system_package tigervnc vncsession # vnc client
+  install_system_package tigervnc vncsession # vnc client and server
 fi
 
 if [ -f ~/project/.config/obs-studio ]; then install_system_package obs-studio obs; fi # for video recording
@@ -133,14 +133,18 @@ add_desktop_common \
 if [ -f ~/project/.config/vnc-server ]; then
   install_system_package x11vnc
   cat >> ~/.shell_aliases <<"EOF"
-VNCServerStart() {
+XVNCServerStart() {
   if [ ! -f ~/project/.config/vnc-xrandr-output ]; then echo "~/project/.config/vnc-xrandr-output missing"; return 1; fi
   if [ ! -f ~/project/.config/vnc-xrandr-mode ]; then echo "~/project/.config/vnc-xrandr-mode missing"; return 1; fi
   systemctl start --user x11vnc.service
   sleep 1
   DISPLAY=:0.0 xrandr --output "$(cat ~/project/.config/vnc-xrandr-output)" --mode "$(cat ~/project/.config/vnc-xrandr-mode)"
 }
-VNCServerStorePassword() { x11vnc -storepasswd; }
+XVNCServerStorePassword() { x11vnc -storepasswd; }
+
+# This server doesn't share the main X11 session
+# To run, for example in display `:3`: vncserver :3 &
+alias VNCServerPassword='vncpasswd'
 EOF
   # Don't enable, just manually start or stop
   # Until reboot, have to: `systemctl --user daemon-reload`
