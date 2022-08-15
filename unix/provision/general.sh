@@ -584,12 +584,13 @@ if [ "$PROVISION_OS" == "LINUX" ]; then
   install_system_package ufw
   if [[ ! -z $(sudo ufw status | grep inactive) ]]; then
     sudo ufw --force enable
+    sudo systemctl enable --now ufw
   fi
   cat >> ~/.shell_aliases <<"EOF"
 alias UFWStatus='sudo ufw status numbered' # numbered is useful for insert / delete
 alias UFWLogging='sudo ufw logging on'
-alias UFWDelete='sudo ufw status numbered ; sudo ufw --force delete'
-alias UFWDmsg="sudo dmesg | grep '\[UFW'"
+UFWDelete() { sudo ufw status numbered ; sudo ufw --force delete $1; sudo ufw status numbered; }
+alias UFWBlocked="sudo journalctl | grep -i ufw | tail -f" # For better findings, can use `grep -v -f /tmp/some_file` with some patterns to ignore
 UFWAllowOutIPPort() { sudo ufw allow out from any to $1 port $2; }
 UFWInit() {
   sudo ufw default deny outgoing; sudo ufw default deny incoming;

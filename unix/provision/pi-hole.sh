@@ -32,12 +32,13 @@ cat >> ~/.shell_aliases <<"EOF"
 alias PiHoleStart='(cd ~/.pi-hole/ && docker compose up -d)'
 alias PiHoleStop='(cd ~/.pi-hole/ && docker compose down)'
 alias PiHoleLogs='(cd ~/.pi-hole/ && docker compose logs -f pihole)'
-PiHoleWhitelistAdd() { cd ~/.pi-hole/ && docker compose exec pihole -w $1; }
-PiHoleWhitelistRemove() { cd ~/.pi-hole/ && docker compose exec pihole -w $1 -d; }
-alias PiHoleWhitelisted='(cd ~/.pi-hole/ && docker compose exec pihole -q .)'
+PiHoleWhitelistAdd() { cd ~/.pi-hole/ && docker compose exec pihole pihole -w $1; }
+PiHoleWhitelistRemove() { cd ~/.pi-hole/ && docker compose exec pihole pihole -w $1 -d; }
+alias PiHoleWhitelisted='(cd ~/.pi-hole/ && docker compose exec pihole pihole -q .)'
 alias PiHolePassword='(cd ~/.pi-hole && docker compose exec pihole pihole -a -p)'
 alias PiHoleRepl='(cd ~/.pi-hole && docker compose exec pihole /bin/bash)'
-alias PiHoleUnboundUpdate=(sudo vim /etc/unbound/unbound.conf)
+alias PiHoleRestartDNS='(cd ~/.pi-hole && docker compose exec pihole pihole restartdns)'
+alias PiHoleUnboundUpdate='(sudo vim /etc/unbound/unbound.conf)'
 PiHoleInit() {
   cd ~/.pi-hole
   if [ -z $(docker compose ps | ag running | ag pihole) ]; then echo 'You have to run docker'; return; fi
@@ -49,11 +50,6 @@ PiHoleInit() {
   sudo systemctl enable --now unbound
   docker compose down
   docker compose up -d
-}
-PiHoleRestardDNS() {
-  cd ~/.pi-hole/
-  sudo vim ./etc-pihole/custom.list && \
-    docker compose exec pihole pihole restartdns
 }
 EOF
 # Clients:
