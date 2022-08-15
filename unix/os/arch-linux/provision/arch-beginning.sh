@@ -189,6 +189,7 @@ if [ -f ~/project/.config/tailscale ]; then
   if [ ! -f ~/.check-files/tailscale ]; then
     install_system_package tailscale
     sudo systemctl enable --now tailscale
+    touch ~/.check-files/tailscale
   fi
 fi
 

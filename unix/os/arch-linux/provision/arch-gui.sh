@@ -189,6 +189,10 @@ if [ -z "$ARM_ARCH" ]; then
   rm -rf ~/.xprofile
   ln -s ~/.xinitrc ~/.xprofile
 
+  if [ ! -f ~/.check-files/lightdm-vnc ]; then
+    echo '[~/.check-files/lightdm-vnc] Set up the vncserver (password and port) in /etc/lightdm/lightdm.conf'
+  fi
+
   install_with_yay google-chrome google-chrome-stable
   echo '' > ~/.config/chrome-flags.conf
   if [ "$ENVIRONMENT_THEME" == "dark" ]; then
