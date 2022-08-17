@@ -41,7 +41,8 @@ SystemdFindReference() { sudo grep -r "$1" /usr/lib/systemd/system/; }
 TOTP() {
   KEY=$(sudo gpg -q -d --pinentry-mode=loopback --no-symkey-cache $1)
   if [ -z "$KEY" ]; then echo "Invalid key"; return; fi
-  oathtool --totp -b "$KEY";
+  VALUE=$(oathtool --totp -b "$KEY");
+  echo "$VALUE" ; echo "$VALUE" | tr -d '\n' | xclip -selection clipboard
 }
 EOF
 

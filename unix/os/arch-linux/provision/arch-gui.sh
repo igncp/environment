@@ -189,10 +189,6 @@ if [ -z "$ARM_ARCH" ]; then
   rm -rf ~/.xprofile
   ln -s ~/.xinitrc ~/.xprofile
 
-  if [ ! -f ~/.check-files/lightdm-vnc ]; then
-    echo '[~/.check-files/lightdm-vnc] Set up the vncserver (password and port) in /etc/lightdm/lightdm.conf'
-  fi
-
   install_with_yay google-chrome google-chrome-stable
   echo '' > ~/.config/chrome-flags.conf
   if [ "$ENVIRONMENT_THEME" == "dark" ]; then
@@ -393,6 +389,32 @@ EOF
     chmod +x ~/.scripts/vlc_move_cursor.sh
     echo "*/9 * * * * /home/igncp/.scripts/vlc_move_cursor.sh" >> /var/spool/cron/igncp
   fi
+fi
+
+if [ -f ~/project/.config/x11-vnc-server-lightdm ]; then
+  install_system_package x11vnc
+  if [ ! -f /etc/x11vnc.pass ]; then echo 'You have to setup `/etc/x11vnc.pass` to run ~/project/.config/x11-vnc-server-lightdm'; fi
+  sudo mkdir /etc/systemd/system/x11vnc.service.d/
+  cat > /tmp/custom.conf <<"EOF"
+[Unit]
+Description=VNC Server for X11
+Requires=graphical.target
+After=graphical.target
+
+[Service]
+ExecStart=
+ExecStart=/usr/local/bin/x11vnc-lightdm
+
+[Install]
+WantedBy=graphical.target
+EOF
+  sudo mv /tmp/custom.conf /etc/systemd/system/x11vnc.service.d/
+  cat > /tmp/custom.conf <<"EOF"
+#!/bin/bash
+/usr/bin/x11vnc -rfbauth /etc/x11vnc.pass -forever -loop -display :0 -auth '/run/lightdm/root/:0'
+EOF
+  sudo mv /tmp/x11vnc-lightdm /usr/local/bin/
+  sudo chmod +x /usr/local/bin/x11vnc-lightdm
 fi
 
 # arch-gui END

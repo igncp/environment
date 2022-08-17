@@ -125,12 +125,10 @@ add_desktop_common() {
 add_desktop_common \
   '/home/igncp/.scripts/wallpaper_update.sh' 'wallpaper-update' 'Wallpaper Update'
 
-# VNC uses `5900` as the default port
-# But don't open the `5900` port on the server (e.g. with `ufw`)
-# Use SSH tunneling from the client instead:
+# This setup requires that the user is already logged in in the main console
+# Use SSH tunneling from the client and don't open the port:
   # `ssh -fN -L 5900:localhost:5900 REMOTE_ADDRESS`
-# Then when using the VNC client, just connect to `127.0.0.1`
-if [ -f ~/project/.config/vnc-server ]; then
+if [ -f ~/project/.config/x11-vnc-server ]; then
   install_system_package x11vnc
   cat >> ~/.shell_aliases <<"EOF"
 XVNCServerStart() {
@@ -141,10 +139,6 @@ XVNCServerStart() {
   DISPLAY=:0.0 xrandr --output "$(cat ~/project/.config/vnc-xrandr-output)" --mode "$(cat ~/project/.config/vnc-xrandr-mode)"
 }
 XVNCServerStorePassword() { x11vnc -storepasswd; }
-
-# This server doesn't share the main X11 session
-# To run, for example in display `:3`: vncserver :3 &
-alias VNCServerPassword='vncpasswd'
 EOF
   # Don't enable, just manually start or stop
   # Until reboot, have to: `systemctl --user daemon-reload`
@@ -160,6 +154,14 @@ RestartSec=2
 
 [Install]
 WantedBy=multi-user.target
+EOF
+  # This server (from tigervnc) opens new sessions, so the operations are not
+  # displayed in the physical device. It can be configured whithin lightdm:
+  # /etc/lightdm/lightdm.conf
+  cat > ~/.config/systemd/user/x11vnc.service <<"EOF"
+# This server doesn't share the main X11 session
+# To run, for example in display `:3`: vncserver :3 &
+alias VNCServerPassword='vncpasswd'
 EOF
 fi
 if [ ! -f ~/project/.config/inside ] && [ -n $(systemctl --user is-active x11vnc.service | grep '\bactive\b' | true) ]; then
