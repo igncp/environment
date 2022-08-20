@@ -38,4 +38,10 @@ EOF
 
 sudo mv /tmp/configuration.yaml ~/.home-assistant/config/configuration.yaml
 
+## CLI
+  # Install as root (using `sudo su`): pip install homeassistant-cli click==7.1.2
+  # Add the `HASS_SERVER` and `HASS_TOKEN` environment variables in `/root/.bashrc`
+  # Run as root so the token is not logged into `journald` (which can be read passwordless by users in the `wheel` group)
+  # Some commands like `info` don't work in newer versions
+
 # arch-home-assistant END

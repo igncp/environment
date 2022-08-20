@@ -28,6 +28,8 @@ alias SystemAnalyzeCriticalChain='systemd-analyze critical-chain'
 alias SystemAnalyzePlot='systemd-analyze plot > /tmp/plot.svg && echo "/tmp/plot.svg generated"'
 alias SystemAnalyzeTimes='systemd-analyze blame'
 
+FACLRemoveGroupForFile() { sudo setfacl -x g:$1 $2 ; }
+
 alias LsBlkNoLoop='lsblk -e7' # Excludes loop devices, which can accumulate when using snaps: https://askubuntu.com/a/1142405
 alias LsInitRAMFS='lsinitcpio /boot/initramfs-linux.img'
 
