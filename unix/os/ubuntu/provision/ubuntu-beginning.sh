@@ -35,6 +35,7 @@ if ! type nvim > /dev/null 2>&1 ; then
   fi
 fi
 cat >> ~/.shellrc <<"EOF"
+export DEBIAN_FRONTEND=noninteractive
 export PATH="$PATH:/home/igncp/nvim/bin"
 EOF
 

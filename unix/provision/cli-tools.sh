@@ -125,4 +125,16 @@ install_system_package graphviz dot
 # - https://github.com/firebase/firebase-tools
 # - https://support.crowdin.com/cli-tool/
 
+# `doctl`
+  # Download the latest release from: https://github.com/digitalocean/doctl/releases/
+  # The `doctl completion zsh` and the ohmyzsh plugin didn't work during tests
+  if type doctl > /dev/null 2>&1 ; then
+    cat >> ~/.shell_aliases <<"EOF"
+# Keep the token encrypted and don't keep the user logged in
+alias DOLogin='doctl auth init'
+alias DOLogout='doctl auth remove --context default'
+alias DODroplets='doctl compute droplet list'
+EOF
+  fi
+
 # cli-tools END

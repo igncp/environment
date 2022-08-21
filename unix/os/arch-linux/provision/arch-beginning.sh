@@ -110,14 +110,6 @@ cat >> ~/.shell_aliases <<"EOF"
 alias GPGPinentryList='pacman -Ql pinentry | grep /usr/bin/'
 EOF
 
-# https://wiki.archlinux.org/title/Google_Authenticator
-if [ -f ~/project/.config/gauth-pam ]; then
-  install_system_package libpam-google-authenticator google-authenticator
-  # - `/etc/pam.d/sshd`: `auth required pam_google_authenticator.so`
-  # - `/etc/ssh/sshd_config`: `KbdInteractiveAuthentication yes`
-  # - `/etc/ssh/sshd_config`: `AuthenticationMethods keyboard-interactive:pam,publickey`
-fi
-
 # Benchmarking
 install_with_yay sysbench
 

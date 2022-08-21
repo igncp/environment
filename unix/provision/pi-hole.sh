@@ -32,9 +32,11 @@ cat >> ~/.shell_aliases <<"EOF"
 alias PiHoleStart='(cd ~/.pi-hole/ && docker compose up -d)'
 alias PiHoleStop='(cd ~/.pi-hole/ && docker compose down)'
 alias PiHoleLogs='(cd ~/.pi-hole/ && docker compose logs -f pihole)'
-PiHoleWhitelistAdd() { cd ~/.pi-hole/ && docker compose exec pihole pihole -w $1; }
-PiHoleWhitelistRemove() { cd ~/.pi-hole/ && docker compose exec pihole pihole -w $1 -d; }
-alias PiHoleWhitelisted='(cd ~/.pi-hole/ && docker compose exec pihole pihole -q .)'
+PiHoleAllowedAdd() { cd ~/.pi-hole/ && docker compose exec pihole pihole -w $1; }
+PiHoleAllowedRemove() { cd ~/.pi-hole/ && docker compose exec pihole pihole -w $1 -d; }
+alias PiHoleAllowedList='(cd ~/.pi-hole/ && docker compose exec pihole pihole -q .)'
+alias PiHoleForbidAdd='(cd ~/.pi-hole/ && docker compose exec pihole pihole -b $1)'
+alias PiHoleForbidAddRegex='(cd ~/.pi-hole/ && docker compose exec pihole pihole --regex $1)' # To include subdomains like `www`: .*\.example.com
 alias PiHolePassword='(cd ~/.pi-hole && docker compose exec pihole pihole -a -p)'
 alias PiHoleRepl='(cd ~/.pi-hole && docker compose exec pihole /bin/bash)'
 alias PiHoleRestartDNS='(cd ~/.pi-hole && docker compose exec pihole pihole restartdns)'
@@ -53,6 +55,8 @@ PiHoleInit() {
 }
 EOF
 # Clients:
+  # Chrome:
+    # Flush DNS cache: `chrome://net-internals/#dns`
   # Arch Linux:
     # Update `netctl` profile config to include the IP address
       # DNS=('192.168.1.X')

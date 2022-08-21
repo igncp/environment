@@ -611,9 +611,11 @@ install_system_package gnupg gpg
 cat >> ~/.shell_aliases <<"EOF"
 alias GPGCreateKey='gpg --full-gen-key'
 alias GPGDecryptSymmetric='gpg --decrypt --no-symkey-cache' # just passphrase
+alias GPGDecryptSymmetricSudo='sudo gpg --decrypt --no-symkey-cache --pinentry-mode=loopback' # just passphrase
 alias GPGDetachSign='gpg --detach-sign --armor'
 alias GPGEditKey='gpg --edit-key' # type `help` for a list of commands
 alias GPGEncryptSymmetric='gpg --armor --symmetric --no-symkey-cache' # just passphrase
+alias GPGEncryptSymmetricSudo='sudo gpg --pinentry-mode=loopback --armor --symmetric --no-symkey-cache' # just passphrase
 alias GPGExportASCIIKey='gpg --export-secret-keys --armor'
 alias GPGExportPublic='gpg --export --armor --export-options export-minimal'
 alias GPGImportKey='gpg --import' # e.g. GPGImportKey public.key
@@ -645,9 +647,13 @@ if [ ! -f ~/project/.config/inside ]; then
   sudo systemctl restart sshd
 fi
 
+# For arch
 if ! type crond > /dev/null 2>&1 ; then
-  install_system_package cronie crond
-  sudo systemctl enable --now cronie
+  # For ubuntu
+  if ! type cron > /dev/null 2>&1 ; then
+    install_system_package cronie crond
+    sudo systemctl enable --now cronie
+  fi
 fi
 sudo touch /var/spool/cron/igncp
 sudo touch /var/spool/cron/root
