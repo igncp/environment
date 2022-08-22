@@ -661,18 +661,11 @@ sudo chown igncp /var/spool/cron/igncp
 printf '' > /var/spool/cron/igncp
 sudo sh -c "printf '' > /var/spool/cron/root"
 
+# @TODO: Check if it is Ubuntu to do this
+  # crontab /var/spool/cron/igncp
+  # sudo crontab /var/spool/cron/root
+
 # /etc/motd is read by /etc/pam.d/system-login
-sudo rm -rf ~/.scripts/motd_update.sh
-cat > ~/.scripts/motd_update.sh <<"EOF"
-pacman -Sy > /dev/null
-UPDATES="$(pacman -Sup | wc -l)"
-echo "###" > /etc/motd
-echo "Message created in /home/igncp/.scripts/motd_update.sh" >> /etc/motd
-echo "Available pacman updates: $UPDATES" >> /etc/motd
-echo "###" >> /etc/motd
-echo "" >> /etc/motd
-EOF
-sudo chown root:root ~/.scripts/motd_update.sh
 sudo sh -c "echo '*/10 * * * * sh /home/igncp/.scripts/motd_update.sh' >> /var/spool/cron/root"
 sudo touch /etc/motd
 sudo chmod o+r /etc/motd

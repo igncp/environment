@@ -188,4 +188,16 @@ if [ -f ~/project/.config/tailscale ]; then
   fi
 fi
 
+sudo rm -rf ~/.scripts/motd_update.sh
+cat > ~/.scripts/motd_update.sh <<"EOF"
+pacman -Sy > /dev/null
+UPDATES="$(pacman -Sup | wc -l)"
+echo "###" > /etc/motd
+echo "Message created in /home/igncp/.scripts/motd_update.sh" >> /etc/motd
+echo "Available pacman updates: $UPDATES" >> /etc/motd
+echo "###" >> /etc/motd
+echo "" >> /etc/motd
+EOF
+sudo chown root:root ~/.scripts/motd_update.sh
+
 # arch-beginning END

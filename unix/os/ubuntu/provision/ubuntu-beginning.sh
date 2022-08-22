@@ -30,6 +30,7 @@ if ! type nvim > /dev/null 2>&1 ; then
   else
     cd /tmp && rm -rf nvim-linux* && wget https://github.com/neovim/neovim/releases/download/v0.6.1/nvim-linux64.tar.gz
     tar -xf ./nvim-linux64.tar.gz
+    rm -rf ~/nvim
     mv nvim-linux64 ~/nvim
     cd ~
   fi
@@ -58,5 +59,15 @@ if [ ! -f ~/.check-files/ubuntu-dev ]; then
   sudo apt-get install -y pkg-config libssl-dev
   touch ~/.check-files/ubuntu-dev
 fi
+
+sudo rm -rf ~/.scripts/motd_update.sh
+cat > ~/.scripts/motd_update.sh <<"EOF"
+echo "###" > /etc/motd
+echo "Message created in /home/igncp/.scripts/motd_update.sh" >> /etc/motd
+echo "Hello!" >> /etc/motd
+echo "###" >> /etc/motd
+echo "" >> /etc/motd
+EOF
+sudo chown root:root ~/.scripts/motd_update.sh
 
 # ubuntu-beginning END

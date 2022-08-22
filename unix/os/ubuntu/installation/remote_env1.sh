@@ -108,10 +108,17 @@ rm -rf ~/.check-files
 bash ~/project/provision/provision.sh
 # Set up the timezone with the bash alias
 
-# @TODO: https://linuxize.com/post/how-to-add-swap-space-on-ubuntu-20-04/
+sudo fallocate -l NUMG /swapfile # **Update NUM with a number of Gb**
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+sudo sh -c "echo '/swapfile none swap sw 0 0' >> /etc/fstab"
 
 # Once finished, delete the environment
+
+# * In the host
 
 # With digital ocean
   doctl compute droplet list | grep -v DROPLET_IMPORTANT | grep DROPLET_NAME | less -S
   doctl compute droplet delete DROPLET_ID
+  doctl auth remove --context default
