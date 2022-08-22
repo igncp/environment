@@ -9,12 +9,25 @@ set -e
 
 # * In the host:
 
+# With digital ocean
+  doctl compute droplet create \
+    --image ubuntu-22-04-x64 \
+    --size ... \
+    --region ... \
+    --volumes ... \
+    --droplet-agent=false \
+    --wait \
+    sample-env
+  # doctl compute size list | less -S
+  # doctl compute region list | less -S
+  # doctl compute volume list | less -S
+
 ssh root@REMOTE_HOSTNAME
 
 # * As `root`:
 
 # To paste commands
-printf '#!/usr/bin/env bash\nset -e\n' > /tmp/script.sh
+printf '#!/usr/bin/env bash\nset -e\n\n' > /tmp/script.sh ; "${EDITOR:-vim}" "+normal G$" +startinsert /tmp/script.sh && sh /tmp/script.sh
 
 ufw allow ssh
 ufw default deny outgoing
@@ -55,12 +68,15 @@ ssh -i ~/.ssh/USEDKEY igncp@REMOTE_HOSTNAME
 
 # * As `igncp`:
 
+sudo rm -rf /tmp/script.sh
+printf '#!/usr/bin/env bash\nset -e\n\n' > /tmp/script.sh ; "${EDITOR:-vim}" "+normal G$" +startinsert /tmp/script.sh && sh /tmp/script.sh
+
 sudo sed -i 's|^PermitRootLogin yes|PermitRootLogin no|' /etc/ssh/sshd_config
 sudo sed -i 's|^PasswordAuthentication yes|PasswordAuthentication no|' /etc/ssh/sshd_config
 
 sudo systemctl restart sshd
 sudo systemctl disable --now snapd ; sudo systemctl disable --now snapd.socket
-sudo apt-get purge -y droplet-agent
+sudo apt-get purge -y droplet-agent || true
 
 # Only the first time setting up the volume
   sudo cryptsetup open /dev/sda1 cryptmain
@@ -73,6 +89,8 @@ sudo apt-get purge -y droplet-agent
   sh /home/igncp/environment/unix/os/ubuntu/installation/remote_env2.sh
   echo 'REMOTE_ENV' > ~/project/.config/ssh-notice
   sudo umount /home/igncp ; sudo cryptsetup close cryptmain
+# If not the first time
+  sudo rm -rf /home/igncp ; sudo mkdir -p /home/igncp ; sudo chown -R igncp:igncp /home/igncp
 
 sudo cryptsetup open /dev/sda1 cryptmain ; sudo mount /dev/mapper/cryptmain /home/igncp
 
@@ -91,3 +109,9 @@ bash ~/project/provision/provision.sh
 # Set up the timezone with the bash alias
 
 # @TODO: https://linuxize.com/post/how-to-add-swap-space-on-ubuntu-20-04/
+
+# Once finished, delete the environment
+
+# With digital ocean
+  doctl compute droplet list | grep -v DROPLET_IMPORTANT | grep DROPLET_NAME | less -S
+  doctl compute droplet delete DROPLET_ID
