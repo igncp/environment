@@ -97,8 +97,9 @@ if [ ! -f ~/project/.config/common-gui-light ]; then
   install_system_package flameshot # for annotations in images
   install_system_package lxappearance # gnome themes
   install_system_package arandr # xrandr frontend
-  install_system_package tigervnc vncsession # vnc client and server
 fi
+
+install_system_package tigervnc vncserver # vnc client and server
 
 if [ -f ~/project/.config/obs-studio ]; then install_system_package obs-studio obs; fi # for video recording
 
@@ -158,13 +159,13 @@ EOF
   # This server (from tigervnc) opens new sessions, so the operations are not
   # displayed in the physical device. It can be configured whithin lightdm:
   # /etc/lightdm/lightdm.conf
-  cat > ~/.config/systemd/user/x11vnc.service <<"EOF"
+  cat > ~/.shell_aliases <<"EOF"
 # This server doesn't share the main X11 session
 # To run, for example in display `:3`: vncserver :3 &
 alias VNCServerPassword='vncpasswd'
 EOF
 fi
-if [ ! -f ~/project/.config/inside ] && [ -n $(systemctl --user is-active x11vnc.service | grep '\bactive\b' | true) ]; then
+if [ ! -f ~/project/.config/inside ] && [ -n "$(systemctl --user is-active x11vnc.service | grep '\bactive\b' || true)" ]; then
   echo 'Stopping VNC server'
   systemctl --user daemon-reload
   systemctl --user stop x11vnc.service
@@ -206,5 +207,14 @@ fi
 install_system_package mesa-utils glxgears
 
 install_system_package acpi
+
+cat >> ~/.shell_aliases <<"EOF"
+BluetoothFixIntel() {
+  # https://unix.stackexchange.com/a/707841
+  sudo rmmod btusb ; sudo rmmod btintel
+  sleep 2
+  sudo modprobe btintel ; sudo modprobe btusb
+}
+EOF
 
 # gui-common END

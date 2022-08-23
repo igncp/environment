@@ -6,6 +6,8 @@ cat >> ~/.shell_aliases <<"EOF"
 alias StartX='startxfce4'
 EOF
 
+echo 'startxfce4' >> ~/.xinitrc
+
 if [ ! -f ~/.check-files/xfce-setup ]; then
   install_system_package xfce4-systemload-plugin
 

@@ -23,7 +23,9 @@ echo 'alias FontsList="fc-list"' >> ~/.shell_aliases
 if [ ! -f ~/.check-files/gui ]; then
   echo "installing gui"
   install_system_package xorg
-  install_system_package xorg-xinit
+  if ! type startx > /dev/null 2>&1 ; then
+    install_system_package xorg-xinit
+  fi
   touch ~/.check-files/gui
 fi
 

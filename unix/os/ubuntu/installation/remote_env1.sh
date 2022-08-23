@@ -86,8 +86,9 @@ sudo apt-get purge -y droplet-agent || true
   sudo rm -rf igncp-tmp/ ; sudo chown -R igncp:igncp igncp/
   mkdir -p ~/project/.config
   # * From host: `rsync -e 'ssh -i ~/.ssh/USEDKEY' -rhv --delete ./ igncp@REMOTE_HOSTNAME:/home/igncp/environment`
-  sh /home/igncp/environment/unix/os/ubuntu/installation/remote_env2.sh
   echo 'REMOTE_ENV' > ~/project/.config/ssh-notice
+  # Opt-in GUI: `touch ~/project/.config/gui-install`
+  sh /home/igncp/environment/unix/os/ubuntu/installation/remote_env2.sh
   sudo umount /home/igncp ; sudo cryptsetup close cryptmain
 # If not the first time
   sudo rm -rf /home/igncp ; sudo mkdir -p /home/igncp ; sudo chown -R igncp:igncp /home/igncp

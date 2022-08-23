@@ -40,6 +40,8 @@ fi
 # backups with GUI (timeshift-gtk)
 if [ -f ~/project/.config/timeshift ]; then install_with_yay timeshift; fi
 
+if [ -f ~/project/.config/diffpdf ]; then install_with_yay diffpdf; fi
+
 if [ -f ~/project/.config/copyq ]; then
   install_system_package copyq
   # https://copyq.readthedocs.io/en/latest/faq.html#how-to-omit-storing-text-copied-from-specific-windows-like-a-password-manager
