@@ -29,8 +29,8 @@ if [ -f ~/project/.config/gui-install ]; then
   cat environment/unix/provision/gui-base.sh >> ~/project/provision/provision.sh
   cat environment/unix/os/ubuntu/provision/ubuntu-gui.sh >> ~/project/provision/provision.sh
   cat environment/unix/provision/gui-common.sh >> ~/project/provision/provision.sh
-  cat environment/unix/provision/xfce.sh >> ~/project/provision/provision.sh
-  cp environment/unix/config-files/alacritty ~/project/provision/alacritty.yml
+  cat environment/unix/provision/gui-xfce.sh >> ~/project/provision/provision.sh
+  cp environment/unix/config-files/alacritty.yml ~/project/provision/alacritty.yml
   cp environment/unix/config-files/fonts.conf ~/project/provision/
   cp environment/unix/config-files/rime-config.yaml ~/project/provision/
   touch ~/project/.config/common-gui-light

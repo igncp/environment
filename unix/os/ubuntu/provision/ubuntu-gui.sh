@@ -85,8 +85,13 @@ if [ -f ~/project/.config/headless-xorg ]; then
   if [ -n "$(sudo systemctl is-active lightdm | grep '\bactive\b' || true)" ]; then
     sudo systemctl disable --now lightdm
   fi
-  if [ -n "$(groups | grep '\btty\b' || true)" ]; then sudo usermod -a -G tty igncp; fi
-  if [ -n "$(groups | grep '\bvideo\b' || true)" ]; then sudo usermod -a -G video igncp; fi
+  if [ -z "$(groups | grep '\btty\b' || true)" ]; then sudo usermod -a -G tty igncp; fi
+  if [ -z "$(groups | grep '\bvideo\b' || true)" ]; then sudo usermod -a -G video igncp; fi
+  if [ ! ~/.check-files/headless-driver ]; then
+    sudo apt-get install -y xserver-xorg-video-dummy
+    sudo apt-get install -y xdg-utils # Required for browser
+    touch ~/.check-files/headless-driver
+  fi
   cat > /tmp/10-headless.conf <<"EOF"
 Section "Monitor"
         Identifier "dummy_monitor"
@@ -118,5 +123,7 @@ EOF
   echo 'alias HeadlessStart="startx"' >> ~/.shell_aliases
   echo 'alias HeadlessXRandr="DISPLAY=:0 xrandr --output DUMMY0 --mode 1920x1080"' >> ~/.shell_aliases
 fi
+
+# @TODO: Automate installing firefox (no snap): https://www.omgubuntu.co.uk/2022/04/how-to-install-firefox-deb-apt-ubuntu-22-04
 
 # ubuntu-gui END

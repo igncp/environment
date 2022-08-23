@@ -20,8 +20,8 @@ endfunction
 let g:coc_global_extensions = []
 nnoremap <silent> K :call CocAction('doHover')<CR>
 
-inoremap <expr> <c-j> pumvisible() ? "<C-n>" :"j"
-inoremap <expr> <c-k> pumvisible() ? "<C-p>" : "k"
+inoremap <silent><expr> <C-j> coc#pum#visible() ? coc#pum#next(1) : "\<C-j>"
+inoremap <silent><expr> <C-k> coc#pum#visible() ? coc#pum#prev(1) : "\<C-k>"
 
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
@@ -60,6 +60,7 @@ EOF
 
 cat >> ~/.vim/colors.vim <<"EOF"
 highlight CocErrorFloat ctermfg=black
+highlight CocMenuSel ctermbg=white
 highlight CocFloating ctermbg=lightcyan
 highlight CocInfoFloat ctermfg=black
 highlight CocWarningFloat ctermfg=black

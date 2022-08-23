@@ -29,15 +29,17 @@ ssh root@REMOTE_HOSTNAME
 # To paste commands
 printf '#!/usr/bin/env bash\nset -e\n\n' > /tmp/script.sh ; "${EDITOR:-vim}" "+normal G$" +startinsert /tmp/script.sh && sh /tmp/script.sh
 
-ufw allow ssh
+ufw allow ssh # @TODO: Use a non-default port
 ufw default deny outgoing
 ufw default deny incoming
 ufw allow out to any port 80
 ufw allow out to any port 443
 ufw allow out to any port 53
-ufw enable
+ufw --force enable
 
 echo 'umask 0077' >> /etc/profile
+
+# @TODO: Automate TOTP with `libpam-google-authenticator`
 
 # If it is using a fresh volume, set it up first
   cfdisk /dev/sda # Create the `/dev/sda1` partition (and others if necessary)
@@ -54,8 +56,8 @@ useradd -m init ; echo 'Password for init' ; passwd init
 
 echo 'cryptsetup open /dev/sda1 cryptmain ; mount /dev/mapper/cryptmain /home/igncp' > /home/init/init.sh
 chmod 701 /home/init/init.sh ; chown root:root /home/init/init.sh
-echo 'init ALL=NOPASSWD:/home/init/init.sh' >> /etc/sudoers
-echo 'init ALL=NOPASSWD:/usr/sbin/reboot' >> /etc/sudoers
+echo 'init ALL=(ALL) /home/init/init.sh' >> /etc/sudoers
+echo 'init ALL=(ALL) /usr/sbin/reboot' >> /etc/sudoers
 
 chsh igncp -s /usr/bin/bash ; chsh init -s /usr/bin/bash
 

@@ -159,16 +159,11 @@ EOF
   # This server (from tigervnc) opens new sessions, so the operations are not
   # displayed in the physical device. It can be configured whithin lightdm:
   # /etc/lightdm/lightdm.conf
-  cat > ~/.shell_aliases <<"EOF"
+  cat >> ~/.shell_aliases <<"EOF"
 # This server doesn't share the main X11 session
 # To run, for example in display `:3`: vncserver :3 &
 alias VNCServerPassword='vncpasswd'
 EOF
-fi
-if [ ! -f ~/project/.config/inside ] && [ -n "$(systemctl --user is-active x11vnc.service | grep '\bactive\b' || true)" ]; then
-  echo 'Stopping VNC server'
-  systemctl --user daemon-reload
-  systemctl --user stop x11vnc.service
 fi
 
 # Bluetooth headphones command and rofi script
