@@ -20,6 +20,8 @@ EOF
 echo 'killall pa-applet || true' >> ~/.scripts/gui_daemons.sh
 echo '/usr/bin/pa-applet &' >> ~/.scripts/gui_daemons.sh
 
+install_system_package gvim # Adds support to clipboard to vim
+
 # bluetooth
 # for dual boot:
     # - Copy the key in /var/lib/bluetooth/MAC/DEVICE_MAC/info

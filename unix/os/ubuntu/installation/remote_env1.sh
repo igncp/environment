@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 set -e
+
 # set -x # Uncomment for debugging
 
 # Create the environment
@@ -15,6 +16,7 @@ set -e
     --size ... \
     --region ... \
     --volumes ... \
+    --ssh-keys ... \
     --droplet-agent=false \
     --wait \
     sample-env
@@ -29,7 +31,15 @@ ssh root@REMOTE_HOSTNAME
 # To paste commands
 printf '#!/usr/bin/env bash\nset -e\n\n' > /tmp/script.sh ; "${EDITOR:-vim}" "+normal G$" +startinsert /tmp/script.sh && sh /tmp/script.sh
 
-ufw allow ssh # @TODO: Use a non-default port
+# **Important** Replace `PORT` with a custom port
+# Remember to allow the port in the local machine too
+sudo sed -i 's|#Port .*|Port PORT|' /etc/ssh/sshd_config
+ufw allow in from any port PORT comment 'SSH port'
+# ---
+
+sudo sed -i 's|^PasswordAuthentication no|PasswordAuthentication yes|' /etc/ssh/sshd_config
+systemctl restart sshd
+
 ufw default deny outgoing
 ufw default deny incoming
 ufw allow out to any port 80
@@ -58,15 +68,15 @@ echo 'cryptsetup open /dev/sda1 cryptmain ; mount /dev/mapper/cryptmain /home/ig
 chmod 701 /home/init/init.sh ; chown root:root /home/init/init.sh
 echo 'init ALL=(ALL) /home/init/init.sh' >> /etc/sudoers
 echo 'init ALL=(ALL) /usr/sbin/reboot' >> /etc/sudoers
+cp -r /root/.ssh /home/igncp/.ssh ; chown -R igncp:igncp /home/igncp/
+cp -r /root/.ssh /home/init/.ssh ; chown -R init:init /home/init
 
 chsh igncp -s /usr/bin/bash ; chsh init -s /usr/bin/bash
 
 # * In the host:
 
-# Use a key with a passphrase
-ssh-copy-id -i ~/.ssh/USEDKEY igncp@REMOTE_HOSTNAME
-ssh-copy-id -i ~/.ssh/USEDKEY init@REMOTE_HOSTNAME
-ssh -i ~/.ssh/USEDKEY igncp@REMOTE_HOSTNAME
+sudo vim ~/.ssh/config
+ssh REMOTE_HOSTNAME
 
 # * As `igncp`:
 
