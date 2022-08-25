@@ -189,6 +189,7 @@ alias r="ranger"
 alias rm="rm -rf"
 alias tree="tree -a"
 
+alias Lsblk="lsblk -f | less -S"
 Diff() { diff --color=always "$@" | less -r; }
 DisplayFilesConcatenated(){ xargs tail -n +1 | sed "s|==>|\n\n\n\n\n$1==>|; s|<==|<==\n|" | $EDITOR -; }
 FileSizeCreate() { head -c "$1" /dev/urandom > "$2"; } # For example: FileSizeCreate 1GB /tmp/foo

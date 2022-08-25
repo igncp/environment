@@ -16,11 +16,10 @@ const items = [
   ["ts", "unix/provision/ts.sh"],
   ["gui-base", "unix/provision/gui-base.sh"],
   ["gui-common", "unix/provision/gui-common.sh"],
-  ["gui-i3", "unix/provision/gui-i3.sh"],
-  ["android", "unix/provision/android.sh"],
+  ["gui-xfce", "unix/provision/gui-xfce.sh"],
+  ["ubuntu-gui", "unix/os/ubuntu/provision/ubuntu-gui.sh"],
   ["cli-tools", "unix/provision/cli-tools.sh"],
   ["docker", "unix/provision/docker.sh"],
-  ["vscode", "unix/provision/vscode.sh"],
   // ...
 ];
 

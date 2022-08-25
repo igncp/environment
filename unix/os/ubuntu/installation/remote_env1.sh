@@ -24,7 +24,10 @@ set -e
   # doctl compute region list | less -S
   # doctl compute volume list | less -S
 
-ssh root@REMOTE_HOSTNAME
+# ------------
+# ------------
+
+ssh -p 22 root@REMOTE_HOSTNAME
 
 # * As `root`:
 
@@ -34,11 +37,9 @@ printf '#!/usr/bin/env bash\nset -e\n\n' > /tmp/script.sh ; "${EDITOR:-vim}" "+n
 # **Important** Replace `PORT` with a custom port
 # Remember to allow the port in the local machine too
 sudo sed -i 's|#Port .*|Port PORT|' /etc/ssh/sshd_config
-ufw allow in from any port PORT comment 'SSH port'
+ufw allow in from any to any port PORT comment 'SSH port'
+sudo systemctl restart sshd
 # ---
-
-sudo sed -i 's|^PasswordAuthentication no|PasswordAuthentication yes|' /etc/ssh/sshd_config
-systemctl restart sshd
 
 ufw default deny outgoing
 ufw default deny incoming
@@ -50,6 +51,9 @@ ufw --force enable
 echo 'umask 0077' >> /etc/profile
 
 # @TODO: Automate TOTP with `libpam-google-authenticator`
+# https://gist.github.com/troyfontaine/926ed27a4fe1c17507fd
+apt-get update
+apt-get install -y libpam-google-authenticator
 
 # If it is using a fresh volume, set it up first
   cfdisk /dev/sda # Create the `/dev/sda1` partition (and others if necessary)
@@ -72,6 +76,9 @@ cp -r /root/.ssh /home/igncp/.ssh ; chown -R igncp:igncp /home/igncp/
 cp -r /root/.ssh /home/init/.ssh ; chown -R init:init /home/init
 
 chsh igncp -s /usr/bin/bash ; chsh init -s /usr/bin/bash
+
+# https://www.computernetworkingnotes.com/linux-tutorials/how-to-disable-local-login-in-linux.html
+# touch /etc/nologin # @TODO
 
 # * In the host:
 
@@ -126,6 +133,16 @@ sudo chmod 600 /swapfile
 sudo mkswap /swapfile
 sudo swapon /swapfile
 sudo sh -c "echo '/swapfile none swap sw 0 0' >> /etc/fstab"
+
+sudo chsh igncp -s /usr/bin/zsh
+
+# This should be a temporal fix until there is more space in the volume
+sudo mkdir /external ; mkdir /home/igncp/external ; sudo chown -R igncp:igncp /external
+sudo mount --bind /external /home/igncp/external
+yarn config set cache-folder /home/igncp/external/yarn
+
+# ------------
+# ------------
 
 # Once finished, delete the environment
 
