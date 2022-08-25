@@ -111,4 +111,11 @@ fi
   #   add_desktop_common \
   #     'sh /home/igncp/.scripts/quick_vnc_NAME.sh' 'quick_vnc_NAME' 'NAME VNC'
 
+# Copy SSH remote clipboard into the guest one (replace HOST)
+  # cat > ~/.scripts/ssh_clipboard.sh <<"EOF"
+  # alacritty -e sh -c 'ssh HOST "DISPLAY=:0 xclip -o -selection c" > /tmp/clip ; copyq copy "$(cat /tmp/clip)" ; rm /tmp/clip'
+  # EOF
+  # chmod +x ~/.scripts/ssh_clipboard.sh
+  # echo 'bindsym $mod+p exec "sh ~/.scripts/ssh_clipboard.sh"' >> ~/.config/i3/config
+
 # gui-i3 END

@@ -44,26 +44,6 @@ if [ -f ~/project/.config/timeshift ]; then install_with_yay timeshift; fi
 
 if [ -f ~/project/.config/diffpdf ]; then install_with_yay diffpdf; fi
 
-if [ -f ~/project/.config/copyq ]; then
-  install_system_package copyq
-  # https://copyq.readthedocs.io/en/latest/faq.html#how-to-omit-storing-text-copied-from-specific-windows-like-a-password-manager
-    # Create two items, one for the password manager and one for Entry
-    # Click: "Show Advance", then click "Advanced" tab and put text on "Window" input (instead of "Password")
-    if [ ! -f "$HOME"/.check-files/copyq-passwords ]; then
-      echo '[~/.check-files/copyq-passwords]: Add and test command to filter out copied passwords and remove this message'
-    fi
-  sed -i '1i(sleep 10s && copyq 2>&1 > /dev/null) &' ~/.xinitrc
-  cat >> ~/.shell_aliases <<"EOF"
-CopyQReadN() {
-  for i in {0..$1}; do
-    echo "$i"
-    copyq read "$i"
-    echo ""; echo ""
-  done
-}
-EOF
-fi
-
 if [ -z "$ARM_ARCH" ]; then
   if ! type dunst > /dev/null 2>&1 ; then
     echo "Installing Dunst"
@@ -420,5 +400,7 @@ EOF
   sudo mv /tmp/x11vnc-lightdm /usr/local/bin/
   sudo chmod +x /usr/local/bin/x11vnc-lightdm
 fi
+
+install_system_package xsel
 
 # arch-gui END

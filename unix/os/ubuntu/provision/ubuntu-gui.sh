@@ -87,7 +87,7 @@ if [ -f ~/project/.config/headless-xorg ]; then
   fi
   if [ -z "$(groups | grep '\btty\b' || true)" ]; then sudo usermod -a -G tty igncp; fi
   if [ -z "$(groups | grep '\bvideo\b' || true)" ]; then sudo usermod -a -G video igncp; fi
-  if [ ! ~/.check-files/headless-driver ]; then
+  if [ ! -f ~/.check-files/headless-driver ]; then
     sudo apt-get install -y xserver-xorg-video-dummy
     sudo apt-get install -y xdg-utils # Required for browser
     touch ~/.check-files/headless-driver
@@ -121,7 +121,7 @@ needs_root_rights = yes
 EOF
   sudo mv /tmp/Xwrapper.config  /etc/X11/
   echo 'alias HeadlessStart="startx"' >> ~/.shell_aliases
-  echo 'alias HeadlessXRandr="DISPLAY=:0 xrandr --output DUMMY0 --mode 1920x1080"' >> ~/.shell_aliases
+  echo 'alias HeadlessXRandr="DISPLAY=:0 xrandr --output default --mode 1920x1080"' >> ~/.shell_aliases
 fi
 
 # @TODO: Automate installing firefox (no snap): https://www.omgubuntu.co.uk/2022/04/how-to-install-firefox-deb-apt-ubuntu-22-04

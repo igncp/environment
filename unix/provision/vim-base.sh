@@ -476,7 +476,7 @@ EOF
 
 cp ~/.vimrc ~/.base-vimrc
 
-# https://static.wikia.nocookie.net/vim/images/1/16/Xterm-color-table.png
+# https://upload.wikimedia.org/wikipedia/commons/1/15/Xterm_256color_chart.svg
 update_vim_colors_theme() {
   sed -i '/syntax off/d' ~/.vimrc
   if [ "$ENVIRONMENT_THEME" == 'light' ]; then return; fi

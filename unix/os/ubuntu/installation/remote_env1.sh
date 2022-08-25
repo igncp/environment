@@ -77,8 +77,14 @@ cp -r /root/.ssh /home/init/.ssh ; chown -R init:init /home/init
 
 chsh igncp -s /usr/bin/bash ; chsh init -s /usr/bin/bash
 
-# https://www.computernetworkingnotes.com/linux-tutorials/how-to-disable-local-login-in-linux.html
-# touch /etc/nologin # @TODO
+# Disable TTYs so the server can't be easily accessed from a physical terminal
+# If something goes wrong in the environment and can't login via SSH, will have
+# to create a new one
+sed 's|#NAutoVTs=.*|NAutoVTs=0|' -i /etc/systemd/logind.conf
+sed 's|#ReserveVT=.*|ReserveVT=0|' -i /etc/systemd/logind.conf
+systemctl disable --now getty@tty1.service
+systemctl restart systemd-logind.service
+systemctl stop "getty@tty*.service"
 
 # * In the host:
 

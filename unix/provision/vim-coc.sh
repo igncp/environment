@@ -75,8 +75,7 @@ EOF
 
 cat > "$HOME"/.vim/coc-settings.json <<"EOF"
 {
-  "coc.preferences.colorSupport": false,
-  "coc.preferences.enableFloatHighlight": false,
+  "suggest.noselect": true,
   "coc.preferences.jumpCommand": "tab drop",
   "diagnostic.enableHighlightLineNumber": false,
   "diagnostic.errorSign": "E",
