@@ -126,7 +126,7 @@ if [ ! -f ~/.check-files/hp-printer ]; then
   sudo pacman -S --noconfirm nss-mdns
   sudo sed -i '/^hosts:/ s|myhostname resolve|myhostname mdns_minimal [NOTFOUND=return] resolve|' /etc/nsswitch.conf
   # sudo lpinfo -v # Confirm that the printer is found over network
-  sudo sed -i '/SystemGroup sys root wheel$/ s|$| igncp|' /etc/cups/cups-files.conf; sudo systemctl restart cups
+  sudo sed -i '/SystemGroup sys root wheel$/ s|$| '"$USER"'|' /etc/cups/cups-files.conf; sudo systemctl restart cups
   # - Open the CUPS web interface in `http://localhost:631`
     # - Click `Administration > Add new printer` At this point, in the options it show the printer discovered
     # - Choose the first one discovered, the one with `dnssd` in the url protocol

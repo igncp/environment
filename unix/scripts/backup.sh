@@ -23,7 +23,7 @@ rsync -rh --delete ~/project/ "$BACKUP_PATH/project"
 # +++
 
 mkdir -p ~/backups/
-sudo chown -R igncp "$BACKUP_PATH"
+sudo chown -R $USER "$BACKUP_PATH"
 rm -rf "$BACKUP_PATH/$BACKUP_FILE"
 rm -rf ~/backups/"$BACKUP_FILE"
 echo "Input password for zip file"

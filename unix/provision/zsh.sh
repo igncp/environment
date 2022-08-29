@@ -140,7 +140,7 @@ alias ProvisionUpdate='node ~/project/provision/updateProvision.js; print -S "# 
 zstyle ':completion:*' completer _expand_alias _complete _ignored
 EOF
 if [ "$PROVISION_OS" == "LINUX" ]; then
-  echo 'eval "$(dircolors /home/igncp/.dircolors)"' >> ~/.zshrc
+  echo 'eval "$(dircolors /home/'"$USER"'/.dircolors)"' >> ~/.zshrc
 fi
 
 install_omzsh_plugin zsh-users/zsh-syntax-highlighting

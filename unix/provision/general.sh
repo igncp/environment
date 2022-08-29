@@ -527,7 +527,7 @@ ProvisionCommitRepo() {
 alias ProvisionGetDiff='node $HOME/project/provision/updateProvision.js && sh /tmp/diff_provision.sh'
 ProvisionListPossibleConfig() {
   cat ~/project/provision/provision.sh | ag 'project\/\.config\/[-.a-zA-Z0-9]*' -o \
-    | sed 's|^|/home/igncp/|' | sort | uniq > /tmp/config_all;
+    | sed 's|^|'"$HOME"'|' | sort | uniq > /tmp/config_all;
   mkdir -p ~/project/.config; find ~/project/.config -type f | sort > /tmp/config_used
   echo "# Used" > /tmp/config_printed ; cat /tmp/config_used >> /tmp/config_printed ; printf '\n\n' >> /tmp/config_printed
   echo "# Not used" >> /tmp/config_printed; comm -23 /tmp/config_all /tmp/config_used >> /tmp/config_printed
@@ -656,18 +656,18 @@ if ! type crond > /dev/null 2>&1 ; then
     sudo systemctl enable --now cronie
   fi
 fi
-sudo touch /var/spool/cron/igncp
+sudo touch /var/spool/cron/"$USER"
 sudo touch /var/spool/cron/root
-sudo chown igncp /var/spool/cron/igncp
-printf '' > /var/spool/cron/igncp
+sudo chown "$USER" /var/spool/cron/"$USER"
+printf '' > /var/spool/cron/"$USER"
 sudo sh -c "printf '' > /var/spool/cron/root"
 
 # @TODO: Check if it is Ubuntu to do this
-  # crontab /var/spool/cron/igncp
+  # crontab /var/spool/cron/"$USER"
   # sudo crontab /var/spool/cron/root
 
 # /etc/motd is read by /etc/pam.d/system-login
-sudo sh -c "echo '*/10 * * * * sh /home/igncp/.scripts/motd_update.sh' >> /var/spool/cron/root"
+sudo sh -c "echo '*/10 * * * * sh /home/$USER/.scripts/motd_update.sh' >> /var/spool/cron/root"
 sudo touch /etc/motd
 sudo chmod o+r /etc/motd
 

@@ -19,7 +19,7 @@ EOF
 cat >> ~/.shell_aliases <<"EOF"
 EOF
 
-cat >> ~/.vimrc <<"EOF"
+cat > /tmp/.vimrc <<"EOF"
 function! SetupEnvironment()
   let l:path = expand('%:p')
   if l:path =~ '/home/igncp/foo/bar'
@@ -32,6 +32,8 @@ function! SetupEnvironment()
 endfunction
 autocmd! BufReadPost,BufNewFile * call SetupEnvironment()
 EOF
+sed -i 's|/home/igncp|'"$HOME"'|' /tmp/.vimrc
+cat /tmp/.vimrc >> ~/.vimrc ; rm -rf /tmp/.vimrc
 
 cat >> ~/.bashrc <<"EOF"
 if [ ! -f "$HOME"/.check-files/vpn-info ]; then

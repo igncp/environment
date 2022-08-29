@@ -5,8 +5,8 @@
 set -e
 # set -o xtrace # displays commands, helpful for debugging errors
 
-if [ -z "$(whoami | grep igncp || true)" ]; then
-  echo 'You should run this command as the igncp user'
+if [ -n "$(whoami | grep root || true)" ]; then
+  echo 'You should not be run as root'
   exit 1
 fi
 

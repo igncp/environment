@@ -4,7 +4,7 @@
 # And replace the env vars
 
 # The key file ideally should have root ownership. To copy it over the network can use:
-# `ssh user@host -t "sudo cat ~/usbkey.lek.asc" | grep -v 'password for' | sudo tee /home/igncp/usbkey.lek.asc > /dev/null`
+# `ssh user@host -t "sudo cat ~/usbkey.lek.asc" | grep -v 'password for' | sudo tee $HOME/usbkey.lek.asc > /dev/null`
 # Will have to enter the sudo password after connecting, even if there is no prompt
 
 set -e
