@@ -134,4 +134,32 @@ if [ -f ~/project/.config/gauth-pam ]; then
   # - `/etc/ssh/sshd_config`: `AuthenticationMethods keyboard-interactive:pam,publickey`
 fi
 
+# For arch
+if ! type crond > /dev/null 2>&1 ; then
+  # For ubuntu
+  if ! type cron > /dev/null 2>&1 ; then
+    install_system_package cronie crond
+    sudo systemctl enable --now cronie
+  fi
+fi
+sudo touch /var/spool/cron/"$USER"
+sudo touch /var/spool/cron/root
+sudo chown "$USER" /var/spool/cron/"$USER"
+printf '' > /var/spool/cron/"$USER"
+sudo sh -c "printf '' > /var/spool/cron/root"
+
+# @TODO: Check if it is Ubuntu to do this
+  # crontab /var/spool/cron/"$USER"
+  # sudo crontab /var/spool/cron/root
+
+# /etc/motd is read by /etc/pam.d/system-login
+sudo sh -c "echo '*/10 * * * * sh /home/$USER/.scripts/motd_update.sh' >> /var/spool/cron/root"
+sudo touch /etc/motd
+sudo chmod o+r /etc/motd
+
+mkdir -p ~/.gnupg
+cat > ~/.gnupg/gpg-agent.conf <<"EOF"
+pinentry-program /usr/bin/pinentry-tty
+EOF
+
 # linux END

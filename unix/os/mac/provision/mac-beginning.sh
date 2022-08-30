@@ -29,6 +29,8 @@ if [ ! -f ~/.check-files/coreutils ]; then
 fi
 
 cat >> ~/.shellrc <<"EOF"
+umask 027
+
 eval "$(/opt/homebrew/bin/brew shellenv)"
 export PATH="/opt/homebrew/opt/gnu-sed/libexec/gnubin:$PATH"
 export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
@@ -43,6 +45,13 @@ cat >> ~/.zshrc <<"EOF"
 # For chinese characters
 export LANG="en_US.UTF-8"
 export LC_ALL=en_US.utf-8
+EOF
+
+install_system_package pinentry pinentry-tty
+
+mkdir -p ~/.gnupg
+cat > ~/.gnupg/gpg-agent.conf <<"EOF"
+pinentry-program /opt/homebrew/bin/pinentry-tty
 EOF
 
 # mac-beginning END

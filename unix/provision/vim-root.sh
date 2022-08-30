@@ -1,10 +1,8 @@
 # vim-root START
 
+# This can be different in MacOS
+ROOT_HOME=$(eval echo "~root")
 echo '" # This file was generated from ~/project/provision/provision.sh' > /tmp/.vimrc
-sudo mv /tmp/.vimrc /root/.vimrc
-
-sudo cp /root/.vimrc /tmp/.vimrc
-sudo chown igncp /tmp/.vimrc
 cat >> /tmp/.vimrc <<"EOF"
 syntax off
 set number
@@ -17,6 +15,6 @@ nnoremap Q @q
 nnoremap r gt
 nnoremap R gT
 EOF
-sudo mv /tmp/.vimrc /root/.vimrc
+sudo mv /tmp/.vimrc "$ROOT_HOME"/.vimrc
 
 # vim-root END

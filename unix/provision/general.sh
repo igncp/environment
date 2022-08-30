@@ -598,11 +598,6 @@ UFWInit() {
   sudo ufw allow out to any port 80; sudo ufw allow out to any port 443;
 }
 EOF
-  if [ ! -f ~/project/.config/inside ]; then
-    if [ -n "$(sudo systemctl status sshd | grep -F 'active (running) since' || true)" ]; then
-      sudo systemctl stop sshd
-    fi
-  fi
 fi
 
 # GnuPG https://wiki.archlinux.org/title/GnuPG
@@ -628,11 +623,6 @@ alias GPGSignature='gpg --clearsign'
 alias GPGVerify='gpg --verify'
 EOF
 
-mkdir -p ~/.gnupg
-cat > ~/.gnupg/gpg-agent.conf <<"EOF"
-pinentry-program /usr/bin/pinentry-tty
-EOF
-
 cat >> ~/.shell_aliases <<"EOF"
 MsgFmtPo() { FILE_NO_EXT="$(echo $1 | sed 's|.po$||')" ; msgfmt -o "$1".mo "$1".po ; }
 EOF
@@ -645,30 +635,17 @@ if [ ! -f ~/project/.config/inside ]; then
   if [ -f ~/.ssh/authorized_keys ]; then sudo chmod 400 ~/.ssh/authorized_keys ; fi
   if [ -f ~/.ssh/config ]; then sudo chmod 400 ~/.ssh/config ; fi
 
-  sudo systemctl restart sshd
-fi
-
-# For arch
-if ! type crond > /dev/null 2>&1 ; then
-  # For ubuntu
-  if ! type cron > /dev/null 2>&1 ; then
-    install_system_package cronie crond
-    sudo systemctl enable --now cronie
+  if [ ! -f /tmp/restarted_sshd ]; then
+    echo "Restarting sshd"
+    if [ "$PROVISION_OS" == "MAC" ]; then
+      sudo launchctl stop com.openssh.sshd
+    else
+      sudo systemctl restart sshd
+    fi
+    touch /tmp/restarted_sshd
   fi
+else
+  rm -rf /tmp/restarted_sshd
 fi
-sudo touch /var/spool/cron/"$USER"
-sudo touch /var/spool/cron/root
-sudo chown "$USER" /var/spool/cron/"$USER"
-printf '' > /var/spool/cron/"$USER"
-sudo sh -c "printf '' > /var/spool/cron/root"
-
-# @TODO: Check if it is Ubuntu to do this
-  # crontab /var/spool/cron/"$USER"
-  # sudo crontab /var/spool/cron/root
-
-# /etc/motd is read by /etc/pam.d/system-login
-sudo sh -c "echo '*/10 * * * * sh /home/$USER/.scripts/motd_update.sh' >> /var/spool/cron/root"
-sudo touch /etc/motd
-sudo chmod o+r /etc/motd
 
 # general END
