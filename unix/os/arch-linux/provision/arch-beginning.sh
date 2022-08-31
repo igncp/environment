@@ -167,7 +167,7 @@ if [ -f ~/project/.config/tlp ]; then
   fi
 fi
 
-install_system_package hwinfo
+if [ -z "$ARM_ARCH" ]; then install_system_package hwinfo ; fi
 
 install_with_yay ananicy
 if [ ! -f ~/.check-files/ananicy ]; then
@@ -176,7 +176,8 @@ if [ ! -f ~/.check-files/ananicy ]; then
   touch ~/.check-files/ananicy
 fi
 
-install_system_package i7z
+if [ -z "$ARM_ARCH" ]; then install_system_package i7z ; fi
+
 install_system_package cpupower
 install_with_yay cpupower-gui
 
