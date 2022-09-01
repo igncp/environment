@@ -37,7 +37,7 @@ if ! type nvim > /dev/null 2>&1 ; then
 fi
 cat >> ~/.shellrc <<"EOF"
 export DEBIAN_FRONTEND=noninteractive
-export PATH="$PATH:/home/igncp/nvim/bin"
+export PATH="$PATH:$HOME/nvim/bin"
 EOF
 
 cat >> ~/.shell_aliases <<"EOF"
@@ -63,7 +63,7 @@ fi
 sudo rm -rf ~/.scripts/motd_update.sh
 cat > ~/.scripts/motd_update.sh <<"EOF"
 echo "###" > /etc/motd
-echo "Message created in /home/igncp/.scripts/motd_update.sh" >> /etc/motd
+echo "Message created in $HOME/.scripts/motd_update.sh" >> /etc/motd
 echo "Hello!" >> /etc/motd
 echo "###" >> /etc/motd
 echo "" >> /etc/motd

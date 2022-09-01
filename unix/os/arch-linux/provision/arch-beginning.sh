@@ -125,7 +125,7 @@ install_system_package usbutils lsusb
 install_system_package usbguard
 cat >> ~/.shell_aliases <<"EOF"
 function USBGuardInit() {
-  sudo sed -i 's|IPCAllowedUsers=root|IPCAllowedUsers=root igncp|' /etc/usbguard/usbguard-daemon.conf
+  sudo sed -i 's|IPCAllowedUsers=root|IPCAllowedUsers=root '"$USER"'|' /etc/usbguard/usbguard-daemon.conf
   sudo bash -c 'usbguard generate-policy > /etc/usbguard/rules.conf'
   sudo systemctl enable --now usbguard
 }
@@ -140,7 +140,7 @@ if [ ! -f ~/.check-files/apparmor-config ]; then
   sudo pacman -S --noconfirm audit
   sudo systemctl enable --now apparmor
   sudo groupadd -r audit || true
-  sudo gpasswd -a igncp audit || true
+  sudo gpasswd -a "$USER" audit || true
   sudo sed -i 's|^log_group =.*|log_group = audit|' /etc/audit/auditd.conf
   sudo systemctl enable --now auditd
   touch ~/.check-files/apparmor-config
@@ -194,7 +194,7 @@ cat > ~/.scripts/motd_update.sh <<"EOF"
 pacman -Sy > /dev/null
 UPDATES="$(pacman -Sup | wc -l)"
 echo "###" > /etc/motd
-echo "Message created in /home/igncp/.scripts/motd_update.sh" >> /etc/motd
+echo "Message created in $HOME/.scripts/motd_update.sh" >> /etc/motd
 echo "Available pacman updates: $UPDATES" >> /etc/motd
 echo "###" >> /etc/motd
 echo "" >> /etc/motd
