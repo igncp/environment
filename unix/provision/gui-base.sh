@@ -6,10 +6,11 @@ cat ~/.fehbg | grep --color=never -o '\/home\/.*jpg' | sed 's|^|Image: |'
 EOF
 chmod +x ~/.set-background.sh
 cat > ~/.scripts/wallpaper_update.sh <<"EOF"
-if [ -d /home/igncp/.config/variety/Downloaded ]; then
-  find /home/igncp/.config/variety/Downloaded/ -type f -name *.jpg | shuf -n 1 | xargs -I {} sh ~/.set-background.sh {}
+if [ -d _HOME_/.config/variety/Downloaded ]; then
+  find _HOME_/.config/variety/Downloaded/ -type f -name *.jpg | shuf -n 1 | xargs -I {} sh ~/.set-background.sh {}
 fi
 EOF
+sed -i "s|_HOME_|$HOME|g" ~/.scripts/wallpaper_update.sh
 chmod +x ~/.scripts/wallpaper_update.sh
 cat >> ~/.shellrc <<"EOF"
 alias WallpaperPrintCurrent="cat ~/.fehbg | grep --color=never -o '\/home\/.*jpg'"

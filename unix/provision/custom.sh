@@ -22,9 +22,9 @@ EOF
 cat > /tmp/.vimrc <<"EOF"
 function! SetupEnvironment()
   let l:path = expand('%:p')
-  if l:path =~ '/home/igncp/foo/bar'
+  if l:path =~ '_HOME_/foo/bar'
     let g:Fast_grep='. --exclude-dir={node_modules,dist,.git,coverage} --exclude="*.log"'
-  elseif l:path =~ '/home/igncp/bar/baz'
+  elseif l:path =~ '_HOME_/bar/baz'
     let g:Fast_grep='main'
   else
     let g:Fast_grep='src'
@@ -32,7 +32,7 @@ function! SetupEnvironment()
 endfunction
 autocmd! BufReadPost,BufNewFile * call SetupEnvironment()
 EOF
-sed -i 's|/home/igncp|'"$HOME"'|' /tmp/.vimrc
+sed -i 's|_HOME_|'"$HOME"'|g' /tmp/.vimrc
 cat /tmp/.vimrc >> ~/.vimrc ; rm -rf /tmp/.vimrc
 
 cat >> ~/.bashrc <<"EOF"

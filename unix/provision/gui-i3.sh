@@ -12,7 +12,7 @@ Description=Lock screen before suspend
 Before=sleep.target
 
 [Service]
-User=igncp
+User=_USER_
 Type=forking
 Environment=DISPLAY=:0
 ExecStart=/usr/bin/i3lock -c 000000
@@ -20,6 +20,7 @@ ExecStart=/usr/bin/i3lock -c 000000
 [Install]
 WantedBy=sleep.target
 EOF
+  sed -i "s|_USER_|$USER|g" ~/i3lock.service
   sudo mv ~/i3lock.service /etc/systemd/system/
   sudo systemctl enable i3lock.service
 fi
@@ -75,7 +76,7 @@ sh ~/project/provision/i3blocks.sh
     echo "alias PicomModify='$EDITOR ~/project/provision/picom.conf && cp ~/project/provision/picom.conf ~/.config/picom.conf'" >> ~/.shell_aliases
   fi
 
-echo 'exec /home/igncp/.scripts/wallpaper_update.sh' >> ~/.config/i3/config
+echo "exec $HOME/.scripts/wallpaper_update.sh" >> ~/.config/i3/config
 
 # I3 needs terminal emulator (e.g. terminator from gui-common) and may require custom fonts (e.g. arch-gui)
 
@@ -109,7 +110,7 @@ fi
   # vncviewer localhost
   # EOF
   #   add_desktop_common \
-  #     'sh /home/igncp/.scripts/quick_vnc_NAME.sh' 'quick_vnc_NAME' 'NAME VNC'
+  #     "sh $HOME/.scripts/quick_vnc_NAME.sh" 'quick_vnc_NAME' 'NAME VNC'
 
 # Copy SSH remote clipboard into the guest one (replace HOST)
   # cat > ~/.scripts/ssh_clipboard.sh <<"EOF"

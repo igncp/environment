@@ -8,8 +8,8 @@ install_system_package pulsemixer # TUI mixer (simple)
 install_with_yay ncpamixer # TUI mixer (live pavucontrol)
 if [ ! -f ~/.check-files/pulseaudio ]; then
   sudo pacman -S --noconfirm pulseaudio-alsa
-  sudo usermod -a -G lp igncp
-  sudo gpasswd -a igncp audio
+  sudo usermod -a -G lp "$USER"
+  sudo gpasswd -a "$USER" audio
 
   touch ~/.check-files/pulseaudio
 fi
@@ -73,18 +73,18 @@ if [ -f ~/project/.config/nvidia ]; then
     fi
     cat > ~/.scripts/nvidia-config.sh <<"EOF"
 #!/usr/bin/env bash
-if [ ! -f /home/igncp/.nvidia-settings-rc ]; then
+if [ ! -f "$HOME"/.nvidia-settings-rc ]; then
   exit
 fi
-sed -i 's|Brightness=.*|Brightness=-0.710000|g' /home/igncp/.nvidia-settings-rc
-sed -i 's|Contrast=.*|Contrast=-0.710000|g' /home/igncp/.nvidia-settings-rc
-sed -i 's|Gamma=.*|Gamma=1.087667|g' /home/igncp/.nvidia-settings-rc
+sed -i 's|Brightness=.*|Brightness=-0.710000|g' "$HOME"/.nvidia-settings-rc
+sed -i 's|Contrast=.*|Contrast=-0.710000|g' "$HOME"/.nvidia-settings-rc
+sed -i 's|Gamma=.*|Gamma=1.087667|g' "$HOME"/.nvidia-settings-rc
 nvidia-settings --load-config-only
 EOF
-    if [ ! -f /home/igncp/.nvidia-settings-rc ]; then
-      echo "/home/igncp/.nvidia-settings-rc doesn't exist. Run 'nvidia-settings' to generate it"
+    if [ ! -f "$HOME"/.nvidia-settings-rc ]; then
+      echo "$HOME/.nvidia-settings-rc doesn't exist. Run 'nvidia-settings' to generate it"
     fi
-    sed -i '1isleep 5s && sh /home/igncp/.scripts/nvidia-config.sh' ~/.xinitrc
+    sed -i "1isleep 5s && sh $HOME/.scripts/nvidia-config.sh" ~/.xinitrc
   fi
 else
   echo "[~/project/.config/nvidia]: file is missing, add it with 'yes' or 'no' to install nvidia packages"
@@ -104,7 +104,7 @@ if [ -f ~/project/.config/dropbox ]; then
     sudo pacman -Sy python-gpgme # https://wiki.archlinux.org/title/dropbox#Required_packages
   fi
   install_with_yay dropbox
-  echo '/home/igncp/.dropbox-dist/dropboxd &' >> ~/.scripts/gui_daemons.sh
+  echo "$HOME/.dropbox-dist/dropboxd &" >> ~/.scripts/gui_daemons.sh
 fi
 
 # https://zoom.us/download?os=linux
@@ -156,7 +156,7 @@ if [ -z "$ARM_ARCH" ]; then
     if ! type virtualbox > /dev/null 2>&1 ; then
       install_system_package virtualbox-host-modules-arch
       install_system_package virtualbox
-      sudo usermod -a -G vboxusers igncp
+      sudo usermod -a -G vboxusers "$USER"
     fi
   fi
 
@@ -299,18 +299,18 @@ EOF
   sudo mv /tmp/i3blocks_updates.sh ~/.scripts/i3blocks_updates.sh
   # This script can run any sudo code, so just allow r and x for user
   sudo chmod 500 ~/.scripts/i3blocks_updates.sh
-  echo 'sudo /home/igncp/.scripts/i3blocks_updates.sh' > ~/.scripts/i3blocks_updates_sudo.sh
+  echo "sudo $HOME/.scripts/i3blocks_updates.sh" > ~/.scripts/i3blocks_updates_sudo.sh
   chmod +x ~/.scripts/i3blocks_updates_sudo.sh
   cat > /tmp/i3blocks_updates.txt <<"EOF"
 
 [updates]
-command="/home/igncp/.scripts/i3blocks_updates_sudo.sh"
+command="$HOME/.scripts/i3blocks_updates_sudo.sh"
 interval=30
 EOF
   sed -i '/global config end/r /tmp/i3blocks_updates.txt' ~/.config/i3blocks/config
   rm -rf /tmp/i3blocks_updates.txt
   if [ -z "$(sudo cat /etc/sudoers | grep i3blocks_updates.sh)" ]; then
-    sudo sh -c 'echo "igncp ALL=NOPASSWD:/home/igncp/.scripts/i3blocks_updates.sh" >> /etc/sudoers'
+    sudo sh -c "echo '$USER ALL=NOPASSWD:$HOME/.scripts/i3blocks_updates.sh' >> /etc/sudoers"
   fi
 fi
 
@@ -357,7 +357,7 @@ if [[ "$IS_DISCHARGING" && $(echo "$BATTINFO" | cut -f 5 -d " ") < 00:30:00 ]] ;
 fi
 EOF
 chmod +x ~/.scripts/acpi_warning.sh
-echo '*/4 * * * * /home/igncp/.scripts/acpi_warning.sh' >> /var/spool/cron/igncp
+echo "*/4 * * * * $HOME/.scripts/acpi_warning.sh" >> /var/spool/cron/$USER
 
 if [ -f ~/project/.config/remote ]; then
   install_system_package playerctl
@@ -371,7 +371,7 @@ if [ -n "$(ps aux | grep -v '\bgrep\b' | grep '\bvlc\b' || true)" ]; then
 fi
 EOF
     chmod +x ~/.scripts/vlc_move_cursor.sh
-    echo "*/9 * * * * /home/igncp/.scripts/vlc_move_cursor.sh" >> /var/spool/cron/igncp
+    echo "*/9 * * * * $HOME/.scripts/vlc_move_cursor.sh" >> /var/spool/cron/"$USER"
   fi
 fi
 

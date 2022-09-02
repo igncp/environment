@@ -20,7 +20,7 @@ set -e
 # ssh-copy-id -i ~/.ssh/local-asus alarm@raspberry
 # ssh alarm@raspberry # password: alarm
 # scp this file into the PI
-    # rsync -rhv . alarm@raspberry:/home/igncp/environment
+    # rsync -rhv . alarm@raspberry:$HOME/environment
 
 # Run this as root
 
