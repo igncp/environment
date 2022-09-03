@@ -187,7 +187,9 @@ alias lsblk="lsblk -f"
 alias mkdir="mkdir -p"
 alias r="ranger"
 alias rm="rm -rf"
+alias svim="sudo vim"
 alias tree="tree -a"
+alias wget="wget -c"
 
 alias Lsblk="lsblk -f | less -S"
 Diff() { diff --color=always "$@" | less -r; }
