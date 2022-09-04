@@ -55,6 +55,8 @@ if [ -f ~/project/.config/cli-gh ]; then
 alias gh='NO_COLOR=1 gh'
 alias GHDeployments="gh api repos/{owner}/{repo}/deployments | jq | ag web_url | sort | uniq | less"
 alias GHAuthLogin="gh auth login"
+alias GHRepoList="gh repo list" # For example: GHRepoList igncp
+alias GHRepoClone="gh repo clone" # For example: GHRepoClone igncp/environment
 EOF
 fi
 
@@ -136,5 +138,19 @@ alias DOLogout='doctl auth remove --context default'
 alias DODroplets='doctl compute droplet list'
 EOF
   fi
+
+# https://github.com/sharkdp/bat
+install_system_package bat
+mkdir -p $HOME/.config/bat/
+cat > $HOME/.config/bat/config <<"EOF"
+# Force colors to see in less, otherwise use normal `cat`
+-f
+# The default theme doesn't display the numbers with existing colors
+--theme=Nord
+--style="numbers,changes,header"
+EOF
+
+# JSON viewer: https://github.com/antonmedv/fx
+install_system_package fx
 
 # cli-tools END
