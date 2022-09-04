@@ -153,4 +153,9 @@ EOF
 # JSON viewer: https://github.com/antonmedv/fx
 install_system_package fx
 
+# https://github.com/dalance/procs
+install_system_package procs
+procs --completion-out zsh >> ~/.scripts/procs_completion
+echo 'fpath=(~/.scripts/procs_completion $fpath)' >> ~/.zshrc
+
 # cli-tools END
