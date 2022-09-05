@@ -323,6 +323,8 @@ cat > ~/.tmux.conf <<"EOF"
 set-option -g default-shell $SHELL
 set -s escape-time 0
 set-window-option -g xterm-keys on
+set -g prefix C-a
+unbind C-b
 
 set -g status off
 set -g status-right ""
@@ -499,7 +501,7 @@ if [ -z "$SESSION" ]; then exit 0; fi
 tmux switch-client -t "$SESSION"
 EOF
 
-echo "bind b split-window 'sh /tmp/tmux_choose_session.sh'" >> ~/.tmux.conf
+echo "bind a split-window 'sh /tmp/tmux_choose_session.sh'" >> ~/.tmux.conf
 
 if [ ! -d ~/project/.git ]; then
   (cd ~/project && git init)

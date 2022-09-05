@@ -169,13 +169,6 @@ fi
 
 if [ -z "$ARM_ARCH" ]; then install_system_package hwinfo ; fi
 
-install_with_yay ananicy
-if [ ! -f ~/.check-files/ananicy ]; then
-  sudo sed -i 's|"type": "[^"]*"|"type": "Game"|' /etc/ananicy.d/00-default/node.rules
-  sudo systemctl enable --now ananicy
-  touch ~/.check-files/ananicy
-fi
-
 if [ -z "$ARM_ARCH" ]; then install_system_package i7z ; fi
 
 install_system_package cpupower
