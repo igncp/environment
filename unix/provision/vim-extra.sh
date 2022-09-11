@@ -354,6 +354,9 @@ function! CustomDismiss() abort
 endfunction
 
 imap <silent><script><nowait><expr> <C-]> CustomDismiss() . "\<C-]>"
+" This maps to control + /
+inoremap <C-_> <Plug>(copilot-next)
+inoremap <C-\> <Plug>(copilot-previous)
 EOF
 fi
 
