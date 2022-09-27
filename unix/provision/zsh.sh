@@ -41,8 +41,6 @@ bindkey "\C-g" vi-forward-blank-word
 bindkey "\C-f" vi-backward-blank-word
 bindkey "\C-u" kill-region
 
-bindkey "^B" vi-beginning-of-line
-
 bookmarksJustInput () {
   text_to_add="$(__FZFBookmarkedCommands)"
   LBUFFER=${text_to_add}
