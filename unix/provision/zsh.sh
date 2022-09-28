@@ -110,7 +110,8 @@ setopt PROMPT_SUBST
 PS1_BEGINNING="$TMUX_PREFIX_A"
 PS1_NEXT="%F{$SSH_PS1_NOTICE_COLOR}$SSH_PS1_NOTICE%F{green}%1d"
 PS1_MIDDLE='$(__git_ps1) $(get_jobs_prefix)'
-PS1_END='%F{blue}$(date +"%H:%M")$TMUX_PREFIX_B %F{reset_color}'
+# https://miro.medium.com/max/4800/1*Q4WxN-bh4Exk8ULhwSexGQ.png
+PS1_END='%F{39}$(date +"%H:%M")$TMUX_PREFIX_B %F{reset_color}'
 NEXT_TASK='$(__get_next_task)'
 RPROMPT="[$NEXT_TASK]"
 

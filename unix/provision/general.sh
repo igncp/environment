@@ -527,7 +527,7 @@ ProvisionCommitRepo() {
 alias ProvisionGetDiff='node $HOME/project/provision/updateProvision.js && sh /tmp/diff_provision.sh'
 ProvisionListPossibleConfig() {
   cat ~/project/provision/provision.sh | ag 'project\/\.config\/[-.a-zA-Z0-9]*' -o \
-    | sed 's|^|'"$HOME"'|' | sort | uniq > /tmp/config_all;
+    | sed 's|^|'"$HOME"'/|' | sort | uniq > /tmp/config_all;
   mkdir -p ~/project/.config; find ~/project/.config -type f | sort > /tmp/config_used
   echo "# Used" > /tmp/config_printed ; cat /tmp/config_used >> /tmp/config_printed ; printf '\n\n' >> /tmp/config_printed
   echo "# Not used" >> /tmp/config_printed; comm -23 /tmp/config_all /tmp/config_used >> /tmp/config_printed
@@ -647,5 +647,7 @@ if [ ! -f ~/project/.config/inside ]; then
 else
   rm -rf /tmp/restarted_sshd
 fi
+
+echo "bind b split-window 'sh /tmp/tmux_choose_session.sh'" >> ~/.tmux.conf
 
 # general END
