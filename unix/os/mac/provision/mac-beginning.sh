@@ -54,4 +54,19 @@ cat > ~/.gnupg/gpg-agent.conf <<"EOF"
 pinentry-program /opt/homebrew/bin/pinentry-tty
 EOF
 
+if [ ! -f ~/.check-files/init-apps ]; then
+  brew install iterm2
+  brew install mysqlworkbench
+  touch ~/.check-files/init-apps
+fi
+
+# Switch tilde with the top left key in the keyboard
+# As an improvement it could be added to `launchctl`
+cat << 'EOF' > ~/.scripts/tilde-switch.sh && chmod +x ~/.scripts/tilde-switch.sh
+hidutil property --set '{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc":0x700000035,"HIDKeyboardModifierMappingDst":0x700000064},{"HIDKeyboardModifierMappingSrc":0x700000064,"HIDKeyboardModifierMappingDst":0x700000035}]}'
+EOF
+cat >> ~/.shellrc <<"EOF"
+sh ~/.scripts/tilde-switch.sh 2>&1 > /dev/null
+EOF
+
 # mac-beginning END
