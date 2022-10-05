@@ -57,16 +57,51 @@ EOF
 if [ ! -f ~/.check-files/init-apps ]; then
   brew install iterm2
   brew install mysqlworkbench
+
+  # Reduce transparency
+  defaults write com.apple.universalaccess reduceTransparency -bool true
+
+  # Safari debug
+  defaults write com.apple.Safari IncludeInternalDebugMenu -bool true && \
+  defaults write com.apple.Safari IncludeDevelopMenu -bool true && \
+  defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true && \
+  defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled -bool true && \
+  defaults write -g WebKitDeveloperExtras -bool true
+
+  # Xcode command-line tools
+  xcode-select --install || true
+
+  # Disable automatic arrangement of spaces
+  defaults write com.apple.dock mru-spaces -bool false && killall Dock
+  # Autohide dock
+  defaults write com.apple.dock autohide -bool true && killall Dock
+  # Disable icon bounce on notification
+  defaults write com.apple.dock no-bouncing -bool false && killall Dock
+  # Show hidden files
+  defaults write com.apple.finder AppleShowAllFiles true
+  # Show hidden dir
+  chflags nohidden ~/Library
+  # Hide desktop icons
+  defaults write com.apple.finder CreateDesktop -bool false && killall Finder
+  # Show pathbar at the bottom
+  defaults write com.apple.finder ShowPathbar -bool true
+
+  cat >> ~/.shell_aliases <<"EOF"
+alias MacListAppsAppStore='mdfind kMDItemAppStoreHasReceipt=1'
+alias MacEjectAll="osascript -e 'tell application "'"Finder"'" to eject (every disk whose ejectable is true)'"
+EOF
+
   touch ~/.check-files/init-apps
 fi
 
 # Switch tilde with the top left key in the keyboard
 # As an improvement it could be added to `launchctl`
-cat << 'EOF' > ~/.scripts/tilde-switch.sh && chmod +x ~/.scripts/tilde-switch.sh
-hidutil property --set '{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc":0x700000035,"HIDKeyboardModifierMappingDst":0x700000064},{"HIDKeyboardModifierMappingSrc":0x700000064,"HIDKeyboardModifierMappingDst":0x700000035}]}'
-EOF
-cat >> ~/.shellrc <<"EOF"
-sh ~/.scripts/tilde-switch.sh 2>&1 > /dev/null
-EOF
+# TODO: This doesn't work well with external keyboards
+# cat << 'EOF' > ~/.scripts/tilde-switch.sh && chmod +x ~/.scripts/tilde-switch.sh
+# hidutil property --set '{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc":0x700000035,"HIDKeyboardModifierMappingDst":0x700000064},{"HIDKeyboardModifierMappingSrc":0x700000064,"HIDKeyboardModifierMappingDst":0x700000035}]}'
+# EOF
+# cat >> ~/.shellrc <<"EOF"
+# sh ~/.scripts/tilde-switch.sh 2>&1 > /dev/null
+# EOF
 
 # mac-beginning END
