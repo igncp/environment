@@ -8,7 +8,7 @@ set -e
   # Check the region of the environment to be able to attach the respective volumes
   # After creation, copy the IP and update it in `/etc/hosts` and attach the volume
 
-# * In the host:
+# `create_droplet.sh`
 
 # With digital ocean
   doctl compute droplet create \
@@ -24,22 +24,18 @@ set -e
   # doctl compute region list | less -S
   # doctl compute volume list | less -S
 
-# ------------
-# ------------
+# `prepare_root.sh`
 
-ssh -p 22 root@REMOTE_HOSTNAME
+# Replace:
+# - REMOTE_HOSTNAME
+# - PORT
+# - SSH_KEY_PATH
 
-# * As `root`:
-
-# To paste commands
-printf '#!/usr/bin/env bash\nset -e\n\n' > /tmp/script.sh ; "${EDITOR:-vim}" "+normal G$" +startinsert /tmp/script.sh && sh /tmp/script.sh
-
-# **Important** Replace `PORT` with a custom port
+ssh -p 22 root@REMOTE_HOSTNAME -i SSH_KEY_PATH bash <<EOF
 # Remember to allow the port in the local machine too
 sudo sed -i 's|#Port .*|Port PORT|' /etc/ssh/sshd_config
 ufw allow in from any to any port PORT comment 'SSH port'
 sudo systemctl restart sshd
-# ---
 
 ufw default deny outgoing
 ufw default deny incoming
@@ -50,13 +46,13 @@ ufw --force enable
 
 echo 'umask 0077' >> /etc/profile
 
-# @TODO: Automate TOTP with `libpam-google-authenticator`
+# @TODO: Automate TOTP with libpam-google-authenticator
 # https://gist.github.com/troyfontaine/926ed27a4fe1c17507fd
 apt-get update
 apt-get install -y libpam-google-authenticator
 
 # If it is using a fresh volume, set it up first
-  cfdisk /dev/sda # Create the `/dev/sda1` partition (and others if necessary)
+  cfdisk /dev/sda # Create the /dev/sda1 partition (and others if necessary)
   # At this point only add password # @TODO use a random key in an encrypted file for decryption later
   cryptsetup -y -v luksFormat /dev/sda1
   cryptsetup open /dev/sda1 cryptmain
@@ -64,10 +60,13 @@ apt-get install -y libpam-google-authenticator
   cryptsetup close cryptmain
 
 echo 'igncp ALL=(ALL) ALL' >> /etc/sudoers
+EOF
 
-useradd -m igncp ; echo 'Password for igncp' ; passwd igncp
-useradd -m init ; echo 'Password for init' ; passwd init
+ssh -t -p PORT root@REMOTE_HOSTNAME -i SSH_KEY_PATH "useradd -m igncp ; echo 'Password for igncp' ; passwd igncp"
 
+ssh -t -p PORT root@REMOTE_HOSTNAME -i SSH_KEY_PATH "useradd -m init ; echo 'Password for init' ; passwd init"
+
+ssh -p PORT root@REMOTE_HOSTNAME -i SSH_KEY_PATH bash <<EOF
 echo 'cryptsetup open /dev/sda1 cryptmain ; mount /dev/mapper/cryptmain /home/igncp' > /home/init/init.sh
 chmod 701 /home/init/init.sh ; chown root:root /home/init/init.sh
 echo 'init ALL=(ALL) /home/init/init.sh' >> /etc/sudoers
@@ -85,13 +84,9 @@ sed 's|#ReserveVT=.*|ReserveVT=0|' -i /etc/systemd/logind.conf
 systemctl disable --now getty@tty1.service
 systemctl restart systemd-logind.service
 systemctl stop "getty@tty*.service"
+EOF
 
-# * In the host:
-
-sudo vim ~/.ssh/config
-ssh REMOTE_HOSTNAME
-
-# * As `igncp`:
+# `prepare_igncp.sh`
 
 sudo rm -rf /tmp/script.sh
 printf '#!/usr/bin/env bash\nset -e\n\n' > /tmp/script.sh ; "${EDITOR:-vim}" "+normal G$" +startinsert /tmp/script.sh && sh /tmp/script.sh
@@ -147,14 +142,21 @@ sudo mkdir /external ; mkdir /home/igncp/external ; sudo chown -R igncp:igncp /e
 sudo mount --bind /external /home/igncp/external
 yarn config set cache-folder /home/igncp/external/yarn
 
-# ------------
-# ------------
-
-# Once finished, delete the environment
-
-# * In the host
+# `remove_droplet.sh`
 
 # With digital ocean
-  doctl compute droplet list | grep -v DROPLET_IMPORTANT | grep DROPLET_NAME | less -S
-  doctl compute droplet delete DROPLET_ID
-  doctl auth remove --context default
+# Replace:
+# - DROPLET_IMPORTANT
+# - DROPLET_NAME
+
+set -e
+
+DROPLET_ID=$(doctl compute droplet list | grep -v DROPLET_IMPORTANT | grep DROPLET_NAME | awk '{print $1}')
+doctl compute droplet delete --force $DROPLET_ID
+echo "Droplet DROPLET_NAME deleted"
+
+# `doctl_logout.sh`
+
+set -e
+doctl auth remove --context default
+echo "doctl logout"

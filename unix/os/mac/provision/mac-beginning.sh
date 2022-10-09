@@ -55,18 +55,18 @@ pinentry-program /opt/homebrew/bin/pinentry-tty
 EOF
 
 if [ ! -f ~/.check-files/init-apps ]; then
-  brew install iterm2
-  brew install mysqlworkbench
+  brew install iterm2 || true
+  brew install mysqlworkbench || true
 
   # Reduce transparency
-  defaults write com.apple.universalaccess reduceTransparency -bool true
+  defaults write com.apple.universalaccess reduceTransparency -bool true || true
 
   # Safari debug
   defaults write com.apple.Safari IncludeInternalDebugMenu -bool true && \
   defaults write com.apple.Safari IncludeDevelopMenu -bool true && \
   defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true && \
   defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled -bool true && \
-  defaults write -g WebKitDeveloperExtras -bool true
+  defaults write -g WebKitDeveloperExtras -bool true || true
 
   # Xcode command-line tools
   xcode-select --install || true
