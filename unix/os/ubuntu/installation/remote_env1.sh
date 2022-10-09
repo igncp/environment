@@ -24,6 +24,8 @@ set -e
   # doctl compute region list | less -S
   # doctl compute volume list | less -S
 
+echo 'Update the IP in /etc/hosts'
+
 # `prepare_root.sh`
 
 # Replace:
@@ -88,9 +90,18 @@ EOF
 
 # `prepare_igncp.sh`
 
-sudo rm -rf /tmp/script.sh
-printf '#!/usr/bin/env bash\nset -e\n\n' > /tmp/script.sh ; "${EDITOR:-vim}" "+normal G$" +startinsert /tmp/script.sh && sh /tmp/script.sh
+# Replace:
+# - REMOTE_HOSTNAME
+# - PORT
+# - SSH_KEY_PATH
+# - PATH_TO_ENVIRONMENT
+# - SWAP_NUM
 
+rsync -e 'ssh -i SSH_KEY_PATH -p PORT' -rhv --delete PATH_TO_ENVIRONMENT/ \
+  igncp@REMOTE_HOSTNAME:/home/igncp/environment
+
+ssh -t -p PORT igncp@REMOTE_HOSTNAME -i SSH_KEY_PATH bash <<EOF
+set -e
 sudo sed -i 's|^PermitRootLogin yes|PermitRootLogin no|' /etc/ssh/sshd_config
 sudo sed -i 's|^PasswordAuthentication yes|PasswordAuthentication no|' /etc/ssh/sshd_config
 
@@ -105,9 +116,8 @@ sudo apt-get purge -y droplet-agent || true
   sudo rsync -rhv --delete igncp-tmp/ igncp/
   sudo rm -rf igncp-tmp/ ; sudo chown -R igncp:igncp igncp/
   mkdir -p ~/project/.config
-  # * From host: `rsync -e 'ssh -i ~/.ssh/USEDKEY' -rhv --delete ./ igncp@REMOTE_HOSTNAME:/home/igncp/environment`
-  echo 'REMOTE_ENV' > ~/project/.config/ssh-notice
-  # Opt-in GUI: `touch ~/project/.config/gui-install`
+  echo 'REMOTE_HOSTNAME' > ~/project/.config/ssh-notice
+  # Opt-in GUI: "touch ~/project/.config/gui-install"
   sh /home/igncp/environment/unix/os/ubuntu/installation/remote_env2.sh
   sudo umount /home/igncp ; sudo cryptsetup close cryptmain
 # If not the first time
@@ -119,7 +129,6 @@ sudo hostnamectl hostname --static REMOTE_HOSTNAME
 
 cd /home/igncp
 sudo apt-get update
-sudo sed 's|^root:.*|root:x:0:0:root:/root:/sbin/nologin|' -i /etc/passwd
 
 # This disables the prompt to restart services after every install
 export DEBIAN_FRONTEND=noninteractive
@@ -129,7 +138,7 @@ rm -rf ~/.check-files
 bash ~/project/provision/provision.sh
 # Set up the timezone with the bash alias
 
-sudo fallocate -l NUMG /swapfile # **Update NUM with a number of Gb**
+sudo fallocate -l "SWAP_NUM"G /swapfile
 sudo chmod 600 /swapfile
 sudo mkswap /swapfile
 sudo swapon /swapfile
@@ -141,6 +150,18 @@ sudo chsh igncp -s /usr/bin/zsh
 sudo mkdir /external ; mkdir /home/igncp/external ; sudo chown -R igncp:igncp /external
 sudo mount --bind /external /home/igncp/external
 yarn config set cache-folder /home/igncp/external/yarn
+
+# Forbids using 'sudo su', which can cause problems in some applications
+sudo sed 's|^root:.*|root:x:0:0:root:/root:/sbin/nologin|' -i /etc/passwd
+EOF
+
+scp -P PORT -i SSH_KEY_PATH /tmp/prepare_igncp.sh \
+  igncp@REMOTE_HOSTNAME:/tmp/prepare_igncp.sh
+
+rm /tmp/prepare_igncp.sh
+
+ssh -t -p PORT -i SSH_KEY_PATH igncp@REMOTE_HOSTNAME \
+  'sudo echo "Prepare igncp" ; bash /tmp/prepare_igncp.sh'
 
 # `remove_droplet.sh`
 
