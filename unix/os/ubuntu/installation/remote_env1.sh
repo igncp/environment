@@ -33,6 +33,8 @@ echo 'Update the IP in /etc/hosts'
 # - PORT
 # - SSH_KEY_PATH
 
+sed -i '/REMOTE_HOSTNAME/d' ~/.ssh/known_hosts
+
 ssh -p 22 root@REMOTE_HOSTNAME -i SSH_KEY_PATH bash <<EOF
 # Remember to allow the port in the local machine too
 sudo sed -i 's|#Port .*|Port PORT|' /etc/ssh/sshd_config
@@ -98,9 +100,9 @@ EOF
 # - SWAP_NUM
 
 rsync -e 'ssh -i SSH_KEY_PATH -p PORT' -rhv --delete PATH_TO_ENVIRONMENT/ \
-  igncp@REMOTE_HOSTNAME:/home/igncp/environment
+  igncp@REMOTE_HOSTNAME:/home/igncp/environment/
 
-ssh -t -p PORT igncp@REMOTE_HOSTNAME -i SSH_KEY_PATH bash <<EOF
+ssh -p PORT igncp@REMOTE_HOSTNAME -i SSH_KEY_PATH bash <<EOF
 set -e
 sudo sed -i 's|^PermitRootLogin yes|PermitRootLogin no|' /etc/ssh/sshd_config
 sudo sed -i 's|^PasswordAuthentication yes|PasswordAuthentication no|' /etc/ssh/sshd_config
@@ -117,7 +119,7 @@ sudo apt-get purge -y droplet-agent || true
   sudo rm -rf igncp-tmp/ ; sudo chown -R igncp:igncp igncp/
   mkdir -p ~/project/.config
   echo 'REMOTE_HOSTNAME' > ~/project/.config/ssh-notice
-  # Opt-in GUI: "touch ~/project/.config/gui-install"
+  # touch ~/project/.config/gui-install # Opt-in GUI
   sh /home/igncp/environment/unix/os/ubuntu/installation/remote_env2.sh
   sudo umount /home/igncp ; sudo cryptsetup close cryptmain
 # If not the first time
@@ -146,13 +148,14 @@ sudo sh -c "echo '/swapfile none swap sw 0 0' >> /etc/fstab"
 
 sudo chsh igncp -s /usr/bin/zsh
 
-# This should be a temporal fix until there is more space in the volume
-sudo mkdir /external ; mkdir /home/igncp/external ; sudo chown -R igncp:igncp /external
-sudo mount --bind /external /home/igncp/external
-yarn config set cache-folder /home/igncp/external/yarn
-
 # Forbids using 'sudo su', which can cause problems in some applications
 sudo sed 's|^root:.*|root:x:0:0:root:/root:/sbin/nologin|' -i /etc/passwd
+
+## This should be a temporal fix until there is more space in the volume
+## It requires "yarn"
+# sudo mkdir /external ; mkdir /home/igncp/external ; sudo chown -R igncp:igncp /external
+# sudo mount --bind /external /home/igncp/external
+# yarn config set cache-folder /home/igncp/external/yarn
 EOF
 
 scp -P PORT -i SSH_KEY_PATH /tmp/prepare_igncp.sh \
