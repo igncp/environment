@@ -39,6 +39,7 @@ EOF
 cat >> ~/.shell_aliases <<"EOF"
 alias MacDisks='diskutil list'
 alias MacFeatures='system_profiler > /tmp/features.txt && echo "/tmp/features.txt written" && less /tmp/features.txt'
+alias BrewListPackages='brew list'
 EOF
 
 cat >> ~/.zshrc <<"EOF"
@@ -93,6 +94,13 @@ EOF
 
   touch ~/.check-files/init-apps
 fi
+
+# Rime - Squirrel
+  # I can't remember the location, but it may be from:
+    # https://github.com/rime/squirrel/releases
+  # https://github.com/rime/squirrel/issues/471#issuecomment-748751617
+    # Use `~/Library/Rime/default.custom.yaml``
+    # The `patch` in the top level, above `schemas`, is necessary
 
 # Switch tilde with the top left key in the keyboard
 # As an improvement it could be added to `launchctl`

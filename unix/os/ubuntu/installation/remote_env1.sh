@@ -30,10 +30,13 @@ echo 'Update the IP in /etc/hosts'
 
 # Replace:
 # - REMOTE_HOSTNAME
+# - DROPLET_NAME
 # - PORT
 # - SSH_KEY_PATH
 
 sed -i '/REMOTE_HOSTNAME/d' ~/.ssh/known_hosts
+DROPLET_IP=$(doctl compute droplet list | ag DROPLET_NAME | awk '{ print $3 }')
+echo "$DROPLET_IP DROPLET_NAME" | sudo tee -a /etc/hosts
 
 ssh -p 22 root@REMOTE_HOSTNAME -i SSH_KEY_PATH bash <<EOF
 # Remember to allow the port in the local machine too
@@ -102,7 +105,7 @@ EOF
 rsync -e 'ssh -i SSH_KEY_PATH -p PORT' -rhv --delete PATH_TO_ENVIRONMENT/ \
   igncp@REMOTE_HOSTNAME:/home/igncp/environment/
 
-ssh -p PORT igncp@REMOTE_HOSTNAME -i SSH_KEY_PATH bash <<EOF
+cat > /tmp/prepare_igncp.sh <<"EOF"
 set -e
 sudo sed -i 's|^PermitRootLogin yes|PermitRootLogin no|' /etc/ssh/sshd_config
 sudo sed -i 's|^PasswordAuthentication yes|PasswordAuthentication no|' /etc/ssh/sshd_config

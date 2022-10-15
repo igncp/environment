@@ -34,14 +34,12 @@ if [ -f ~/project/.config/gui-install ]; then
   cp environment/unix/config-files/fonts.conf ~/project/provision/
   cp environment/unix/config-files/rime-config.yaml ~/project/provision/
   touch ~/project/.config/common-gui-light
+  touch ~/project/.config/headless-xorg
+  touch ~/project/.config/x11-vnc-server
 fi
 
 cat environment/unix/provision/custom.sh >> ~/project/provision/provision.sh
 
-
-if [ -f ~/project/.config/gui-install ]; then
-  echo 'Update to include GUI'
-fi
 cp environment/unix/os/ubuntu/config-files/data.updateProvision.js ~/project/provision
 cp environment/unix/config-files/updateProvision.js ~/project/provision
 
