@@ -51,7 +51,9 @@ autocmd filetype rust :exe RustPrintMapping
 
 let g:deoplete#sources#rust#racer_binary='$HOME/.cargo/bin/racer'
 let g:deoplete#sources#rust#rust_source_path='HOME/rust-src'
+EOF
 
+cat >> ~/.vim/colors.vim <<"EOF"
 hi rustCommentLineDoc    cterm=NONE ctermfg=cyan  ctermbg=white
 hi rustAttribute    cterm=NONE ctermfg=cyan  ctermbg=white
 hi rustDerive    cterm=NONE ctermfg=cyan  ctermbg=white
@@ -69,7 +71,10 @@ install_cargo_crate() {
 }
 
 install_cargo_crate rustfmt
-install_cargo_crate racer
+
+if [ -z "$ARM_ARCH" ]; then
+  install_cargo_crate racer # TODO - Fix on ARM
+fi
 
 install_system_package valgrind
 

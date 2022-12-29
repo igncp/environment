@@ -30,7 +30,7 @@ if [ ! -f ~/project/.config/theme ]; then
 fi
 ENVIRONMENT_THEME="$(cat ~/project/.config/theme)" # light | dark
 PROVISION_OS=''
-ARM_ARCH="$(uname -m | grep arm || true)"
+ARM_ARCH="$(uname -m | grep -E '(arm|aarch64)' || true)"
 
 case "$(uname -s)" in
    Darwin)

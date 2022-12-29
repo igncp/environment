@@ -35,8 +35,6 @@ nnoremap <leader>dc :CocList commands<cr>
 nnoremap <leader>de :CocEnable<cr>
 nnoremap <leader>dE :CocDisable<cr>
 nnoremap <leader>ds :CocCommand<cr>
-nnoremap <leader>da <Plug>(coc-codeaction-selected)<cr>
-vnoremap <leader>da <Plug>(coc-codeaction-selected)<cr>
 nnoremap <leader>dl <Plug>(coc-codelens-action)
 nnoremap <leader>do <Plug>(coc-codeaction)
 nnoremap <leader>dr <Plug>(coc-rename)
@@ -48,8 +46,6 @@ call add(g:coc_global_extensions, 'coc-git')
 call add(g:coc_global_extensions, 'coc-lists')
 call add(g:coc_global_extensions, 'coc-sumneko-lua')
 
-imap <C-l> <Plug>(coc-snippets-expand-jump)
-smap <C-l> <Plug>(coc-snippets-expand-jump)
 let g:coc_snippet_next = '<c-d>'
 
 nnoremap <nowait><expr> <C-g> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
@@ -165,7 +161,8 @@ EOF
 if type rustc > /dev/null 2>&1 ; then
   install_vim_package neoclide/coc-rls
   cat >> ~/.vimrc <<"EOF"
-call add(g:coc_global_extensions, 'coc-rls')
+" TODO: Fix
+" call add(g:coc_global_extensions, 'coc-rls')
 EOF
   sed -i '$ d' ~/.vim/coc-settings.json
   cat >> ~/.vim/coc-settings.json <<"EOF"
@@ -181,6 +178,14 @@ fi
 "sumneko-lua.enableNvimLuaDev": true,
 "Lua.telemetry.enable": false
 }
+EOF
+
+cat >> ~/.vim/lua/extra_beginning.lua <<"EOF"
+vim.api.nvim_set_keymap("i", "<c-l>", "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>", {})
+vim.api.nvim_set_keymap("s", "<c-l>", "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>", {})
+
+vim.api.nvim_set_keymap("n", "<leader>da", "<Plug>(coc-codeaction-cursor)", {silent = true, nowait = true})
+vim.api.nvim_set_keymap("v", "<leader>da", "<Plug>(coc-codeaction-selected)", {silent = true, nowait = true})
 EOF
 
 # To try:

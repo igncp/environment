@@ -67,7 +67,7 @@ EOF
 
 # LVM
 # Creation: lvcreate --size 10G -n home ubuntu-vg # use mkfs.ext4 and mount (for fstab) after
-# For extending: lvextend -l +8G /dev/mapper/lv-foo ; resize2fs /dev/mapper/lv-foo
+# For extending: lvextend -L +8G /dev/mapper/lv-foo ; resize2fs /dev/mapper/lv-foo
 # lvdisplay
 
 ## Performance

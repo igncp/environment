@@ -34,9 +34,9 @@ if [ -f ~/project/.config/cli-gh ]; then
       install_system_package gh
     else
       if [ -n "$ARM_ARCH" ]; then
-        wget https://github.com/cli/cli/releases/download/v2.5.1/gh_2.5.1_linux_armv6.tar.gz
+        wget https://github.com/cli/cli/releases/download/v2.21.1/gh_2.21.1_linux_arm64.tar.gz
       else
-        wget https://github.com/cli/cli/releases/download/v2.5.1/gh_2.5.1_linux_amd64.tar.gz
+        wget https://github.com/cli/cli/releases/download/v2.21.1/gh_2.21.1_linux_amd64.tar.gz
       fi
       tar xvzf *.tar.gz
       rm -rf *.tar.gz
@@ -98,16 +98,24 @@ fi
 
 if [ -f ~/project/.config/cli-scc ]; then
   if ! type scc > /dev/null 2>&1 ; then
+    FILTER='Linux.*86_64'
+    if [ -n "$ARM_ARCH" ]; then
+      if [ "$PROVISION_OS" == "MAC" ]; then
+        FILTER='Darwin.*arm64'
+      else
+        FILTER='Linux.*arm64'
+      fi
+    fi
     (cd ~ && \
       curl -s https://api.github.com/repos/boyter/scc/releases/latest \
-        | grep unknown-linux \
         | grep browser \
-        | grep 86_64 \
+        | grep gz \
+        | grep "$FILTER" \
         | cut -d : -f 2,3 \
         | tr -d \" \
         | xargs wget
-      unzip scc*64*.zip
-      rm scc*.zip
+      tar -xf scc*.tar.gz
+      rm -rf scc*.tar.gz
       sudo mv scc /usr/bin)
   fi
 fi
@@ -149,13 +157,21 @@ cat > $HOME/.config/bat/config <<"EOF"
 --theme=Nord
 --style="numbers,changes,header"
 EOF
+if [ -f /usr/bin/batcat ] && [ ! -f /usr/bin/bat ]; then
+  sudo ln -s /usr/bin/batcat /usr/bin/bat
+fi
 
-# JSON viewer: https://github.com/antonmedv/fx
-install_system_package fx
+# In Ubuntu ARM, these packages are installed via snap
+if [ -z "$ARM_ARCH" ] || [ -z "$(uname -a | grep 'Ubuntu' || true)" ]; then
+  # JSON viewer: https://github.com/antonmedv/fx
+  install_system_package fx
 
-# https://github.com/dalance/procs
-install_system_package procs
-procs --completion-out zsh >> ~/.scripts/procs_completion
-echo 'fpath=(~/.scripts/procs_completion $fpath)' >> ~/.zshrc
+  # https://github.com/dalance/procs
+  install_system_package procs
+  procs --completion-out zsh >> ~/.scripts/procs_completion
+  echo 'fpath=(~/.scripts/procs_completion $fpath)' >> ~/.zshrc
+fi
+
+install_system_package age # https://github.com/FiloSottile/age
 
 # cli-tools END

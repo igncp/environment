@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Check notes/vbox.md
+# Check notes/vms.md
 # Download Ubuntu Server: https://ubuntu.com/download/server
 
 # Follow wizard of Ubuntu Server

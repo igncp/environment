@@ -19,6 +19,11 @@ if [ -f /etc/sudoers.d/0pwfeedback ]; then
   sudo mv  /etc/sudoers.d/0pwfeedback.disabled
 fi
 
+# This avoids displaying the restart-services popup on every install
+if [ -f /etc/needrestart/needrestart.conf ]; then
+  sudo sed "s|#\$nrconf{restart}.*|\$nrconf{restart} = 'a';|" -i /etc/needrestart/needrestart.conf
+fi
+
 if ! type nvim > /dev/null 2>&1 ; then
   if [ -n "$ARM_ARCH" ]; then
     cd ~ ; rm -rf nvim-repo ; git clone https://github.com/neovim/neovim.git nvim-repo --depth 1 --branch release-0.6 ; cd nvim-repo

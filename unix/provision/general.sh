@@ -544,7 +544,7 @@ echo -e "\n$SOURCE_ASDF_COMPLETION" >> ~/.shellrc
 if ! type asdf > /dev/null 2>&1 ; then
   rm -rf ~/.asdf
   # list all versions of language: asdf list all PLUGIN_NAME
-  git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.8.1
+  git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.10.2
   eval "$SOURCE_ASDF"
   eval "$SOURCE_ASDF_COMPLETION"
 fi

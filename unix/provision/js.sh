@@ -27,7 +27,7 @@ else
   install_node_modules() {
     NODE_VERSION="$(node --version | sed 's|^v||')"
     for MODULE_NAME in "$@"; do
-      if [ ! -d "$HOME/.asdf/installs/nodejs/$NODE_VERSION/.npm/lib/node_modules/$MODULE_NAME" ]; then
+      if [ ! -d "$HOME/.asdf/installs/nodejs/$NODE_VERSION/lib/node_modules/$MODULE_NAME" ]; then
         echo "doing: npm i -g $MODULE_NAME"
         npm i -g $MODULE_NAME
       fi
