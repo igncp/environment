@@ -359,6 +359,7 @@ function! CustomDismiss() abort
 endfunction
 
 imap <silent><script><nowait><expr> <C-]> CustomDismiss() . "\<C-]>"
+nmap <silent><script><nowait><expr> <C-]> CustomDismiss() . "\<C-]>"
 EOF
 fi
 
