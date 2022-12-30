@@ -7,6 +7,8 @@ bind 1 split-window 'tmux switch-client -t SESSION_NAME_A'
 bind 2 split-window 'tmux switch-client -t SESSION_NAME_B'
 EOF
 
+# echo "$HOME/.zsh_history_foo" > "$HOME/.check-files/zsh-history"
+
 bash ~/project/provision/provision.sh
 
 tmux \

@@ -12,6 +12,7 @@
 - Update the dock
   - Remove most of the icons
   - Add activity monitor, iterm 2
+      - Install monofur for iterm 2 (to support vim-devicons): https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/Monofur/Regular/complete/monofur%20Nerd%20Font%20Complete%20Mono.ttf
   - Set up to automatically show or hide (in the same menu, also for the top bar)
   - Set up icons size
 - Download Chrome and sync it

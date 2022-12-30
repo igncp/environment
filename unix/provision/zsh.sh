@@ -64,11 +64,21 @@ scriptsPrint () {
   LBUFFER=${text_to_add}
   zle accept-line # enter
 }
+randomScript () {
+  TMP_FILE=$(mktemp)
+  mv "$TMP_FILE" "$TMP_FILE.sh" && chmod +x "$TMP_FILE.sh"
+  printf '#!/bin/bash\nset e\n\n' > "$TMP_FILE.sh"
+  text_to_add="nvim +3 $TMP_FILE.sh && sh $TMP_FILE.sh"
+  LBUFFER=${text_to_add}
+  zle accept-line # enter
+}
+
 zle -N bookmarksJustInput
 zle -N bookmarksFull
 zle -N scriptsJustInput
 zle -N scriptsPrint
 zle -N scriptsFull
+zle -N randomScript
 
 bindkey "\C-q\C-q" bookmarksJustInput
 bindkey "\C-q\C-w" bookmarksFull
@@ -76,6 +86,7 @@ bindkey "\C-q\C-a" scriptsJustInput
 bindkey "\C-q\C-s" scriptsFull
 bindkey "\C-p" scriptsPrint
 bindkey "\C-k" edit-command-line
+bindkey "\C-q\C-i" randomScript
 
 source $HOME/.shellrc
 source $HOME/.shell_sources
@@ -139,6 +150,10 @@ alias ProvisionUpdate='node ~/project/provision/updateProvision.js; print -S "# 
 
 # Expand aliases on tab
 zstyle ':completion:*' completer _expand_alias _complete _ignored
+
+if [ -f ~/.check-files/zsh-history ]; then
+  HISTFILE=$(cat ~/.check-files/zsh-history)
+fi
 EOF
 if [ "$PROVISION_OS" == "LINUX" ]; then
   echo 'eval "$(dircolors /home/'"$USER"'/.dircolors)"' >> ~/.zshrc

@@ -62,10 +62,6 @@ install_vim_package tpope/vim-repeat # https://github.com/tpope/vim-repeat
 install_vim_package tpope/vim-surround # https://github.com/tpope/vim-surround
 install_vim_package vim-scripts/AnsiEsc.vim # https://github.com/vim-scripts/AnsiEsc.vim
 
-if [ -f ~/project/.config/copilot ]; then
-  install_vim_package github/copilot.vim # https://github.com/github/copilot.vim
-fi
-
 cat >> ~/.vimrc <<"EOF"
 execute pathogen#infect()
 lua require("extra_beginning")
@@ -342,7 +338,16 @@ add_special_vim_map "showtabnumber" $':echo tabpagenr()<cr>' 'show tab number'
 ## vim-textobj END
 
 if [ -f ~/project/.config/copilot ]; then
-  # GH Copilot
+  install_vim_package github/copilot.vim # https://github.com/github/copilot.vim
+  cat >> ~/.vim/colors.vim <<"EOF"
+hi CopilotSuggestion guifg=#ff8700 ctermfg=208
+EOF
+
+  cat >> ~/.vim/lua/extra_beginning.lua <<"EOF"
+vim.api.nvim_set_keymap("i", "<C-_>", "<Plug>(copilot-next)", {silent = true, nowait = true})
+vim.api.nvim_set_keymap("i", "<C-\>", "<Plug>(copilot-previous)", {silent = true, nowait = true})
+EOF
+
   # This is due to the screen not cleaned when dismissing a suggestion
   cat >> ~/.vimrc <<"EOF"
 function! CustomDismiss() abort
@@ -354,9 +359,6 @@ function! CustomDismiss() abort
 endfunction
 
 imap <silent><script><nowait><expr> <C-]> CustomDismiss() . "\<C-]>"
-" This maps to control + /
-inoremap <C-_> <Plug>(copilot-next)
-inoremap <C-\> <Plug>(copilot-previous)
 EOF
 fi
 

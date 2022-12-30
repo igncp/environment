@@ -278,7 +278,7 @@ GitFilesByAuthorLatestGrep() {
 
 alias GitAddAll='GitAdd .'
 alias GitBranchOrder='git branch -r --sort=creatordate --format "%(creatordate:relative);%(committername);%(refname)" | sed "s|refs/remotes/origin/||" | grep -v ";HEAD$" | column -s ";" -t | tac | less'
-alias GitCommit='git commit -m'
+GitCommit() { eval "git commit -m '$@'"; }
 alias GitConfig='"$EDITOR" .git/config'
 alias GitEditorCommit='git commit -v'
 alias GitListConflictFiles='git diff --name-only --relative --diff-filter=U'
