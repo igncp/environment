@@ -582,6 +582,13 @@ nnoremap <silent> e :call fzf#run({
 \ })<CR>
 EOF
 
+if [ -f ~/project/.config/netcat-clipboard ]; then
+  sed '/leader>i/d' -i ~/.vimrc
+  cat >> ~/.vimrc <<"EOF"
+vnoremap <leader>i y:call writefile(getreg('0', 1, 1), "/tmp/netcat-clipboard")<cr>:silent !sh ~/.scripts/netcat-clipboard.sh<cr>
+EOF
+fi
+
 # vim-extra available
 
 # vim-base END

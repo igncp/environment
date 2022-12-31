@@ -39,6 +39,12 @@ alias DockerSystemSpace='docker system df --verbose'
 DockerBashExec() { docker exec -it $1 /bin/bash; }
 DockerBashRun() { docker run -it $1 /bin/bash; }
 DockerHistory() { docker history --no-trunc $1 | less -S; }
+
+# DockerContainerPortainer 9123
+DockerContainerPortainer() { docker run --rm -d -p $1:9000 --name portainer \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -v $HOME/misc/portainer_data:/data \
+  portainer/portainer-ce:latest; }
 EOF
 
 cat >> ~/.vimrc <<"EOF"

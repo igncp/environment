@@ -222,6 +222,7 @@ SSHGenerateStrongKey() { FILE="$1"; ssh-keygen -t ed25519 -f "$FILE"; }
 alias SSHListLocalForwardedPorts='ps x -ww -o pid,command | ag ssh | grep --color=never localhost'
 SSHForwardPortLocal() { ssh -fN -L "$1":localhost:"$1" ${@:2}; } # SSHForwardPort 1234 192.168.1.40
 alias SSHDConfig='sudo sshd -T'
+SSHListConnections() { sudo netstat -tnpa | grep 'ESTABLISHED.*sshd'; }
 
 alias AliasesReload='source ~/.shell_aliases'
 alias CleanNCurses='stty sane;clear;'
@@ -649,5 +650,19 @@ else
 fi
 
 echo "bind b split-window 'sh /tmp/tmux_choose_session.sh'" >> ~/.tmux.conf
+
+if [ -f ~/project/.config/netcat-clipboard ]; then
+  cat > ~/.scripts/netcat-clipboard.sh <<"EOF"
+cat /tmp/netcat-clipboard | nc -q0 localhost 5556
+rm -rf /tmp/netcat-clipboard
+EOF
+  cat >> ~/.shell_aliases <<"EOF"
+# Remote forward the port in ~/.ssh/config of the client
+alias ClipboardNetcatSender='nc -q0 localhost 5556'
+EOF
+fi
+cat >> ~/.shell_aliases <<"EOF"
+alias ClipboardNetcatReceiver='while (true); do nc -l 5556 | pbcopy; done'
+EOF
 
 # general END
