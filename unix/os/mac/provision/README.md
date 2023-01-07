@@ -2,7 +2,7 @@
 
 ## Manual Steps
 
-- Setup wizard, disabling analytics and voice detection
+- Set up wizard, disabling analytics and voice detection
   - Choose black theme
 - Install Homebrew command
 - If there are issues with `brew`, run `xcode-select --install`
@@ -21,8 +21,8 @@
 - Change desktop background
 - Reduce motion in accesibility settings
 - Enabled firewall in Security settings
-- Added desktops (with control+up) and setup shortcuts in keyboard settings
-- Setup provision with `environment` repo
+- Added desktops (with control+up) and set up mission control shortcuts in keyboard settings
+- Set up provision with `environment` repo
 - Installed UTM: https://mac.getutm.app/ (check vms.md)
 - Go to settings of mission control to not re-arrange workspaces
 - Disable dictation shortcut to avoid the popup on double control
