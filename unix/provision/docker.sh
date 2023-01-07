@@ -30,6 +30,7 @@ if [ ! -f ~/.docker/cli-plugins/docker-compose ]; then
   if [ "$PROVISION_OS" = "MAC" ]; then COMPOSE_OS=darwin ; else COMPOSE_OS=linux ; fi
   wget "https://github.com/docker/compose/releases/download/v2.15.0/docker-compose-$COMPOSE_OS-$COMPOSE_ARCH" \
     -O ~/.docker/cli-plugins/docker-compose
+  sudo chmod +x ~/.docker/cli-plugins/docker-compose
 fi
 
 cat >> ~/.shell_aliases <<"EOF"
@@ -73,6 +74,7 @@ if [ -f ~/project/.config/docker-buildx ]; then
     if [ "$PROVISION_OS" = "MAC" ]; then BUILDX_OS=darwin ; else BUILDX_OS=linux ; fi
     wget "https://github.com/docker/buildx/releases/download/v0.9.1/buildx-v0.9.1.$BUILDX_OS-$BUILDX_ARCH" \
       -O ~/.docker/cli-plugins/docker-buildx
+    sudo chmod +x ~/.docker/cli-plugins/docker-buildx
   fi
 
   if [ ! -f ~/.check-files/docker-buildx ]; then
