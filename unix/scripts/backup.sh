@@ -17,7 +17,11 @@ if [ -z "$BACKUP_PATH" ]; then
   exit 1
 fi
 
+rm -rf "$BACKUP_PATH"
+mkdir -p "$BACKUP_PATH"
+
 rsync -rh --delete ~/project/ "$BACKUP_PATH/project"
+rsync -rh --delete /etc/hosts "$BACKUP_PATH/hosts"
 # +++ Add here the rest of things to copy
 # ...
 # +++
