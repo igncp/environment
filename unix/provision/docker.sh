@@ -29,8 +29,8 @@ if [ ! -f ~/.docker/cli-plugins/docker-compose ]; then
   if [ -n "$ARM_ARCH" ]; then COMPOSE_ARCH=aarch64 ; else COMPOSE_ARCH=x86_64 ; fi
   if [ "$PROVISION_OS" = "MAC" ]; then COMPOSE_OS=darwin ; else COMPOSE_OS=linux ; fi
   wget "https://github.com/docker/compose/releases/download/v2.15.0/docker-compose-$COMPOSE_OS-$COMPOSE_ARCH" \
-    -O ~/.docker/cli-plugins/docker-compose
-  sudo chmod +x ~/.docker/cli-plugins/docker-compose
+    -O "$HOME"/.docker/cli-plugins/docker-compose
+  sudo chmod +x "$HOME"/.docker/cli-plugins/docker-compose
 fi
 
 cat >> ~/.shell_aliases <<"EOF"
