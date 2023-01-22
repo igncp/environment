@@ -14,16 +14,16 @@ fi
 if [ -f ~/project/.config/cli-openvpn ]; then
   install_system_package openvpn
   mkdir -p ~/.openvpn
-  cat > ~/.openvpn/vpn_setup.sh <<"EOF"
-    cat >> /tmp/resolv.conf <<"FOOMSG"
-nameserver 8.8.8.8
-nameserver 8.8.4.4
-FOOMSG
-sudo mv /tmp/resolv.conf /etc
-sudo openvpn --config ~/.openvpn/"$1" ${@:2}
-EOF
-  cat >> ~/.shell_aliases <<"EOF"
-alias VPNLondon='sh ~/.openvpn/vpn_setup.sh London.ovpn'
+  cat > ~/.openvpn/_start_cli_template.sh <<"EOF"
+#!/usr/bin/env bash
+sudo openvpn \
+  --config $HOME/.openvpn/LOCATION.ovpn \
+  --script-security 2 \
+  --auth-user-pass $HOME/.openvpn/creds.txt \
+  --up /etc/openvpn/update-systemd-resolved \
+  --down /etc/openvpn/update-systemd-resolved \
+  --dhcp-option 'DOMAIN-ROUTE .' \
+  --down-pre
 EOF
 fi
 
@@ -173,5 +173,9 @@ if [ -z "$ARM_ARCH" ] || [ -z "$(uname -a | grep 'Ubuntu' || true)" ]; then
 fi
 
 install_system_package age # https://github.com/FiloSottile/age
+
+if [ -f ~/project/.config/vercel-cli ]; then
+  if ! type vercel > /dev/null 2>&1 ; then npm i -g vercel; fi
+fi
 
 # cli-tools END

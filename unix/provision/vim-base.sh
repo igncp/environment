@@ -404,6 +404,8 @@ if !exists('g:lasttab')
 endif
 nmap <leader>zt :exe "tabn ".g:lasttab<CR>
 au TabLeave * let g:lasttab = tabpagenr()
+
+nnoremap <leader>jk :put =strftime(\"%Y-%m-%d %H:%M:%S\")<cr>
 EOF
 
 cat >> ~/.vimrc <<"EOF"

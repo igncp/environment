@@ -47,6 +47,8 @@ EOF
 
 cat >> ~/.shell_aliases <<"EOF"
 alias SystemListInstalled='apt list --installed'
+alias SystemUpgrade='sudo apt-get upgrade -y'
+
 alias AptLog='tail -f /var/log/apt/term.log'
 alias UbuntuVersion='lsb_release -a'
 alias UbuntuFindPackageByFile="dpkg-query -S" # e.g. UbuntuFindPackageByFile '/usr/bin/ag'

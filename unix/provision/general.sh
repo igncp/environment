@@ -227,6 +227,7 @@ SSHListConnections() { sudo netstat -tnpa | grep 'ESTABLISHED.*sshd'; }
 alias AliasesReload='source ~/.shell_aliases'
 alias CleanNCurses='stty sane;clear;'
 alias EditProvision="$EDITOR ~/project/provision/provision.sh && provision.sh"
+alias GeoInfo='curl -s ipinfo.io | jq .'
 alias FDisk='sudo fdisk /dev/sda'
 alias FilterLeaf=$'sort -r | awk \'a!~"^"$0{a=$0;print}\' | sort'
 alias HierarchyManual='man hier'
@@ -544,8 +545,10 @@ echo -e "\n$SOURCE_ASDF_COMPLETION" >> ~/.shellrc
 
 if ! type asdf > /dev/null 2>&1 ; then
   rm -rf ~/.asdf
+  LAST_TAG=$(git ls-remote --tags https://github.com/asdf-vm/asdf | awk '{ print $2 }' \
+    | grep -v {} | sed 's|refs/tags/||' | sort -Vr | head -n 1)
   # list all versions of language: asdf list all PLUGIN_NAME
-  git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.10.2
+  git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch "$LAST_TAG"
   eval "$SOURCE_ASDF"
   eval "$SOURCE_ASDF_COMPLETION"
 fi

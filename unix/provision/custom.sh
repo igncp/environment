@@ -35,20 +35,6 @@ EOF
 sed -i 's|_HOME_|'"$HOME"'|g' /tmp/.vimrc
 cat /tmp/.vimrc >> ~/.vimrc ; rm -rf /tmp/.vimrc
 
-cat >> ~/.bashrc <<"EOF"
-if [ ! -f "$HOME"/.check-files/vpn-info ]; then
-  echo '[~/.check-files/vpn-info]: Update vpn info in the grep'
-fi
-_get_if_vpn() {
-  IS_VPN=$(ps -aux | grep -E 'onevpn|othervpn' | grep -v grep)
-  if [ ! -z "$IS_VPN" ]; then
-    echo '[VPN] '
-  else
-    printf ''
-  fi
-}
-EOF
-
 cat >> ~/.shellrc <<"EOF"
 if [ -z "$TMUX" ]; then
   echo 'check if running in VM and remove condition if yes, either way remove this message'
