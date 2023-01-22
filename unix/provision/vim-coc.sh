@@ -181,8 +181,8 @@ fi
 EOF
 
 cat >> ~/.vim/lua/extra_beginning.lua <<"EOF"
-vim.api.nvim_set_keymap("i", "<c-l>", "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>", {})
-vim.api.nvim_set_keymap("s", "<c-l>", "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>", {})
+vim.api.nvim_set_keymap("i", "<c-l>", "<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])<CR>", {})
+vim.api.nvim_set_keymap("s", "<c-l>", "<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])<CR>", {})
 
 vim.api.nvim_set_keymap("n", "<leader>da", "<Plug>(coc-codeaction-cursor)", {silent = true, nowait = true})
 vim.api.nvim_set_keymap("v", "<leader>da", "<Plug>(coc-codeaction-selected)", {silent = true, nowait = true})

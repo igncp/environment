@@ -46,7 +46,7 @@ if [ -z "$TMUX" ]; then
     tmux attach
   elif [ -f "$HOME"/project/scripts/bootstrap/Bootstrap_common.sh ]; then
     sh "$HOME"/project/scripts/bootstrap/Bootstrap_common.sh
-  else
+  elif [ ! -f $HOME/project/.config/no-auto-tmux ]; then
     tmux
   fi
 fi
