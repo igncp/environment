@@ -191,6 +191,10 @@ alias svim="sudo vim"
 alias tree="tree -a"
 alias wget="wget -c"
 
+alias go="git checkout"
+complete -F _git_checkout go
+alias gob="git checkout -b"
+
 alias Lsblk="lsblk -f | less -S"
 Diff() { diff --color=always "$@" | less -r; }
 DisplayFilesConcatenated(){ xargs tail -n +1 | sed "s|==>|\n\n\n\n\n$1==>|; s|<==|<==\n|" | $EDITOR -; }
@@ -247,6 +251,13 @@ alias CrontabUser='crontab -e'
 alias CrontabRoot='sudo EDITOR=vim crontab -e'
 
 GitAdd() { git add -A $@; git status -u; }
+GitCloneRepo() {
+  SOURCE=$1; TARGET=$2;
+  rm -rf "$TARGET"; mkdir -p "$TARGET";
+  cp -r "$SOURCE"/.git "$TARGET"
+  cd "$TARGET" && git reset --hard
+  echo "Moved to target: $TARGET"
+}
 GitFilesAddedDiff() {
   GitAddAll 2>&1 > /dev/null;
   R_PATH="$(git rev-parse --show-toplevel)";
@@ -564,7 +575,11 @@ alias.d=done
 alias.a=add
 EOF
 if [ "$PROVISION_OS" == "LINUX" ]; then
-  echo 'include /usr/share/doc/task/rc/no-color.theme' >> ~/.taskrc
+  if [ -f /usr/share/taskwarrior/no-color.theme ]; then
+    echo 'include /usr/share/taskwarrior/no-color.theme' >> ~/.taskrc
+  elif [ -f /usr/share/doc/task/rc/no-color.theme ]; then
+    echo 'include /usr/share/doc/task/rc/no-color.theme' >> ~/.taskrc
+  fi
 elif [ "$PROVISION_OS" == "MAC" ]; then
   THEME_PATH=$(find /opt/homebrew/Cellar/task -type f -name "no-color.theme")
   echo "include $THEME_PATH" >> ~/.taskrc

@@ -14,14 +14,15 @@ const items = [
   ["vim-coc", "unix/provision/vim-coc.sh"],
   ["js", "unix/provision/js.sh"],
   ["ts", "unix/provision/ts.sh"],
-  ["gui-base", "unix/provision/gui-base.sh"],
-  ["gui-common", "unix/provision/gui-common.sh"],
-  ["gui-i3", "unix/provision/gui-i3.sh"],
-  ["arch-gui", "unix/os/arch-linux/provision/arch-gui.sh"],
-  ["android", "unix/provision/android.sh"],
+  // ["gui-base", "unix/provision/gui-base.sh"],
+  // ["gui-common", "unix/provision/gui-common.sh"],
+  // ["gui-i3", "unix/provision/gui-i3.sh"],
+  // ["arch-gui", "unix/os/arch-linux/provision/arch-gui.sh"],
+  // ["android", "unix/provision/android.sh"],
   ["cli-tools", "unix/provision/cli-tools.sh"],
   ["docker", "unix/provision/docker.sh"],
-  ["vscode", "unix/provision/vscode.sh"],
+  // ["vscode", "unix/provision/vscode.sh"],
+  ["rust", "unix/provision/rust.sh"],
   // ...
 ];
 

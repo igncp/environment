@@ -23,7 +23,6 @@ cat >> ~/.vimrc <<"EOF"
 
 " vim-sneak
   hi! link Sneak Search
-
 EOF
 
 # vim-misc END

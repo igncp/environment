@@ -34,7 +34,8 @@ cat environment/unix/provision/vim-root.sh >> ~/project/provision/provision.sh
 cat environment/unix/provision/js.sh >> ~/project/provision/provision.sh
 cat environment/unix/provision/ts.sh >> ~/project/provision/provision.sh
 cat environment/unix/provision/vim-coc.sh >> ~/project/provision/provision.sh
-cat environment/unix/provision/cli-tools.sh >> ~/project/provision/cli-tools.sh
+cat environment/unix/provision/cli-tools.sh >> ~/project/provision/provision.sh
+cat environment/unix/provision/rust.sh >> ~/project/provision/provision.sh
 cat environment/unix/provision/custom.sh >> ~/project/provision/provision.sh
 
 cp environment/unix/os/ubuntu/config-files/data.updateProvision.js ~/project/provision

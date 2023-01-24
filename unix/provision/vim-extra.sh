@@ -45,7 +45,6 @@ install_vim_package haya14busa/incsearch.vim # https://github.com/haya14busa/inc
 install_vim_package honza/vim-snippets "find ~/.vim/bundle/vim-snippets/snippets/ -type f | xargs sed -i 's|:\${VISUAL}||'"
 install_vim_package jiangmiao/auto-pairs # https://github.com/jiangmiao/auto-pairs
 install_vim_package junegunn/limelight.vim # https://github.com/junegunn/limelight.vim
-install_vim_package junegunn/vim-easy-align # https://github.com/junegunn/vim-easy-align
 install_vim_package junegunn/vim-peekaboo # https://github.com/junegunn/vim-peekaboo
 install_vim_package liuchengxu/vista.vim # https://github.com/liuchengxu/vista.vim
 install_vim_package mbbill/undotree # https://github.com/mbbill/undotree
@@ -56,6 +55,7 @@ install_vim_package rhysd/clever-f.vim # https://github.com/rhysd/clever-f.vim
 install_vim_package ryanoasis/vim-devicons # if not supported, add in custom: rm -rf ~/.vim/bundle/vim-devicons/*
 install_vim_package scrooloose/nerdcommenter # https://github.com/scrooloose/nerdcommenter
 install_vim_package terryma/vim-expand-region # https://github.com/terryma/vim-expand-region
+install_vim_package tommcdo/vim-exchange # https://github.com/tommcdo/vim-exchange
 install_vim_package tpope/vim-eunuch # https://github.com/tpope/vim-eunuch
 install_vim_package tpope/vim-fugitive # https://github.com/tpope/vim-fugitive
 install_vim_package tpope/vim-repeat # https://github.com/tpope/vim-repeat
@@ -66,12 +66,6 @@ cat >> ~/.vimrc <<"EOF"
 execute pathogen#infect()
 lua require("extra_beginning")
 
-" toggle distraction free mode
-  nnoremap <silent> <leader>n :GitGutterDisable<cr>:set laststatus=0<cr>
-    \ :hi Folded ctermbg=white ctermfg=white<cr>
-  nnoremap <silent> <leader>N :GitGutterEnable<cr>:set laststatus=2<cr>
-    \ :hi Folded ctermbg=236 ctermfg=236<cr>
-
 " ctrlp
   let g:ctrlp_map = '<c-p>'
   let g:ctrlp_cmd = 'CtrlP'
@@ -79,8 +73,6 @@ lua require("extra_beginning")
   nnoremap <leader>p :CtrlP %:p:h<cr> " CtrlP in file's dir
   nnoremap <leader>P :CtrlPMRUFiles<cr>
   nnoremap <leader>kpp :CtrlP ~/project<cr>
-  nnoremap <leader>kpd :CtrlP ~/dev<cr>
-  nnoremap <leader>kph :CtrlP ~<cr>
   nnoremap <leader>kpk :CtrlPClearAllCaches<cr>
   let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
   let g:ctrlp_user_command = 'ag %s -l --hidden --ignore "\.git/*" --nocolor -g ""'
@@ -95,43 +87,12 @@ lua require("extra_beginning")
   \ sed "s\|$1\|\|" \| sed "1i _" \| sed "1i $1" \| sed "1i _" \| sed '4d' \| less; }
   \ && F <c-R>=expand("%:p:h")<cr>/ )<left><left>
 
-" grep current file
-  let g:GrepCF_fn = ':w! /tmp/current_vim<cr>:-tabnew\|te
-    \ Grep() { printf "<c-r>=expand("%")<cr>\n\n"; grep --color=always "$@" /tmp/current_vim;
-    \ printf "\n----\n\nlines: "; grep -in "$@" /tmp/current_vim \| wc -l; echo ""; }
-    \ && GrepAndLess() { Grep "$@" \| less -r; } && GrepAndLess '
-  execute 'nnoremap <leader>ky ' . g:GrepCF_fn . ' -i ""<left>'
-  execute 'vnoremap <leader>ky y' . g:GrepCF_fn . ' -i "<c-r>""<left>'
-
-" fast grep
-  let g:FastGrep_fn = ':-tabnew\|te
-    \ Grep() { grep -rn --color=always "$@"; printf "\n\n\n----\n\n\n"; grep --color=always -rl "$@"; }
-    \ && Grep <c-r>=g:Fast_grep_opts<cr> "<c-r>"" <c-r>=g:Fast_grep<cr> \| less -r<c-left><c-left><left><left><left><c-left><left><left>'
-  let g:Fast_grep=''
-  let g:Fast_grep_opts='-i'
-  nnoremap <leader>BB :let g:Fast_grep=''<left>
-  nnoremap <leader>BV :let g:Fast_grep_opts='-i '<left>
-  execute 'vnoremap <leader>b y' . g:FastGrep_fn
-  execute 'nnoremap <leader>b" vi"y' . g:FastGrep_fn
-  execute 'nnoremap <leader>bw viwy' . g:FastGrep_fn
-  execute 'nnoremap <leader>bb vy' . g:FastGrep_fn
-  execute 'nnoremap <leader>bf vy' . g:FastGrep_fn . '<c-left><left><left><bs>/<c-R>=expand("%:t")<cr>'
-
 " don't have to press the extra key when exiting the terminal (nvim)
   augroup terminal
     autocmd!
     autocmd TermClose * close
   augroup end
   autocmd TermOpen * startinsert
-
-" convenience indentation for copy-paste
-  " autocmd Filetype EXTENSION setlocal softtabstop=2 tabstop=2 shiftwidth=2
-  " autocmd Filetype EXTENSION setlocal softtabstop=4 tabstop=4 shiftwidth=4
-  " autocmd BufRead,BufEnter /path/to/project/*.{js} setlocal softtabstop=4 tabstop=4 shiftwidth=4
-
-" easy align
-  xmap ga <Plug>(EasyAlign)
-  nmap ga <Plug>(EasyAlign)
 EOF
 
 cat >> ~/.shellrc <<"EOF"
@@ -186,11 +147,6 @@ __add_n_completion() {
 }
 __add_n_completion "$HOME"/.vim/bundle/fzf/shell/completion.bash
 __add_n_completion "$HOME"/.fzf/shell/completion.bash
-cat >> ~/.shell_aliases <<"EOF"
-NFZF() { nvim -R -c "set foldlevel=20" -c "Line!" -; } # useful to pipe to this cmd
-Tree() { tree -a $@ -C -I "node_modules|.git" | nvim -R -c "AnsiEsc" -c "set foldlevel=20" -; }
-alias o='xdg-open'
-EOF
 
 cat >> ~/.vimrc <<"EOF"
 " from fzf.vim
@@ -216,7 +172,7 @@ inoremap <c-f> <c-c>:call SpecialMaps()<cr>
 EOF
 
 # these maps will be present in a fzf list (apart from working normally)
-# the must begin with <leader>zm (where <leader> == <Space>)
+# they must begin with <leader>zm (where <leader> == <Space>)
 add_special_vim_map() {
   MAP_KEYS_AFTER_LEADER="$1"
   MAP_END="$2"

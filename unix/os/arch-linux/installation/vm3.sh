@@ -60,6 +60,7 @@ cat environment/unix/provision/cli-tools.sh >> ~/project/provision/provision.sh
 cat environment/unix/provision/android.sh >> ~/project/provision/provision.sh
 cat environment/unix/provision/vscode.sh >> ~/project/provision/provision.sh
 cat environment/unix/provision/docker.sh >> ~/project/provision/provision.sh
+cat environment/unix/provision/rust.sh >> ~/project/provision/provision.sh
 cat environment/unix/provision/custom.sh >> ~/project/provision/provision.sh
 
 cp environment/unix/os/arch-linux/config-files/data.updateProvision.js ~/project/provision

@@ -14,12 +14,13 @@ const items = [
   ["vim-coc", "unix/provision/vim-coc.sh"],
   ["js", "unix/provision/js.sh"],
   ["ts", "unix/provision/ts.sh"],
-  ["gui-base", "unix/provision/gui-base.sh"],
-  ["gui-common", "unix/provision/gui-common.sh"],
-  ["gui-xfce", "unix/provision/gui-xfce.sh"],
-  ["ubuntu-gui", "unix/os/ubuntu/provision/ubuntu-gui.sh"],
+  // ["gui-base", "unix/provision/gui-base.sh"],
+  // ["gui-common", "unix/provision/gui-common.sh"],
+  // ["gui-xfce", "unix/provision/gui-xfce.sh"],
+  // ["ubuntu-gui", "unix/os/ubuntu/provision/ubuntu-gui.sh"],
   ["cli-tools", "unix/provision/cli-tools.sh"],
   ["docker", "unix/provision/docker.sh"],
+  ["rust", "unix/provision/rust.sh"],
   // ...
 ];
 

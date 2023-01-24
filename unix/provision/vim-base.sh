@@ -177,8 +177,6 @@ nnoremap <leader>kW :e <c-R>=expand("%:p:h") . "/" <cr>
 nnoremap <leader>ke :Mkdir <c-R>=expand("%:p:h") . "/"<cr>
 nnoremap <leader>kE :Move <c-R>=expand("%:p:h") . "/"<cr>
 
-nnoremap <leader>c" _f"ci"
-
 vnoremap <leader>ku y:%s/\C<c-r>"//gn<cr>
 
 " sort indent block. requires nmap. requires 2 plugins.
@@ -197,30 +195,26 @@ au BufNewFile,BufRead *.ejs set filetype=html
   nnoremap gf <c-w>gf
 
 nnoremap <leader>kv :%s/\t/  /g<cr>
-vnoremap <F4> :sort<cr>
 inoremap <c-e> <esc>A
 inoremap <c-a> <esc>I
+
 vnoremap <silent> y y`]
 nnoremap <silent> p p`]
 vnoremap <silent> p pgvy`]
-nnoremap <leader>zk v%
-nnoremap <leader>zK v%<del>
+
 nnoremap <leader>zf :let @" = expand("%")<cr>
+
 vnoremap ; :<c-u>
 nnoremap <leader>zx 'mzz
 nnoremap <leader>jrw :call setreg("f", "<c-r>=expand("%:t:r")<cr>")<cr>
 nnoremap <leader>jrW :call setreg("g", "<c-r>=expand("%:p")<cr>")<cr>
-" nnoremap ' :<C-u>marks<CR>:normal! `
 
 " use always the same cursor
   set guicursor=
 
-" delete from cursor to end of line
-  inoremap <C-Del> <C-\><C-O>D
-
 " save file shortcuts
   nmap <c-s> :update<esc>
-  inoremap <c-s> <esc>:update<cr>
+  inoremap <c-s> <esc>:update<cr>a
 
 " quickly move to lines
   nnoremap <cr> G
@@ -235,18 +229,6 @@ nnoremap <leader>jrW :call setreg("g", "<c-r>=expand("%:p")<cr>")<cr>
 " tabs
   nnoremap r gt
   nnoremap R gT
-  nnoremap <leader>1 1gt
-  nnoremap <leader>2 2gt
-  nnoremap <leader>3 3gt
-  nnoremap <leader>4 4gt
-  nnoremap <leader>5 5gt
-  nnoremap <leader>6 6gt
-  nnoremap <leader>7 7gt
-  nnoremap <leader>8 8gt
-  nnoremap <leader>9 9gt
-  nnoremap <c-g> :execute "tabmove" tabpagenr() - 2 <cr>
-  nnoremap <c-l> :execute "tabmove" tabpagenr() + 1 <cr>
-  " add ':e' to paste a PATH_TO_FILE:LINE_NUMBER from fast grep
   nnoremap <c-t> :tabnew<cr>:e <left><right>
   nnoremap <leader>zz :tab split<cr>
 
@@ -256,9 +238,6 @@ nnoremap <leader>jrW :call setreg("g", "<c-r>=expand("%:p")<cr>")<cr>
 
 " highlight last inserted text
   nnoremap gV `[v`]
-
-" replace quotes
-nnoremap <leader>` f`a<BS>'<c-c>f`a<BS>'<c-c>l
 
 so ~/.vim/colors.vim
 
@@ -274,12 +253,6 @@ runtime macros/matchit.vim
 nnoremap gs /<c-r>/
 
 set scrolloff=3
-
-" copy - paste between files and VMs
-  vmap <leader>ff "+y
-  vmap <leader>fy "uy:-tabnew /tmp/vim-shared<cr>ggVG"up:x<cr>
-  nmap <leader>fp :-tabnew /tmp/vim-shared<cr>gg_vG$<left>"uy:q!<cr>"up
-  vmap <leader>fp <c-c>:-tabnew /tmp/vim-shared<cr>ggvG$<left>"uy:q!<cr>gv"up
 
 " improve the 'preview window' behaviour
   autocmd CompleteDone * pclose " close when done
@@ -399,81 +372,7 @@ function! CloseTab()
 endfunction
 map <c-d> :call CloseTab()<CR>
 
-if !exists('g:lasttab')
-  let g:lasttab = 1
-endif
-nmap <leader>zt :exe "tabn ".g:lasttab<CR>
-au TabLeave * let g:lasttab = tabpagenr()
-
 nnoremap <leader>jk :put =strftime(\"%Y-%m-%d %H:%M:%S\")<cr>
-EOF
-
-cat >> ~/.vimrc <<"EOF"
-function! ClearRegs()
-  let regs='abcdefghijklmnopqrstuvwxyz"'
-  let i=0
-  while (i<strlen(regs))
-    exec 'let @'.regs[i].'=""'
-    let i=i+1
-  endwhile
-  unlet regs
-endfunction!
-
-function! ShowRegs()
-  redir => l:registersOutput
-      silent! execute 'registers abcdefghijklmnopqrstuvwxyz"'
-  redir END
-  call writefile([""], '/tmp/regs.txt')
-  for l:line in split(l:registersOutput, "\n")
-      if l:line !~# '^"\S\s*$'
-          " echo l:line
-          call writefile(split(l:line, "\n", 1), '/tmp/regs.txt', 'a')
-      endif
-  endfor
-  execute ':-tabnew|te cat /tmp/regs.txt | sed "s|^|  |" | less -S'
-endfunction!
-
-nnoremap "" :call ShowRegs()<CR>
-nnoremap ". :call ClearRegs()<CR>
-EOF
-
-cat >> ~/.vimrc <<"EOF"
-function! AddNewListItem(del, reg)
-  let ch_in_line = getline('.') =~ a:reg
-
-  if ch_in_line == 0
-    execute "normal vi" . a:del
-    execute "normal zz"
-    execute "normal \<c-c>"
-
-    let ch = matchstr(getline('.'), '\%' . (col('.') - 1) . 'c.')
-
-    if ch != ','
-      execute "normal A,\<c-c>o"
-    endif
-  else
-    exe "normal f" . a:del
-
-    let ch1 = matchstr(getline('.'), '\%' . (col('.') - 1) . 'c.')
-    let ch2 = matchstr(getline('.'), '\%' . (col('.') - 2) . 'c.')
-
-    if ch1 == ',' || ch2 == ','
-      execute 'normal i '
-    elseif ch1 == ' '
-      execute 'normal hi, '
-      execute 'normal l'
-    else
-      execute 'normal i, '
-      execute 'normal l'
-    endif
-  endif
-
-  startinsert
-endfunction
-
-nnoremap <silent> <leader>m} :call AddNewListItem("}", "\}")<cr>
-nnoremap <silent> <leader>m) :call AddNewListItem(")", "\)")<cr>
-nnoremap <silent> <leader>m] :call AddNewListItem("]", "\]")<cr>
 EOF
 
 cp ~/.vimrc ~/.base-vimrc

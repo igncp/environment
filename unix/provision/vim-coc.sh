@@ -13,10 +13,6 @@ install_vim_package neoclide/coc-lists
 install_vim_package xiyaowong/coc-sumneko-lua
 
 cat >> ~/.vimrc <<"EOF"
-function! GetColorInCursor()
-  echo synIDattr(synID(line("."), col("."), 1), "name")
-endfunction
-
 let g:coc_global_extensions = []
 nnoremap <silent> K :call CocAction('doHover')<CR>
 
@@ -105,18 +101,15 @@ install_vim_package neoclide/coc-css
 if [ ! -f ~/project/.config/without-coc-eslint ]; then
   install_vim_package neoclide/coc-eslint
   cat >> ~/.vimrc <<"EOF"
-  call add(g:coc_global_extensions, 'coc-eslint')
+call add(g:coc_global_extensions, 'coc-eslint')
 EOF
 fi
 
 if [ -f ~/project/.config/coc-prettier ]; then
   install_vim_package neoclide/coc-prettier
-  sed -i '$ d' ~/.vim/coc-settings.json
-  cat >> ~/.vim/coc-settings.json <<"EOF"
-,
-"coc.preferences.formatOnSaveFiletypes": ["typescriptreact", "typescript", "javascript"]
-}
-EOF
+  jq \
+    '."coc.preferences.formatOnSaveFiletypes" = ["typescriptreact", "typescript", "javascript"]
+    ' ~/.vim/coc-settings.json | sponge ~/.vim/coc-settings.json
   echo "call add(g:coc_global_extensions, 'coc-prettier')" >> ~/.vimrc
 fi
 
@@ -129,16 +122,13 @@ autocmd FileType scss setl iskeyword+=@-@
 EOF
 
 # The filetypes and probe is to disable on Markdown
-sed -i '$ d' ~/.vim/coc-settings.json
-cat >> ~/.vim/coc-settings.json <<"EOF"
-  ,
-  "eslint.autoFixOnSave": true,
-  "eslint.filetypes": ["javascript", "javascriptreact", "typescript", "typescriptreact", "vue"],
-  "eslint.probe": ["javascript", "javascriptreact", "typescript", "typescriptreact", "vue"],
-  "javascript.suggestionActions.enabled": false,
-  "prettier.disableSuccessMessage": true
-}
-EOF
+jq \
+  '."eslint.autoFixOnSave" = true
+  | ."eslint.filetypes" = ["javascript", "javascriptreact", "typescript", "typescriptreact", "vue"]
+  | ."eslint.probe" = ["javascript", "javascriptreact", "typescript", "typescriptreact", "vue"]
+  | ."javascript.suggestionActions.enabled" = false
+  | ."prettier.disableSuccessMessage" = true
+  ' ~/.vim/coc-settings.json | sponge ~/.vim/coc-settings.json
 if [ -f ~/project/.config/coc-eslint-no-fix-on-save ]; then
   sed -i 's|"eslint.autoFixOnSave": true,$|"eslint.autoFixOnSave": false,|' ~/.vim/coc-settings.json
 fi
@@ -164,21 +154,15 @@ if type rustc > /dev/null 2>&1 ; then
 " TODO: Fix
 " call add(g:coc_global_extensions, 'coc-rls')
 EOF
-  sed -i '$ d' ~/.vim/coc-settings.json
-  cat >> ~/.vim/coc-settings.json <<"EOF"
-  ,
-  "rust.clippy_preference": "on"
-}
-EOF
+  jq \
+    '."rust.clippy_preference" = "on"
+    ' ~/.vim/coc-settings.json | sponge ~/.vim/coc-settings.json
 fi
 
-  sed -i '$ d' ~/.vim/coc-settings.json
-  cat >> ~/.vim/coc-settings.json <<"EOF"
-,
-"sumneko-lua.enableNvimLuaDev": true,
-"Lua.telemetry.enable": false
-}
-EOF
+jq \
+  '."sumneko-lua.enableNvimLuaDev" = true
+  | ."Lua.telemetry.enable" = false
+  ' ~/.vim/coc-settings.json | sponge ~/.vim/coc-settings.json
 
 cat >> ~/.vim/lua/extra_beginning.lua <<"EOF"
 vim.api.nvim_set_keymap("i", "<c-l>", "<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])<CR>", {})

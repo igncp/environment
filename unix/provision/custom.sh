@@ -52,6 +52,10 @@ if [ -z "$TMUX" ]; then
 fi
 EOF
 
+if [ -f ~/.vim/coc-settings.json ]; then
+  jq -S "." ~/.vim/coc-settings.json | sponge ~/.vim/coc-settings.json
+fi
+
 # custom END
 
 echo "finished provisioning"

@@ -71,6 +71,11 @@ install_cargo_crate() {
 }
 
 install_cargo_crate rustfmt
+install_cargo_crate pastel # https://github.com/sharkdp/pastel
+
+cat >> ~/.shellrc <<"EOF"
+export PASTEL_COLOR_MODE=24bit
+EOF
 
 if [ -z "$ARM_ARCH" ]; then
   install_cargo_crate racer # TODO - Fix on ARM
