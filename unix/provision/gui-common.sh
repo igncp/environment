@@ -54,6 +54,7 @@ alias XClipCopy='xclip -selection clipboard' # usage: echo foo | XClipCopy
 alias XClipPaste='xclip -selection clipboard -o'
 EOF
 
+if [ -z "$ARM_ARCH" ]; then
 # alacritty
   install_system_package alacritty
   check_file_exists ~/project/provision/alacritty.yml
@@ -75,6 +76,7 @@ if [ "$ENVIRONMENT_THEME" == "dark" ]; then
   sed -i 's|magenta: .*|magenta: "#ffcff9"|' ~/.config/alacritty/alacritty.yml
   sed -i 's|red: .*|red: "#ffc7d3"|' ~/.config/alacritty/alacritty.yml
   sed -i 's|yellow: .*|yellow: "#feffc7"|' ~/.config/alacritty/alacritty.yml
+fi
 fi
 
 mkdir -p ~/.config/gtk-3.0/
@@ -135,6 +137,7 @@ if [ -f ~/project/.config/x11-vnc-server ]; then
 XVNCServerStart() {
   if [ ! -f ~/project/.config/vnc-xrandr-output ]; then echo "~/project/.config/vnc-xrandr-output missing"; return 1; fi
   if [ ! -f ~/project/.config/vnc-xrandr-mode ]; then echo "~/project/.config/vnc-xrandr-mode missing"; return 1; fi
+  if [ ! -f ~/project/.config/vnc-port ]; then echo "~/project/.config/vnc-port missing"; return 1; fi
   systemctl start --user x11vnc.service
   sleep 1
   DISPLAY=:0.0 xrandr --output "$(cat ~/project/.config/vnc-xrandr-output)" --mode "$(cat ~/project/.config/vnc-xrandr-mode)"
@@ -148,7 +151,7 @@ EOF
 Description=VNC Server for X11
 
 [Service]
-ExecStart=/usr/bin/x11vnc -usepw -display :0
+ExecStart=/usr/bin/bash -c 'x11vnc -usepw -rfbport $(cat /home/igncp/project/.config/vnc-port) -shared'
 ExecStop=/usr/bin/x11vnc -R stop
 Restart=always
 RestartSec=2

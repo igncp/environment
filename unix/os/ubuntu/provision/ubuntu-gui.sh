@@ -51,6 +51,8 @@ if ! type vncserver > /dev/null 2>&1 ; then
   sudo apt-get install -y tightvncserver
 fi
 
+# There were some issues with Alacritty in Ubuntu ARM over silicon chip
+if [ -z "$ARM_ARCH" ]; then
 # Alacritty tweaks
   if ! type alacritty > /dev/null 2>&1 ; then
     sudo add-apt-repository -y ppa:aslatter/ppa
@@ -64,6 +66,9 @@ EOF
   if [ -f ~/.config/i3/config ]; then
     sed -i 's|exec alacritty|exec /home/igncp/.scripts/alacritty_ubuntu.sh|' ~/.config/i3/config
   fi
+else
+  install_system_package terminator
+fi
 
 if [ ! -f ~/.check-files/adobe-font ]; then
   mkdir -p /tmp/adodefont

@@ -140,6 +140,8 @@ set switchbuf+=usetab,newtab
 set tabstop=2
 set wildmenu
 
+nnoremap <leader>zk v%
+
 " this will display foo-bar in autocomplete
   set iskeyword+=-
   nnoremap <leader>z- :set iskeyword+=-<cr>
@@ -214,7 +216,7 @@ nnoremap <leader>jrW :call setreg("g", "<c-r>=expand("%:p")<cr>")<cr>
 
 " save file shortcuts
   nmap <c-s> :update<esc>
-  inoremap <c-s> <esc>:update<cr>a
+  inoremap <c-s> <esc>:update<cr>
 
 " quickly move to lines
   nnoremap <cr> G

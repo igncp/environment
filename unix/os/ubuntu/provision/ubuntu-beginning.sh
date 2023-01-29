@@ -77,4 +77,15 @@ echo "" >> /etc/motd
 EOF
 sudo chown root:root ~/.scripts/motd_update.sh
 
+
+if [ -f ~/project/.config/network-analysis ] ; then
+  if ! type wireshark > /dev/null 2>&1 ; then
+    sudo add-apt-repository ppa:wireshark-dev/stable -y
+    sudo apt-get update
+    sudo apt-get install wireshark tshark -y
+    sudo adduser $USER wireshark
+  fi
+  install_system_package mitmproxy
+fi
+
 # ubuntu-beginning END

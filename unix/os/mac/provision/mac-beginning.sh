@@ -112,4 +112,11 @@ fi
 # sh ~/.scripts/tilde-switch.sh 2>&1 > /dev/null
 # EOF
 
+if [ -f ~/project/.config/network-analysis ]; then
+  if ! type wireshark > /dev/null 2>&1 ; then
+    brew install --cask wireshark
+  fi
+  install_system_package mitmproxy
+fi
+
 # mac-beginning END
