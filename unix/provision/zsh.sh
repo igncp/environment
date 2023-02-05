@@ -134,9 +134,11 @@ setopt AUTO_PUSHD                  # pushes the old directory onto the stack
 setopt PUSHD_MINUS                 # exchange the meanings of '+' and '-'
 setopt CDABLE_VARS                 # expand the expression (allows 'cd -2/tmp')
 autoload -U compinit && compinit   # load + start completion
+_comp_options+=(globdots)          # include hidden files in completion
 zstyle ':completion:*:directory-stack' list-colors '=(#b) #([0-9]#)*( *)==95=38;5;12'
 
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*' special-dirs true # include `./` and `../` in completion
 
 _zsh_cli_fg() {
   LAST_JOB="$(jobs | tail -n 1 | grep -o '[0-9]*' | head -n 1)"

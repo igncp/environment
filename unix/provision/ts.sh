@@ -25,4 +25,22 @@ if [ "$ENVIRONMENT_THEME" == "dark" ]; then
 fi
 cat /tmp/colors.vim >> ~/.vim/colors.vim ; rm /tmp/colors.vim
 
+cat >> ~/.vimrc <<"EOF"
+function! RunTsMorph(fileName)
+  call writefile(getreg('i', 1, 1), "/tmp/myNewFile.ts")
+  call system('(cd ~/.ts-morph && node build/src/' . a:fileName . '.js true)')
+  let l:fileContent = readfile("/tmp/myNewFile.ts")
+  call setreg('i', l:fileContent, 'b')
+  execute 'normal! "ip'
+endfunction
+vnoremap <leader>le "id:call RunTsMorph('arrow-to-fn')<CR>
+EOF
+
+cat >> ~/.shell_aliases <<"EOF"
+alias TsMorfCopyFromHomeIntoProject='bash ~/.ts-morph/copy_into_project.sh'
+alias TsMorfCopyFromProjectIntoHome='bash ~/project/scripts/ts-morph/copy_into_home.sh'
+alias TsMorfCopyFromProjectIntoEnvironment='rsync -rhv --delete ~/project/scripts/ts-morph/ ~/development/environment/unix/scripts/ts-morph/'
+alias TsMorfCopyFromEnvironmentIntoProjectAndHome='rsync -rhv --delete ~/development/environment/unix/scripts/ts-morph/ ~/project/scripts/ts-morph/ && TsMorfCopyFromProjectIntoHome'
+EOF
+
 # ts END
