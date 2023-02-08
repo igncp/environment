@@ -24,6 +24,29 @@ test("simple replace with value", async () => {
   expect(file.getFullText()).toEqual("function () { return 'foo' }");
 });
 
+test("simple arguments", async () => {
+  const file = await transform("(a: foo, b) => 'bar'");
+
+  expect(file.getFullText()).toEqual("function (a: foo, b) { return 'bar' }");
+});
+
+test("with return type", async () => {
+  const file = await transform("(): Promise<Foo> => Promise.resolve('bar')");
+
+  expect(file.getFullText()).toEqual(
+    "function (): Promise<Foo> { return Promise.resolve('bar') }"
+  );
+});
+
+// TODO
+test.skip("inside variable", async () => {
+  const file = await transform("const foo = () => null");
+
+  expect(file.getFullText()).toEqual(
+    "const foo = () => function() { return null }"
+  );
+});
+
 test("arrow with multiple lines", async () => {
   const file = await transform(`
 () => {

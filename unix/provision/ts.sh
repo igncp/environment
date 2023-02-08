@@ -27,11 +27,15 @@ cat /tmp/colors.vim >> ~/.vim/colors.vim ; rm /tmp/colors.vim
 
 cat >> ~/.vimrc <<"EOF"
 function! RunTsMorph(fileName)
-  call writefile(getreg('i', 1, 1), "/tmp/myNewFile.ts")
-  call system('(cd ~/.ts-morph && node build/src/' . a:fileName . '.js true)')
-  let l:fileContent = readfile("/tmp/myNewFile.ts")
-  call setreg('i', l:fileContent, 'b')
-  execute 'normal! "ip'
+  call writefile(getreg('i', 1, 1), "/tmp/vimTsMorph.ts")
+  call system('(cd ~/.ts-morph && node build/src/' . a:fileName . '.js "/tmp/vimTsMorph.ts")')
+  let l:fileContent = readfile("/tmp/vimTsMorph.ts")
+  call setreg('i', l:fileContent, 'c')
+  if col('.') == 1
+    execute 'normal! "ip'
+  else
+    execute 'normal! "iP'
+  endif
 endfunction
 vnoremap <leader>le "id:call RunTsMorph('arrow-to-fn')<CR>
 EOF

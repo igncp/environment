@@ -1,17 +1,11 @@
-import { Project, ScriptTarget, SyntaxKind } from "ts-morph";
-import fs from "fs";
-import { SemicolonPreference } from "typescript";
+import { SyntaxKind } from "ts-morph";
+import { createFile, defaultFileName, format, handleArgs } from "./common";
 
-export const transform = async (content: string) => {
-  const project = new Project({
-    compilerOptions: {
-      target: ScriptTarget.ES3,
-    },
-  });
-
-  const sourceFile = project.createSourceFile("/tmp/myNewFile.ts", content, {
-    overwrite: true,
-  });
+export const transform = async (
+  content: string,
+  fileName = defaultFileName
+) => {
+  const sourceFile = createFile(content, fileName);
 
   const arrowFunction = sourceFile.getDescendantsOfKind(
     SyntaxKind.ArrowFunction
@@ -22,32 +16,31 @@ export const transform = async (content: string) => {
   }
 
   const hasBlock = arrowFunction.getChildrenOfKind(SyntaxKind.Block).length > 0;
+  const returnType = arrowFunction.getChildrenOfKind(SyntaxKind.TypeReference);
   const parent = arrowFunction.getParentOrThrow();
+  const params = arrowFunction.getParameters();
 
-  if (!hasBlock) {
-    parent.replaceWithText(
-      "function () { return " + arrowFunction.getBodyText() + "; }"
-    );
-  } else {
-    parent.replaceWithText(
-      "function () { " + arrowFunction.getBodyText() + " }"
-    );
+  let functionText = "function";
+
+  functionText += ` (${params.map((p) => p.getText()).join(", ")})`;
+
+  if (returnType.length > 0) {
+    functionText += `: ${returnType[0].getText()}`;
   }
 
-  sourceFile.formatText({
-    ensureNewLineAtEndOfFile: false,
-    semicolons: SemicolonPreference.Remove,
-  });
+  functionText += " {";
+
+  functionText += hasBlock
+    ? arrowFunction.getBodyText()
+    : " return " + arrowFunction.getBodyText() + ";";
+
+  functionText += " }";
+
+  parent.replaceWithText(functionText);
+
+  format(sourceFile);
 
   return sourceFile;
 };
 
-const params = process.argv.slice(2);
-
-if (params.length) {
-  const fileContent = fs.readFileSync("/tmp/myNewFile.ts", "utf8");
-
-  transform(fileContent).then((sourceFile) => {
-    sourceFile.saveSync();
-  });
-}
+handleArgs(transform);
