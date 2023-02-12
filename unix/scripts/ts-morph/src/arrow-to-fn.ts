@@ -17,7 +17,6 @@ export const transform = async (
 
   const hasBlock = arrowFunction.getChildrenOfKind(SyntaxKind.Block).length > 0;
   const returnType = arrowFunction.getChildrenOfKind(SyntaxKind.TypeReference);
-  const parent = arrowFunction.getParentOrThrow();
   const params = arrowFunction.getParameters();
 
   let functionText = "function";
@@ -36,7 +35,13 @@ export const transform = async (
 
   functionText += " }";
 
-  parent.replaceWithText(functionText);
+  const parent = arrowFunction.getParentOrThrow();
+  const siblings = parent.getChildren();
+  if (siblings.length === 1) {
+    parent.replaceWithText(functionText);
+  } else {
+    arrowFunction.replaceWithText(functionText);
+  }
 
   format(sourceFile);
 

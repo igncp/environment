@@ -38,13 +38,10 @@ test("with return type", async () => {
   );
 });
 
-// TODO
-test.skip("inside variable", async () => {
+test("inside variable", async () => {
   const file = await transform("const foo = () => null");
 
-  expect(file.getFullText()).toEqual(
-    "const foo = () => function() { return null }"
-  );
+  expect(file.getFullText()).toEqual("const foo = function() { return null }");
 });
 
 test("arrow with multiple lines", async () => {

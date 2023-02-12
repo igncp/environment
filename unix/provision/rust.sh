@@ -25,7 +25,6 @@ alias CargoClippy='CMD="# rm -rf target && cargo clippy --all-targets --all-feat
 EOF
 
 install_vim_package rust-lang/rust.vim
-install_vim_package racer-rust/vim-racer
 install_vim_package mattn/webapi-vim
 install_vim_package cespare/vim-toml
 
@@ -38,9 +37,6 @@ install_vim_package cespare/vim-toml
 cat >> ~/.vimrc <<"EOF"
 let g:rustfmt_autosave = 1
 
-let g:racer_cmd = "$HOME/.cargo/bin/racer"
-let g:racer_experimental_completer = 1
-
 au FileType rust nmap gd <Plug>(rust-def)
 au FileType rust nmap gs <Plug>(rust-def-split)
 au FileType rust nmap gx <Plug>(rust-def-vertical)
@@ -49,7 +45,6 @@ au FileType rust nmap <leader>gd <Plug>(rust-doc)
 let RustPrintMapping="vnoremap <leader>kk yOprintln!(\"a {:?}\", a);<C-c>11hvpgvyf\"lllvp"
 autocmd filetype rust :exe RustPrintMapping
 
-let g:deoplete#sources#rust#racer_binary='$HOME/.cargo/bin/racer'
 let g:deoplete#sources#rust#rust_source_path='HOME/rust-src'
 EOF
 
@@ -77,10 +72,6 @@ cat >> ~/.shellrc <<"EOF"
 export PASTEL_COLOR_MODE=24bit
 EOF
 
-if [ -z "$ARM_ARCH" ]; then
-  install_cargo_crate racer # TODO - Fix on ARM
-fi
-
 install_system_package valgrind
 
 # for C bindings
@@ -88,5 +79,10 @@ install_system_package clang # for bindgen
 if ! type "$CMD_CHECK" > /dev/null 2>&1 ; then
   cargo install bindgen
 fi
+
+install_vim_package fannheyward/coc-rust-analyzer
+cat >> ~/.vimrc <<"EOF"
+call add(g:coc_global_extensions, 'coc-rust-analyzer')
+EOF
 
 # rust END
