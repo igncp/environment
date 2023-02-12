@@ -37,15 +37,8 @@ install_vim_package cespare/vim-toml
 cat >> ~/.vimrc <<"EOF"
 let g:rustfmt_autosave = 1
 
-au FileType rust nmap gd <Plug>(rust-def)
-au FileType rust nmap gs <Plug>(rust-def-split)
-au FileType rust nmap gx <Plug>(rust-def-vertical)
-au FileType rust nmap <leader>gd <Plug>(rust-doc)
-
 let RustPrintMapping="vnoremap <leader>kk yOprintln!(\"a {:?}\", a);<C-c>11hvpgvyf\"lllvp"
 autocmd filetype rust :exe RustPrintMapping
-
-let g:deoplete#sources#rust#rust_source_path='HOME/rust-src'
 EOF
 
 cat >> ~/.vim/colors.vim <<"EOF"
