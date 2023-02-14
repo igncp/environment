@@ -78,4 +78,13 @@ cat >> ~/.vimrc <<"EOF"
 call add(g:coc_global_extensions, 'coc-rust-analyzer')
 EOF
 
+jq \
+  '."rust-analyzer.inlayHints.bindingModeHints.enable" = false
+   | ."rust-analyzer.inlayHints.chainingHints.enable" = false
+   | ."rust-analyzer.inlayHints.closingBraceHints.enable" = false
+   | ."rust-analyzer.inlayHints.closureReturnTypeHints.enable" = false
+   | ."rust-analyzer.inlayHints.lifetimeElisionHints.enable" = false
+   | ."rust-analyzer.inlayHints.typeHints.enable" = false
+  ' ~/.vim/coc-settings.json | sponge ~/.vim/coc-settings.json
+
 # rust END
