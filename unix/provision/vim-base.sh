@@ -8,6 +8,8 @@ set sessionoptions+=globals
 let mapleader = "\<Space>"
 syntax off " This is removed in update_vim_colors_theme, in case an error in provision
 
+" To display a map: for example `:verbose map <leader>l`
+
 " disable mouse to be able to select + copy
   set mouse-=a
 

@@ -236,6 +236,7 @@ alias FDisk='sudo fdisk /dev/sda'
 alias FilterLeaf=$'sort -r | awk \'a!~"^"$0{a=$0;print}\' | sort'
 alias HierarchyManual='man hier'
 alias IPPublic='curl ifconfig.co'
+alias KillAllTmux='killall /usr/bin/tmux'
 alias LastColumn="awk '{print "'$NF'"}'"
 alias PathShow='echo $PATH | tr ":" "\n" | sort | uniq | less'
 alias PsTree='pstree -pTUl | less -S'

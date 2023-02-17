@@ -76,6 +76,7 @@ fi
 install_vim_package fannheyward/coc-rust-analyzer
 cat >> ~/.vimrc <<"EOF"
 call add(g:coc_global_extensions, 'coc-rust-analyzer')
+nnoremap <leader>lr :CocCommand rust-analyzer.reload<CR>
 EOF
 
 jq \
@@ -84,6 +85,8 @@ jq \
    | ."rust-analyzer.inlayHints.closingBraceHints.enable" = false
    | ."rust-analyzer.inlayHints.closureReturnTypeHints.enable" = false
    | ."rust-analyzer.inlayHints.lifetimeElisionHints.enable" = false
+   | ."rust-analyzer.inlayHints.parameterHints.enable" = false
+   | ."rust-analyzer.inlayHints.reborrowHints.enable" = false
    | ."rust-analyzer.inlayHints.typeHints.enable" = false
   ' ~/.vim/coc-settings.json | sponge ~/.vim/coc-settings.json
 
