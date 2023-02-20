@@ -7,10 +7,13 @@ fi
 
 update_vim_colors_theme
 
-git config --global user.name 'Foo Bar'
-git config --global user.email foo@bar.com
 if [ ! -f "$HOME"/.check-files/git-info ]; then
   echo '[~/.check-files/git-info]: configure git user and email info'
+  # git config --global user.name 'Foo Bar'
+  # git config --global user.email foo@bar.com
+  # git config --global gpg.format ssh
+  # git config --global commit.gpgsign true
+  # git config --global user.signingkey '...' # Public SSH key
 fi
 
 cat >> ~/.shellrc <<"EOF"

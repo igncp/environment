@@ -48,7 +48,6 @@ install_vim_package junegunn/limelight.vim # https://github.com/junegunn/limelig
 install_vim_package junegunn/vim-peekaboo # https://github.com/junegunn/vim-peekaboo
 install_vim_package liuchengxu/vista.vim # https://github.com/liuchengxu/vista.vim
 install_vim_package mbbill/undotree # https://github.com/mbbill/undotree
-install_vim_package milkypostman/vim-togglelist # https://github.com/milkypostman/vim-togglelist
 install_vim_package ntpeters/vim-better-whitespace # https://github.com/ntpeters/vim-better-whitespace
 install_vim_package plasticboy/vim-markdown # https://github.com/plasticboy/vim-markdown
 install_vim_package rhysd/clever-f.vim # https://github.com/rhysd/clever-f.vim

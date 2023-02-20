@@ -58,7 +58,9 @@ install_cargo_crate() {
   fi
 }
 
-install_cargo_crate rustfmt
+install_cargo_crate rustfmt # https://github.com/rust-lang/rustfmt
+install_cargo_crate cargo-bloat # https://github.com/RazrFalcon/cargo-bloat
+install_cargo_crate cargo-unused-features unused-features # https://github.com/TimonPost/cargo-unused-features
 install_cargo_crate pastel # https://github.com/sharkdp/pastel
 
 cat >> ~/.shellrc <<"EOF"
@@ -69,9 +71,6 @@ install_system_package valgrind
 
 # for C bindings
 install_system_package clang # for bindgen
-if ! type "$CMD_CHECK" > /dev/null 2>&1 ; then
-  cargo install bindgen
-fi
 
 install_vim_package fannheyward/coc-rust-analyzer
 cat >> ~/.vimrc <<"EOF"
@@ -89,5 +88,18 @@ jq \
    | ."rust-analyzer.inlayHints.reborrowHints.enable" = false
    | ."rust-analyzer.inlayHints.typeHints.enable" = false
   ' ~/.vim/coc-settings.json | sponge ~/.vim/coc-settings.json
+
+if [ -f ~/project/.config/rust-cross-compile ]; then
+  if [ ! -f ~/.check-files/rust-cross-compile ] && type "apt-get" > /dev/null 2>&1; then
+    # TODO: generalize installation for arch linux
+    sudo apt-get install -y gcc-x86-64-linux-gnu
+    rustup target add x86_64-unknown-linux-musl
+
+    # export CC_x86_64_unknown_linux_musl=x86_64-linux-gnu-gcc
+    # export RUSTFLAGS='-C linker=x86_64-linux-gnu-gcc'
+
+    touch ~/.check-files/rust-cross-compile
+  fi
+fi
 
 # rust END
