@@ -7,13 +7,17 @@ fi
 
 update_vim_colors_theme
 
+# git config --global user.name 'Foo Bar'
+# git config --global user.email foo@bar.com
+# git config --global gpg.format ssh
+# git config --global commit.gpgsign true
+# git config --global user.signingkey '...' # Public SSH key
+# mkdir -p "$HOME"/.config/git/git
+# git config --global gpg.ssh.allowedSignersFile "$HOME/.config/git/allowed_signers"
+# # This file is used for `git log --show-signature`, have to add the public key instead of `...`
+# echo "icarbajop@gmail.com ..." > "$HOME"/.config/git/allowed_signers
 if [ ! -f "$HOME"/.check-files/git-info ]; then
   echo '[~/.check-files/git-info]: configure git user and email info'
-  # git config --global user.name 'Foo Bar'
-  # git config --global user.email foo@bar.com
-  # git config --global gpg.format ssh
-  # git config --global commit.gpgsign true
-  # git config --global user.signingkey '...' # Public SSH key
 fi
 
 cat >> ~/.shellrc <<"EOF"

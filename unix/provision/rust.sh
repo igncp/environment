@@ -15,6 +15,10 @@ if ! type rustc > /dev/null 2>&1 ; then
   cargo install cargo-edit
 fi
 
+if ! type cargo-clippy > /dev/null 2>&1 ; then
+  rustup component add clippy
+fi
+
 if ! type cargo-add > /dev/null 2>&1 ; then
   # will add commands like: `cargo add`, `cargo rm` and `cargo upgrade`
   cargo install cargo-edit
@@ -25,14 +29,7 @@ alias CargoClippy='CMD="# rm -rf target && cargo clippy --all-targets --all-feat
 EOF
 
 install_vim_package rust-lang/rust.vim
-install_vim_package mattn/webapi-vim
 install_vim_package cespare/vim-toml
-
-# if rustfmt doesn't work
-  # https://github.com/rust-lang/rustfmt/issues/3404
-  # rustup toolchain add nightly-2019-02-08
-  # rustup component add --toolchain nightly-2019-02-08 rustfmt clippy
-  # rustup default nightly-2019-02-08
 
 cat >> ~/.vimrc <<"EOF"
 let g:rustfmt_autosave = 1
@@ -69,13 +66,13 @@ EOF
 
 install_system_package valgrind
 
-# for C bindings
-install_system_package clang # for bindgen
-
 install_vim_package fannheyward/coc-rust-analyzer
 cat >> ~/.vimrc <<"EOF"
 call add(g:coc_global_extensions, 'coc-rust-analyzer')
 nnoremap <leader>lr :CocCommand rust-analyzer.reload<CR>
+nnoremap <leader>lx :CocCommand rust-analyzer.explainError<CR>
+nnoremap <leader>lj :CocCommand rust-analyzer.moveItemDown<CR>
+nnoremap <leader>lk :CocCommand rust-analyzer.moveItemUp<CR>
 EOF
 
 jq \
@@ -87,6 +84,7 @@ jq \
    | ."rust-analyzer.inlayHints.parameterHints.enable" = false
    | ."rust-analyzer.inlayHints.reborrowHints.enable" = false
    | ."rust-analyzer.inlayHints.typeHints.enable" = false
+   | ."rust-analyzer.checkOnSave.command" = "clippy"
   ' ~/.vim/coc-settings.json | sponge ~/.vim/coc-settings.json
 
 if [ -f ~/project/.config/rust-cross-compile ]; then
