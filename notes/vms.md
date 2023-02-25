@@ -31,3 +31,19 @@ VBoxHeadless \
     - https://vitux.com/how-to-configure-networking-with-netplan-on-ubuntu/
     - https://github.com/utmapp/UTM/issues/2619
     - In another test, had to update the UTM network interface in its settings to `en1` for Ubuntu
+
+### Arch ARM setup
+
+- `brew install qemu`
+- `qemu-img resize  /PATH/TO/FILE.qcow2 +30G`
+- From VM:
+    - Update ssh config: allow root login
+    - `useradd igncp`
+    - `pacman -S cfdisk`
+    - Resize with: `cfdisk`
+    - `pacman -S parted`
+    - `partprobe /dev/vda2`
+    - `resize2fs /dev/vda2`
+    - Reset SSH config and change root password
+    - `userdel alarm && usermod -u 1000 igncp`
+    - Normal setup
