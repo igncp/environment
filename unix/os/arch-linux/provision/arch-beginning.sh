@@ -176,7 +176,11 @@ install_with_yay cpupower-gui
 if [ -f ~/project/.config/tailscale ]; then
   if [ ! -f ~/.check-files/tailscale ]; then
     install_system_package tailscale
-    sudo systemctl enable --now tailscale
+    if [ -n "$(sudo systemctl list-units | grep tailscaled || true)" ]; then
+      sudo systemctl enable --now tailscaled
+    else
+      sudo systemctl enable --now tailscale
+    fi
     touch ~/.check-files/tailscale
   fi
 fi
