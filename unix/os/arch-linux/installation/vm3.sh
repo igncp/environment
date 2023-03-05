@@ -63,8 +63,7 @@ cat environment/unix/provision/docker.sh >> ~/project/provision/provision.sh
 cat environment/unix/provision/rust.sh >> ~/project/provision/provision.sh
 cat environment/unix/provision/custom.sh >> ~/project/provision/provision.sh
 
-cp environment/unix/os/arch-linux/config-files/data.updateProvision.js ~/project/provision
-cp environment/unix/config-files/updateProvision.js ~/project/provision
+cp environment/unix/os/arch-linux/config-files/data.updateProvision.json ~/project/provision
 
 mkdir ~/project/.config
 touch ~/project/.config/inside # Some settings depend on this, like SSH password auth

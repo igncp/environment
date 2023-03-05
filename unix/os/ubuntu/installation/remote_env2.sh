@@ -40,8 +40,7 @@ fi
 
 cat environment/unix/provision/custom.sh >> ~/project/provision/provision.sh
 
-cp environment/unix/os/ubuntu/config-files/data.updateProvision.js ~/project/provision
-cp environment/unix/config-files/updateProvision.js ~/project/provision
+cp environment/unix/os/ubuntu/config-files/data.updateProvision.json ~/project/provision
 
 if [ ! -f ~/.ssh/config ]; then
   mkdir -p ~/.ssh

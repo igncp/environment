@@ -298,7 +298,7 @@ EOF
 
   cat >> ~/.vim/lua/extra_beginning.lua <<"EOF"
 vim.api.nvim_set_keymap("i", "<C-_>", "<Plug>(copilot-next)", {silent = true, nowait = true})
-vim.api.nvim_set_keymap("i", "<C-\>", "<Plug>(copilot-previous)", {silent = true, nowait = true})
+vim.api.nvim_set_keymap("i", "<C-\\>", "<Plug>(copilot-previous)", {silent = true, nowait = true})
 EOF
 
   # This is due to the screen not cleaned when dismissing a suggestion

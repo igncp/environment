@@ -1,42 +1,31 @@
 # general START
 
+mkdir -p ~/.scripts/toolbox
+while IFS= read -r -d '' FILE_PATH; do
+  FILE_NAME=$(basename "$FILE_PATH")
+  if [ ! -f "$HOME/.scripts/toolbox/$FILE_NAME" ]; then
+    (cd "$FILE_PATH" \
+      && cargo build --release \
+      && cp $HOME/.scripts/cargo_target/release/"$FILE_NAME" $HOME/.scripts/toolbox/)
+  fi
+done < <(find ~/project/scripts/toolbox -maxdepth 1 -mindepth 1 -type d -print0)
+
+while IFS= read -r -d '' FILE_PATH; do
+  FILE_NAME=$(basename "$FILE_PATH")
+  if [ ! -f "$HOME/.scripts/cargo_target/release/$FILE_NAME" ]; then
+    (cd "$FILE_PATH" \
+      && cargo build --release)
+  fi
+done < <(find ~/project/scripts/misc -maxdepth 1 -mindepth 1 -type d -print0)
+
+# This increases re-compilation times but these dirs can get very large
+rm -rf ~/.scripts/cargo_target/release/deps
+rm -rf ~/.scripts/cargo_target/release/build
+rm -rf ~/.scripts/cargo_target/debug
+
 if [ ! -f ~/project/.config/ssh-notice-color ]; then
   echo 'cyan' > ~/project/.config/ssh-notice-color
 fi
-
-cat >> ~/.shellrc <<"EOF"
-getTime() {
-  MINUTES=$(date +"%M"); HOURS=$(date +"%H")
-  echo $HOURS":"$MINUTES
-}
-getCNumberWithTmux() {
-  IDX=$(tmux display-message -p '#I'); echo "$IDX"
-}
-
-if [[ -z $TMUX ]]; then
-  TMUX_PREFIX_A="" && TMUX_PREFIX_B=" ·"
-else
-  TMUX_PREFIX_A='$(getCNumberWithTmux) ' && TMUX_PREFIX_B=''
-fi
-get_jobs_prefix() {
-  JOBS=$(jobs | wc -l | sed 's|\s*||')
-  if [ "$JOBS" -eq "0" ]; then echo ""; else echo "$JOBS "; fi
-}
-SSH_PS1_NOTICE_COLOR="$(cat ~/project/.config/ssh-notice-color)"
-if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ] || [ -n "$SSH_CONNECTION" ]; then
-  if [ ! -f ~/project/.config/ssh-notice ]; then
-    echo "~/project/.config/ssh-notice is missing, using the default"
-    SSH_PS1_NOTICE="[SSH] "
-  else
-    FILE_CONTENT="$(cat ~/project/.config/ssh-notice)"
-    if [ -z "$FILE_CONTENT" ]; then
-      SSH_PS1_NOTICE="[VM] "
-    else
-      SSH_PS1_NOTICE="[$FILE_CONTENT] "
-    fi
-  fi
-fi
-EOF
 
 if [ -d ~/project/scripts ]; then chmod -R +x ~/project/scripts; fi
 if [ -f ~/project/provision/provision.sh ]; then chmod +x ~/project/provision/provision.sh; fi
@@ -161,11 +150,7 @@ export EDITOR=vim
 source ~/.shellrc
 source ~/.shell_sources
 
-PS1_BEGINNING="\n\n\[\e[33m\]$TMUX_PREFIX_A"
-PS1_NEXT="\[\e[36m\]$SSH_PS1_NOTICE\W\[\e[m\]"
-PS1_MIDDLE="\[\e[32m\]\$(__git_ps1)\[\e[m\]\[\e[33m\] \$(get_jobs_prefix)\[\e[m\]"
-PS1_END="\[\e[34m\]\$(getTime)\[\e[32m\]$TMUX_PREFIX_B\[\e[m\] "
-export PS1="$PS1_BEGINNING""$PS1_NEXT""$PS1_MIDDLE""$PS1_END"
+PS1='$(~/.scripts/cargo_target/release/ps1 "$(jobs)")'
 EOF
 
 cat >> ~/.shellrc <<"EOF"
@@ -450,8 +435,9 @@ EOF
     fzf --height 100% --border -m --ansi --no-sort --reverse --multi --bind 'ctrl-s:toggle-sort' --header 'Press CTRL-S to toggle sort'
   }
   __FZFScriptsRaw() {
-    find ~/project/scripts -mindepth 2 -type f ! -name "*.md" | grep -v node_modules |
-      fzf --height 100% --border -m -q "'" --ansi --no-sort --reverse --multi --bind 'ctrl-s:toggle-sort' --header 'Press CTRL-S to toggle sort'
+    FILES=$(find ~/project/scripts -mindepth 2 -type f ! -name "*.md" | grep -v node_modules | grep ".sh")
+    FILES="$FILES\n$(find ~/.scripts/toolbox -type f)"
+    echo "$FILES" | fzf --height 100% --border -m -q "'" --ansi --no-sort --reverse --multi --bind 'ctrl-s:toggle-sort' --header 'Press CTRL-S to toggle sort'
   }
   __FZFScripts() {
     $(__FZFScriptsRaw)
@@ -538,7 +524,7 @@ ProvisionCommitRepo() {
   fi
   cd -
 }
-alias ProvisionGetDiff='node $HOME/project/provision/updateProvision.js && sh /tmp/diff_provision.sh'
+alias ProvisionGetDiff='~/.scripts/cargo_target/release/provision_update && sh /tmp/diff_provision.sh'
 ProvisionListPossibleConfig() {
   cat ~/project/provision/provision.sh | ag 'project\/\.config\/[-.a-zA-Z0-9]*' -o \
     | sed 's|^|'"$HOME"'/|' | sort | uniq > /tmp/config_all;

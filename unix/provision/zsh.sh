@@ -118,15 +118,10 @@ __get_next_task() {
 }
 
 setopt PROMPT_SUBST
-PS1_BEGINNING="$TMUX_PREFIX_A"
-PS1_NEXT="%F{$SSH_PS1_NOTICE_COLOR}$SSH_PS1_NOTICE%F{green}%1d"
-PS1_MIDDLE='$(__git_ps1) $(get_jobs_prefix)'
-# https://miro.medium.com/max/4800/1*Q4WxN-bh4Exk8ULhwSexGQ.png
-PS1_END='%F{39}$(date +"%H:%M")$TMUX_PREFIX_B %F{reset_color}'
+PS1='$(~/.scripts/cargo_target/release/ps1 "$(jobs)")'
 NEXT_TASK='$(__get_next_task)'
 RPROMPT="[$NEXT_TASK]"
 
-PS1=$'\n'$'\n'"$PS1_BEGINNING$PS1_NEXT$PS1_MIDDLE$PS1_END"
 SHELL=/bin/zsh
 
 # cd -[tab] to see options. `dirs -v` to list previous history
@@ -148,7 +143,7 @@ zle -N _zsh_cli_fg
 bindkey '^X' _zsh_cli_fg
 
 alias HistoryDisable='unset HISTFILE'
-alias ProvisionUpdate='node ~/project/provision/updateProvision.js; print -S "# cp /tmp/provision/* ~/project/provision/ ; provision.sh"; print -S "sh /tmp/diff_provision.sh"'
+alias ProvisionUpdate='~/.scripts/cargo_target/release/provision_update; print -S "# cp /tmp/provision/* ~/project/provision/ && rsync -rhv ~/development/environment/unix/scripts/toolbox/ ~/project/scripts/toolbox/ && rsync -rhv ~/development/environment/unix/scripts/misc/ ~/project/scripts/misc/ && rsync -rhv ~/development/environment/unix/scripts/ts-morph/ ~/project/scripts/ts-morph/; provision.sh"; print -S "sh /tmp/diff_provision.sh"'
 
 # Expand aliases on tab
 zstyle ':completion:*' completer _expand_alias _complete _ignored

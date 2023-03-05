@@ -1,20 +1,5 @@
 # rust START
 
-cat >> ~/.shellrc <<"EOF"
-if [ -f "$HOME/.cargo/env" ]; then
-  source "$HOME/.cargo/env"
-fi
-EOF
-
-if [ -f "$HOME"/.cargo/env ]; then source "$HOME/.cargo/env"; fi # in case provision stopped before
-
-if ! type rustc > /dev/null 2>&1 ; then
-  curl https://sh.rustup.rs -sSf | sh -s -- --no-modify-path -y --default-toolchain nightly
-  source "$HOME/.cargo/env"
-  rustup component add rust-src
-  cargo install cargo-edit
-fi
-
 if ! type cargo-clippy > /dev/null 2>&1 ; then
   rustup component add clippy
 fi

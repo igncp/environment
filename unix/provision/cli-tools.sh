@@ -128,7 +128,10 @@ fi
 echo 'source_if_exists ~/hhighlighter/h.sh' >> ~/.shell_sources
 install_system_package ack # Required by hhighlighter
 
-install_system_package pandoc # document conversion
+if [ -z "$ARM_ARCH" ]; then
+  install_system_package pandoc # document conversion
+fi
+
 install_system_package graphviz dot
 
 # Potential installs:

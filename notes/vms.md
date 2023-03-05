@@ -31,6 +31,8 @@ VBoxHeadless \
     - https://vitux.com/how-to-configure-networking-with-netplan-on-ubuntu/
     - https://github.com/utmapp/UTM/issues/2619
     - In another test, had to update the UTM network interface in its settings to `en1` for Ubuntu
+    - Ethernet: Set the inteface to `en0`, change the driver to `device`
+    - Wifi: Set the interface to `en1`, use the default driver
 
 ### Arch ARM setup
 

@@ -51,4 +51,42 @@ if [ "$PROVISION_OS" == "LINUX" ]; then
   mkdir -p ~/.config/systemd/user
 fi
 
+cat >> ~/.shell_aliases <<"EOF"
+ProvisionRustCompile() {
+  (cd ~/project/scripts/misc/"$1" && cargo build --release)
+}
+ProvisionRustCompileAll() {
+  for i in ~/project/scripts/misc/*; do
+    if [ -d "$i" ]; then (cd "$i" && echo "$i" && cargo build --release); fi
+  done
+  for i in ~/project/scripts/toolbox/*; do
+    if [ -d "$i" ]; then (cd "$i" && echo "$i" && cargo build --release); fi
+  done
+}
+ProvisionScriptsCopyFromProjectIntoEnvironment() {
+  rsync -rhv --delete ~/project/scripts/misc/ ~/development/environment/unix/scripts/misc/
+  rsync -rhv --delete ~/project/scripts/toolbox/ ~/development/environment/unix/scripts/toolbox/
+}
+EOF
+
+if [ -f "$HOME"/.cargo/env ]; then source "$HOME/.cargo/env"; fi # in case provision stopped before
+cat >> ~/.shellrc <<"EOF"
+if [ -f "$HOME/.cargo/env" ]; then
+  source "$HOME/.cargo/env"
+fi
+EOF
+
+if ! type rustc > /dev/null 2>&1 ; then
+  curl https://sh.rustup.rs -sSf | sh -s -- --no-modify-path -y --default-toolchain nightly
+  source "$HOME/.cargo/env"
+  rustup component add rust-src
+  cargo install cargo-edit
+fi
+
+mkdir -p ~/.cargo
+cat > ~/.cargo/config <<"EOF"
+[build]
+target-dir = ".scripts/cargo_target"
+EOF
+
 # top END
