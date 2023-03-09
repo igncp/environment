@@ -4,7 +4,7 @@ use crossterm::{
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
 use std::{
-    collections::HashSet,
+    collections::{HashMap, HashSet},
     error::Error,
     io,
     time::{Duration, Instant},
@@ -66,6 +66,7 @@ impl<T> StatefulList<T> {
 
 struct App {
     enabled: HashSet<String>,
+    config_content: HashMap<String, String>,
     items: StatefulList<String>,
 }
 
@@ -74,6 +75,7 @@ impl App {
         App {
             enabled: HashSet::new(),
             items: StatefulList::with_items(list),
+            config_content: HashMap::new(),
         }
     }
 
@@ -107,19 +109,37 @@ fn main() -> Result<(), Box<dyn Error>> {
         std::fs::read_to_string(home_dir.clone() + "/project/provision/provision.sh").unwrap();
     let config_regex = regex::Regex::new(r"project/.config/([a-zA-Z0-9-]*)").unwrap();
 
-    let mut all_possible_config = config_regex
-        .captures_iter(&provision_file_content)
-        .map(|x| x[1].to_string())
-        .collect::<std::collections::HashSet<String>>()
-        .into_iter()
-        .collect::<Vec<String>>();
+    let config_dir = home_dir + "/project/.config";
 
-    all_possible_config.sort();
-
-    let existing_config = std::fs::read_dir(home_dir + "/project/.config")
+    let existing_config = std::fs::read_dir(config_dir.clone())
         .unwrap()
         .map(|x| x.unwrap().file_name().to_str().unwrap().to_string())
         .collect::<std::collections::HashSet<String>>();
+
+    let mut all_possible_config_set = config_regex
+        .captures_iter(&provision_file_content)
+        .map(|x| x[1].to_string())
+        .collect::<std::collections::HashSet<String>>();
+
+    existing_config.iter().for_each(|x| {
+        all_possible_config_set.insert(x.clone());
+    });
+
+    let mut all_possible_config: Vec<String> =
+        all_possible_config_set.into_iter().collect::<Vec<String>>();
+
+    all_possible_config.sort();
+
+    let existing_files_content: HashMap<String, String> = existing_config
+        .iter()
+        .map(|x| {
+            let file_dir = format!("{config_dir}/{x}");
+            let content = std::fs::read_to_string(file_dir).unwrap_or_default();
+            let content = content.replace('\n', "");
+
+            (x.to_string(), content)
+        })
+        .collect();
 
     let tick_rate = Duration::from_millis(250);
     let mut app = App::new(all_possible_config);
@@ -127,6 +147,8 @@ fn main() -> Result<(), Box<dyn Error>> {
     app.items.items.iter().for_each(|x| {
         if existing_config.contains(x) {
             app.enabled.insert(x.to_string());
+            app.config_content
+                .insert(x.to_string(), existing_files_content[x].clone());
         }
     });
 
@@ -191,7 +213,18 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut App) {
         .items
         .iter()
         .map(|line_text| {
-            let line = Span::raw(line_text);
+            let default_content = "".to_string();
+            let content = app
+                .config_content
+                .get(line_text)
+                .unwrap_or(&default_content);
+
+            let mut full_line_text = line_text.clone();
+            if content != &default_content {
+                full_line_text = format!("{line_text} [{content}]");
+            }
+
+            let line = Span::raw(full_line_text);
 
             let fg = if app.enabled.contains(line_text) {
                 Color::Green
