@@ -81,19 +81,63 @@ impl App {
 
     fn toggle_selected(&mut self) {
         let selected = self.items.state.selected();
+
         if let Some(i) = selected {
-            let item = self.items.items.get(i).unwrap();
-            let home_dir = std::env::var("HOME").unwrap();
+            let item = self.items.items.get(i).expect("No item found");
+            let home_dir = std::env::var("HOME").expect("No home dir found");
             let file_path = format!("{home_dir}/project/.config/{item}");
+
             if self.enabled.contains(item) {
                 self.enabled.remove(item);
                 std::fs::remove_file(file_path).unwrap_or_default();
+                self.config_content.remove(&item.clone());
             } else {
+                let default_values = get_default_values();
+                let empty_string = "".to_string();
+                let default_value = default_values.get(item).unwrap_or(&empty_string);
                 self.enabled.insert(item.clone());
-                std::fs::write(file_path, "").unwrap();
+
+                std::fs::write(file_path, default_value).expect("Unable to write file");
+
+                if default_value.is_empty() {
+                    self.config_content.remove(&item.clone());
+                } else {
+                    self.config_content
+                        .insert(item.clone(), default_value.clone());
+                };
             }
         }
     }
+}
+
+fn get_all_possible_config() -> Vec<String> {
+    let mut all_possible_config = std::process::Command::new("bash")
+        .arg("-c")
+        .arg("grep --no-file -rEo 'project/.config/([_a-zA-Z0-9-])*' ~/project/ | cut -d '/' -f 3 | sort | uniq")
+        .output()
+        .expect("Failed to execute command")
+        .stdout
+        .iter()
+        .map(|x| *x as char)
+        .collect::<String>()
+        .split('\n')
+        .map(|x| x.to_string())
+        .filter(|x| !x.is_empty())
+        .collect::<Vec<String>>();
+
+    all_possible_config.sort();
+
+    all_possible_config
+}
+
+fn get_default_values() -> HashMap<String, String> {
+    let mut hash_map = HashMap::new();
+
+    hash_map.insert("vpn_check".to_string(), "yes".to_string());
+    hash_map.insert("ssh-notice-color".to_string(), "cyan".to_string());
+    hash_map.insert("theme".to_string(), "dark".to_string());
+
+    hash_map
 }
 
 // This has been extended from: https://github.com/fdehau/tui-rs/blob/master/Cargo.toml
@@ -104,31 +148,16 @@ fn main() -> Result<(), Box<dyn Error>> {
     let backend = CrosstermBackend::new(stdout);
     let mut terminal = Terminal::new(backend)?;
 
-    let home_dir = std::env::var("HOME").unwrap();
-    let provision_file_content =
-        std::fs::read_to_string(home_dir.clone() + "/project/provision/provision.sh").unwrap();
-    let config_regex = regex::Regex::new(r"project/.config/([a-zA-Z0-9-]*)").unwrap();
+    let home_dir = std::env::var("HOME").expect("No home dir found");
 
     let config_dir = home_dir + "/project/.config";
 
     let existing_config = std::fs::read_dir(config_dir.clone())
-        .unwrap()
+        .expect("Unable to read config dir")
         .map(|x| x.unwrap().file_name().to_str().unwrap().to_string())
         .collect::<std::collections::HashSet<String>>();
 
-    let mut all_possible_config_set = config_regex
-        .captures_iter(&provision_file_content)
-        .map(|x| x[1].to_string())
-        .collect::<std::collections::HashSet<String>>();
-
-    existing_config.iter().for_each(|x| {
-        all_possible_config_set.insert(x.clone());
-    });
-
-    let mut all_possible_config: Vec<String> =
-        all_possible_config_set.into_iter().collect::<Vec<String>>();
-
-    all_possible_config.sort();
+    let all_possible_config = get_all_possible_config();
 
     let existing_files_content: HashMap<String, String> = existing_config
         .iter()
@@ -208,20 +237,23 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut App) {
         .constraints([Constraint::Percentage(100)].as_ref())
         .split(f.size());
 
+    let default_values = get_default_values();
+
     let items: Vec<ListItem> = app
         .items
         .items
         .iter()
         .map(|line_text| {
-            let default_content = "".to_string();
-            let content = app
-                .config_content
-                .get(line_text)
-                .unwrap_or(&default_content);
+            let empty_content = "".to_string();
+            let content = app.config_content.get(line_text).unwrap_or(&empty_content);
 
             let mut full_line_text = line_text.clone();
-            if content != &default_content {
-                full_line_text = format!("{line_text} [{content}]");
+            if app.enabled.contains(line_text) && content != &empty_content {
+                if content != &empty_content {
+                    full_line_text = format!("{line_text} [{content}]");
+                }
+            } else if let Some(default_value) = default_values.get(line_text) {
+                full_line_text = format!("{line_text} ({default_value})");
             }
 
             let line = Span::raw(full_line_text);

@@ -75,6 +75,7 @@ fi
 
 install_system_package curl
 install_system_package dnsutils dig
+install_system_package hyperfine
 install_system_package jq
 install_system_package lsof
 install_system_package moreutils vidir
