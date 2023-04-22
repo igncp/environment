@@ -101,17 +101,6 @@ source "$HOME"/.shell_aliases # some aliases depend on $EDITOR
 EOF
 
 cat >> ~/.shell_aliases <<"EOF"
-n() {
-  if [[ -z "$1" ]]; then DIRECTORY=.; else DIRECTORY="$1"; fi
-  if [ -d "$DIRECTORY" ]; then
-    DEPTH=1; FILE="";
-    while [ $DEPTH -lt 100 ]; do
-      FILE=$(find $DIRECTORY -mindepth $DEPTH -maxdepth $DEPTH -type f | head -n 1)
-      if [[ ! -z $FILE ]]; then break; else DEPTH=$((DEPTH + 1)); fi
-    done
-  else FILE="$DIRECTORY"; fi
-  nvim "$FILE"
-}
 alias nn='nvim -n -u NONE -i NONE -N' # nvim without vimrc, plugins, syntax, etc
 alias nb='nvim -n -u ~/.base-vimrc -i NONE -N' # nvim with base vimrc
 alias XargsNvim='xargs nvim -p'

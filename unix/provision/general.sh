@@ -296,6 +296,8 @@ alias NetstatConnections='netstat -nputw'
 alias RemoveAnsiColors="sed 's/\x1b\[[0-9;]*m//g'"
 
 WorktreeClone() { git clone --bare "$1" .bare; echo "gitdir: ./.bare" > .git; }
+
+alias n="$HOME/.scripts/cargo_target/release/n"
 EOF
 
 cat > ~/.inputrc <<"EOF"

@@ -171,7 +171,7 @@ if [ -z "$ARM_ARCH" ] || [ -z "$(uname -a | grep 'Ubuntu' || true)" ]; then
 
   # https://github.com/dalance/procs
   install_system_package procs
-  procs --completion-out zsh >> ~/.scripts/procs_completion
+  procs --gen-completion-out zsh >> ~/.scripts/procs_completion
   echo 'fpath=(~/.scripts/procs_completion $fpath)' >> ~/.zshrc
 fi
 
