@@ -171,7 +171,11 @@ if [ -z "$ARM_ARCH" ] || [ -z "$(uname -a | grep 'Ubuntu' || true)" ]; then
 
   # https://github.com/dalance/procs
   install_system_package procs
-  procs --gen-completion-out zsh >> ~/.scripts/procs_completion
+  if [ "$PROVISION_OS" == "MAC" ]; then
+    procs --completion-out zsh >> ~/.scripts/procs_completion
+  else
+    procs --gen-completion-out zsh >> ~/.scripts/procs_completion
+  fi
   echo 'fpath=(~/.scripts/procs_completion $fpath)' >> ~/.zshrc
 fi
 

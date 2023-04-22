@@ -49,7 +49,9 @@ cat >> ~/.shellrc <<"EOF"
 export PASTEL_COLOR_MODE=24bit
 EOF
 
-install_system_package valgrind
+if [ "$PROVISION_OS" != "MAC" ]; then
+  install_system_package valgrind
+fi
 
 install_vim_package fannheyward/coc-rust-analyzer
 cat >> ~/.vimrc <<"EOF"

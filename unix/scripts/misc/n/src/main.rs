@@ -1,7 +1,4 @@
-use std::{
-    fs::metadata,
-    process::{self, Command},
-};
+use std::{fs::metadata, process::Command};
 
 /**
  * If the path is absolute, return it. Otherwise, try to find the path relative to the current
@@ -10,6 +7,7 @@ use std::{
  */
 fn find_correct_path(checked_path: &String) -> Result<String, String> {
     let is_absolute = checked_path.starts_with('/');
+    let has_slash = checked_path.contains('/');
     let mut levels_up = 0;
 
     loop {
@@ -24,7 +22,11 @@ fn find_correct_path(checked_path: &String) -> Result<String, String> {
             return Ok(full_path);
         }
 
-        if is_absolute || levels_up > 100 {
+        if is_absolute || levels_up > 100 ||
+            // When the path doesn't contain any slash, don't try to go up as probably trying to
+            // create a new file
+            !has_slash
+        {
             let err_str = format!("Could not find path: {}", checked_path);
             return Err(err_str);
         } else {
@@ -42,17 +44,14 @@ fn main() {
     let resolved_path = first_path.unwrap_or(&default_string);
     let correct_path = find_correct_path(resolved_path);
 
-    if let Err(error) = correct_path {
-        println!("{}", error);
-        process::exit(1);
-    }
-
-    let full_path = correct_path.unwrap();
     let editor = std::env::var("EDITOR").unwrap_or("vim".to_string());
 
+    // If the file doesn't exist, create it.
+    let final_path = correct_path.unwrap_or(resolved_path.to_string());
+
     Command::new(editor)
-        .arg(full_path)
-        .args(if args.len() > 2 { &args[2..] } else { &[] })
+        .arg(final_path)
+        .args(if args.len() > 3 { &args[3..] } else { &[] })
         .status()
         .expect("Failed to open file");
 }
