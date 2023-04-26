@@ -5,9 +5,8 @@ use std::{fs::metadata, process::Command};
  * working directory. If the path is not found, try to find it relative to the parent directory.
  * Repeat this process until the path is found or the parent directory is the root directory.
  */
-fn find_correct_path(checked_path: &String) -> Result<String, String> {
+fn find_correct_path(checked_path: &String) -> Option<String> {
     let is_absolute = checked_path.starts_with('/');
-    let has_slash = checked_path.contains('/');
     let mut levels_up = 0;
 
     loop {
@@ -19,16 +18,11 @@ fn find_correct_path(checked_path: &String) -> Result<String, String> {
         let path_metadata = metadata(full_path.clone());
 
         if path_metadata.is_ok() {
-            return Ok(full_path);
+            return Some(full_path);
         }
 
-        if is_absolute || levels_up > 100 ||
-            // When the path doesn't contain any slash, don't try to go up as probably trying to
-            // create a new file
-            !has_slash
-        {
-            let err_str = format!("Could not find path: {}", checked_path);
-            return Err(err_str);
+        if is_absolute || levels_up > 100 {
+            return None;
         } else {
             levels_up += 1;
         }
@@ -44,14 +38,15 @@ fn main() {
     let resolved_path = first_path.unwrap_or(&default_string);
     let correct_path = find_correct_path(resolved_path);
 
+    let full_path = match correct_path {
+        Some(path) => path,
+        None => resolved_path.clone(),
+    };
     let editor = std::env::var("EDITOR").unwrap_or("vim".to_string());
 
-    // If the file doesn't exist, create it.
-    let final_path = correct_path.unwrap_or(resolved_path.to_string());
-
     Command::new(editor)
-        .arg(final_path)
-        .args(if args.len() > 3 { &args[3..] } else { &[] })
+        .arg(full_path)
+        .args(if args.len() > 2 { &args[2..] } else { &[] })
         .status()
         .expect("Failed to open file");
 }
