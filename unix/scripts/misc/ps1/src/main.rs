@@ -33,6 +33,7 @@ enum TaskResult {
     SSHNotice(String),
     TmuxPrefix((String, String)),
     Vpn(String),
+    Tailscale(String),
 }
 
 async fn get_tmux_prefix() -> TaskResult {
@@ -110,14 +111,40 @@ async fn get_git_ps1() -> TaskResult {
     TaskResult::GitBranch(result_color)
 }
 
-fn get_jobs(jobs_args: String) -> String {
-    let jobs = jobs_args.lines().count();
+fn get_background_jobs(jobs_args: String) -> Option<String> {
+    // The format is Xr/Ys where X is the running number and Y is the suspended number
+    let jobs_args = jobs_args.split('/').collect::<Vec<&str>>();
+    let running_str = jobs_args.first()?;
+    let running_jobs = running_str.replace('r', "").parse::<usize>().ok()?;
+    let suspended_str = jobs_args.get(1)?;
+    let suspended_jobs = suspended_str.replace('s', "").parse::<usize>().ok()?;
+    let jobs = running_jobs + suspended_jobs;
 
     if jobs == 0 {
-        return "".to_string();
+        return None;
     }
 
-    format!(" {}", jobs)
+    Some(format!(" {}", jobs))
+}
+
+async fn get_tailscale_status() -> TaskResult {
+    let tailscale_status = tokio::process::Command::new("bash")
+        .arg("-c")
+        .arg("tailscale status --peers=false | grep -vq 'stopped' && echo connected || echo ''")
+        .output()
+        .await
+        .unwrap()
+        .stdout
+        .into_iter()
+        .map(|x| x as char)
+        .collect::<String>()
+        .replace('\n', "");
+
+    if tailscale_status != "connected" {
+        return TaskResult::Tailscale("".to_string());
+    }
+
+    TaskResult::Tailscale(" %F{yellow}[TS]%F{reset_color}".to_string())
 }
 
 async fn get_vpn() -> TaskResult {
@@ -158,13 +185,14 @@ async fn main() {
     let args: Vec<String> = std::env::args().collect();
 
     let jobs_args = args.get(1).unwrap_or(&"".to_string()).to_string();
-    let jobs_prefix = get_jobs(jobs_args);
+    let jobs_prefix = get_background_jobs(jobs_args).unwrap_or("".to_string());
 
     let tasks: Vec<tokio::task::JoinHandle<TaskResult>> = vec![
         tokio::spawn(get_tmux_prefix()),
         tokio::spawn(get_vpn()),
         tokio::spawn(get_ssh_notice()),
         tokio::spawn(get_git_ps1()),
+        tokio::spawn(get_tailscale_status()),
     ];
 
     let tasks_result = futures::future::join_all(tasks)
@@ -193,8 +221,12 @@ async fn main() {
         TaskResult::GitBranch(a) => a,
         _ => panic!(""),
     };
+    let tailscale = match tasks_result.get(4).unwrap() {
+        TaskResult::Tailscale(a) => a,
+        _ => panic!(""),
+    };
 
-    let ps1_start = format!("{tmux_prefix_a} {ssh_notice}{vpn_result}");
+    let ps1_start = format!("{tmux_prefix_a} {ssh_notice}{vpn_result}{tailscale}");
     let ps1_middle = format!("{git_ps1}{jobs_prefix}");
     let time = get_time();
     let ps1_end = format!("%F{{39}}{}{}%F{{reset_color}}", time, tmux_prefix_b);

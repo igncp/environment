@@ -118,7 +118,11 @@ __get_next_task() {
 }
 
 setopt PROMPT_SUBST
-PS1='$(~/.scripts/cargo_target/release/ps1 "$(jobs)")'
+precmd () {
+  jobscount=${(M)#${jobstates%%:*}:#running}r/${(M)#${jobstates%%:*}:#suspended}s
+  if [[ $jobscount == s0 ]]; then jobscount=; fi
+}
+PS1='$(~/.scripts/cargo_target/release/ps1 $jobscount)'
 NEXT_TASK='$(__get_next_task)'
 RPROMPT="[$NEXT_TASK]"
 
