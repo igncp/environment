@@ -40,6 +40,10 @@ cat >> ~/.shell_aliases <<"EOF"
 alias MacDisks='diskutil list'
 alias MacFeatures='system_profiler > /tmp/features.txt && echo "/tmp/features.txt written" && less /tmp/features.txt'
 alias BrewListPackages='brew list'
+
+# Edit this file: `/etc/pf.conf`
+# For example: `pass in proto tcp from any to any port 3000`
+alias MacRestartFirewallConfig='sudo pfctl -f /etc/pf.conf'
 EOF
 
 cat >> ~/.zshrc <<"EOF"
