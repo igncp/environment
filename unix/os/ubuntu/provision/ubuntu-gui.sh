@@ -71,6 +71,7 @@ else
 fi
 
 if [ ! -f ~/.check-files/adobe-font ]; then
+  sudo apt-get install -y fonts-noto
   mkdir -p /tmp/adodefont
   cd /tmp/adodefont
   wget -q --show-progress -O source-code-pro.zip https://github.com/adobe-fonts/source-code-pro/archive/2.030R-ro/1.050R-it.zip

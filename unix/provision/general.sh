@@ -420,7 +420,7 @@ check_file_exists() {
   install_system_package the_silver_searcher ag
   cat >> ~/.shellrc <<"EOF"
   export FZF_COMPLETION_TRIGGER='['
-  export FZF_DEFAULT_OPTS='--bind=pgup:preview-page-up,pgdn:preview-page-down,ctrl-j:preview-down,ctrl-k:preview-up --preview-window right:wrap --color=light'
+  export FZF_DEFAULT_OPTS='--bind=pgup:preview-page-up,pgdn:preview-page-down,ctrl-j:preview-down,ctrl-k:preview-up --preview-window right:wrap --color=dark'
   AG_DIRS() { ag -u --hidden --ignore .git -g "" "$@" | xargs dirname | sort | uniq; }
   export FZF_ALT_C_COMMAND="AG_DIRS"
 EOF
@@ -495,7 +495,7 @@ fi
 cat > /tmp/tmux_choose_session.sh <<"EOF"
 #!/usr/bin/env bash
 
-SESSION=$(tmux ls | grep -o '^.*: ' | sed 's|: ||' | "$HOME"/.fzf/bin/fzf --color light)
+SESSION=$(tmux ls | grep -o '^.*: ' | sed 's|: ||' | "$HOME"/.fzf/bin/fzf --color dark)
 
 if [ -z "$SESSION" ]; then exit 0; fi
 

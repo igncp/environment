@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # First install the firmware updates via Windows
-# Settings > System > Recovery > Advanced Startup
+# Settings > System > Recovery > Advanced Start-up
 # Troubleshoot > UEFI system settings
   # Disable secureboot
   # Change the boot order

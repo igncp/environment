@@ -12,6 +12,8 @@ update_vim_colors_theme
 # git config --global gpg.format ssh
 # git config --global commit.gpgsign true
 # git config --global user.signingkey '...' # Public SSH key
+## If using 1Password directly Linux, this is needed
+# git config --global gpg.ssh.program /opt/1Password/op-ssh-sign
 # mkdir -p "$HOME"/.config/git/git
 # git config --global gpg.ssh.allowedSignersFile "$HOME/.config/git/allowed_signers"
 # # This file is used for `git log --show-signature`, have to add the public key instead of `...`
