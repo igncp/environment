@@ -48,12 +48,6 @@ RimeConfigure() {
 EOF
 fi
 
-install_system_package xclip
-cat >> ~/.shell_aliases <<"EOF"
-alias XClipCopy='xclip -selection clipboard' # usage: echo foo | XClipCopy
-alias XClipPaste='xclip -selection clipboard -o'
-EOF
-
 if [ -z "$ARM_ARCH" ]; then
 # alacritty
   install_system_package alacritty
@@ -91,23 +85,20 @@ fi
 install_system_package imagemagick import # for screenshots with import
 install_system_package feh # image preview
 
-if [ ! -f ~/project/.config/common-gui-light ]; then
+if [ ! -f ~/development/environment/project/.config/common-gui-light ]; then
   install_system_package gimp
   install_system_package nautilus # drag-n-drop files
   install_system_package libreoffice-fresh libreoffice
   install_system_package peek # for gif generation
   install_system_package flameshot # for annotations in images
   install_system_package lxappearance # gnome themes
-  install_system_package arandr # xrandr frontend
 fi
 
-install_system_package tigervnc vncserver # vnc client and server
+if [ -f ~/development/environment/project/.config/obs-studio ]; then install_system_package obs-studio obs; fi # for video recording
 
-if [ -f ~/project/.config/obs-studio ]; then install_system_package obs-studio obs; fi # for video recording
+if [ -f ~/development/environment/project/.config/discord ]; then install_system_package discord; fi
 
-if [ -f ~/project/.config/discord ]; then install_system_package discord; fi
-
-if [ -f ~/project/.config/gedit ]; then install_system_package gedit; fi
+if [ -f ~/development/environment/project/.config/gedit ]; then install_system_package gedit; fi
 
 install_system_package rofi
 mkdir -p ~/.rofi_scripts
@@ -128,55 +119,14 @@ add_desktop_common() {
 add_desktop_common \
   '/home/igncp/.scripts/wallpaper_update.sh' 'wallpaper-update' 'Wallpaper Update'
 
-# This setup requires that the user is already logged in in the main console
-# Use SSH tunneling from the client and don't open the port:
-  # `ssh -fN -L 5900:localhost:5900 REMOTE_ADDRESS`
-if [ -f ~/project/.config/x11-vnc-server ]; then
-  install_system_package x11vnc
-  cat >> ~/.shell_aliases <<"EOF"
-XVNCServerStart() {
-  if [ ! -f ~/project/.config/vnc-xrandr-output ]; then echo "~/project/.config/vnc-xrandr-output missing"; return 1; fi
-  if [ ! -f ~/project/.config/vnc-xrandr-mode ]; then echo "~/project/.config/vnc-xrandr-mode missing"; return 1; fi
-  if [ ! -f ~/project/.config/vnc-port ]; then echo "~/project/.config/vnc-port missing"; return 1; fi
-  systemctl start --user x11vnc.service
-  sleep 1
-  DISPLAY=:0.0 xrandr --output "$(cat ~/project/.config/vnc-xrandr-output)" --mode "$(cat ~/project/.config/vnc-xrandr-mode)"
-}
-XVNCServerStorePassword() { x11vnc -storepasswd; }
-EOF
-  # Don't enable, just manually start or stop
-  # Until reboot, have to: `systemctl --user daemon-reload`
-  cat > ~/.config/systemd/user/x11vnc.service <<"EOF"
-[Unit]
-Description=VNC Server for X11
-
-[Service]
-ExecStart=/usr/bin/bash -c 'x11vnc -usepw -rfbport $(cat /home/igncp/project/.config/vnc-port) -shared'
-ExecStop=/usr/bin/x11vnc -R stop
-Restart=always
-RestartSec=2
-
-[Install]
-WantedBy=multi-user.target
-EOF
-  # This server (from tigervnc) opens new sessions, so the operations are not
-  # displayed in the physical device. It can be configured whithin lightdm:
-  # /etc/lightdm/lightdm.conf
-  cat >> ~/.shell_aliases <<"EOF"
-# This server doesn't share the main X11 session
-# To run, for example in display `:3`: vncserver :3 &
-alias VNCServerPassword='vncpasswd'
-EOF
-fi
-
 # Bluetooth headphones command and rofi script
 cat > ~/.scripts/bluetooth_headphones_connect.sh <<"EOF"
 #!/usr/bin/env bash
-bluetoothctl power on; bluetoothctl connect "$(cat ~/project/.config/bluetooth-headphones-mac.txt)"
+bluetoothctl power on; bluetoothctl connect "$(cat ~/development/environment/project/.config/bluetooth-headphones-mac.txt)"
 EOF
 cat > ~/.scripts/bluetooth_headphones_disconnect.sh <<"EOF"
 #!/usr/bin/env bash
-bluetoothctl disconnect "$(cat ~/project/.config/bluetooth-headphones-mac.txt)"
+bluetoothctl disconnect "$(cat ~/development/environment/project/.config/bluetooth-headphones-mac.txt)"
 EOF
 cat >> ~/.shell_aliases <<"EOF"
 alias BluetoothHeadphonesConnect="bash ~/.scripts/bluetooth_headphones_connect.sh"
@@ -194,8 +144,8 @@ cat >> ~/.shell_aliases <<"EOF"
 alias GPUInfo='sudo lshw -C display -short'
 alias GPUStat='gpustat -cp'
 EOF
-if [ -f ~/project/.config/nvidia ]; then
-  if [ "$(cat ~/project/.config/nvidia)" == "yes" ]; then
+if [ -f ~/development/environment/project/.config/nvidia ]; then
+  if [ "$(cat ~/development/environment/project/.config/nvidia)" == "yes" ]; then
     if ! type gpustat > /dev/null 2>&1 ; then
       pip install gpustat
     fi
@@ -203,8 +153,6 @@ if [ -f ~/project/.config/nvidia ]; then
   fi
 fi
 install_system_package mesa-utils glxgears
-
-install_system_package acpi
 
 cat >> ~/.shell_aliases <<"EOF"
 BluetoothFixIntel() {
@@ -215,7 +163,7 @@ BluetoothFixIntel() {
 }
 EOF
 
-if [ -f ~/project/.config/copyq ]; then
+if [ -f ~/development/environment/project/.config/copyq ]; then
   install_system_package copyq
   # https://copyq.readthedocs.io/en/latest/faq.html#how-to-omit-storing-text-copied-from-specific-windows-like-a-password-manager
     # Create two items, one for the password manager and one for Entry

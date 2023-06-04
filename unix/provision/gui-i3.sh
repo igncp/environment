@@ -2,7 +2,7 @@
 
 # to start it: startx
 if ! type i3 > /dev/null 2>&1 ; then
-  if [ -f ~/project/.config/standard-i3 ]; then install_system_package i3; else install_system_package i3-gaps; fi
+  if [ -f ~/development/environment/project/.config/standard-i3 ]; then install_system_package i3; else install_system_package i3-gaps; fi
   install_system_package i3lock
   install_system_package i3blocks
 
@@ -26,7 +26,7 @@ EOF
 fi
 
 echo 'sh ~/.keyboard-config.sh' >> ~/.xinitrc
-if [ ! -f ~/project/.config/no-auto-i3 ]; then
+if [ ! -f ~/development/environment/project/.config/no-auto-i3 ]; then
   echo 'exec i3' >> ~/.xinitrc
 fi
 
@@ -57,7 +57,7 @@ else
   HAS_TO_RELOAD_I3=''
 fi
 cp ~/project/provision/i3-config ~/.config/i3/config
-if [ -f ~/project/.config/standard-i3 ]; then
+if [ -f ~/development/environment/project/.config/standard-i3 ]; then
   sed -i '/gaps/d' ~/.config/i3/config
 fi
 if [ "$ENVIRONMENT_THEME" == "dark" ]; then
@@ -68,7 +68,7 @@ fi
 sh ~/project/provision/i3blocks.sh
 
 # picom: can be disabled due performance
-  if [ ! -f ~/project/.config/without-picom ]; then
+  if [ ! -f ~/development/environment/project/.config/without-picom ]; then
     install_system_package picom
     cp ~/project/provision/picom.conf ~/.config/picom.conf
     check_file_exists ~/project/provision/picom.conf
@@ -89,7 +89,7 @@ if type dunst > /dev/null 2>&1 ; then
 fi
 
 # These require `polkit`, which is a dependency for example for `lightdm`
-if [ -f ~/project/.config/inside ]; then
+if [ -f ~/development/environment/project/.config/inside ]; then
   sed -i -r '/mod\+Shift\+o/ s|exec ".*"|exec "systemctl suspend"|' ~/.config/i3/config
 else
   sed -i -r '/mod\+Shift\+o/ s|exec ".*"|exec "systemctl poweroff"|' ~/.config/i3/config

@@ -174,7 +174,7 @@ for_window [title="Android Virtual Device Manager"] floating enable
 for_window [title="ImageMagick"] floating enable, move position 0 0
 
 bindsym Mod4+BackSpace kill
-bindsym --release Mod1+Shift+b exec "/home/igncp/project/scripts/misc/take_screenshot.sh &>> /tmp/i3-log"
+bindsym --release Mod1+Shift+b exec "/home/igncp/development/environment/unix/scripts/misc/take_screenshot.sh &>> /tmp/i3-log"
 
 bindsym Mod1+d exec "rofi -show combi -font 'hack 20' -combi-modi drun,window,ssh"
 bindsym Mod1+c exec "rofi -show window -font 'hack 20' -theme-str 'window { background-color:#cfc;}'"

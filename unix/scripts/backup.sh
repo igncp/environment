@@ -2,7 +2,7 @@
 
 # Rename this file inside the project
 # The part to change is between the `+++` lines
-# Example usage: sh ~/project/scripts/backup.sh /mnt/backup_2022-01-02
+# Example usage: sh backup.sh /mnt/backup_2022-01-02
     # Here, /mnt/backup_2022-01-02 should be a directory
 # It keeps the uncompressed files in the path plus a password protected zip
 # file with the same contents inside the directory

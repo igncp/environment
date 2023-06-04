@@ -57,7 +57,7 @@ PolybarConfigure() {
 }
 alias PolybarRestart='killall polybar; nohup /home/igncp/.config/polybar/launch.sh >/dev/null 2>&1 &'
 EOF
-  if [ -f ~/project/.config/polybar-small ]; then
+  if [ -f ~/development/environment/project/.config/polybar-small ]; then
     sed -i 's|height =.*|height = 20pt|' ~/.config/polybar/config.ini
     sed -i '/font-0/s|size=.*;|size=14;|' ~/.config/polybar/config.ini
     sed -i 's|tray-offset-y =.*|tray-offset-y = -20pt|' ~/.config/polybar/config.ini

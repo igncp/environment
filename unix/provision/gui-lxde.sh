@@ -1,9 +1,5 @@
 # gui-lxde START
 
-install_system_package lxde startlxde
-
-echo 'exec startlxde' >> ~/.xinitrc
-
 echo 'pcmanfm -w "$1"' > ~/.set-background.sh
 chmod +x ~/.set-background.sh
 sed -i "1i(sleep 5s && $HOME/.scripts/wallpaper_update.sh 2>&1 > /dev/null) &" ~/.xinitrc
@@ -19,21 +15,6 @@ if [ -z "$(grep 'W-q' ~/.config/openbox/lxde-rc.xml || true)" ]; then
 </keybind>
 EOF
   cat /tmp/rofi-shortcut
-fi
-cat >> ~/.shell_aliases <<"EOF"
-alias LXDEReload='echo "Remember to run in guest"; openbox-lxde --reconfigure'
-alias LXDEPanelRestart='DISPLAY=:0 lxpanelctl restart'
-alias LXDEPanelConfig='nvim ~/.config/lxpanel/LXDE/panels/panel && DISPLAY=:0 lxpanelctl restart'
-EOF
-
-if [ -f ~/.config/pcmanfm/LXDE/pcmanfm.conf ]; then
-  sed -i 's|maximized=.*|maximized=1|' ~/.config/pcmanfm/LXDE/pcmanfm.conf
-  sed -i 's|show_hidden=.*|show_hidden=1|' ~/.config/pcmanfm/LXDE/pcmanfm.conf
-  sed -i 's|view_mode=.*|view_mode=list|' ~/.config/pcmanfm/LXDE/pcmanfm.conf
-fi
-
-if [ -f ~/.config/lxpanel/LXDE/panels/panel ]; then
-  sed -i 's|autohide=.*|autohide=1|' ~/.config/lxpanel/LXDE/panels/panel
 fi
 
 if [ -z "$(grep 'arandr' ~/.config/lxpanel/LXDE/panels/panel || true)" ]; then

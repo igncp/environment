@@ -37,12 +37,6 @@ EOF
   autocmd FileType reason nmap <buffer> <leader>kb :ReasonPrettyPrint<Cr>
 EOF
 
-# import js
-  install_node_modules import-js
-  install_vim_package galooshi/vim-import-js
-  add_special_vim_map 'impjswor' ':ImportJSWord<cr>' 'import js word'
-  add_special_vim_map 'impjswor' ':ImportJSFix<cr>' 'import js file'
-
 # local eslint
   cat >> ~/.vimrc <<"EOF"
     if executable('node_modules/.bin/eslint')

@@ -1,0 +1,480 @@
+use std::path::Path;
+
+use crate::base::{config::Config, system::System, Context};
+
+use self::{
+    asdf::run_asdf, fzf::run_fzf, git::run_git, gpg::setup_gpg, hashi::setup_hashi, htop::run_htop,
+    netcat_clipboard::run_netcat_clipboard, pi_hole::setup_pi_hole, python::run_python,
+    taskwarrior::setup_taskwarrior, tmux::setup_tmux,
+};
+
+mod asdf;
+mod fzf;
+mod git;
+mod gpg;
+mod hashi;
+mod htop;
+mod netcat_clipboard;
+mod pi_hole;
+mod python;
+mod taskwarrior;
+mod tmux;
+
+pub fn run_general(context: &mut Context) {
+    System::run_bash_command(
+        r###"
+mkdir -p $HOME/.scripts/toolbox
+
+while IFS= read -r -d '' FILE_PATH; do
+  FILE_NAME=$(basename "$FILE_PATH")
+  if [ ! -f "$HOME/.scripts/toolbox/$FILE_NAME" ]; then
+    (cd "$FILE_PATH" \
+      && cargo build --release --jobs 1 \
+      && cp $HOME/.scripts/cargo_target/release/"$FILE_NAME" $HOME/.scripts/toolbox/)
+  fi
+done < <(find ~/development/environment/unix/scripts/toolbox -maxdepth 1 -mindepth 1 -type d -print0)
+
+while IFS= read -r -d '' FILE_PATH; do
+  FILE_NAME=$(basename "$FILE_PATH")
+  if [ ! -f "$HOME/.scripts/cargo_target/release/$FILE_NAME" ]; then
+    (cd "$FILE_PATH" \
+      && cargo build --release --jobs 1)
+  fi
+done < <(find ~/development/environment/unix/scripts/misc -maxdepth 1 -mindepth 1 -type d -print0)
+
+# This increases re-compilation times but these dirs can get very large
+rm -rf ~/.scripts/cargo_target/release/deps
+rm -rf ~/.scripts/cargo_target/release/build
+rm -rf ~/.scripts/cargo_target/debug
+
+if [ ! -f ~/.ssh/config ]; then
+  mkdir -p ~/.ssh
+  cp ~/development/environment/unix/config-files/ssh-client-config ~/.ssh/config
+fi
+"###,
+    );
+
+    std::fs::create_dir_all(context.system.get_home_path(".scripts/toolbox")).unwrap();
+    std::fs::create_dir_all(context.system.get_home_path("logs")).unwrap();
+
+    context
+        .system
+        .install_system_package("base-devel", Some("make"));
+    context.system.install_system_package("curl", None);
+    context
+        .system
+        .install_system_package("dnsutils", Some("dig"));
+    context.system.install_system_package("git", None);
+    context.system.install_system_package("jq", None);
+    context.system.install_system_package("lsof", None);
+    context.system.install_system_package("ncdu", None);
+    context.system.install_system_package("neofetch", None);
+    context.system.install_system_package("nmap", None);
+    context.system.install_system_package("ranger", None);
+    context.system.install_system_package("rsync", None);
+    context.system.install_system_package("tree", None);
+    context.system.install_system_package("unzip", None);
+    context.system.install_system_package("wget", None);
+    context.system.install_system_package("zip", None);
+
+    context.files.append(
+        &context.system.get_home_path(".shellrc"),
+        r#"
+if [ -f "$HOME/.cargo/env" ]; then
+  source "$HOME/.cargo/env"
+fi
+
+export EDITOR=vim
+export PATH="$PATH:$HOME/development/environment/unix/scripts"
+export PATH="$PATH:$HOME/development/environment/unix/scripts/bootstrap"
+export PATH="$PATH:$HOME/.local/bin"
+"#,
+    );
+
+    if !Path::new(&context.system.get_home_path(".git-prompt")).exists() {
+        System::run_bash_command(
+            r###"
+if type pacman > /dev/null 2>&1 ; then
+  sudo pacman -S --noconfirm bash-completion
+fi
+curl -o ~/.git-prompt https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh
+"###,
+        );
+    }
+
+    context.files.append(
+        &context.system.get_home_path(".shell_sources"),
+        r#"
+source_if_exists() {
+  FILE_PATH=$1
+  if [ -f $FILE_PATH ]; then source $FILE_PATH; fi
+}
+
+source_if_exists ~/.shell_aliases
+source_if_exists ~/.git-prompt
+"#,
+    );
+
+    if !Path::new(&context.system.get_home_path(".config/up/up.sh")).exists() {
+        System::run_bash_command(
+            r###"
+    curl --create-dirs -o ~/.config/up/up.sh https://raw.githubusercontent.com/shannonmoeller/up/master/up.sh
+"###,
+        );
+    }
+
+    context.files.appendln(
+        &context.system.get_home_path(".shell_sources"),
+        "source_if_exists ~/.config/up/up.sh",
+    );
+
+    setup_tmux(context);
+
+    context.files.append(
+        &context.system.get_home_path(".shell_aliases"),
+        r###"
+alias ag="ag --hidden  --color-match 7"
+alias agg='ag --hidden --ignore node_modules --ignore .git'
+alias cp="cp -r"
+alias htop="htop --no-color"
+alias l="less -i"
+alias ll="ls -lah --color=always"
+alias lsblk="lsblk -f"
+alias mkdir="mkdir -p"
+alias r="ranger"
+alias rm="rm -rf"
+alias svim="sudo vim"
+alias tree="tree -a"
+alias wget="wget -c"
+
+alias go="git checkout"
+complete -F _git_checkout go
+alias gob="git checkout -b"
+
+alias Lsblk="lsblk -f | less -S"
+Diff() { diff --color=always "$@" | less -r; }
+DisplayFilesConcatenated(){ xargs tail -n +1 | sed "s|==>|\n\n\n\n\n$1==>|; s|<==|<==\n|" | $EDITOR -; }
+FileSizeCreate() { head -c "$1" /dev/urandom > "$2"; } # For example: FileSizeCreate 1GB /tmp/foo
+FindLinesJustInFirstFile() { comm -23 <(sort "$1") <(sort "$2"); }
+FindSortDate() { find "$@" -printf "%T@ %Tc %p\n" | sort -nr; }
+GetProcessUsingPort(){ fuser $1/tcp 2>&1 | grep -oE '[0-9]*$'; }
+GetProcessUsingPortAndKill(){ fuser $1/tcp 2>&1 | grep -oE '[0-9]*$' | xargs -I {} kill {}; }
+KillPsAux() { awk '{ print $2 }' | xargs -I{} kill "$@" {}; }
+LsofDir() { lsof +D $1; } # It uses `+` instead of `-`
+LsofNetwork() { lsof -i; }
+LsofPort() { lsof -i TCP:$1; }
+LsofProcess() { lsof -p $1; } # It expects the PID
+RandomFile() { find "$1" -type f | shuf -n 1; }
+RandomLine() { sort -R "$1" | head -n 1; }
+# will not catch `'` so can wrap generated texts with single quotes
+RandomStrGenerator() { tr -dc 'A-Za-z0-9!"#$%&()*+,-./:;<=>?@[\]^_`{|}~' </dev/urandom | head -c "$1"; echo; }
+SedLines() { if [ "$#" -eq 1 ]; then sed -n "$1,$1p"; else sed -n "$1,$2p"; fi; }
+TopCPU()    { ps aux | sort -nr -k 3 | head "$@" | sed -e 'G;G;'; } # e.g. TopCPU -n 5 | less -S
+TopMemory() { ps aux | sort -nr -k 4 | head "$@" | sed -e 'G;G;'; } # e.g. TopMemory -n 5 | less -S
+USBClone() { if [ -z "$I" ] || [ -z "$O" ]; then echo "Missing params"; return; fi; dd if=$I of=$O bs=1G count=10 status=progress; } # Example: I=/dev/sdb O=/dev/sdc USBClone
+Vidir() { vidir -v -; }
+VidirFind() { find $@ | vidir -v -; }
+VisudoUser() { sudo env EDITOR=vim visudo -f /etc/sudoers.d/$1; }
+
+alias SSHAgent='eval `ssh-agent`'
+SSHGeneratePemPublicKey() { FILE=$1; ssh-keygen -f "$FILE" -e -m pem; }
+SSHGenerateStrongKey() { FILE="$1"; ssh-keygen -t ed25519 -f "$FILE"; }
+alias SSHListLocalForwardedPorts='ps x -ww -o pid,command | ag ssh | grep --color=never localhost'
+SSHForwardPortLocal() { ssh -fN -L "$1":localhost:"$1" ${@:2}; } # SSHForwardPort 1234 192.168.1.40
+alias SSHDConfig='sudo sshd -T'
+SSHListConnections() { sudo netstat -tnpa | grep 'ESTABLISHED.*sshd'; }
+
+alias AliasesReload='source ~/.shell_aliases'
+alias CleanNCurses='stty sane;clear;'
+alias EditProvision="(cd ~/development/environment && $EDITOR src/main.rs && cargo run --release)"
+alias Provision="(cd ~/development/environment && cargo run --release)"
+alias GeoInfo='curl -s ipinfo.io | jq .'
+alias FDisk='sudo fdisk /dev/sda'
+alias FilterLeaf=$'sort -r | awk \'a!~"^"$0{a=$0;print}\' | sort'
+alias HierarchyManual='man hier'
+alias IPPublic='curl ifconfig.co'
+alias KillAllTmux='killall /usr/bin/tmux || true ; killall tmux'
+alias LastColumn="awk '{print "'$NF'"}'"
+alias PathShow='echo $PATH | tr ":" "\n" | sort | uniq | less'
+alias PsTree='pstree -pTUl | less -S'
+alias RsyncDelete='rsync -rhv --delete' # remember to add a slash at the end of source (dest doesn't matter)
+alias ShellChangeToBash='chsh -s /bin/bash; exit'
+alias SocketSearch='sudo ss -lntup'
+alias Sudo='sudo -E ' # this preserves aliases and environment in root
+alias TreeDir='tree -d'
+alias Visudo='sudo env EDITOR=vim visudo'
+alias Xargs='xargs -I{}'
+
+alias CrontabUser='crontab -e'
+alias CrontabRoot='sudo EDITOR=vim crontab -e'
+
+GitAdd() { git add -A $@; git status -u; }
+GitCloneRepo() {
+  SOURCE=$1; TARGET=$2;
+  rm -rf "$TARGET"; mkdir -p "$TARGET";
+  cp -r "$SOURCE"/.git "$TARGET"
+  cd "$TARGET" && git reset --hard
+  echo "Moved to target: $TARGET"
+}
+GitFilesAddedDiff() {
+  GitAddAll 2>&1 > /dev/null;
+  R_PATH="$(git rev-parse --show-toplevel)";
+  git diff --name-only --diff-filter=A "$@" | sed 's|^|'"$R_PATH"'/|';
+}
+GitDiff() { git diff --color --relative $@; }
+GitsShow() { git show --color $@; }
+GitOpenStatusFiles() { $EDITOR -p $(git status --porcelain $1 | grep -vE "^ D" | sed s/^...//); }
+GitPrintRemoteUrl() { git config --get "remote.${1:-origin}.url"; }
+GitResetLastCommit() { LAST_COMMIT_MESSAGE=$(git log -1 --pretty=%B); \
+  git reset --soft HEAD^; git add -A .; git commit -m "$LAST_COMMIT_MESSAGE"; }
+GitRevertCode() { git reset "$1"; rm -rf "$1" ; git checkout -- "$1"; git status; }
+GitFilesByAuthor() {
+  DEFAULT_AUTHOR="$(git config user.name)"; AUTHOR="${1:-$DEFAULT_AUTHOR}"
+  git log \
+    --pretty="%H" \
+    --author="$AUTHOR" \
+  | while read commit_hash; do \
+      git show --oneline --name-only $commit_hash | tail -n+2; \
+    done \
+  | sort | uniq | grep .
+}
+GitFilesByAuthorLatest() {
+  git ls-files -z "$@" | \
+    xargs --null -I % \
+      sh -c "printf %' '; git annotate -p % | sed -nr '/^author /{s/^author (.*)/\1/;p}' | sort | uniq | awk '{printf (\$0 \" \")}END{print \"\"}'"
+}
+GitFilesByAuthorLatestGrep() {
+  GitFilesByAuthorLatest "${@:2}" | grep -i "$1" | grep -o '^[^ ]* '
+}
+
+alias GitAddAll='GitAdd .'
+alias GitBranchOrder='git branch -r --sort=creatordate --format "%(creatordate:relative);%(committername);%(refname)" | sed "s|refs/remotes/origin/||" | grep -v ";HEAD$" | column -s ";" -t | tac | less'
+GitCommit() { eval "git commit -m '$@'"; }
+alias GitConfig='"$EDITOR" .git/config'
+alias GitEditorCommit='git commit -v'
+alias GitListConflictFiles='git diff --name-only --relative --diff-filter=U'
+alias GitListFilesChangedHistory='git log --pretty=format: --name-only | sort | uniq -c | sort -rg' # can add `--author Foo`, --since, or remove files
+alias GitRebaseResetAuthorContinue='git commit --amend --reset-author --no-edit; git rebase --continue'
+alias GitStashApply='git stash apply' # can also use name here
+alias GitStashList='git stash list'
+alias GitStashName='git stash push -m'
+alias GitSubmodulesUpdate='git submodule update --init --recursive' # clones existing submodules
+
+alias Headers='curl -I' # e.g. Headers google.com
+alias NmapLocal='sudo nmap -sn 192.168.1.0/24 > /tmp/nmap-result && sed -i "s|Nmap|\nNmap|" /tmp/nmap-result && less /tmp/nmap-result'
+alias Ports='sudo netstat -tulanp'
+alias NetstatConnections='netstat -nputw'
+alias RemoveAnsiColors="sed 's/\x1b\[[0-9;]*m//g'"
+
+WorktreeClone() { git clone --bare "$1" .bare; echo "gitdir: ./.bare" > .git; }
+
+alias n="$HOME/.scripts/cargo_target/release/n"
+
+alias ProvisionListPossibleConfig='~/.scripts/cargo_target/release/provision_choose_config && provision.sh'
+    "###);
+
+    // https://github.com/TomWright/dasel
+    // https://daseldocs.tomwright.me/
+    if !context.system.get_has_binary("dasel") {
+        if context.system.is_mac() {
+            System::run_bash_command("brew install dasel");
+        } else if context.system.is_linux() {
+            System::run_bash_command(
+                r###"
+FILTER_OPT="linux_amd64"
+DASEL_URL="$(curl -sSLf https://api.github.com/repos/tomwright/dasel/releases/latest | grep browser_download_url | grep "$FILTER_OPT" | grep -v '\.gz' | cut -d\" -f 4)"
+curl -sSLf "$DASEL_URL" -L -o dasel && sudo chmod +x dasel
+sudo mv ./dasel /usr/local/bin/dasel
+"###,
+            );
+        }
+    }
+
+    if context.system.is_linux() {
+        if !Path::new(&context.system.get_home_path(".dircolors")).exists() {
+            System::run_bash_command(
+                r###"
+dircolors -p > ~/.dircolors
+COLOR_ITEMS=(FIFO OTHER_WRITABLE STICKY_OTHER_WRITABLE CAPABILITY SETGID SETUID ORPHAN CHR BLK)
+for COLOR_ITEM in "${COLOR_ITEMS[@]}"; do
+    sed -i 's|^'"$COLOR_ITEM"' .* #|'"$COLOR_ITEM"' 01;35 #|' ~/.dircolors
+done
+"###,
+            );
+        }
+
+        context.files.appendln(
+            &context.system.get_home_path(".shellrc"),
+            r#"eval "$(dircolors ~/.dircolors)""#,
+        );
+    }
+
+    let notice_file = Config::get_config_file_path(&context.system, "ssh-notice-color");
+
+    if !Path::new(&notice_file).exists() {
+        context.files.append(&notice_file, "cyan");
+        context.write_file(&notice_file, true);
+    }
+
+    context.files.appendln(
+        &context.system.get_home_path(".shell_aliases"),
+        r#"MsgFmtPo() { FILE_NO_EXT="$(echo $1 | sed 's|.po$||')" ; msgfmt -o "$1".mo "$1".po ; }"#,
+    );
+
+    // Only for bash, zsh uses `dirs -v` and `cd -[tab]`
+    if !Path::new(&context.system.get_home_path(".acd_func")).exists() {
+        System::run_bash_command(
+            r###"
+curl -o ~/.acd_func \
+    https://raw.githubusercontent.com/djoot/all-bash-history/master/acd_func.sh
+"###,
+        );
+        context.files.appendln(
+            &context.system.get_home_path(".bashrc"),
+            r#"source "$HOME"/.acd_func"#,
+        );
+    }
+
+    context.files.append(
+        &context.system.get_home_path(".bash_profile"),
+        r###"
+if [ -f "$HOME/.bashrc" ]; then
+  . "$HOME/.bashrc"
+fi
+"###,
+    );
+
+    context.files.append(
+        &context.system.get_home_path(".bashrc"),
+        r###"
+if [ -z "$PS1" ]; then
+  # prompt var is not set, so this is *not* an interactive shell (e.g. using scp)
+  return
+fi
+
+# move from word to word. avoid ctrl+b to use in tmux
+  bind '"\C-g":vi-fWord' > /dev/null 2>&1
+  bind '"\C-f":vi-bWord' > /dev/null 2>&1
+
+export GREEN='\033[0;32m'
+export BLUE='\033[0;34m'
+export NC='\033[0m'
+
+# prevent the terminal from hanging on ctrl+s
+# although it can be recovered with ctrl+q
+stty -ixon
+
+export HISTCONTROL=ignoreboth:erasedups
+export EDITOR=vim
+
+source ~/.shellrc
+source ~/.shell_sources
+
+PS1='$(~/.scripts/cargo_target/release/ps1 "$(jobs)")'
+"###,
+    );
+
+    context.files.append(
+        &context.system.get_home_path(".inputrc"),
+        r###"
+set mark-symlinked-directories on
+set show-all-if-ambiguous on
+
+C-h:unix-filename-rubout
+C-k:edit-and-execute-command
+
+Control-x: " fg\n"
+Control-}: " | less -SR\n"
+
+set show-all-if-ambiguous on
+
+# How to get these characters:
+# - run `sed -n l`
+# - type combination (it only works for some, like ctrl + something)
+# - copy it here, but replace ^[ with  (ctrl-v ctrl-[ in insert mode)
+"[1;5A":menu-complete # ctrl-up
+"[1;5B":menu-complete-backward # ctrl-down
+"###,
+    );
+
+    if context.system.is_linux() {
+        System::run_bash_command(
+            r###"
+echo 'LANG=en_US.UTF-8' > /tmp/locale.conf
+sudo mv /tmp/locale.conf /etc/locale.conf
+
+if [[ ! -z $(sudo ufw status | grep inactive) ]]; then
+    sudo ufw --force enable
+    sudo systemctl enable --now ufw
+fi
+"###,
+        );
+
+        // To mute/unmute in GUI press M
+        context
+            .system
+            .install_system_package("alsa-utils", Some("alsamixer"));
+
+        // UFW
+        context.system.install_system_package("ufw", None);
+
+        context.files.append(
+            &context.system.get_home_path(".shell_aliases"),
+            r###"
+alias UFWStatus='sudo ufw status numbered' # numbered is useful for insert / delete
+alias UFWLogging='sudo ufw logging on'
+UFWDelete() { sudo ufw status numbered ; sudo ufw --force delete $1; sudo ufw status numbered; }
+alias UFWBlocked="sudo journalctl | grep -i ufw | tail -f" # For better findings, can use `grep -v -f /tmp/some_file` with some patterns to ignore
+UFWAllowOutIPPort() { sudo ufw allow out from any to $1 port $2; }
+UFWInit() {
+    sudo ufw default deny outgoing; sudo ufw default deny incoming;
+    sudo ufw allow out to any port 80; sudo ufw allow out to any port 443;
+}
+"###,
+        );
+    }
+
+    context.system.install_system_package("hyperfine", None);
+    context
+        .system
+        .install_system_package("moreutils", Some("vidir"));
+    context
+        .system
+        .install_system_package("net-tools", Some("netstat"));
+
+    context.files.appendln(
+        &context.system.get_home_path(".bashrc"),
+        "complete -cf sudo",
+    );
+
+    context.files.append(
+        &context.system.get_home_path(".shell_aliases"),
+        r###"
+# https://stackoverflow.com/a/22625150
+CurlMeasureTime() {
+  cat > /tmp/curl_measure_time.txt <<"EOF2"
+  time_namelookup:  %{time_namelookup}s\n
+        time_connect:  %{time_connect}s\n
+     time_appconnect:  %{time_appconnect}s\n
+    time_pretransfer:  %{time_pretransfer}s\n
+       time_redirect:  %{time_redirect}s\n
+  time_starttransfer:  %{time_starttransfer}s\n
+                     ----------\n
+          time_total:  %{time_total}s\n
+EOF2
+  curl -w "@/tmp/curl_measure_time.txt" -o /dev/null -s $@
+}
+"###,
+    );
+
+    setup_gpg(context);
+    run_asdf(context);
+    run_git(context);
+    run_fzf(context);
+    run_htop(context);
+    run_netcat_clipboard(context);
+    run_python(context);
+    setup_taskwarrior(context);
+    setup_hashi(context);
+    setup_pi_hole(context);
+}

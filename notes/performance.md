@@ -17,7 +17,6 @@ General steps for improving the machine performance while developing.
 
 ## VM and Host
 
-- Add `linux.sh` provision when in Linux to tune performance
 - Check OS specific code to improve performance (e.g. `arch-misc.sh`)
 
 ## Mac

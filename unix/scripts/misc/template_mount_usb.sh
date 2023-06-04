@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copy this file into `~/project/scripts/custom/mount_NAME_usb.sh`
+# Copy this file into `mount_NAME_usb.sh`
 # And replace the env vars
 
 # The key file ideally should have root ownership. To copy it over the network can use:

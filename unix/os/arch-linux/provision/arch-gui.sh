@@ -1,8 +1,5 @@
 # arch-gui START
 
-install_system_package pulseaudio
-install_with_yay paman
-install_system_package pavucontrol # for audio settings
 install_with_yay pa-applet-git pa-applet
 install_system_package pulsemixer # TUI mixer (simple)
 install_with_yay ncpamixer # TUI mixer (live pavucontrol)
@@ -19,8 +16,6 @@ alias PASetSink="pacmd set-default-sink"
 EOF
 echo 'killall pa-applet || true' >> ~/.scripts/gui_daemons.sh
 echo '/usr/bin/pa-applet &' >> ~/.scripts/gui_daemons.sh
-
-install_system_package gvim # Adds support to clipboard to vim
 
 # bluetooth
 # for dual boot:
@@ -40,9 +35,9 @@ if [ ! -f ~/.check-files/bluetooth ]; then
 fi
 
 # backups with GUI (timeshift-gtk)
-if [ -f ~/project/.config/timeshift ]; then install_with_yay timeshift; fi
+if [ -f ~/development/environment/project/.config/timeshift ]; then install_with_yay timeshift; fi
 
-if [ -f ~/project/.config/diffpdf ]; then install_with_yay diffpdf; fi
+if [ -f ~/development/environment/project/.config/diffpdf ]; then install_with_yay diffpdf; fi
 
 if [ -z "$ARM_ARCH" ]; then
   if ! type dunst > /dev/null 2>&1 ; then
@@ -63,8 +58,8 @@ if [ -z "$ARM_ARCH" ]; then
   sed -i '1i(sleep 5s && dunst) &' ~/.xinitrc
 fi
 
-if [ -f ~/project/.config/nvidia ]; then
-  if [ "$(cat ~/project/.config/nvidia)" == "yes" ]; then
+if [ -f ~/development/environment/project/.config/nvidia ]; then
+  if [ "$(cat ~/development/environment/project/.config/nvidia)" == "yes" ]; then
     install_system_package nvidia nvidia-smi
     install_system_package nvidia-settings
     if [ ! -f ~/.check-files/nvidia-installed ]; then
@@ -87,16 +82,16 @@ EOF
     sed -i "1isleep 5s && sh $HOME/.scripts/nvidia-config.sh" ~/.xinitrc
   fi
 else
-  echo "[~/project/.config/nvidia]: file is missing, add it with 'yes' or 'no' to install nvidia packages"
+  echo "[~/development/environment/project/.config/nvidia]: file is missing, add it with 'yes' or 'no' to install nvidia packages"
 fi
 
-if [ -f ~/project/.config/skype  ]; then install_with_yay skypeforlinux-stable-bin skypeforlinux; fi
+if [ -f ~/development/environment/project/.config/skype  ]; then install_with_yay skypeforlinux-stable-bin skypeforlinux; fi
 
-if [ -f ~/project/.config/slack  ]; then install_with_yay slack-desktop slack; fi
+if [ -f ~/development/environment/project/.config/slack  ]; then install_with_yay slack-desktop slack; fi
 
-if [ -f ~/project/.config/postman ]; then install_with_yay postman-bin postman; fi
+if [ -f ~/development/environment/project/.config/postman ]; then install_with_yay postman-bin postman; fi
 
-if [ -f ~/project/.config/dropbox ]; then
+if [ -f ~/development/environment/project/.config/dropbox ]; then
   # Once installed, run `dropbox` and a URL will be opened
   if ! type dropbox > /dev/null 2>&1 ; then
     # https://aur.archlinux.org/packages/dropbox/#pinned-676597
@@ -109,9 +104,9 @@ fi
 
 # https://zoom.us/download?os=linux
 # sudo pacman -U ./zoom_x86_64.pkg.tar.xz
-if [ -f ~/project/.config/zoom ]; then install_with_yay zoom; fi
+if [ -f ~/development/environment/project/.config/zoom ]; then install_with_yay zoom; fi
 
-if [ -f ~/project/.config/mysql-workbench ]; then
+if [ -f ~/development/environment/project/.config/mysql-workbench ]; then
   install_system_package mysql-workbench
   install_system_package gnome-keyring
 fi
@@ -141,7 +136,7 @@ if [ ! -f ~/.check-files/nerd-fonts ]; then
   touch ~/.check-files/nerd-fonts
 fi
 
-if [ -f ~/project/.config/irssi ]; then
+if [ -f ~/development/environment/project/.config/irssi ]; then
   # set colors off
   install_system_package irssi
   echo 'alias Irssi="irssi"' >> ~/.shell_aliases
@@ -149,10 +144,10 @@ fi
 
 install_with_yay lxqt-sudo-git lxqt-sudo # for rofi
 
-if [ -f ~/project/.config/figma ]; then install_with_yay figma-linux; fi
+if [ -f ~/development/environment/project/.config/figma ]; then install_with_yay figma-linux; fi
 
 if [ -z "$ARM_ARCH" ]; then
-  if [ -f ~/project/.config/virtualbox-host ]; then
+  if [ -f ~/development/environment/project/.config/virtualbox-host ]; then
     if ! type virtualbox > /dev/null 2>&1 ; then
       install_system_package virtualbox-host-modules-arch
       install_system_package virtualbox
@@ -182,7 +177,7 @@ if [ -z "$ARM_ARCH" ]; then
 EOF
   fi
 
-  if [ -f ~/project/.config/espanso ]; then
+  if [ -f ~/development/environment/project/.config/espanso ]; then
     install_with_yay espanso
     check_file_exists ~/project/provision/espanso.yml
     touch ~/project/provision/espansoCustom.yml
@@ -235,7 +230,7 @@ alias SnapList='snap list'
 EOF
 fi
 
-if [ -f ~/project/.config/safeeyes ]; then
+if [ -f ~/development/environment/project/.config/safeeyes ]; then
   if [ ! -f ~/.check-files/safeeyes ]; then
     install_with_yay safeeyes
     sudo pacman -S --noconfirm xprintidle # Required by the idle plugin
@@ -245,7 +240,7 @@ if [ -f ~/project/.config/safeeyes ]; then
   sed -i '1i(sleep 2s && safeeyes -e) &' ~/.xinitrc
 fi
 
-if [ -f ~/project/.config/headless-xorg ]; then
+if [ -f ~/development/environment/project/.config/headless-xorg ]; then
   if [ ! -f ~/.check-files/xf86-video-dummy ]; then sudo pacman -S xf86-video-dummy; touch ~/.check-files/xf86-video-dummy; fi
   cat > /tmp/10-headless.conf <<"EOF"
 Section "Monitor"
@@ -280,7 +275,7 @@ fi
 
 install_with_yay inxi
 
-if [ -f ~/project/.config/autokey ]; then
+if [ -f ~/development/environment/project/.config/autokey ]; then
   install_with_yay autokey autokey-run
   install_with_yay autokey-gtk
   sed -i 's|"date"|"date +%s"|' ~/.config/autokey/data/Sample\ Scripts/Insert\ Date.py
@@ -319,7 +314,7 @@ install_with_yay hardinfo
 # It is started automatically with the desktop entry in `~/.config/autostart`
 install_with_yay arch-audit-gtk
 
-if [ ! -f ~/project/.config/no-dex ]; then
+if [ ! -f ~/development/environment/project/.config/no-dex ]; then
   install_system_package dex
   sed -i '1i(sleep 5s && dex -a) &' ~/.xinitrc
 fi
@@ -340,7 +335,7 @@ EOF
   touch ~/.check-files/apparmor-gui-config
 fi
 
-if [ -f ~/project/.config/tlp ]; then
+if [ -f ~/development/environment/project/.config/tlp ]; then
   install_with_yay tlpui
 fi
 
@@ -359,12 +354,12 @@ EOF
 chmod +x ~/.scripts/acpi_warning.sh
 echo "*/4 * * * * $HOME/.scripts/acpi_warning.sh" >> /var/spool/cron/$USER
 
-if [ -f ~/project/.config/remote ]; then
+if [ -f ~/development/environment/project/.config/remote ]; then
   install_system_package playerctl
   install_system_package xdotool
   install_system_package xssstate
 
-  if [ -f ~/project/.config/vlc_move_cursor ]; then
+  if [ -f ~/development/environment/project/.config/vlc_move_cursor ]; then
     cat > ~/.scripts/vlc_move_cursor.sh <<"EOF"
 if [ -n "$(ps aux | grep -v '\bgrep\b' | grep '\bvlc\b' || true)" ]; then
   sh -c '(($(DISPLAY=:0 xssstate -i) > 20000)) && DISPLAY=:0 xdotool mousemove 0 0 && sleep 0.2 && DISPLAY=:0 xdotool mousemove 10 10'
@@ -375,9 +370,9 @@ EOF
   fi
 fi
 
-if [ -f ~/project/.config/x11-vnc-server-lightdm ]; then
+if [ -f ~/development/environment/project/.config/x11-vnc-server-lightdm ]; then
   install_system_package x11vnc
-  if [ ! -f /etc/x11vnc.pass ]; then echo 'You have to setup `/etc/x11vnc.pass` to run ~/project/.config/x11-vnc-server-lightdm'; fi
+  if [ ! -f /etc/x11vnc.pass ]; then echo 'You have to setup `/etc/x11vnc.pass` to run ~/development/environment/project/.config/x11-vnc-server-lightdm'; fi
   sudo mkdir /etc/systemd/system/x11vnc.service.d/
   cat > /tmp/custom.conf <<"EOF"
 [Unit]

@@ -25,7 +25,7 @@ echo "igncp ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 cp -r /app/environment /home/igncp/environment
 chown -R igncp:igncp /home/igncp/environment
 su - igncp -c "cp environment/unix/os/ubuntu/installation/vm2.sh . && bash ./vm2.sh"
-su - igncp -c "mkdir -p ~/project/.config && touch ~/project/.config/inside"
+su - igncp -c "mkdir -p ~/development/environment/project/.config && touch ~/development/environment/project/.config/inside"
 su - igncp -c "bash project/provision/provision.sh"
 
 echo "Finished preparing docker env"

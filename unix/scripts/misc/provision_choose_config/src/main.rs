@@ -85,7 +85,7 @@ impl App {
         if let Some(i) = selected {
             let item = self.items.items.get(i).expect("No item found");
             let home_dir = std::env::var("HOME").expect("No home dir found");
-            let file_path = format!("{home_dir}/project/.config/{item}");
+            let file_path = format!("{home_dir}/development/environment/project/.config/{item}");
 
             if self.enabled.contains(item) {
                 self.enabled.remove(item);
@@ -113,7 +113,7 @@ impl App {
 fn get_all_possible_config() -> Vec<String> {
     let mut all_possible_config = std::process::Command::new("bash")
         .arg("-c")
-        .arg("grep --no-file -rEo 'project/.config/([_a-zA-Z0-9-])*' ~/project/ | cut -d '/' -f 3 | sort | uniq")
+        .arg("grep --no-file -rEo 'development/environment/project/.config/([_a-zA-Z0-9-])*' ~/project/ | cut -d '/' -f 3 | sort | uniq")
         .output()
         .expect("Failed to execute command")
         .stdout
@@ -150,7 +150,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     let home_dir = std::env::var("HOME").expect("No home dir found");
 
-    let config_dir = home_dir + "/project/.config";
+    let config_dir = home_dir + "/development/environment/project/.config";
 
     let existing_config = std::fs::read_dir(config_dir.clone())
         .expect("Unable to read config dir")

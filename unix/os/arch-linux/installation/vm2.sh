@@ -17,13 +17,16 @@ pacman -S --noconfirm openssh rsync
 
 ssh-keygen -A
 
-# comment if not installing a vbox VM
-pacman -S --noconfirm virtualbox-guest-utils
-usermod -G vboxsf -a igncp
-systemctl enable vboxservice.service
+# # Uncomment if installing a vbox VM
+# pacman -S --noconfirm virtualbox-guest-utils
+# usermod -G vboxsf -a igncp
+# systemctl enable vboxservice.service
 
 systemctl enable dhcpcd.service
 systemctl enable sshd.service
+
+# For rust installation
+sudo pacman -S base-devel --noconfirm
 
 pacman -S --noconfirm ufw
 

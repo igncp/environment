@@ -125,7 +125,7 @@ EOF
 chmod +x ~/.scripts/i3blocks_docker_containers.sh
 
 cat > ~/.scripts/i3blocks_location.sh <<"EOF"
-if [ -f /home/igncp/project/.config/inside ]; then
+if [ -f /home/igncp/development/environment/project/.config/inside ]; then
   echo "🏡 |"
 else
   echo "🏢 |"

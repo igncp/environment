@@ -142,7 +142,7 @@ ms-vscode-remote.remote-ssh-edit
 sleistner.vscode-fileutils
 EOF
 
-if [ -f ~/project/.config/copilot ]; then
+if [ -f ~/development/environment/project/.config/copilot ]; then
   echo 'GitHub.copilot' >> /tmp/expected-vscode-extensions
 fi
 

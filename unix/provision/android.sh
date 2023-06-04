@@ -9,8 +9,8 @@ if [ ! -d ~/android-sdk ] && [ ! -d ~/android-studio ] && [ ! -d ~/Library/Andro
   echo 'https://developer.android.com/studio/index.html#downloads'
 fi
 
-if [ ! -f "$HOME"/project/.config/android-path ]; then
-  echo '[~/project/.config/android-path]: Update to the correct path inside ~/project/.config/android-path'
+if [ ! -f "$HOME"/development/environment/project/.config/android-path ]; then
+  echo '[~/development/environment/project/.config/android-path]: Update to the correct path inside ~/development/environment/project/.config/android-path'
   echo 'If using studio, remember to first open it and download the CLI tools from Menu > Tools > SDK Manager'
   echo 'Example for android-path when using studio: $HOME/Android/Sdk'
 fi
@@ -23,7 +23,7 @@ cat >> ~/.shellrc <<"EOF"
 # If using Android Studio instead. Remember to create a project and download CLI tools
 # $HOME/Android/Sdk
 
-ANDROID_PATH_FILE="$(cat ~/project/.config/android-path)"
+ANDROID_PATH_FILE="$(cat ~/development/environment/project/.config/android-path)"
 export ANDROID_HOME="$ANDROID_PATH_FILE"
 
 export ANDROID_SDK_ROOT="$ANDROID_HOME"

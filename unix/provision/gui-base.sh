@@ -21,15 +21,6 @@ mkdir -p ~/.config/fontconfig
 cp ~/project/provision/fonts.conf ~/.config/fontconfig
 echo 'alias FontsList="fc-list"' >> ~/.shell_aliases
 
-if [ ! -f ~/.check-files/gui ]; then
-  echo "installing gui"
-  install_system_package xorg
-  if ! type startx > /dev/null 2>&1 ; then
-    install_system_package xorg-xinit
-  fi
-  touch ~/.check-files/gui
-fi
-
 # GTK
   # https://www.gnome-look.org/browse/ord/rating/
   # Can run: lxappearance # including inside Rofi

@@ -59,7 +59,7 @@ async fn get_ssh_notice() -> TaskResult {
 
     let ssh_notice_color = tokio::fs::read_to_string(format!(
         "{}{}",
-        home_path, "/project/.config/ssh-notice-color"
+        home_path, "/development/environment/project/.config/ssh-notice-color"
     ))
     .await
     .unwrap_or("cyan".to_string())
@@ -69,7 +69,10 @@ async fn get_ssh_notice() -> TaskResult {
     let mut ssh_notice = String::new();
 
     if !ssh_client.is_empty() || !ssh_tty.is_empty() || !ssh_connection.is_empty() {
-        let file_value = tokio::fs::read_to_string(home_path + "/project/.config/ssh-notice").await;
+        let file_value = tokio::fs::read_to_string(
+            home_path + "/development/environment/project/.config/ssh-notice",
+        )
+        .await;
 
         if let Ok(file_value) = file_value {
             let file_value = file_value.trim_end().to_string();
@@ -150,9 +153,10 @@ async fn get_tailscale_status() -> TaskResult {
 async fn get_vpn() -> TaskResult {
     let home_path = std::env::var("HOME").unwrap();
 
-    let full_content = tokio::fs::read_to_string(home_path + "/project/.config/vpn_check")
-        .await
-        .unwrap_or("".to_string());
+    let full_content =
+        tokio::fs::read_to_string(home_path + "/development/environment/project/.config/vpn_check")
+            .await
+            .unwrap_or("".to_string());
 
     let content = full_content
         .clone()

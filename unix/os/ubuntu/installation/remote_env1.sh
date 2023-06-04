@@ -120,9 +120,9 @@ sudo apt-get purge -y droplet-agent || true
   sudo mount /dev/mapper/cryptmain igncp
   sudo rsync -rhv --delete igncp-tmp/ igncp/
   sudo rm -rf igncp-tmp/ ; sudo chown -R igncp:igncp igncp/
-  mkdir -p ~/project/.config
-  echo 'REMOTE_HOSTNAME' > ~/project/.config/ssh-notice
-  # touch ~/project/.config/gui-install # Opt-in GUI
+  mkdir -p ~/development/environment/project/.config
+  echo 'REMOTE_HOSTNAME' > ~/development/environment/project/.config/ssh-notice
+  # touch ~/development/environment/project/.config/gui-install # Opt-in GUI
   sh /home/igncp/environment/unix/os/ubuntu/installation/remote_env2.sh
   sudo umount /home/igncp ; sudo cryptsetup close cryptmain
 # If not the first time
@@ -142,12 +142,6 @@ sudo sed "s|#\$nrconf{restart} = 'i';|\$nrconf{restart} = 'a';|" -i /etc/needres
 rm -rf ~/.check-files
 bash ~/project/provision/provision.sh
 # Set up the timezone with the bash alias
-
-sudo fallocate -l "SWAP_NUM"G /swapfile
-sudo chmod 600 /swapfile
-sudo mkswap /swapfile
-sudo swapon /swapfile
-sudo sh -c "echo '/swapfile none swap sw 0 0' >> /etc/fstab"
 
 sudo chsh igncp -s /usr/bin/zsh
 
