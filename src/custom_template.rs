@@ -44,6 +44,7 @@ fi
 # git config --global gpg.format ssh
 # git config --global commit.gpgsign true
 # git config --global user.signingkey '...' # Public SSH key
+# git config --global core.editor nvim
 ## If using 1Password directly Linux, this is needed
 # git config --global gpg.ssh.program /opt/1Password/op-ssh-sign
 # mkdir -p "$HOME"/.config/git/git

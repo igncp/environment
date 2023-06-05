@@ -9,7 +9,7 @@ EOF
 
 # echo "$HOME/.zsh_history_foo" > "$HOME/.check-files/zsh-history"
 
-bash ~/project/provision/provision.sh
+(cd ~/development/environment/ && cargo run --release)
 
 tmux \
   new-session -s SESSION_NAME \; \

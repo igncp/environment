@@ -19,3 +19,9 @@ REM `type FILENAME`, for example: `type foo.txt`
 
 REM To clear the screen
 REM `cls`
+
+REM Open the current directory in the explorer
+REM `ii .`
+
+REM Set a command alias
+REM `Set-Alias subl 'C:\Program Files\Sublime Text\subl.exe'`

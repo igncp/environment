@@ -15,3 +15,6 @@ Process, Close, chrome.exe
 
 ; Launch a AHK on startup
 ; https://stackoverflow.com/a/41730695/3244654
+; - Tested way (1st point): https://stackoverflow.com/a/41730695
+
+; See log messages: https://learn.microsoft.com/en-us/sysinternals/downloads/debugview
