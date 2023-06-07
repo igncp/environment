@@ -271,6 +271,18 @@ WorktreeClone() { git clone --bare "$1" .bare; echo "gitdir: ./.bare" > .git; }
 alias n="$HOME/.scripts/cargo_target/release/n"
 
 alias ProvisionListPossibleConfig='~/.scripts/cargo_target/release/provision_choose_config && provision.sh'
+
+CargoGenerateClean() {
+    BIN_NAME=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[].targets[] | select( .kind | map(. == "bin") | any ) | .name')
+    CARGO_TARGET_DIR=target cargo build --release && mv target/release/"$BIN_NAME" . && rm -rf target
+    echo "Binary '$BIN_NAME' built and moved to current directory"
+}
+
+CargoDevGenerate() {
+    BIN_NAME=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[].targets[] | select( .kind | map(. == "bin") | any ) | .name')
+    CARGO_TARGET_DIR=target cargo build && mv target/debug/"$BIN_NAME" .
+    echo "Binary '$BIN_NAME' built and moved to current directory"
+}
     "###);
 
     // https://github.com/TomWright/dasel

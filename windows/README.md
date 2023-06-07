@@ -1,5 +1,7 @@
 # Windows Provision
 
+- PowerToys: https://learn.microsoft.com/en-us/windows/powertoys/#current-powertoy-utilities
+
 ## Change workspace shortcuts
 
 Import `./switch-desktop.ahk` with AutoHotKey to be able to switch workspaces numerically.
@@ -29,12 +31,15 @@ terminal, with admin privileges, run: `powercfg -hibernate off`
 
 - https://support.microsoft.com/en-us/windows/keyboard-shortcuts-in-windows-dcc61a57-8ff0-cffe-9796-cb9706c75eec
 
-- LWin + d: Display desktop
 - Alt + space: Open the window menu (useful for maximized terminal)
+- LWin + d: Display desktop
 - LWin + e: Open files on the home dir
 - LWin + i: Open settings
 - LWin + l: Lock the PC
 - LWin + tab: Open the Task View (virtual desktops), where can drag programs to other desktops
+- LWin + v: Built-in clipboard manager
+- Long press of "ImprPa": Take screenshot of area
+- Shift + left click in explorer: Additional options like copy file path to clipboard
 
 ### Windows Terminal
 
