@@ -6,9 +6,12 @@ mod disk_on_volume;
 mod install;
 mod mac;
 mod ubuntu;
+mod windows;
 
 pub fn setup_os_beginnning(context: &mut Context) {
-    if context.system.is_mac() {
+    if context.system.is_windows() {
+        windows::run_windows(context);
+    } else if context.system.is_mac() {
         mac::run_mac_beginning(context);
     } else if context.system.is_linux() {
         let distro = context.system.linux_distro.clone().unwrap();

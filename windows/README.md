@@ -32,6 +32,7 @@ terminal, with admin privileges, run: `powercfg -hibernate off`
 - https://support.microsoft.com/en-us/windows/keyboard-shortcuts-in-windows-dcc61a57-8ff0-cffe-9796-cb9706c75eec
 
 - Alt + space: Open the window menu (useful for maximized terminal)
+- Control + Shift + s: Take screenshot with the snipping tool
 - LWin + d: Display desktop
 - LWin + e: Open files on the home dir
 - LWin + i: Open settings
@@ -45,6 +46,23 @@ terminal, with admin privileges, run: `powercfg -hibernate off`
 
 - Control + Shift + w: Close window (e.g. for settings)
 - Control + Shift + p: Command paletter
+
+### VNC
+
+- When logging into a Mac: AltL = Cmd
+- To move to host (by minifying): F8 + n
+
+### VS Code
+
+- Control + .: Show code action
+- Control + /: Toggle comment
+- Control + b: Toggle sidebar
+- F12: Go to definition
+- F8: Go to the next error
+
+## Misc
+
+- Take a screenshot: Snipping tool
 
 ## References
 

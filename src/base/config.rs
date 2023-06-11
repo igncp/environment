@@ -2,6 +2,7 @@ use super::system::System;
 
 #[derive(PartialEq)]
 pub enum Theme {
+    #[cfg(target_family = "unix")]
     Light,
     Dark,
 }

@@ -8,6 +8,10 @@ use crate::base::{
 use super::{disk_on_volume::setup_disk_on_volume, ubuntu};
 
 pub fn setup_os_install(context: &mut Context) {
+    if context.system.is_windows() {
+        return;
+    }
+
     if context.system.is_linux() {
         context
             .system

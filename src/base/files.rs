@@ -1,5 +1,5 @@
+use std::collections::HashMap;
 use std::io::Write;
-use std::{collections::HashMap, path::Path};
 
 pub struct Files {
     pub data: HashMap<String, String>,
@@ -53,6 +53,7 @@ impl Files {
         }
     }
 
+    #[cfg(target_family = "unix")]
     pub fn replace(&mut self, path: &str, old: &str, new: &str) {
         let expect_msg = format!("Error reading file in map: {path}");
         let mut current_data = self.data.get(path).expect(&expect_msg).clone();
@@ -65,16 +66,19 @@ impl Files {
         self.append(path, &format!("\n{}\n", content));
     }
 
+    #[cfg(target_family = "unix")]
     pub fn get(&self, path: &str) -> String {
         self.data.get(path).unwrap().clone()
     }
 
+    #[cfg(target_family = "unix")]
     pub fn set(&mut self, path: &str, content: &str) {
         self.data.insert(path.to_string(), content.to_string());
     }
 
+    #[cfg(target_family = "unix")]
     pub fn assert_it_exists(path: &str) {
-        if !Path::new(path).exists() {
+        if !std::path::Path::new(path).exists() {
             println!("Assertion for file existence failed: {path}");
             std::process::exit(1);
         }

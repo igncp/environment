@@ -1,10 +1,6 @@
 use std::{fs, path::Path, process};
 
-use crate::base::{
-    config::Config,
-    system::{System, OS},
-    Context,
-};
+use crate::base::{config::Config, system::System, Context};
 
 #[link(name = "c")]
 extern "C" {
@@ -16,11 +12,6 @@ pub fn run_top_setup(context: &mut Context) {
 
     if uid == 0 {
         println!("You must not run the provision as root");
-        process::exit(1);
-    }
-
-    if context.system.os == OS::Windows {
-        println!("Windows is not supported yet");
         process::exit(1);
     }
 

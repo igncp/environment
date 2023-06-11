@@ -63,6 +63,11 @@ impl System {
                         .unwrap(),
                     _ => panic!("Not implemented"),
                 },
+                OS::Windows => Command::new("bash")
+                    .arg("-c")
+                    .arg(format!("winget install {}", command_name))
+                    .status()
+                    .unwrap(),
                 _ => panic!("Not implemented"),
             };
 
@@ -102,6 +107,10 @@ impl System {
         self.os == OS::Mac
     }
 
+    pub fn is_windows(&self) -> bool {
+        self.os == OS::Windows
+    }
+
     pub fn is_linux(&self) -> bool {
         self.os == OS::Linux
     }
@@ -123,7 +132,11 @@ impl System {
     }
 
     pub fn get_home_path(&self, subpath: &str) -> String {
-        format!("{}/{}", self.home, subpath)
+        #[cfg(target_family = "unix")]
+        return format!("{}/{}", self.home, subpath);
+
+        #[cfg(target_family = "windows")]
+        return format!("{}\\{}", self.home, subpath);
     }
 
     pub fn get_has_binary(&self, binary: &str) -> bool {
@@ -165,9 +178,18 @@ impl Default for System {
             _ => None,
         };
 
+        #[cfg(target_family = "unix")]
+        let home = env::var_os("HOME").unwrap().to_str().unwrap().to_string();
+        #[cfg(target_family = "windows")]
+        let home = env::var_os("USERPROFILE")
+            .unwrap()
+            .to_str()
+            .unwrap()
+            .to_string();
+
         Self {
             arch: env::consts::ARCH.to_string(),
-            home: env::var_os("HOME").unwrap().to_str().unwrap().to_string(),
+            home,
             linux_distro,
             node_version: None,
             os,

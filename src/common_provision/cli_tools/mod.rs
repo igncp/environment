@@ -113,13 +113,7 @@ rm -rf ~/hhighlighter
 
         // https://github.com/dalance/procs
         context.system.install_system_package("procs", None);
-        if context.system.is_mac() {
-            System::run_bash_command("procs --completion-out zsh >> ~/.scripts/procs_completion");
-        } else {
-            System::run_bash_command(
-                "procs --gen-completion-out zsh >> ~/.scripts/procs_completion",
-            );
-        }
+        System::run_bash_command("procs --gen-completion-out zsh >> ~/.scripts/procs_completion");
 
         context.files.appendln(
             &context.system.get_home_path(".zshrc"),

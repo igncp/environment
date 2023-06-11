@@ -278,6 +278,12 @@ CargoGenerateClean() {
     echo "Binary '$BIN_NAME' built and moved to current directory"
 }
 
+CargoRunClean() {
+    DIR=$1 ; COMMAND=$(basename $DIR)
+    (cd $DIR && CargoGenerateClean )
+    $DIR/$COMMAND
+}
+
 CargoDevGenerate() {
     BIN_NAME=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[].targets[] | select( .kind | map(. == "bin") | any ) | .name')
     CARGO_TARGET_DIR=target cargo build && mv target/debug/"$BIN_NAME" .
