@@ -2,7 +2,7 @@ use std::path::Path;
 
 use crate::base::{config::Config, system::System, Context};
 
-use super::vim::install_vim_package;
+use super::vim::install_nvim_package;
 
 pub fn setup_php(context: &mut Context) {
     if !Config::has_config_file(&context.system, "php") {
@@ -29,10 +29,10 @@ call add(g:coc_global_extensions, '@yaegassy/coc-phpstan')
 "###
     );
 
-    install_vim_package(
+    install_nvim_package(
         context,
         "yaegassy/coc-phpstan",
-        Some("cd ~/.vim/bundle/coc-phpstan && yarn install --frozen-lockfile"),
+        Some("cd ~/.local/share/nvim/lazy/coc-phpstan && yarn install --frozen-lockfile"),
     );
 
     if !Config::has_config_file(&context.system, "php-no-composer")

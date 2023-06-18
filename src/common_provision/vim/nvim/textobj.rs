@@ -1,12 +1,9 @@
 use crate::base::Context;
 
-use super::install::{add_special_vim_map, install_vim_package};
+use super::install::{add_special_vim_map, install_nvim_package};
 
 pub fn run_nvim_textobj(context: &mut Context) {
-    install_vim_package(context, "glts/vim-textobj-comment", None);
-    install_vim_package(context, "kana/vim-textobj-indent", None);
-    install_vim_package(context, "kana/vim-textobj-user", None);
-    install_vim_package(context, "wellle/targets.vim", None);
+    install_nvim_package(context, "wellle/targets.vim", None);
 
     // Examples: https://github.com/kana/vim-textobj-user/wiki
 
@@ -76,14 +73,6 @@ endfunction
 " Mappings:
 xnoremap <silent> iN :<c-u>call <sid>inNumber()<cr>
 onoremap <silent> iN :<c-u>call <sid>inNumber()<cr>
-call textobj#user#plugin('line', {
-\   '-': {
-\     'select-a-function': 'CurrentLineA',
-\     'select-a': 'al',
-\     'select-i-function': 'CurrentLineI',
-\     'select-i': 'il',
-\   },
-\ })
 autocmd User targets#mappings#user call targets#mappings#extend({
     \ 'a': { 'argument': [{'o': '[({[]', 'c': '[]})]', 's': ','}] }
     \ })

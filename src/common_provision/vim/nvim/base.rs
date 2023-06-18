@@ -6,18 +6,9 @@ use crate::base::{
     Context,
 };
 
-use super::{add_special_vim_map, install_vim_package};
+use super::{add_special_vim_map, install_nvim_package, lua::setup_nvim_lua};
 
 pub fn run_nvim_base(context: &mut Context) {
-    std::fs::create_dir_all(context.system.get_home_path(".vim/autoload")).unwrap();
-    std::fs::create_dir_all(context.system.get_home_path(".vim/bundle")).unwrap();
-
-    if !Path::new(&context.system.get_home_path(".vim/autoload/pathogen.vim")).exists() {
-        System::run_bash_command(
-"curl https://raw.githubusercontent.com/tpope/vim-pathogen/master/autoload/pathogen.vim > ~/.vim/autoload/pathogen.vim"
-        );
-    }
-
     context
         .system
         .install_system_package("neovim", Some("nvim"));
@@ -36,39 +27,41 @@ touch ~/.check-files/neovim
         );
     }
 
+    setup_nvim_lua(context);
+
     // Faster than sed
     System::run_bash_command("git config --global core.editor nvim");
 
-    install_vim_package(context, "airblade/vim-gitgutter", None); // https://github.com/airblade/vim-gitgutter
-    install_vim_package(context, "andrewRadev/splitjoin.vim", None); // gS, gJ
-    install_vim_package(context, "bogado/file-line", None); // https://github.com/bogado/file-line
-    install_vim_package(context, "ctrlpvim/ctrlp.vim", None); // https://github.com/ctrlpvim/ctrlp.vim
-    install_vim_package(context, "elzr/vim-json", None); // https://github.com/elzr/vim-json
-    install_vim_package(context, "google/vim-searchindex", None); // https://github.com/google/vim-searchindex
-    install_vim_package(context, "haya14busa/incsearch.vim", None); // https://github.com/haya14busa/incsearch.vim
-    install_vim_package(context, "honza/vim-snippets", None); // ind ~/.vim/bundle/vim-snippets/snippets/ -type f | xargs sed -i 's|:\${VISUAL}||'"
-    install_vim_package(context, "jiangmiao/auto-pairs", None); // https://github.com/jiangmiao/auto-pairs
-    install_vim_package(context, "junegunn/limelight.vim", None); // https://github.com/junegunn/limelight.vim
-    install_vim_package(context, "junegunn/vim-peekaboo", None); // https://github.com/junegunn/vim-peekaboo
-    install_vim_package(context, "liuchengxu/vista.vim", None); // https://github.com/liuchengxu/vista.vim
-    install_vim_package(context, "mbbill/undotree", None); // https://github.com/mbbill/undotree
-    install_vim_package(context, "ntpeters/vim-better-whitespace", None); // https://github.com/ntpeters/vim-better-whitespace
-    install_vim_package(context, "plasticboy/vim-markdown", None); // https://github.com/plasticboy/vim-markdown
-    install_vim_package(context, "rhysd/clever-f.vim", None); // https://github.com/rhysd/clever-f.vim
-    install_vim_package(context, "ryanoasis/vim-devicons", None); // if not supported, add in custom: rm -rf ~/.vim/bundle/vim-devicons/*
-    install_vim_package(context, "scrooloose/nerdcommenter", None); // https://github.com/scrooloose/nerdcommenter
-    install_vim_package(context, "terryma/vim-expand-region", None); // https://github.com/terryma/vim-expand-region
-    install_vim_package(context, "tommcdo/vim-exchange", None); // https://github.com/tommcdo/vim-exchange
-    install_vim_package(context, "tpope/vim-eunuch", None); // https://github.com/tpope/vim-eunuch
-    install_vim_package(context, "tpope/vim-fugitive", None); // https://github.com/tpope/vim-fugitive
-    install_vim_package(context, "tpope/vim-repeat", None); // https://github.com/tpope/vim-repeat
-    install_vim_package(context, "tpope/vim-surround", None); // https://github.com/tpope/vim-surround
-    install_vim_package(context, "vim-scripts/AnsiEsc.vim", None); // https://github.com/vim-scripts/AnsiEsc.vim
+    install_nvim_package(context, "airblade/vim-gitgutter", None); // https://github.com/airblade/vim-gitgutter
+    install_nvim_package(context, "andrewRadev/splitjoin.vim", None); // gS, gJ
+    install_nvim_package(context, "bogado/file-line", None); // https://github.com/bogado/file-line
+    install_nvim_package(context, "chentoast/marks.nvim", None); // https://github.com/chentoast/marks.nvim
+    install_nvim_package(context, "ctrlpvim/ctrlp.vim", None); // https://github.com/ctrlpvim/ctrlp.vim
+    install_nvim_package(context, "elzr/vim-json", None); // https://github.com/elzr/vim-json
+    install_nvim_package(context, "google/vim-searchindex", None); // https://github.com/google/vim-searchindex
+    install_nvim_package(context, "haya14busa/incsearch.vim", None); // https://github.com/haya14busa/incsearch.vim
+    install_nvim_package(context, "honza/vim-snippets", None); // ind ~/.local/share/nvim/lazy/vim-snippets/snippets/ -type f | xargs sed -i 's|:\${VISUAL}||'"
+    install_nvim_package(context, "jiangmiao/auto-pairs", None); // https://github.com/jiangmiao/auto-pairs
+    install_nvim_package(context, "junegunn/limelight.vim", None); // https://github.com/junegunn/limelight.vim
+    install_nvim_package(context, "junegunn/vim-peekaboo", None); // https://github.com/junegunn/vim-peekaboo
+    install_nvim_package(context, "liuchengxu/vista.vim", None); // https://github.com/liuchengxu/vista.vim
+    install_nvim_package(context, "mbbill/undotree", None); // https://github.com/mbbill/undotree
+    install_nvim_package(context, "ntpeters/vim-better-whitespace", None); // https://github.com/ntpeters/vim-better-whitespace
+    install_nvim_package(context, "plasticboy/vim-markdown", None); // https://github.com/plasticboy/vim-markdown
+    install_nvim_package(context, "rhysd/clever-f.vim", None); // https://github.com/rhysd/clever-f.vim
+    install_nvim_package(context, "ryanoasis/vim-devicons", None); // if not supported, add in custom: rm -rf ~/.local/share/nvim/lazy/vim-devicons/*
+    install_nvim_package(context, "scrooloose/nerdcommenter", None); // https://github.com/scrooloose/nerdcommenter
+    install_nvim_package(context, "sindrets/diffview.nvim", None); // https://github.com/sindrets/diffview.nvim
+    install_nvim_package(context, "tommcdo/vim-exchange", None); // https://github.com/tommcdo/vim-exchange
+    install_nvim_package(context, "tpope/vim-eunuch", None); // https://github.com/tpope/vim-eunuch
+    install_nvim_package(context, "tpope/vim-fugitive", None); // https://github.com/tpope/vim-fugitive
+    install_nvim_package(context, "tpope/vim-repeat", None); // https://github.com/tpope/vim-repeat
+    install_nvim_package(context, "tpope/vim-surround", None); // https://github.com/tpope/vim-surround
+    install_nvim_package(context, "vim-scripts/AnsiEsc.vim", None); // https://github.com/vim-scripts/AnsiEsc.vim
 
     context.files.append(
         &context.system.get_home_path(".vimrc"),
         r###"
-execute pathogen#infect()
 lua require("extra_beginning")
 
 " ctrlp
@@ -150,7 +143,7 @@ source "$HOME"/.shell_aliases # some aliases depend on $EDITOR
 alias nn='nvim -n -u NONE -i NONE -N' # nvim without vimrc, plugins, syntax, etc
 alias nb='nvim -n -u ~/.base-vimrc -i NONE -N' # nvim with base vimrc
 alias XargsNvim='xargs nvim -p'
-alias CheckVimSnippets='nvim ~/.vim/bundle/vim-snippets/snippets'
+alias CheckVimSnippets='nvim ~/.local/share/nvim/lazy/vim-snippets/snippets'
 # https://vi.stackexchange.com/a/277
 NProfile() {
   nvim --startuptime /tmp/nvim-profile-log.txt "$@"
@@ -183,88 +176,6 @@ NProfile() {
             "show relative path of file",
         ],
     );
-
-    std::fs::create_dir_all(context.system.get_home_path(".vim/lua")).unwrap();
-
-    context.files.append(
-        &context.system.get_home_path(".vim/lua/extra_beginning.lua"),
-        r###"
-vim.api.nvim_set_keymap("i", "<C-_>", "<Plug>(copilot-next)", {silent = true, nowait = true})
-vim.api.nvim_set_keymap("i", "<C-\\>", "<Plug>(copilot-previous)", {silent = true, nowait = true})
-
--- Undo tree
-vim.api.nvim_set_keymap("n", "<leader>mm", ":UndotreeShow<cr><c-w><left>", { noremap = true })
-
--- vim-expand-region
-vim.api.nvim_set_keymap("v", "v", "<Plug>(expand_region_expand)", {})
-vim.api.nvim_set_keymap("v", "<c-v>", "<Plug>(expand_region_shrink)", {})
-
--- fzf maps
-vim.api.nvim_set_keymap("n", "<leader>ja", ":Ag!<cr>", { noremap = true })
-vim.api.nvim_set_keymap("n", "<leader>jb", ":Buffers!<cr>", { noremap = true })
-vim.api.nvim_set_keymap("n", "<leader>jc", ":Commands!<cr>", { noremap = true })
-vim.api.nvim_set_keymap("n", "<leader>jg", ":GFiles!<cr>", { noremap = true })
-vim.api.nvim_set_keymap("n", "<leader>jh", ":History!<cr>", { noremap = true })
-vim.api.nvim_set_keymap("n", "<leader>jj", ":BLines!<cr>", { noremap = true })
-vim.api.nvim_set_keymap("n", "<leader>jl", ":Lines!<cr>", { noremap = true })
-vim.api.nvim_set_keymap("n", "<leader>jm", ":Marks!<cr>", { noremap = true })
-vim.api.nvim_set_keymap("n", "<leader>jM", ":Maps!<cr>", { noremap = true })
-vim.api.nvim_set_keymap("n", "<leader>jt", ":Tags!<cr>", { noremap = true })
-vim.api.nvim_set_keymap("n", "<leader>jw", ":Windows!<cr>", { noremap = true })
-vim.api.nvim_set_keymap("n", "<leader>jf", ":Filetypes!<cr>", { noremap = true })
-vim.api.nvim_set_keymap("n", "<leader>je", ":AnsiEsc!<cr>", { noremap = true })
-
--- Vista
-vim.g.vista_default_executive = 'coc'
-vim.g.vista_sidebar_width = 100
-
--- limelight
-vim.g.limelight_conceal_ctermfg = 'LightGray'
-vim.g.limelight_bop = '^'
-vim.g.limelight_eop = '$'
-vim.api.nvim_set_keymap("n", "<leader>zl", ":Limelight!!<cr>", { noremap = true })
-vim.api.nvim_set_keymap("n", "<leader>zL", ":let g:limelight_paragraph_span = <left><right>", { noremap = true })
-
--- auto-pairs
-vim.g.AutoPairsMultilineClose = 0
-
--- incsearch.vim
-vim.api.nvim_set_keymap("n", "/", "<Plug>(incsearch-forward)", {})
-vim.api.nvim_set_keymap("n", "?", "<Plug>(incsearch-backward)", {})
-vim.api.nvim_set_keymap("n", "g/", "<Plug>(incsearch-stay)", {})
-
--- nerdcommenter
-vim.g.NERDSpaceDelims = 1
-
--- vim fugitive
-vim.cmd('set diffopt+=vertical')
-vim.cmd('command Gb Git blame')
-
--- vim-json
-vim.g.vim_json_syntax_conceal = 0
-
--- save file shortcuts
-vim.api.nvim_set_keymap("n", "<leader>ks", ':silent exec "!mkdir -p <c-R>=expand("%:p:h")<cr>"<cr>:w<cr>:silent exec ":CtrlPClearAllCaches"<cr>', { noremap = true })
-
--- markdown
-vim.g.vim_markdown_auto_insert_bullets = 0
-vim.g.vim_markdown_new_list_item_indent = 0
-vim.g.vim_markdown_conceal = 0
-vim.g.tex_conceal = ""
-vim.g.vim_markdown_math = 1
-vim.g.vim_markdown_folding_disabled = 1
-vim.cmd 'autocmd Filetype markdown set conceallevel=0'
-
--- format json
-vim.cmd 'command! -range -nargs=0 -bar JsonTool <line1>,<line2>!python -m json.tool'
-vim.api.nvim_set_keymap("n", "<leader>kz", ':JsonTool<cr>', { noremap = true })
-vim.api.nvim_set_keymap("v", "<leader>kz", ":'<,'>JsonTool<cr>", { noremap = true })
-
-vim.g.peekaboo_window='vert bo new'
-"###,
-    );
-
-    std::fs::create_dir_all(context.system.get_home_path(".vim")).unwrap();
 
     context.files.append(
         &context.system.get_home_path(".vim/colors.vim"),
@@ -323,13 +234,13 @@ You can open this file with <leader>ee and that one with <leader>eE
 
     std::fs::create_dir_all(context.system.get_home_path(".vim-snippets")).unwrap();
 
-    install_vim_package(
+    install_nvim_package(
         context,
         "junegunn/fzf",
-        Some("cd ~/.vim/bundle/fzf && ./install --all; cd -"),
+        Some("cd ~/.local/share/nvim/lazy/fzf && ./install --all; cd -"),
     );
 
-    install_vim_package(context, "junegunn/fzf.vim", None);
+    install_nvim_package(context, "junegunn/fzf.vim", None);
 
     System::run_bash_command(
         r###"
@@ -337,7 +248,7 @@ __add_n_completion() {
   ALL_CMDS="n sh RsyncDelete node l o GitAdd GitRevertCode nn ll"; sed -i "s|nvim $ALL_CMDS |nvim |; s|nvim |nvim $ALL_CMDS |" "$1";
   DIR_CMDS='mkdir tree'; sed -i "s|pushd $DIR_CMDS |pushd |; s|pushd |pushd $DIR_CMDS |" "$1";
 }
-__add_n_completion "$HOME"/.vim/bundle/fzf/shell/completion.bash
+__add_n_completion "$HOME"/.local/share/nvim/lazy/fzf/shell/completion.bash
 __add_n_completion "$HOME"/.fzf/shell/completion.bash
 "###,
     );
@@ -379,7 +290,7 @@ alias VimCustomSnippetsModify='nvim ~/development/environment/project/custom_cre
     );
 
     if Config::has_config_file(&context.system, "copilot") {
-        install_vim_package(context, "github/copilot.vim", None);
+        install_nvim_package(context, "github/copilot.vim", None);
         context.files.appendln(
             &context.system.get_home_path(".vim/colors.vim"),
             "hi CopilotSuggestion guifg=#ff8700 ctermfg=208",

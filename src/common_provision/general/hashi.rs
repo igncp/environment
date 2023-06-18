@@ -1,6 +1,6 @@
 use crate::{
     base::{config::Config, system::System, Context},
-    common_provision::vim::install_vim_package,
+    common_provision::vim::install_nvim_package,
 };
 
 pub fn setup_hashi(context: &mut Context) {
@@ -8,7 +8,7 @@ pub fn setup_hashi(context: &mut Context) {
         return;
     }
 
-    install_vim_package(context, "hashivim/vim-terraform", None); // https://github.com/hashivim/vim-terraform
+    install_nvim_package(context, "hashivim/vim-terraform", None); // https://github.com/hashivim/vim-terraform
 
     // This was only tested in mac
     if !context.system.get_has_binary("terraform") && context.system.is_mac() {

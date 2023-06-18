@@ -2,7 +2,7 @@ use std::path::Path;
 
 use crate::base::{config::Config, system::System, Context};
 
-use super::vim::install_vim_package;
+use super::vim::install_nvim_package;
 
 // It expects a bin file for each crate
 fn install_cargo_crate(context: &mut Context, crate_name: &str, bin_name: Option<&str>) {
@@ -22,8 +22,8 @@ alias CargoClippy='CMD="# rm -rf target && cargo clippy --all-targets --all-feat
 "###,
     );
 
-    install_vim_package(context, "rust-lang/rust.vim", None);
-    install_vim_package(context, "cespare/vim-toml", None);
+    install_nvim_package(context, "rust-lang/rust.vim", None);
+    install_nvim_package(context, "cespare/vim-toml", None);
 
     context.files.append(
         &context.system.get_home_path(".vimrc"),
@@ -46,7 +46,7 @@ export PASTEL_COLOR_MODE=24bit
         context.system.install_system_package("valgrind", None);
     }
 
-    install_vim_package(context, "fannheyward/coc-rust-analyzer", None);
+    install_nvim_package(context, "fannheyward/coc-rust-analyzer", None);
 
     context.files.append(
         &context.system.get_home_path(".vimrc"),

@@ -1,6 +1,6 @@
 use crate::base::{config::Config, Context};
 
-use super::vim::install_vim_package;
+use super::vim::install_nvim_package;
 
 pub fn setup_kotlin(context: &mut Context) {
     if !Config::has_config_file(&context.system, "kotlin") {
@@ -9,7 +9,7 @@ pub fn setup_kotlin(context: &mut Context) {
 
     context.system.install_system_package("kotlin", None);
 
-    install_vim_package(context, "udalov/kotlin-vim", None);
+    install_nvim_package(context, "udalov/kotlin-vim", None);
 
     context.files.append(
         &context.system.get_home_path(".shell_aliases"),

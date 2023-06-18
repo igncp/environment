@@ -1,10 +1,13 @@
 pub use self::install::setup_os_install;
+pub use self::multi_os_provision::get_vim_multi_os_provision;
+pub use self::windows::append_json_into_vs_code;
 use crate::base::{config::Config, system::LinuxDistro, Context};
 
 mod arch;
 mod disk_on_volume;
 mod install;
 mod mac;
+mod multi_os_provision;
 mod ubuntu;
 mod windows;
 

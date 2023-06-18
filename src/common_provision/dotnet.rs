@@ -1,6 +1,6 @@
 use crate::base::{config::Config, system::System, Context};
 
-use super::vim::install_vim_package;
+use super::vim::install_nvim_package;
 
 pub fn setup_dotnet(context: &mut Context) {
     if !Config::has_config_file(&context.system, "dotnet") {
@@ -35,5 +35,5 @@ alias DotnetRun='dotnet run'
 "###,
     );
 
-    install_vim_package(context, "OmniSharp/omnisharp-vim", None);
+    install_nvim_package(context, "OmniSharp/omnisharp-vim", None);
 }

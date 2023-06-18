@@ -1,4 +1,5 @@
 use crate::base::{config::Theme, Context};
+use crate::os::get_vim_multi_os_provision;
 
 pub fn run_vim_base(context: &mut Context) {
     let vim_file_path = context.system.get_home_path(".vimrc");
@@ -12,6 +13,10 @@ set sessionoptions+=globals
 let mapleader = "\<Space>"
 syntax off " This is removed in update_vim_colors_theme, in case an error in provision
 
+" Save file shortcuts
+nmap <c-s> :update<esc>
+inoremap <c-s> <esc>:update<cr>
+
 " To display a map: for example `:verbose map <leader>l`
 
 " disable mouse to be able to select + copy
@@ -21,10 +26,6 @@ syntax off " This is removed in update_vim_colors_theme, in case an error in pro
   nnoremap <F10> :buffers<cr>:buffer<Space>
   nnoremap <silent> <F12> :bn<cr>
   nnoremap <silent> <S-F12> :bp<cr>
-
-" don't copy when using del
-  vnoremap <Del> "_d
-  nnoremap <Del> "_d
 
 " numbers maps
   set number norelativenumber
@@ -41,7 +42,6 @@ syntax off " This is removed in update_vim_colors_theme, in case an error in pro
   endf
 
 " useful maps for macros
-  nnoremap Q @q
   nnoremap <leader>eE :tabnew ~/development/environment/project/vim-macros-custom<cr>
   nnoremap <leader>ee :tabnew ~/.vim-macros<cr>
   nnoremap <leader>ez _v$hy:let @="<c-r>""<C-home><right><right><right><right><right>
@@ -56,14 +56,6 @@ syntax off " This is removed in update_vim_colors_theme, in case an error in pro
 " replace in selection
   vnoremap <leader>zr :<bs><bs><bs><bs><bs>%s/\%V\C//g<left><left><left>
   vnoremap <leader>zR :<bs><bs><bs><bs><bs>%s/\%V\C<c-r>"//g<left><left>
-
-" replace with selection. To replace by current register, use <c-r>0 to paste it
-  vmap <leader>g "ay:%s/\C\<<c-r>a\>//g<left><left>
-  vmap <leader>G "ay:%s/\C<c-r>a//g<left><left>
-
-" fill the search bar with current text and allow to edit it
-  vnoremap <leader>/ y/<c-r>"
-  nnoremap <leader>/ viwy/<c-r>"
 
 " prevent saving backup files
   set nobackup
@@ -81,27 +73,8 @@ syntax off " This is removed in update_vim_colors_theme, in case an error in pro
   nnoremap <leader>kA :let g:File_cmd=''<left>
   nnoremap <leader>ka :!<c-r>=g:File_cmd<cr> %<cr>:e<cr>
 
-" move lines up and down
-  nnoremap <c-j> :m .+1<cr>==
-  nnoremap <c-k> :m .-2<cr>==
-  inoremap <c-j> <esc>:m .+1<cr>==gi
-  inoremap <c-k> <esc>:m .-2<cr>==gi
-  vnoremap <c-j> :m '>+1<cr>gv=gv
-  vnoremap <c-k> :m '<-2<cr>gv=gv
-
 " remove trailing spaces
   nmap <leader>t :%s/\s\+$<cr><c-o>
-
-" folding
-  set foldlevelstart=20
-  set foldmethod=indent
-  set fml=0
-  nnoremap <leader>fr :set foldmethod=manual<cr>
-  nnoremap <leader>fR :set foldmethod=indent<cr>
-  vnoremap <leader>ft <c-c>:set foldmethod=manual<cr>mlmk`<kmk`>jmlggvG$zd<c-c>'kVggzf'lVGzfgg<down>
-  nnoremap <leader>; za
-  onoremap <leader>; <C-C>za
-  vnoremap <leader>; zf
 
 " override Ex mode
   nnoremap gQ vipgq
@@ -129,6 +102,10 @@ autocmd Filetype text setlocal wrap linebreak nolist
   xnoremap <S-Tab> <gv
 
 nnoremap <silent> <leader>s :if exists("g:syntax_on") \| syntax off \| else \| syntax enable \| endif<cr>
+
+vnoremap <silent> y y`]
+nnoremap <silent> p p`]
+vnoremap <silent> p pgvy`]
 
 set autoindent
 set expandtab
@@ -162,7 +139,6 @@ let g:Kx_map = ':let g:CurrentFileType=&ft<cr>:tabnew<c-r>=system("mktemp")<cr>
 execute 'nnoremap <leader>kx :' . g:Kx_map
 execute 'vmap <leader>kx y' . g:Kx_map . 'Vp:w<cr>zR'
 nnoremap <c-w>v :vsplit<cr><c-w><right>
-nnoremap <leader>a ggVG$
 nnoremap <leader>u :set list!<cr>
 cnoremap <c-A> <Home>
 cnoremap <c-E> <End>
@@ -201,10 +177,6 @@ nnoremap <leader>kv :%s/\t/  /g<cr>
 inoremap <c-e> <esc>A
 inoremap <c-a> <esc>I
 
-vnoremap <silent> y y`]
-nnoremap <silent> p p`]
-vnoremap <silent> p pgvy`]
-
 nnoremap <leader>zf :let @" = expand("%")<cr>
 
 vnoremap ; :<c-u>
@@ -215,14 +187,6 @@ nnoremap <leader>jrW :call setreg("g", "<c-r>=expand("%:p")<cr>")<cr>
 " use always the same cursor
   set guicursor=
 
-" save file shortcuts
-  nmap <c-s> :update<esc>
-  inoremap <c-s> <esc>:update<cr>
-
-" quickly move to lines
-  nnoremap <cr> G
-  nnoremap <bs> gg
-
 " wrap quickfix window
   augroup quickfix
     autocmd!
@@ -230,9 +194,6 @@ nnoremap <leader>jrW :call setreg("g", "<c-r>=expand("%:p")<cr>")<cr>
   augroup END
 
 " tabs
-  nnoremap r gt
-  nnoremap R gT
-  nnoremap <c-t> :tabnew<cr>:e <left><right>
   nnoremap <leader>zz :tab split<cr>
 
 " move by visual lines (for wrapped lines)
@@ -256,6 +217,14 @@ runtime macros/matchit.vim
 nnoremap gs /<c-r>/
 
 set scrolloff=3
+
+" Move lines up and down
+nnoremap <c-j> :m .+1<cr>==
+nnoremap <c-k> :m .-2<cr>==
+inoremap <c-j> <esc>:m .+1<cr>==gi
+inoremap <c-k> <esc>:m .-2<cr>==gi
+vnoremap <c-j> :m '>+1<cr>gv=gv
+vnoremap <c-k> :m '<-2<cr>gv=gv
 
 " improve the 'preview window' behaviour
   autocmd CompleteDone * pclose " close when done
@@ -393,14 +362,14 @@ nnoremap <leader>jk :put =strftime(\"%Y-%m-%d %H:%M:%S\")<cr>
         if context.config.netcat_clipboard {
             r###"
 " copy to clipboard
-  vnoremap <leader>i "+y
-  nnoremap <leader>i viw"+y
-  nnoremap <leader>I viW"+y
+  vnoremap <leader>i y:call writefile(getreg('0', 1, 1), "/tmp/netcat-clipboard")<cr>:silent !sh ~/.scripts/netcat-clipboard.sh<cr>
 "###
         } else {
 r###"
 " copy to clipboard
-  vnoremap <leader>i y:call writefile(getreg('0', 1, 1), "/tmp/netcat-clipboard")<cr>:silent !sh ~/.scripts/netcat-clipboard.sh<cr>
+  vnoremap <leader>i "+y
+  nnoremap <leader>i viw"+y
+  nnoremap <leader>I viW"+y
 "### },
     );
 
@@ -429,4 +398,8 @@ nnoremap <silent> e :call fzf#run({
 \ })<CR>
 "###,
     );
+
+    let multi_os_vim_str = get_vim_multi_os_provision();
+
+    context.files.append(&vim_file_path, &multi_os_vim_str);
 }

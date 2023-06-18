@@ -1,21 +1,19 @@
-use std::path::Path;
+use crate::base::{config::Theme, Context};
 
-use crate::base::{config::Theme, system::System, Context};
-
-pub fn install_vim_package(context: &mut Context, repo: &str, extra_cmd: Option<&str>) {
-    let dir = repo.split('/').last().unwrap();
-
-    if !Path::new(&format!("{}/.vim/bundle/{}", context.system.home, dir)).exists() {
-        println!("Installing vim package: {}", repo);
-        System::run_bash_command(
-            format!("git clone --depth=1 https://github.com/{repo}.git ~/.vim/bundle/{dir}")
-                .as_str(),
-        );
-
-        if let Some(cmd) = extra_cmd {
-            System::run_bash_command(cmd);
-        }
-    }
+pub fn install_nvim_package(context: &mut Context, repo: &str, extra_cmd: Option<&str>) {
+    let extra = match extra_cmd {
+        Some(cmd) => format!(r#", build = "{}""#, cmd),
+        None => "".to_string(),
+    };
+    context.files.replace(
+        &context.system.get_home_path(".vim/lua/extra_beginning.lua"),
+        r#"local nvim_plugins = {"#,
+        &format!(
+            r###"local nvim_plugins = {{
+{{ "{}"{} }},"###,
+            repo, extra
+        ),
+    );
 }
 
 // These maps will be present in a fzf list (apart from working normally)

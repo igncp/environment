@@ -1,6 +1,6 @@
 use crate::base::{config::Config, system::System, Context};
 
-use super::vim::install_vim_package;
+use super::vim::install_nvim_package;
 
 pub fn setup_dart(context: &mut Context) {
     if !Config::has_config_file(&context.system, "dart") {
@@ -16,7 +16,7 @@ export PATH="$PATH:$HOME/.pub-cache/bin"
 "###,
     );
 
-    install_vim_package(context, "dart-lang/dart-vim-plugin", None);
+    install_nvim_package(context, "dart-lang/dart-vim-plugin", None);
 
     context.system.install_system_package("dart", None);
 

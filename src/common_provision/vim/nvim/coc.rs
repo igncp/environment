@@ -2,7 +2,7 @@ use std::path::Path;
 
 use crate::base::{config::Config, system::System, Context};
 
-use super::install_vim_package;
+use super::install_nvim_package;
 
 // ctrl-w,ctrl-p: move to floating window
 // - To remove an extension after installed, comment lines and then: :CocUninstall coc-name
@@ -10,14 +10,14 @@ use super::install_vim_package;
 //   - Press `t` to open each case in new tab, press `enter` to open each file (unless already opened) in new tab
 
 pub fn run_nvim_coc(context: &mut Context) {
-    install_vim_package(context, "neoclide/coc.nvim", None);
-    install_vim_package(context, "josa42/coc-sh", None);
-    install_vim_package(context, "neoclide/coc-snippets", None);
-    install_vim_package(context, "neoclide/coc-git", None);
-    install_vim_package(context, "neoclide/coc-lists", None);
-    install_vim_package(context, "xiyaowong/coc-sumneko-lua", None);
+    install_nvim_package(context, "neoclide/coc.nvim", None);
+    install_nvim_package(context, "josa42/coc-sh", None);
+    install_nvim_package(context, "neoclide/coc-snippets", None);
+    install_nvim_package(context, "neoclide/coc-git", None);
+    install_nvim_package(context, "neoclide/coc-lists", None);
+    install_nvim_package(context, "xiyaowong/coc-sumneko-lua", None);
 
-    install_vim_package(context, "neoclide/coc-json", None);
+    install_nvim_package(context, "neoclide/coc-json", None);
 
     context.files.append(
         &context.system.get_home_path(".vimrc"),
@@ -65,16 +65,16 @@ call add(g:coc_global_extensions, 'coc-json')
     if !Path::new(
         &context
             .system
-            .get_home_path(".vim/bundle/coc.nvim/node_modules"),
+            .get_home_path(".local/share/nvim/lazy/coc.nvim/node_modules"),
     )
     .exists()
     {
-        System::run_bash_command("(cd ~/.vim/bundle/coc.nvim && yarn)");
+        System::run_bash_command("(cd ~/.local/share/nvim/lazy/coc.nvim && yarn)");
     }
 
-    install_vim_package(context, "neoclide/coc-html", None);
-    install_vim_package(context, "neoclide/coc-css", None);
-    install_vim_package(context, "neoclide/coc-tsserver", None);
+    install_nvim_package(context, "neoclide/coc-html", None);
+    install_nvim_package(context, "neoclide/coc-css", None);
+    install_nvim_package(context, "neoclide/coc-tsserver", None);
 
     context.files.append(
         &context.system.get_home_path(".vimrc"),
@@ -116,7 +116,7 @@ autocmd BufNewFile,BufRead *.tsx,*.jsx set filetype=typescriptreact
     // To remove: `CocUninstall coc-eslint`
     // Confirm with: `CocList`
     if !context.config.without_coc_eslint {
-        install_vim_package(context, "neoclide/coc-eslint", None);
+        install_nvim_package(context, "neoclide/coc-eslint", None);
 
         context.files.appendln(
             &context.system.get_home_path(".vimrc"),
@@ -159,7 +159,7 @@ highlight CocWarningSign ctermfg=white ctermbg=darkred
     // - https://github.com/neoclide/coc-jest
 
     if Config::has_config_file(&context.system, "coc-prettier") {
-        install_vim_package(context, "neoclide/coc-prettier", None);
+        install_nvim_package(context, "neoclide/coc-prettier", None);
         context.files.appendln(
             &context.system.get_home_path(".vimrc"),
             "call add(g:coc_global_extensions, 'coc-prettier')",
@@ -204,7 +204,7 @@ highlight CocWarningSign ctermfg=white ctermbg=darkred
     );
 
     if context.system.get_has_binary("rustc") {
-        install_vim_package(context, "neoclide/coc-rls", None);
+        install_nvim_package(context, "neoclide/coc-rls", None);
         context.files.append(
             &context.system.get_home_path(".vimrc"),
             r###"

@@ -1,9 +1,9 @@
-use crate::{base::Context, common_provision::vim::install_vim_package};
+use crate::{base::Context, common_provision::vim::install_nvim_package};
 
 // This should be after 'coc-vim' (not after 'js')
 pub fn setup_js_vue(context: &mut Context) {
-    install_vim_package(context, "posva/vim-vue", None);
-    install_vim_package(context, "neoclide/coc-vetur", None);
+    install_nvim_package(context, "posva/vim-vue", None);
+    install_nvim_package(context, "neoclide/coc-vetur", None);
 
     context.files.append(
         &context.system.get_home_path(".vimrc"),

@@ -4,7 +4,7 @@ use crate::base::{
     Context,
 };
 
-use super::vim::install_vim_package;
+use super::vim::install_nvim_package;
 
 fn install_ruby_gems(gems: &[&str]) {
     let installed_gems = System::get_bash_command_output("gem list");
@@ -44,5 +44,5 @@ asdf global ruby {default_version}
 
     install_ruby_gems(&["bundler", "lolcat", "fit-commit"]);
 
-    install_vim_package(context, "vim-ruby/vim-ruby", None); // https://github.com/vim-ruby/vim-ruby
+    install_nvim_package(context, "vim-ruby/vim-ruby", None); // https://github.com/vim-ruby/vim-ruby
 }

@@ -1,10 +1,9 @@
 # Windows Provision
 
 - PowerToys: https://learn.microsoft.com/en-us/windows/powertoys/#current-powertoy-utilities
-
-## Change workspace shortcuts
-
-Import `./switch-desktop.ahk` with AutoHotKey to be able to switch workspaces numerically.
+- Git: https://git-scm.com/downloads
+- VS Code Insiders: https://code.visualstudio.com/insiders/
+- VS Code: https://code.visualstudio.com/download
 
 ## Sleep shortcut file
 
@@ -24,8 +23,8 @@ terminal, with admin privileges, run: `powercfg -hibernate off`
     - Close the whole Windows Terminal program and open again
     - To confirm, run: `echo $Env:Path`
 - Edit the `hosts` file:
-    - Open an admin shell: `Start-Process powershell -Verb runAs`
-    - Open the file: `subl.exe C:\Windows\System32\Drivers\etc\hosts`
+    - Open an admin shell: Right click on terminal + Run as administrator
+    - Open the file: `notepad /c/Windows/System32/Drivers/etc/hosts`
 
 ## Useful keyboard shortcuts
 
@@ -34,6 +33,7 @@ terminal, with admin privileges, run: `powercfg -hibernate off`
 - Alt + space: Open the window menu (useful for maximized terminal)
 - Control + Shift + s: Take screenshot with the snipping tool
 - LWin + d: Display desktop
+- LWin + Ctrl + n: (n is the position of the app in the bottom bar) switch windows of the same application
 - LWin + e: Open files on the home dir
 - LWin + i: Open settings
 - LWin + l: Lock the PC
@@ -46,6 +46,42 @@ terminal, with admin privileges, run: `powercfg -hibernate off`
 
 - Control + Shift + w: Close window (e.g. for settings)
 - Control + Shift + p: Command paletter
+- Powershell History: subl.exe ~\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadLine
+
+### VNC
+
+- When logging into a Mac: AltL = Cmd
+- To move to host (by minifying): F8 + n
+
+## Misc
+
+- Take a screenshot: Snipping tool
+- Open the explorer inside the current location: `explorer.exe .`
+
+### VNC
+
+- When logging into a Mac: AltL = Cmd
+- To move to host (by minifying): F8 + n
+
+### VS Code
+
+Shortcuts:
+
+- Alt + Shift + r (with the tree bar opened): Open file in explorer
+- Control + .: Show code action
+- Control + /: Toggle comment
+- Control + 1: When in the terminal, focus first tab
+- Control + Alt + l: Open GitHub Copilot chat
+- Control + b: Toggle sidebar
+- Control + Shift + e: Open tree bar
+- Control + Shift + x: Open the extensions tab
+- F12: Go to definition
+- F8: Go to the next error
+- gh: Show hover
+
+## Misc
+
+- Take a screenshot: Snipping tool
 
 ### VNC
 

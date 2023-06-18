@@ -1,6 +1,6 @@
 use crate::base::{config::Config, Context};
 
-use super::vim::install_vim_package;
+use super::vim::install_nvim_package;
 
 pub fn setup_haskell(context: &mut Context) {
     if !Config::has_config_file(&context.system, "haskell") {
@@ -33,13 +33,13 @@ alias vim="stack exec vim"
 "###,
     );
 
-    install_vim_package(
+    install_nvim_package(
         context,
         "eagletmt/ghcmod-vim",
         Some("stack install ghc-mod"),
     );
-    install_vim_package(context, "neovimhaskell/haskell-vim", None);
-    install_vim_package(
+    install_nvim_package(context, "neovimhaskell/haskell-vim", None);
+    install_nvim_package(
         context,
         "nbouscal/vim-stylish-haskell",
         Some("stylish-haskell --defaults > ~/.stylish-haskell.yaml"),
