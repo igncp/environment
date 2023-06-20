@@ -61,7 +61,7 @@ nnoremap <leader>lk :CocCommand rust-analyzer.moveItemUp<CR>
 
     install_cargo_crate(context, "rustfmt", None); // https://github.com/rust-lang/rustfmt
 
-    if Config::has_config_file(&context.system, "extra-crates") {
+    if Config::has_config_file(&context.system, ".config/extra-crates") {
         context.system.install_system_package("perf", None);
         install_cargo_crate(context, "flamegraph", None); // https://github.com/flamegraph-rs/flamegraph
         install_cargo_crate(context, "cargo-bloat", None); // https://github.com/RazrFalcon/cargo-bloat
@@ -103,7 +103,7 @@ hi rustDeriveTrait    cterm=NONE ctermfg=cyan  ctermbg=white
 "###,
     );
 
-    if Config::has_config_file(&context.system, "rust-cross-compile") {
+    if Config::has_config_file(&context.system, ".config/rust-cross-compile") {
         System::run_bash_command(
             r###"
 if [ ! -f ~/.check-files/rust-cross-compile ] && type "apt-get" > /dev/null 2>&1; then

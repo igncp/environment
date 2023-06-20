@@ -1,6 +1,6 @@
 use crate::base::{config::Config, system::System, Context};
 
-const CONFIG_FILE_NAME: &str = "disk-on-volume";
+const CONFIG_FILE_NAME: &str = ".config/disk-on-volume";
 
 const DISKS: [(&str, &str); 6] = [
     ("/usr", "10G"),

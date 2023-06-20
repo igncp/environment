@@ -44,7 +44,6 @@ cp environment/unix/config-files/rime-config.yaml ~/project/provision/
 cat environment/unix/os/arch-linux/provision/arch-gui.sh >> ~/project/provision/provision.sh
 cat environment/unix/provision/android.sh >> ~/project/provision/provision.sh
 cat environment/unix/provision/vscode.sh >> ~/project/provision/provision.sh
-cat environment/unix/provision/custom.sh >> ~/project/provision/provision.sh
 
 mkdir -p ~/development/environment/project/.config
 touch ~/development/environment/project/.config/inside # Some settings depend on this, like SSH password auth

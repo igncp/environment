@@ -1,5 +1,7 @@
 pub use self::install::setup_os_install;
-pub use self::multi_os_provision::get_vim_multi_os_provision;
+pub use self::multi_os_provision::{
+    get_vim_multi_os_provision, get_vscode_keybindings_multi_os, get_vscode_settings_multi_os,
+};
 pub use self::windows::append_json_into_vs_code;
 use crate::base::{config::Config, system::LinuxDistro, Context};
 
@@ -31,7 +33,7 @@ pub fn setup_os_end(context: &mut Context) {
     if context.system.is_mac() {
         mac::run_mac_end(context);
     } else if context.system.is_linux() {
-        if !Config::has_config_file(&context.system, "gui") {
+        if !Config::has_config_file(&context.system, ".config/gui") {
             return;
         }
 

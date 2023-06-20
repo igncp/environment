@@ -18,7 +18,7 @@ mod jira;
 mod scc;
 
 pub fn run_cli_tools(context: &mut Context) {
-    if Config::has_config_file(&context.system, "cli-openvpn") {
+    if Config::has_config_file(&context.system, ".config/cli-openvpn") {
         context.system.install_system_package("openvpn", None);
         std::fs::create_dir_all(context.system.get_home_path(".openvpn")).unwrap();
 
@@ -57,7 +57,7 @@ alias DODroplets='doctl compute droplet list'
 
     context.system.install_system_package("age", None); // https://github.com/FiloSottile/age
 
-    if Config::has_config_file(&context.system, "cli-vercel") {
+    if Config::has_config_file(&context.system, ".config/cli-vercel") {
         install_node_modules(context, vec!["vercel"]);
     }
 

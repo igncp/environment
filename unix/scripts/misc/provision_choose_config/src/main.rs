@@ -113,7 +113,7 @@ impl App {
 fn get_all_possible_config() -> Vec<String> {
     let mut all_possible_config = std::process::Command::new("bash")
         .arg("-c")
-        .arg("grep --no-file -rEo 'development/environment/project/.config/([_a-zA-Z0-9-])*' ~/project/ | cut -d '/' -f 3 | sort | uniq")
+        .arg(r#"grep --no-file -rEo '".config/([_a-zA-Z0-9-])*"' ~/development/environment | sort | uniq"#)
         .output()
         .expect("Failed to execute command")
         .stdout
@@ -122,6 +122,8 @@ fn get_all_possible_config() -> Vec<String> {
         .collect::<String>()
         .split('\n')
         .map(|x| x.to_string())
+        .map(|x| x.replace(".config/", ""))
+        .map(|x| x.replace('"', ""))
         .filter(|x| !x.is_empty())
         .collect::<Vec<String>>();
 
@@ -218,7 +220,17 @@ fn run_app<B: Backend>(
                     KeyCode::Char('q') => return Ok(()),
                     KeyCode::Left => app.items.unselect(),
                     KeyCode::Down => app.items.next(),
+                    KeyCode::PageDown => {
+                        for _ in 0..10 {
+                            app.items.next();
+                        }
+                    }
                     KeyCode::Up => app.items.previous(),
+                    KeyCode::PageUp => {
+                        for _ in 0..10 {
+                            app.items.previous();
+                        }
+                    }
                     KeyCode::Enter => app.toggle_selected(),
                     _ => {}
                 }

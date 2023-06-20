@@ -120,7 +120,7 @@ sudo chmod +x "$HOME"/.docker/cli-plugins/docker-compose
         ));
     }
 
-    if Config::has_config_file(&context.system, "docker-buildx") {
+    if Config::has_config_file(&context.system, ".config/docker-buildx") {
         if !Path::new(
             &context
                 .system

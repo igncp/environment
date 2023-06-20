@@ -1,7 +1,7 @@
 use crate::base::{config::Config, system::System, Context};
 
 pub fn setup_c(context: &mut Context) {
-    if !Config::has_config_file(&context.system, "c") {
+    if !Config::has_config_file(&context.system, ".config/c") {
         return;
     }
 

@@ -1,8 +1,10 @@
 use std::path::Path;
 
+pub use self::gui::run_ubuntu_gui;
 pub use self::install::install_ubuntu;
 use crate::base::{config::Config, system::System, Context};
 
+mod gui;
 mod install;
 
 pub fn run_ubuntu_beginning(context: &mut Context) {
@@ -63,7 +65,7 @@ sudo mv  /etc/sudoers.d/0pwfeedback.disabled
         );
     }
 
-    if Config::has_config_file(&context.system, "network-analysis") {
+    if Config::has_config_file(&context.system, ".config/network-analysis") {
         if !context.system.get_has_binary("wireshark") {
             System::run_bash_command(
                 r###"
@@ -122,78 +124,6 @@ EOF
 sudo chown root:root ~/.scripts/motd_update.sh
 "####,
     );
-}
 
-pub fn run_ubuntu_gui(context: &mut Context) {
-    context
-        .system
-        .install_system_package("build-essential", Some("make"));
-    context
-        .system
-        .install_system_package("update-manager", None);
-
-    if Config::has_config_file(&context.system, "headless-xorg") {
-        System::run_bash_command(
-            r###"
-if [ -n "$(sudo systemctl is-active lightdm | grep '\bactive\b' || true)" ]; then
-    sudo systemctl disable --now lightdm
-fi
-if [ -z "$(groups | grep '\btty\b' || true)" ]; then sudo usermod -a -G tty igncp; fi
-if [ -z "$(groups | grep '\bvideo\b' || true)" ]; then sudo usermod -a -G video igncp; fi
-if [ -z "$(groups | grep '\baudio\b' || true)" ]; then sudo usermod -a -G audio igncp; fi
-
-if [ ! -f ~/.check-files/headless-driver ]; then
-    sudo apt-get install -y xserver-xorg-video-dummy
-    sudo apt-get install -y xdg-utils # Required for browser
-    touch ~/.check-files/headless-driver
-fi
-cat > /tmp/10-headless.conf <<"EOF"
-Section "Monitor"
-        Identifier "dummy_monitor"
-        HorizSync 28.0-80.0
-        VertRefresh 48.0-75.0
-        Modeline "1920x1080" 172.80 1920 2040 2248 2576 1080 1081 1084 1118
-EndSection
-
-Section "Device"
-        Identifier "dummy_card"
-        VideoRam 256000
-        Driver "dummy"
-EndSection
-
-Section "Screen"
-        Identifier "dummy_screen"
-        Device "dummy_card"
-        Monitor "dummy_monitor"
-        SubSection "Display"
-        EndSubSection
-EndSection
-EOF
-
-sudo mv /tmp/10-headless.conf /etc/X11/xorg.conf.d/
-
-cat > /tmp/Xwrapper.config <<"EOF"
-allowed_users = anybody
-needs_root_rights = yes
-EOF
-
-sudo mv /tmp/Xwrapper.config  /etc/X11/
-"###,
-        );
-
-        context.files.append(
-            &context.system.get_home_path(".shell_aliases"),
-            r###"
-alias HeadlessStart="startx"
-alias HeadlessXRandr="DISPLAY=:0 xrandr --output default --mode 1920x1080"
-"###,
-        );
-    }
-
-    context.files.append(
-        &context.system.get_home_path(".shell_aliases"),
-        r###"
-alias WifiConnect='nmtui'
-"###,
-    );
+    // @TODO: Automate installing firefox (no snap): https://www.omgubuntu.co.uk/2022/04/how-to-install-firefox-deb-apt-ubuntu-22-04
 }

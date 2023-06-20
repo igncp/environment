@@ -1,15 +1,5 @@
 # ubuntu-gui START
 
-# black screen after boot
-# - On booting, press `Esc` to enter the GRUB screen
-# - Press `e` on the `Ubuntu` line to enter the Edit Mode
-# - Change `ro quiet splash` by `nomodeset quiet splash`
-if [ ! -f ~/.check-files/lightdm ] ; then
-  sudo apt-get install -y lightdm
-  mkdir -p ~/.check-files && touch ~/.check-files/lightdm
-  dkpg-reconfigure lightdm
-fi
-
 if [ -f ~/development/environment/project/.config/dropbox ]; then
   if [ ! -d ~/.dropbox-dist ]; then
     cd ~ && wget -O - "https://www.dropbox.com/download?plat=lnx.x86_64" | tar xzf -
@@ -58,23 +48,7 @@ else
   install_system_package terminator
 fi
 
-if [ ! -f ~/.check-files/adobe-font ]; then
-  sudo apt-get install -y fonts-noto
-  mkdir -p /tmp/adodefont
-  cd /tmp/adodefont
-  wget -q --show-progress -O source-code-pro.zip https://github.com/adobe-fonts/source-code-pro/archive/2.030R-ro/1.050R-it.zip
-  unzip -q source-code-pro.zip -d source-code-pro
-  fontpath="${XDG_DATA_HOME:-$HOME/.local/share}"/fonts
-  mkdir -p $fontpath
-  cp -v source-code-pro/*/OTF/*.otf $fontpath
-  fc-cache -f
-  rm -rf source-code-pro{,.zip}
-  touch ~/.check-files/adobe-font
-fi
-
 echo "/usr/lib/update-notifier/apt-check --human-readable | head -1 | awk '{print "'$1'";}'" > ~/.scripts/polybar_updates.sh
 echo "lxqt-sudo update-manager" > ~/.scripts/polybar_updates_click.sh
-
-# @TODO: Automate installing firefox (no snap): https://www.omgubuntu.co.uk/2022/04/how-to-install-firefox-deb-apt-ubuntu-22-04
 
 # ubuntu-gui END

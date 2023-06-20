@@ -147,8 +147,6 @@ alias svim="sudo vim"
 alias tree="tree -a"
 alias wget="wget -c"
 
-alias go="git checkout"
-complete -F _git_checkout go
 alias gob="git checkout -b"
 
 alias Lsblk="lsblk -f | less -S"
@@ -270,7 +268,7 @@ WorktreeClone() { git clone --bare "$1" .bare; echo "gitdir: ./.bare" > .git; }
 
 alias n="$HOME/.scripts/cargo_target/release/n"
 
-alias ProvisionListPossibleConfig='~/.scripts/cargo_target/release/provision_choose_config && provision.sh'
+alias ConfigProvisionList='~/.scripts/cargo_target/release/provision_choose_config && Provision'
 
 CargoGenerateClean() {
     BIN_NAME=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[].targets[] | select( .kind | map(. == "bin") | any ) | .name')
@@ -327,7 +325,7 @@ done
         );
     }
 
-    let notice_file = Config::get_config_file_path(&context.system, "ssh-notice-color");
+    let notice_file = Config::get_config_file_path(&context.system, ".config/ssh-notice-color");
 
     if !Path::new(&notice_file).exists() {
         context.files.append(&notice_file, "cyan");

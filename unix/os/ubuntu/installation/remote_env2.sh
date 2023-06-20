@@ -11,7 +11,6 @@ mkdir -p ~/project/provision
 mkdir -p ~/project/scripts
 
 cp environment/unix/config-files/create_vim_snippets.sh ~/project/provision
-cat environment/unix/os/ubuntu/provision/ubuntu-beginning.sh >> ~/project/provision/provision.sh
 
 if [ -f ~/development/environment/project/.config/gui-install ]; then
   cat environment/unix/provision/gui-base.sh >> ~/project/provision/provision.sh
@@ -25,5 +24,3 @@ if [ -f ~/development/environment/project/.config/gui-install ]; then
   touch ~/development/environment/project/.config/headless-xorg
   touch ~/development/environment/project/.config/x11-vnc-server
 fi
-
-cat environment/unix/provision/custom.sh >> ~/project/provision/provision.sh

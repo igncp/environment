@@ -289,7 +289,7 @@ alias VimCustomSnippetsModify='nvim ~/development/environment/project/custom_cre
 "###,
     );
 
-    if Config::has_config_file(&context.system, "copilot") {
+    if Config::has_config_file(&context.system, ".config/copilot") {
         install_nvim_package(context, "github/copilot.vim", None);
         context.files.appendln(
             &context.system.get_home_path(".vim/colors.vim"),

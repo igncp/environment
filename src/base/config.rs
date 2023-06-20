@@ -16,16 +16,15 @@ pub struct Config {
 impl Config {
     pub fn new(system: &System) -> Self {
         Self {
-            netcat_clipboard: Self::has_config_file(system, "netcat-clipboard"),
+            netcat_clipboard: Self::has_config_file(system, ".config/netcat-clipboard"),
             theme: Theme::Dark,
-            without_coc_eslint: Self::has_config_file(system, "without-coc-eslint"),
+            without_coc_eslint: Self::has_config_file(system, ".config/without-coc-eslint"),
         }
     }
 
     pub fn get_config_file_path(system: &System, file_name: &str) -> String {
-        system.get_home_path(&format!(
-            "development/environment/project/.config/{file_name}"
-        ))
+        // The `.config` path is kept in all cases to be able to parse it from the script
+        system.get_home_path(&format!("development/environment/project/{file_name}"))
     }
 
     pub fn has_config_file(system: &System, file_name: &str) -> bool {

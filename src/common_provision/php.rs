@@ -5,7 +5,7 @@ use crate::base::{config::Config, system::System, Context};
 use super::vim::install_nvim_package;
 
 pub fn setup_php(context: &mut Context) {
-    if !Config::has_config_file(&context.system, "php") {
+    if !Config::has_config_file(&context.system, ".config/php") {
         return;
     }
 
@@ -35,7 +35,7 @@ call add(g:coc_global_extensions, '@yaegassy/coc-phpstan')
         Some("cd ~/.local/share/nvim/lazy/coc-phpstan && yarn install --frozen-lockfile"),
     );
 
-    if !Config::has_config_file(&context.system, "php-no-composer")
+    if !Config::has_config_file(&context.system, ".config/php-no-composer")
         && !context.system.get_has_binary("composer")
     {
         System::run_bash_command(
@@ -45,7 +45,7 @@ curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/loca
         );
     }
 
-    if Config::has_config_file(&context.system, "phpactor")
+    if Config::has_config_file(&context.system, ".config/phpactor")
         && !context.system.get_has_binary("phpactor")
     {
         System::run_bash_command(
@@ -59,7 +59,7 @@ cd ~
         );
     }
 
-    if Config::has_config_file(&context.system, "php-mysql") {
+    if Config::has_config_file(&context.system, ".config/php-mysql") {
         System::run_bash_command(
             r###"
 sudo sed -i 's|;extension=mysqli|extension=mysqli|' /etc/php/php.ini
@@ -75,7 +75,7 @@ felixfbecker.php-debug
 "###,
     );
 
-    if Config::has_config_file(&context.system, "wp-cli") {
+    if Config::has_config_file(&context.system, ".config/wp-cli") {
         if !context.system.get_has_binary("wp") {
             System::run_bash_command(
                 r###"

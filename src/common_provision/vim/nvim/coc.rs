@@ -158,7 +158,7 @@ highlight CocWarningSign ctermfg=white ctermbg=darkred
     // - https://github.com/iamcco/coc-diagnostic
     // - https://github.com/neoclide/coc-jest
 
-    if Config::has_config_file(&context.system, "coc-prettier") {
+    if Config::has_config_file(&context.system, ".config/coc-prettier") {
         install_nvim_package(context, "neoclide/coc-prettier", None);
         context.files.appendln(
             &context.system.get_home_path(".vimrc"),
@@ -181,11 +181,12 @@ highlight CocWarningSign ctermfg=white ctermbg=darkred
 "###,
     );
 
-    let with_autofix = if Config::has_config_file(&context.system, "coc-eslint-no-fix-on-save") {
-        "true"
-    } else {
-        "false"
-    };
+    let with_autofix =
+        if Config::has_config_file(&context.system, ".config/coc-eslint-no-fix-on-save") {
+            "true"
+        } else {
+            "false"
+        };
 
     context.files.append_json(
         &context.system.get_home_path(".vim/coc-settings.json"),

@@ -1,7 +1,7 @@
 use crate::base::{config::Config, Context};
 
 pub fn setup_pi_hole(context: &mut Context) {
-    if !Config::has_config_file(&context.system, "pi-hole") {
+    if !Config::has_config_file(&context.system, ".config/pi-hole") {
         return;
     };
 

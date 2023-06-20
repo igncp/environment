@@ -4,7 +4,7 @@ use crate::{
 };
 
 pub fn setup_hashi(context: &mut Context) {
-    if !Config::has_config_file(&context.system, "hashi") {
+    if !Config::has_config_file(&context.system, ".config/hashi") {
         return;
     }
 

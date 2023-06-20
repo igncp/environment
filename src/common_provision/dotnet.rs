@@ -3,7 +3,7 @@ use crate::base::{config::Config, system::System, Context};
 use super::vim::install_nvim_package;
 
 pub fn setup_dotnet(context: &mut Context) {
-    if !Config::has_config_file(&context.system, "dotnet") {
+    if !Config::has_config_file(&context.system, ".config/dotnet") {
         return;
     }
 

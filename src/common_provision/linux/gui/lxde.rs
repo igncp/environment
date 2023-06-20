@@ -3,7 +3,7 @@ use std::path::Path;
 use crate::base::{config::Config, system::System, Context};
 
 pub fn setup_lxde(context: &mut Context) {
-    if !Config::has_config_file(&context.system, "gui-lxde") {
+    if !Config::has_config_file(&context.system, ".config/gui-lxde") {
         return;
     }
 

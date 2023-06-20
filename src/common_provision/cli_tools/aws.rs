@@ -3,7 +3,7 @@ use crate::base::system::System;
 use crate::base::Context;
 
 pub fn setup_aws(context: &mut Context) {
-    if Config::has_config_file(&context.system, "cli-aws") {
+    if Config::has_config_file(&context.system, ".config/cli-aws") {
         // https://docs.aws.amazon.com/cli/latest/reference/
         if context.system.get_has_binary("aws") {
             if context.system.get_has_binary("aws") {

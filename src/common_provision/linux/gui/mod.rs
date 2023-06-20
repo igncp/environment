@@ -2,12 +2,13 @@ use std::path::Path;
 
 use crate::base::{config::Config, system::System, Context};
 
-use self::lxde::setup_lxde;
+use self::{lxde::setup_lxde, vscode::setup_vscode};
 
 mod lxde;
+mod vscode;
 
 pub fn setup_gui(context: &mut Context) {
-    if !Config::has_config_file(&context.system, "gui") {
+    if !Config::has_config_file(&context.system, ".config/gui") {
         return;
     }
 
@@ -39,7 +40,7 @@ alias XClipPaste='xclip -selection clipboard -o'
     // This setup requires that the user is already logged in in the main console
     // Use SSH tunneling from the client and don't open the port:
     //   `ssh -fN -L 5900:localhost:5900 REMOTE_ADDRESS`
-    if Config::has_config_file(&context.system, "x11-vnc-server") {
+    if Config::has_config_file(&context.system, ".config/x11-vnc-server") {
         context.system.install_system_package("x11vnc", None);
 
         context.files.append(
@@ -97,4 +98,5 @@ fi
     context.system.install_system_package("acpi", None);
 
     setup_lxde(context);
+    setup_vscode(context);
 }

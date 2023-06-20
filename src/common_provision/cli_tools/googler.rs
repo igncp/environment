@@ -3,7 +3,7 @@ use crate::base::system::System;
 use crate::base::Context;
 
 pub fn setup_googler(context: &mut Context) {
-    if Config::has_config_file(&context.system, "cli-googler") {
+    if Config::has_config_file(&context.system, ".config/cli-googler") {
         if !context.system.get_has_binary("googler") {
             // https://github.com/jarun/googler/releases
             System::run_bash_command(

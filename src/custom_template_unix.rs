@@ -57,22 +57,24 @@ fi
 "###,
     );
 
-    context.files.append(
-        &context.system.get_home_path(".bashrc"),
-        r###"
-if [ ! -f "$HOME"/.check-files/vpn-info ]; then
-  echo '[~/.check-files/vpn-info]: Update vpn info in the grep'
-fi
-_get_if_vpn() {
-  IS_VPN=$(ps -aux | grep -E 'onevpn|othervpn' | grep -v grep)
-  if [ ! -z "$IS_VPN" ]; then
-    echo '[VPN] '
+    let vim_env_setup = r###"
+function! SetupEnvironment()
+  let l:path = expand('%:p')
+  if l:path =~ '_HOME_foo/bar'
+    let g:Fast_grep='. --exclude-dir={node_modules,dist,.git,coverage} --exclude="*.log"'
+  elseif l:path =~ '_HOME_bar/baz'
+    let g:Fast_grep='main'
   else
-    printf ''
-  fi
-}
-"###,
-    );
+    let g:Fast_grep='src'
+  endif
+endfunction
+autocmd! BufReadPost,BufNewFile * call SetupEnvironment()
+"###
+    .replace("_HOME_", &context.system.get_home_path(""));
+
+    context
+        .files
+        .append(&context.system.get_home_path(".vimrc"), &vim_env_setup);
 
     clone_dev_github_repo(context, "environment");
 

@@ -203,7 +203,7 @@ sudo pkgfile -u
         "source /usr/share/doc/pkgfile/command-not-found.zsh",
     );
 
-    if !Config::has_config_file(&context.system, "tlp") {
+    if !Config::has_config_file(&context.system, ".config/tlp") {
         context.system.install_system_package("tlp", None);
         context.system.install_system_package("tlp-rdw", None);
 

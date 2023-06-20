@@ -4,7 +4,7 @@ use crate::base::Context;
 
 pub fn setup_jira(context: &mut Context) {
     // https://github.com/go-jira/jira/releases
-    if Config::has_config_file(&context.system, "cli-go-jira")
+    if Config::has_config_file(&context.system, ".config/cli-go-jira")
         && !context.system.is_arm()
         && !context.system.get_has_binary("jira")
     {

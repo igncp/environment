@@ -3,7 +3,7 @@ use crate::base::{config::Config, Context};
 use super::vim::install_nvim_package;
 
 pub fn setup_haskell(context: &mut Context) {
-    if !Config::has_config_file(&context.system, "haskell") {
+    if !Config::has_config_file(&context.system, ".config/haskell") {
         return;
     }
 

@@ -19,8 +19,4 @@ fi
 
 cp environment/unix/config-files/create_vim_snippets.sh ~/project/provision
 
-cat environment/unix/os/ubuntu/provision/ubuntu-beginning.sh >> ~/project/provision/provision.sh
-
-cat environment/unix/provision/custom.sh >> ~/project/provision/provision.sh
-
 rm -rf ~/vm2.sh

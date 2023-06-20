@@ -2,15 +2,17 @@ use std::path::Path;
 
 use crate::base::{system::System, Context};
 
-use self::{komorebi::setup_komorebi, utils::install_windows_package, vscode::run_windows_vscode};
+use self::{komorebi::setup_komorebi, utils::install_windows_package};
 
-use super::get_vim_multi_os_provision;
+use super::{
+    get_vim_multi_os_provision, get_vscode_settings_multi_os,
+    multi_os_provision::get_vscode_keybindings_multi_os,
+};
 
 pub use self::utils::append_json_into_vs_code;
 
 mod komorebi;
 mod utils;
-mod vscode;
 
 fn check_ahk_shortcut(context: &mut Context, file_name: &str) {
     if !Path::new(&context.system.get_home_path(&format!(
@@ -19,7 +21,10 @@ fn check_ahk_shortcut(context: &mut Context, file_name: &str) {
     )))
     .exists()
     {
-        println!("Open the startup dir with 'ExplorerStartup' and create a shortcut for '{}'", file_name);
+        println!(
+            "Open the startup dir with 'ExplorerStartup' and create a shortcut for '{}'",
+            file_name
+        );
     }
 }
 
@@ -36,7 +41,11 @@ pub fn run_windows(context: &mut Context) {
         std::process::exit(1);
     }
 
-    run_windows_vscode(context);
+    let vscode_settings = get_vscode_settings_multi_os();
+    append_json_into_vs_code(context, "User\\settings.json", &vscode_settings);
+
+    let keybindings = get_vscode_keybindings_multi_os();
+    append_json_into_vs_code(context, "User\\keybindings.json", &keybindings);
 
     install_windows_package(context, "RARLab.WinRAR", "WinRAR");
     install_windows_package(context, "AutoHotkey.AutoHotkey", "AutoHotkey.lnk");

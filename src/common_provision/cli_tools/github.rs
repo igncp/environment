@@ -5,7 +5,7 @@ use crate::base::system::System;
 use crate::base::Context;
 
 pub fn setup_gh(context: &mut Context) {
-    if Config::has_config_file(&context.system, "cli-gh") {
+    if Config::has_config_file(&context.system, ".config/cli-gh") {
         if !context.system.get_has_binary("gh") {
             System::run_bash_command("cd ~; rm -rf gh_cli; mkdir -p gh_cli; cd gh_cli");
             if context.system.is_mac() {

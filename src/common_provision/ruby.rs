@@ -17,7 +17,7 @@ fn install_ruby_gems(gems: &[&str]) {
 }
 
 pub fn setup_ruby(context: &mut Context) {
-    if !Config::has_config_file(&context.system, "ruby") {
+    if !Config::has_config_file(&context.system, ".config/ruby") {
         return;
     }
 

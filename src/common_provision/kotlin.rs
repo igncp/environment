@@ -3,7 +3,7 @@ use crate::base::{config::Config, Context};
 use super::vim::install_nvim_package;
 
 pub fn setup_kotlin(context: &mut Context) {
-    if !Config::has_config_file(&context.system, "kotlin") {
+    if !Config::has_config_file(&context.system, ".config/kotlin") {
         return;
     }
 

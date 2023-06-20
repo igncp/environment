@@ -132,7 +132,7 @@ sudo mv /tmp/nobeep.conf /etc/modprobe.d/
         );
     }
 
-    if Config::has_config_file(&context.system, "tailscale")
+    if Config::has_config_file(&context.system, ".config/tailscale")
         && !Path::new(&context.system.get_home_path(".check-files/tailscale")).exists()
     {
         context.system.install_system_package("tailscale", None);
@@ -159,7 +159,7 @@ touch ~/.check-files/oomd
         );
     }
 
-    if Config::has_config_file(&context.system, "netdata") {
+    if Config::has_config_file(&context.system, ".config/netdata") {
         context.system.install_system_package("netdata", None);
         if !Path::new(&context.system.get_home_path(".check-files/netdata")).exists() {
             System::run_bash_command(
@@ -172,7 +172,7 @@ touch ~/.check-files/netdata
     }
 
     // https://wiki.archlinux.org/title/Google_Authenticator
-    if Config::has_config_file(&context.system, "gauth-pam") {
+    if Config::has_config_file(&context.system, ".config/gauth-pam") {
         context
             .system
             .install_system_package("libpam-google-authenticator", Some("google-authenticator"));
@@ -219,7 +219,7 @@ sudo chmod o+r /etc/motd
 
     context.system.install_system_package("vnstat", None);
 
-    if Config::has_config_file(&context.system, "usb-modem") {
+    if Config::has_config_file(&context.system, ".config/usb-modem") {
         context
             .system
             .install_system_package("modemmanager", Some("ModemManager"));

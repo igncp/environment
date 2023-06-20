@@ -26,7 +26,7 @@ pub fn run_top_setup(context: &mut Context) {
     )
     .unwrap();
 
-    let config_theme_file = Config::get_config_file_path(&context.system, "theme");
+    let config_theme_file = Config::get_config_file_path(&context.system, ".config/theme");
     if !Path::new(&config_theme_file).exists() {
         System::run_bash_command(&format!("mkdir -p {config_theme_file}"));
         context.files.append(&config_theme_file, "dark");

@@ -9,11 +9,13 @@ use self::{
     docker::setup_docker,
     dotnet::setup_dotnet,
     general::run_general,
+    go::setup_go,
     haskell::setup_haskell,
     js::{run_js, setup_js_vue},
     kotlin::setup_kotlin,
     linux::setup_linux,
     php::setup_php,
+    raspberry::setup_raspberry,
     ruby::setup_ruby,
     rust::setup_rust,
     vim::{run_nvim_coc, run_vim},
@@ -27,11 +29,13 @@ mod dart;
 mod docker;
 mod dotnet;
 mod general;
+mod go;
 mod haskell;
 mod js;
 mod kotlin;
 mod linux;
 mod php;
+mod raspberry;
 mod ruby;
 mod rust;
 mod vim;
@@ -59,6 +63,8 @@ pub fn run_common_provision(context: &mut Context) {
     setup_brightscript(context);
     setup_haskell(context);
     setup_dart(context);
+    setup_go(context);
+    setup_raspberry(context);
 
     if context.system.is_linux() {
         setup_docker(context);
