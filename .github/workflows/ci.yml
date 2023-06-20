@@ -107,8 +107,8 @@ jobs:
       - name: Package
         shell: bash
         run: |
-          cd target/${{ matrix.target }}/release
-          tar czvf ../../../environment-${{ matrix.target }}.tar.gz environment
+          cd project/target/${{ matrix.target }}/release
+          tar czvf ../../../../environment-${{ matrix.target }}.tar.gz environment
           cd -
 
       - name: Publish
