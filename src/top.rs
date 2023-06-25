@@ -40,6 +40,15 @@ pub fn run_top_setup(context: &mut Context) {
         std::fs::create_dir_all(context.system.get_home_path(".config/systemd/user")).unwrap();
     }
 
+    // This takes a long time to build, so adding it as one of the first lines to have it if there
+    // is a problem building
+    context.files.append(
+        &context.system.get_home_path(".shellrc"),
+        r###"
+export PATH="$PATH:$HOME/nvim/bin"
+"###,
+    );
+
     context.files.append(
         &context.system.get_home_path(".shell_aliases"),
         r###"

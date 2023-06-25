@@ -21,7 +21,6 @@ async fn main() {
                         .action(clap::ArgAction::SetTrue),
                 ),
         )
-        .subcommand(Command::new("down").about("Stops docker compose (but not the VPN)"))
         .subcommand(Command::new("stop").about("Stops docker and/or the VPN"))
         .subcommand(
             Command::new("rm")
@@ -40,6 +39,26 @@ async fn main() {
                 .arg(Arg::new("magnet_link").required(true))
                 .about("Adds a new torrent by using a magent link"),
         )
+        .subcommand(
+            Command::new("daemon")
+                .about("Interacts with the deluge daemon")
+                .subcommand(
+                    Command::new("version").about("Gets the version of the deluge daemon")
+                )
+                .subcommand(
+                    Command::new("methods").about("Prints the available methods for RPC")
+                ),
+        )
+        .subcommand(
+            Command::new("config")
+                .about("Handles deluge config")
+                .subcommand(
+                    Command::new("get").about("Prints the existing config object (to use with `jq`)")
+                )
+                .subcommand(
+                    Command::new("ip").about("Prints the external IP")
+                )
+        )
         .subcommand(Command::new("run").about("Starts the VPN and docker"))
         .arg_required_else_help(true)
         .get_matches();
@@ -57,11 +76,21 @@ async fn main() {
         let magnet_link: &String = matches.get_one::<String>("magnet_link").unwrap();
 
         Controller::add_torrent(magnet_link.clone()).await;
-    } else if let Some(_matches) = matches.subcommand_matches("down") {
-        Controller::set_docker_down();
     } else if let Some(_matches) = matches.subcommand_matches("stop") {
         Controller::stop_all();
     } else if let Some(_matches) = matches.subcommand_matches("run") {
         Controller::run_all();
+    } else if let Some(matches) = matches.subcommand_matches("daemon") {
+        if let Some(_matches) = matches.subcommand_matches("version") {
+            Controller::get_daemon_version().await;
+        } else if let Some(_matches) = matches.subcommand_matches("methods") {
+            Controller::get_daemon_method_list().await;
+        }
+    } else if let Some(matches) = matches.subcommand_matches("config") {
+        if let Some(_matches) = matches.subcommand_matches("get") {
+            Controller::get_config().await;
+        } else if let Some(_matches) = matches.subcommand_matches("ip") {
+            Controller::get_external_ip().await;
+        }
     }
 }

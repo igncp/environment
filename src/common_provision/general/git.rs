@@ -11,6 +11,8 @@ pub fn run_git(context: &mut Context) {
   editor = vim
 [alias]
   l = log --pretty=format:'%Cred%h%Creset%C(yellow)%d%Creset %s %C(bold blue)%an %Cgreen%cd%Creset' --date=short
+[pull]
+  rebase = false
 "###.to_string();
 
     if context.config.theme == Theme::Dark {

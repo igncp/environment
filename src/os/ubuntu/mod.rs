@@ -12,7 +12,6 @@ pub fn run_ubuntu_beginning(context: &mut Context) {
         &context.system.get_home_path(".shellrc"),
         r###"
 export DEBIAN_FRONTEND=noninteractive
-export PATH="$PATH:$HOME/nvim/bin"
 "###,
     );
 
@@ -78,32 +77,6 @@ sudo adduser $USER wireshark
         }
 
         context.system.install_system_package("mitmproxy", None);
-    }
-
-    if !context.system.get_has_binary("nvim") {
-        // https://github.com/neovim/neovim/releases/
-        if context.system.is_arm() {
-            System::run_bash_command(
-                r###"
-cd ~ ; rm -rf nvim-repo ; git clone https://github.com/neovim/neovim.git nvim-repo --depth 1 --branch release-0.9 ; cd nvim-repo
-# https://github.com/neovim/neovim/wiki/Building-Neovim#build-prerequisites
-sudo apt-get install -y ninja-build gettext libtool libtool-bin autoconf automake cmake g++ pkg-config unzip curl doxygen
-make CMAKE_BUILD_TYPE=Release
-make CMAKE_INSTALL_PREFIX=$HOME/nvim install
-cd ~ ; rm -rf nvim-repo
-"###,
-            );
-        } else {
-            System::run_bash_command(
-                r###"
-cd /tmp && rm -rf nvim-linux* && wget https://github.com/neovim/neovim/releases/download/v0.9.0/nvim-linux64.tar.gz
-tar -xf ./nvim-linux64.tar.gz
-rm -rf ~/nvim
-mv nvim-linux64 ~/nvim
-cd ~
-"###,
-            );
-        }
     }
 
     System::run_bash_command(

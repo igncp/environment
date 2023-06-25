@@ -37,6 +37,7 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
     install_omzsh_plugin(context, "zsh-users/zsh-completions");
     install_omzsh_plugin(context, "hlissner/zsh-autopair");
     install_omzsh_plugin(context, "zsh-users/zsh-syntax-highlighting");
+    install_omzsh_plugin(context, "MichaelAquilina/zsh-you-should-use");
 
     context.files.append(
         &zsh_file,
@@ -176,6 +177,8 @@ fi
 # https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/docs/highlighters/main.md
 ZSH_HIGHLIGHT_STYLES[comment]='fg=yellow,bold'
 ZSH_HIGHLIGHT_STYLES[dollar-double-quoted-argument]='fg=green,bold'
+
+alias ZshBrowseAllAliases='zsh -ixc : 2>&1 | l'
 "###,
     );
 

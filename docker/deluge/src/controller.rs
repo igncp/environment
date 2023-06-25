@@ -24,18 +24,18 @@ impl Controller {
 
         loop {
             let torrent_list = client.get_torrents().await;
-            if torrent_list.result.torrents.is_empty() {
+            if torrent_list.torrents.is_empty() {
                 println!("No torrents");
             }
 
-            for (torrent_id, torrent) in torrent_list.result.torrents.iter() {
+            for (torrent_id, torrent) in torrent_list.torrents.iter() {
                 println!(
                     "- [{}]: '{}': {:.1}%",
                     torrent_id, torrent.name, torrent.progress
                 );
             }
 
-            if !is_watch || torrent_list.result.torrents.len() > 1 {
+            if !is_watch || torrent_list.torrents.len() > 1 {
                 return;
             }
 
@@ -65,7 +65,7 @@ impl Controller {
         } else if is_finished {
             let torrent_list = DelugeHttpClient::new().get_torrents().await;
 
-            if torrent_list.result.torrents.is_empty() {
+            if torrent_list.torrents.is_empty() {
                 println!("No torrents to remove");
 
                 if torrent_id.is_some() {
@@ -76,7 +76,7 @@ impl Controller {
 
             let mut torrents_removed = 0;
 
-            for (info_torrent_id, torrent) in torrent_list.result.torrents.iter() {
+            for (info_torrent_id, torrent) in torrent_list.torrents.iter() {
                 if torrent.progress == 100.0 {
                     if torrent_id.is_some() && torrent_id.unwrap() != info_torrent_id {
                         continue;
@@ -114,15 +114,10 @@ impl Controller {
         }
     }
 
-    pub fn set_docker_down() {
-        run_bash_command("docker compose down");
-        println!("Stopped docker compose");
-    }
-
     pub fn stop_all() {
         run_bash_command(
             r###"
-docker compose down || true
+docker-compose down || true
 sudo bash -c "killall openvpn || true" > /dev/null 2>&1
 "###,
         );
@@ -132,10 +127,37 @@ sudo bash -c "killall openvpn || true" > /dev/null 2>&1
     pub fn run_all() {
         run_bash_command(
             r###"
-docker compose up -d
+docker-compose up -d
 
 (cd ~/vpn && bash run.sh)
 "###,
         );
+    }
+
+    pub async fn get_daemon_version() {
+        let version = DelugeHttpClient::new().get_daemon_version().await;
+
+        println!("Deluge daemon version: {}", version);
+    }
+
+    pub async fn get_daemon_method_list() {
+        let methods = DelugeHttpClient::new().get_daemon_method_list().await;
+
+        println!("The available methods for using in RPC:");
+        for method in methods {
+            println!("- {}", method);
+        }
+    }
+
+    pub async fn get_config() {
+        let config = DelugeHttpClient::new().get_config().await;
+
+        println!("{config}");
+    }
+
+    pub async fn get_external_ip() {
+        let ip = DelugeHttpClient::new().get_external_ip().await;
+
+        println!("The external IP: {ip}");
     }
 }

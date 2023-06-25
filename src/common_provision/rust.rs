@@ -1,18 +1,6 @@
-use std::path::Path;
-
 use crate::base::{config::Config, system::System, Context};
 
 use super::vim::install_nvim_package;
-
-// It expects a bin file for each crate
-fn install_cargo_crate(context: &mut Context, crate_name: &str, bin_name: Option<&str>) {
-    let bin = bin_name.unwrap_or(crate_name);
-
-    if !Path::new(&format!("{}/.cargo/bin/{}", context.system.home, bin)).exists() {
-        println!("Installing crate: {}", crate_name);
-        System::run_bash_command(&format!("cargo install {crate_name}"));
-    }
-}
 
 pub fn setup_rust(context: &mut Context) {
     context.files.append(
@@ -59,14 +47,16 @@ nnoremap <leader>lk :CocCommand rust-analyzer.moveItemUp<CR>
 "###,
     );
 
-    install_cargo_crate(context, "rustfmt", None); // https://github.com/rust-lang/rustfmt
+    context.system.install_cargo_crate("rustfmt", None); // https://github.com/rust-lang/rustfmt
 
     if Config::has_config_file(&context.system, ".config/extra-crates") {
         context.system.install_system_package("perf", None);
-        install_cargo_crate(context, "flamegraph", None); // https://github.com/flamegraph-rs/flamegraph
-        install_cargo_crate(context, "cargo-bloat", None); // https://github.com/RazrFalcon/cargo-bloat
-        install_cargo_crate(context, "cargo-unused-features", Some("unused-features")); // https://github.com/TimonPost/cargo-unused-features
-        install_cargo_crate(context, "pastel", None); // https://github.com/sharkdp/pastel
+        context.system.install_cargo_crate("flamegraph", None); // https://github.com/flamegraph-rs/flamegraph
+        context.system.install_cargo_crate("cargo-bloat", None); // https://github.com/RazrFalcon/cargo-bloat
+        context
+            .system
+            .install_cargo_crate("cargo-unused-features", Some("unused-features")); // https://github.com/TimonPost/cargo-unused-features
+        context.system.install_cargo_crate("pastel", None); // https://github.com/sharkdp/pastel
     }
 
     context.files.appendln(

@@ -54,6 +54,7 @@ fi
 if [ ! -f "$HOME"/.check-files/git-info ]; then
   echo '[~/.check-files/git-info]: configure git user and email info'
 fi
+git config --global core.editor nvim
 "###,
     );
 

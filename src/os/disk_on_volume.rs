@@ -2,6 +2,8 @@ use crate::base::{config::Config, system::System, Context};
 
 const CONFIG_FILE_NAME: &str = ".config/disk-on-volume";
 
+// This default config requires around 40GB of disk space
+// Tweak that for your volume
 const DISKS: [(&str, &str); 6] = [
     ("/usr", "10G"),
     ("/var", "5G"),

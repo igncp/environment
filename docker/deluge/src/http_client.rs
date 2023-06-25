@@ -1,10 +1,7 @@
 use std::{collections::HashMap, process};
 
 use reqwest::{Client, RequestBuilder};
-use serde::{Deserialize, Serialize};
-
-// https://deluge.readthedocs.io/en/latest/devguide/how-to/curl-jsonrpc.html
-// https://github.com/huihuimoe/node-deluge-rpc/blob/master/lib/index.js
+use serde::{de::DeserializeOwned, Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
 #[serde(untagged)]
@@ -173,9 +170,32 @@ impl DelugeHttpClient {
             .unwrap();
     }
 
-    pub async fn get_torrents(&mut self) -> DelugeResponse<UpdateUI> {
+    async fn common_rpc_request_raw<A: Serialize>(&mut self, cmd: &str, params: A) -> String {
         self.connect().await;
 
+        let body_req = DelugeRequest::new(self.generate_req_id(), cmd, params);
+
+        let res = self
+            .get_common_req()
+            .body(body_req.serialize())
+            .send()
+            .await
+            .unwrap();
+
+        res.text().await.unwrap()
+    }
+
+    async fn common_rpc_request<A: DeserializeOwned, B: Serialize>(
+        &mut self,
+        cmd: &str,
+        params: B,
+    ) -> DelugeResponse<A> {
+        let response_text = self.common_rpc_request_raw(cmd, params).await;
+
+        serde_json::from_str::<DelugeResponse<A>>(&response_text).unwrap()
+    }
+
+    pub async fn get_torrents(&mut self) -> UpdateUI {
         #[derive(Debug, Serialize, Clone)]
         #[serde(untagged)]
         enum TorrentsRequest<'a> {
@@ -183,36 +203,23 @@ impl DelugeHttpClient {
             Object(HashMap<String, String>),
         }
 
-        let body_req = DelugeRequest::new(
-            self.generate_req_id(),
-            "web.update_ui",
-            vec![
-                TorrentsRequest::List(vec![
-                    "name",
-                    "queue",
-                    "progress",
-                    "distributed_copies",
-                    "eta",
-                ]),
-                TorrentsRequest::Object(HashMap::new()),
-            ],
-        );
+        let params = vec![
+            TorrentsRequest::List(vec![
+                "name",
+                "queue",
+                "progress",
+                "distributed_copies",
+                "eta",
+            ]),
+            TorrentsRequest::Object(HashMap::new()),
+        ];
 
-        let res = self
-            .get_common_req()
-            .body(body_req.serialize())
-            .send()
+        self.common_rpc_request("web.update_ui", params)
             .await
-            .unwrap();
-
-        let body = res.text().await.unwrap();
-
-        serde_json::from_str::<DelugeResponse<UpdateUI>>(&body).unwrap()
+            .result
     }
 
     pub async fn remove_torrent(&mut self, torrent_id: String) -> bool {
-        self.connect().await;
-
         #[derive(Debug, Serialize, Clone)]
         #[serde(untagged)]
         enum RemoveTorrentRequest {
@@ -220,32 +227,19 @@ impl DelugeHttpClient {
             Data(bool),
         }
 
-        let body_req = DelugeRequest::new(
-            self.generate_req_id(),
-            "core.remove_torrent",
-            vec![
-                RemoveTorrentRequest::Id(torrent_id),
-                RemoveTorrentRequest::Data(false),
-            ],
-        );
+        let params = vec![
+            RemoveTorrentRequest::Id(torrent_id),
+            RemoveTorrentRequest::Data(false),
+        ];
 
-        let res = self
-            .get_common_req()
-            .body(body_req.serialize())
-            .send()
-            .await
-            .unwrap();
-
-        let body = res.text().await.unwrap();
-
-        let response = serde_json::from_str::<DelugeResponse<Option<bool>>>(&body).unwrap();
+        let response = self
+            .common_rpc_request::<Option<String>, _>("core.remove_torrent", params)
+            .await;
 
         response.error.is_none()
     }
 
     pub async fn add_torrent(&mut self, magnet_link: String) -> bool {
-        self.connect().await;
-
         #[derive(Debug, Serialize, Clone)]
         #[serde(untagged)]
         enum AddTorrentRequest {
@@ -253,26 +247,38 @@ impl DelugeHttpClient {
             EmptyObject(HashMap<String, String>),
         }
 
-        let body_req = DelugeRequest::new(
-            self.generate_req_id(),
-            "core.add_torrent_magnet",
-            vec![
-                AddTorrentRequest::Magnet(magnet_link),
-                AddTorrentRequest::EmptyObject(HashMap::new()),
-            ],
-        );
+        let params = vec![
+            AddTorrentRequest::Magnet(magnet_link),
+            AddTorrentRequest::EmptyObject(HashMap::new()),
+        ];
 
-        let res = self
-            .get_common_req()
-            .body(body_req.serialize())
-            .send()
-            .await
-            .unwrap();
-
-        let body = res.text().await.unwrap();
-
-        let response = serde_json::from_str::<DelugeResponse<Option<String>>>(&body).unwrap();
+        let response = self
+            .common_rpc_request::<Option<String>, _>("core.add_torrent_magnet", params)
+            .await;
 
         response.error.is_none()
+    }
+
+    pub async fn get_daemon_version(&mut self) -> String {
+        self.common_rpc_request("daemon.get_version", Vec::<String>::new())
+            .await
+            .result
+    }
+
+    pub async fn get_daemon_method_list(&mut self) -> Vec<String> {
+        self.common_rpc_request("daemon.get_method_list", Vec::<String>::new())
+            .await
+            .result
+    }
+
+    pub async fn get_config(&mut self) -> String {
+        self.common_rpc_request_raw("core.get_config", Vec::<String>::new())
+            .await
+    }
+
+    pub async fn get_external_ip(&mut self) -> String {
+        self.common_rpc_request("core.get_external_ip", Vec::<String>::new())
+            .await
+            .result
     }
 }

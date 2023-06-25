@@ -4,7 +4,7 @@ set -e
 
 mkdir -p ~/.vim-snippets
 
-cat >> ~/.bash_aliases <<"EOF"
+cat >> ~/.shell_aliases <<"EOF"
 alias ModifySnippets='"$EDITOR" ~/development/environment/unix/scripts/misc/create_vim_snippets.sh && sh ~/development/environment/unix/scripts/misc/create_vim_snippets.sh'
 EOF
 

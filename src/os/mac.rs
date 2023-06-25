@@ -117,6 +117,9 @@ defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool 
 defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled -bool true && \
 defaults write -g WebKitDeveloperExtras -bool true || true
 
+# Keep the screen on after disconnecting the screen sharing client
+sudo defaults write /Library/Preferences/com.apple.RemoteManagement RestoreMachineState -bool NO
+
 # Xcode command-line tools
 xcode-select --install || true
 

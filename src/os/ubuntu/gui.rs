@@ -11,7 +11,7 @@ pub fn run_ubuntu_gui(context: &mut Context) {
         System::run_bash_command(
             r###"
 sudo apt-get install -y lightdm
-dkpg-reconfigure lightdm
+sudo dpkg-reconfigure lightdm
 mkdir -p ~/.check-files && touch ~/.check-files/lightdm
 "###,
         );
@@ -20,9 +20,12 @@ mkdir -p ~/.check-files && touch ~/.check-files/lightdm
     context
         .system
         .install_system_package("build-essential", Some("make"));
-    context
-        .system
-        .install_system_package("update-manager", None);
+
+    if !context.system.is_debian() {
+        context
+            .system
+            .install_system_package("update-manager", None);
+    }
 
     if Config::has_config_file(&context.system, ".config/headless-xorg") {
         System::run_bash_command(

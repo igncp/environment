@@ -71,6 +71,7 @@ alias tree="tree -a"
 alias ExplorerStartup='(cd $APPDATA/Microsoft/Windows/Start\ Menu/Programs/Startup/ && explorer.exe .)'
 alias ExplorerEnvironment='(cd $USERPROFILE/development/environment && explorer.exe .)'
 alias Provision="(cd ~/development/environment && cargo run --release)"
+alias HostsEdit='sudo vim /c/Windows/System32/Drivers/etc/hosts'
 
 GitAdd() { git add -A $@; git status -u; }
 GitCommit() { eval "git commit -m '$@'"; }
@@ -116,9 +117,24 @@ inoremap <c-e> <esc>:update<cr>
     context
         .system
         .install_system_package("junegunn.fzf", Some("fzf.exe"));
+    context
+        .system
+        .install_system_package("gerardog.gsudo", Some("gsudo.exe"));
 
     check_ahk_shortcut(context, "switch-same-app.ahk");
     check_ahk_shortcut(context, "capslock.ahk");
 
     setup_komorebi(context);
+
+    if !Path::new(
+        &context
+            .system
+            .get_home_path("development/environment/project/target/release/clipboard_ssh.exe"),
+    )
+    .exists()
+    {
+        System::run_bash_command(
+            "cd ~/development/environment/unix/scripts/misc/clipboard_ssh && cargo build --release",
+        );
+    }
 }

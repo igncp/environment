@@ -7,6 +7,13 @@ use self::gui::setup_gui;
 mod gui;
 
 pub fn setup_linux(context: &mut Context) {
+    context.files.append(
+        &context.system.get_home_path(".shellrc"),
+        r###"
+export PATH="$PATH:/usr/sbin"
+"###,
+    );
+
     context.system.install_system_package("lshw", None);
 
     if !context.system.is_arm() {
@@ -135,7 +142,7 @@ sudo mv /tmp/nobeep.conf /etc/modprobe.d/
     if Config::has_config_file(&context.system, ".config/tailscale")
         && !Path::new(&context.system.get_home_path(".check-files/tailscale")).exists()
     {
-        context.system.install_system_package("tailscale", None);
+        System::run_bash_command("curl -fsSL https://tailscale.com/install.sh | sh");
         System::run_bash_command(
             r###"
 if [ -n "$(sudo systemctl list-units | grep tailscaled || true)" ]; then
@@ -184,7 +191,7 @@ touch ~/.check-files/netdata
     // For arch
     if !context.system.get_has_binary("crond") {
         // For ubuntu
-        if !context.system.get_has_binary("cron") {
+        if !context.system.get_has_binary("cron") && !context.system.is_debian() {
             context
                 .system
                 .install_system_package("cronie", Some("crond"));
@@ -192,8 +199,9 @@ touch ~/.check-files/netdata
         }
     }
 
-    System::run_bash_command(
-        r###"
+    if context.system.get_has_binary("crond") {
+        System::run_bash_command(
+            r###"
 sudo touch /var/spool/cron/"$USER"
 sudo touch /var/spool/cron/root
 sudo chown "$USER" /var/spool/cron/"$USER"
@@ -205,19 +213,22 @@ sudo sh -c "echo '*/10 * * * * sh /home/$USER/.scripts/motd_update.sh' >> /var/s
 sudo touch /etc/motd
 sudo chmod o+r /etc/motd
 "###,
-    );
+        );
 
-    // @TODO: setup alias for this
-    // echo '- swap: https://wiki.archlinux.org/index.php/swap'
-    // echo '    sudo su # can create the swapfile inside the home directory if bigger volume'
-    // echo '    dd if=/dev/zero of=/swapfile bs=1G count=10 status=progress # RAM size + 2G, in this case 10 GB Swap'
-    // echo "    chmod 600 /swapfile ; mkswap /swapfile ; swapon /swapfile ; echo '/swapfile none swap sw 0 0' | tee -a /etc/fstab"
+        // @TODO: setup alias for this
+        // echo '- swap: https://wiki.archlinux.org/index.php/swap'
+        // echo '    sudo su # can create the swapfile inside the home directory if bigger volume'
+        // echo '    dd if=/dev/zero of=/swapfile bs=1G count=10 status=progress # RAM size + 2G, in this case 10 GB Swap'
+        // echo "    chmod 600 /swapfile ; mkswap /swapfile ; swapon /swapfile ; echo '/swapfile none swap sw 0 0' | tee -a /etc/fstab"
 
-    // @TODO: Check if it is Ubuntu to do this
-    // crontab /var/spool/cron/"$USER"
-    // sudo crontab /var/spool/cron/root
+        // @TODO: Check if it is Ubuntu to do this
+        // crontab /var/spool/cron/"$USER"
+        // sudo crontab /var/spool/cron/root
+    }
 
     context.system.install_system_package("vnstat", None);
+
+    context.system.install_system_package("speedtest-cli", None);
 
     if Config::has_config_file(&context.system, ".config/usb-modem") {
         context

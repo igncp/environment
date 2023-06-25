@@ -1,4 +1,6 @@
-use crate::base::{config::Config, Context};
+use std::path::Path;
+
+use crate::base::{config::Config, system::System, Context};
 
 pub fn setup_raspberry(context: &mut Context) {
     if !Config::has_config_file(&context.system, ".config/raspberry") {
@@ -30,5 +32,20 @@ pub fn setup_raspberry(context: &mut Context) {
 # From libraspberrypi-bin
 alias RaspberryTemp='vcgencmd measure_temp'
 "###,
-    )
+    );
+
+    // Enable VNC: https://www.pitunnel.com/doc/access-vnc-remote-desktop-raspberry-pi-over-internet
+
+    if context.system.is_ubuntu()
+        && !Path::new(&context.system.get_home_path(".check-files/raspi-tools")).exists()
+    {
+        System::run_bash_command(
+            r###"
+sudo apt install -y linux-tools-raspi
+touch ~/.check-files/raspi-tools
+"###,
+        );
+    }
+
+    // https://retropie.org.uk/docs/Nintendo-Switch-Controllers/
 }

@@ -23,7 +23,7 @@ pub fn setup_os_beginnning(context: &mut Context) {
 
         match distro {
             LinuxDistro::Arch => arch::run_arch_beginning(context),
-            LinuxDistro::Ubuntu => ubuntu::run_ubuntu_beginning(context),
+            LinuxDistro::Ubuntu | LinuxDistro::Debian => ubuntu::run_ubuntu_beginning(context),
             _ => panic!("Not implemented"),
         };
     }
@@ -41,7 +41,7 @@ pub fn setup_os_end(context: &mut Context) {
 
         match distro {
             LinuxDistro::Arch => arch::run_arch_gui(context),
-            LinuxDistro::Ubuntu => ubuntu::run_ubuntu_gui(context),
+            LinuxDistro::Ubuntu | LinuxDistro::Debian => ubuntu::run_ubuntu_gui(context),
             _ => panic!("Not implemented"),
         };
     }

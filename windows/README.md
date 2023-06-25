@@ -22,9 +22,7 @@ terminal, with admin privileges, run: `powercfg -hibernate off`
     - Update the user's one with the path (e.g. `C:\Program Files\Sublime Text`)
     - Close the whole Windows Terminal program and open again
     - To confirm, run: `echo $Env:Path`
-- Edit the `hosts` file:
-    - Open an admin shell: Right click on terminal + Run as administrator
-    - Open the file: `notepad /c/Windows/System32/Drivers/etc/hosts`
+- Edit the `hosts` file: Run alias `HostsEdit`
 
 ## Useful keyboard shortcuts
 
@@ -99,6 +97,12 @@ Shortcuts:
 ## Misc
 
 - Take a screenshot: Snipping tool
+- Clipboard setup:
+    - Create a shortcut file, and in the shortcut file properties
+        - Add: `"C:\Program Files\Git\bin\sh.exe" --login -c "/c/Users/Ignacio/development/environment/project/target/release/clipboard_ssh host"`
+        - Update the icon (can find many in `shell32.dll`)
+        - Change to be opened minimized
+    - Move it to the taskbar
 
 ## References
 

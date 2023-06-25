@@ -95,7 +95,9 @@ fi
 "###,
     );
 
-    context.system.install_system_package("acpi", None);
+    if !context.system.is_debian() {
+        context.system.install_system_package("acpi", None);
+    }
 
     setup_lxde(context);
     setup_vscode(context);

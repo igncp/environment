@@ -1,4 +1,4 @@
-use std::{env, io::Write, process::Command};
+use std::{env, io::Write, path::Path, process::Command};
 
 use crate::base::system::os_commands::{parse_mac_package, parse_ubuntu_package};
 
@@ -16,6 +16,7 @@ pub enum OS {
 pub enum LinuxDistro {
     Arch,
     Ubuntu,
+    Debian,
     Unknown,
 }
 
@@ -52,7 +53,7 @@ impl System {
                         .arg(command_name)
                         .status()
                         .unwrap(),
-                    LinuxDistro::Ubuntu => Command::new("sudo")
+                    LinuxDistro::Ubuntu | LinuxDistro::Debian => Command::new("sudo")
                         .arg("bash")
                         .arg("-c")
                         .arg(format!(
@@ -61,7 +62,10 @@ impl System {
                         ))
                         .status()
                         .unwrap(),
-                    _ => panic!("Not implemented"),
+                    other => {
+                        let distro = format!("{:?}", other);
+                        panic!("Not implemented for {distro}");
+                    }
                 },
                 OS::Windows => Command::new("bash")
                     .arg("-c")
@@ -75,6 +79,16 @@ impl System {
                 println!("Failed to install {}", command_name);
                 std::process::exit(1);
             }
+        }
+    }
+
+    // It expects a bin file for each crate
+    pub fn install_cargo_crate(&self, crate_name: &str, bin_name: Option<&str>) {
+        let bin = bin_name.unwrap_or(crate_name);
+
+        if !Path::new(&format!("{}/.cargo/bin/{}", self.home, bin)).exists() {
+            println!("Installing crate: {}", crate_name);
+            System::run_bash_command(&format!("cargo install {crate_name}"));
         }
     }
 
@@ -113,6 +127,18 @@ impl System {
 
     pub fn is_linux(&self) -> bool {
         self.os == OS::Linux
+    }
+
+    pub fn is_debian(&self) -> bool {
+        self.os == OS::Linux && self.linux_distro == Some(LinuxDistro::Debian)
+    }
+
+    pub fn is_arch(&self) -> bool {
+        self.os == OS::Linux && self.linux_distro == Some(LinuxDistro::Arch)
+    }
+
+    pub fn is_ubuntu(&self) -> bool {
+        self.os == OS::Linux && self.linux_distro == Some(LinuxDistro::Ubuntu)
     }
 
     pub fn is_arm(&self) -> bool {
@@ -171,6 +197,8 @@ impl Default for System {
                     Some(LinuxDistro::Arch)
                 } else if distro.contains("ubuntu") {
                     Some(LinuxDistro::Ubuntu)
+                } else if distro.contains("debian") {
+                    Some(LinuxDistro::Debian)
                 } else {
                     Some(LinuxDistro::Unknown)
                 }

@@ -27,9 +27,13 @@ local nvim_plugins = {
 
 require("lazy").setup(nvim_plugins)
 
-require('marks').setup({
- default_mappings = true,
-})
+function try_marks()
+  require('marks').setup({
+    default_mappings = true,
+  })
+end
+
+pcall(try_marks)
 
 vim.api.nvim_set_keymap("i", "<C-_>", "<Plug>(copilot-next)", {silent = true, nowait = true})
 vim.api.nvim_set_keymap("i", "<C-\\>", "<Plug>(copilot-previous)", {silent = true, nowait = true})

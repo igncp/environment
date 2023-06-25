@@ -3,18 +3,18 @@ use std::path::Path;
 use crate::base::{config::Config, system::System, Context};
 
 use self::{
-    asdf::run_asdf, fzf::run_fzf, git::run_git, gpg::setup_gpg, hashi::setup_hashi, htop::run_htop,
-    netcat_clipboard::run_netcat_clipboard, pi_hole::setup_pi_hole, python::run_python,
+    asdf::run_asdf, diagrams::setup_diagrams, fzf::run_fzf, git::run_git, gpg::setup_gpg,
+    hashi::setup_hashi, htop::run_htop, pi_hole::setup_pi_hole, python::run_python,
     taskwarrior::setup_taskwarrior, tmux::setup_tmux,
 };
 
 mod asdf;
+mod diagrams;
 mod fzf;
 mod git;
 mod gpg;
 mod hashi;
 mod htop;
-mod netcat_clipboard;
 mod pi_hole;
 mod python;
 mod taskwarrior;
@@ -118,7 +118,7 @@ source_if_exists ~/.git-prompt
     if !Path::new(&context.system.get_home_path(".config/up/up.sh")).exists() {
         System::run_bash_command(
             r###"
-    curl --create-dirs -o ~/.config/up/up.sh https://raw.githubusercontent.com/shannonmoeller/up/master/up.sh
+curl --create-dirs -o ~/.config/up/up.sh https://raw.githubusercontent.com/shannonmoeller/up/master/up.sh
 "###,
         );
     }
@@ -420,6 +420,7 @@ echo 'LANG=en_US.UTF-8' > /tmp/locale.conf
 sudo mv /tmp/locale.conf /etc/locale.conf
 
 if [[ ! -z $(sudo ufw status | grep inactive) ]]; then
+    sudo ufw --force allow ssh
     sudo ufw --force enable
     sudo systemctl enable --now ufw
 fi
@@ -450,7 +451,6 @@ UFWInit() {
         );
     }
 
-    context.system.install_system_package("hyperfine", None);
     context
         .system
         .install_system_package("moreutils", Some("vidir"));
@@ -488,9 +488,9 @@ EOF2
     run_git(context);
     run_fzf(context);
     run_htop(context);
-    run_netcat_clipboard(context);
     run_python(context);
     setup_taskwarrior(context);
     setup_hashi(context);
     setup_pi_hole(context);
+    setup_diagrams(context);
 }

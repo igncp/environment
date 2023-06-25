@@ -26,6 +26,9 @@ Host foo
   # This and `LocalForward` are useful when running `ssh -fN host`
   RemoteForward 5556 localhost:5556
 
+  # The default one for sharing the clipboard from `unix/scripts/misc/clipboard_ssh`
+  # RemoteForward 2030 localhost:2030
+
   # Equivalent to: `ssh user@remote-server.com -L 8000:localhost:8000`
   LocalForward 8000 localhost:8000
 

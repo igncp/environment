@@ -1,3 +1,5 @@
+use std::path::Path;
+
 use chrono::prelude::*;
 
 async fn get_tmux_window_index() -> Option<String> {
@@ -131,6 +133,15 @@ fn get_background_jobs(jobs_args: String) -> Option<String> {
 }
 
 async fn get_tailscale_status() -> TaskResult {
+    let home_path = std::env::var("HOME").unwrap();
+    if Path::new(&format!(
+        "{home_path}/development/environment/project/.config/ps1-no-tailscale"
+    ))
+    .exists()
+    {
+        return TaskResult::Tailscale("".to_string());
+    }
+
     let tailscale_status = tokio::process::Command::new("bash")
         .arg("-c")
         .arg("tailscale status --peers=false | grep -vq 'stopped' && echo connected || echo ''")

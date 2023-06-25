@@ -3,6 +3,10 @@ use std::path::Path;
 use crate::base::{config::Config, system::System, Context};
 
 pub fn setup_docker(context: &mut Context) {
+    if Config::has_config_file(&context.system, ".config/docker-skip") {
+        return;
+    }
+
     context.system.install_system_package("docker", None);
 
     // TODO: option to set up https://github.com/chaifeng/ufw-docker

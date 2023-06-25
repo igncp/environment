@@ -69,7 +69,7 @@ call add(g:coc_global_extensions, 'coc-json')
     )
     .exists()
     {
-        System::run_bash_command("(cd ~/.local/share/nvim/lazy/coc.nvim && yarn)");
+        System::run_bash_command("(cd ~/.local/share/nvim/lazy/coc.nvim && yarn) || true");
     }
 
     install_nvim_package(context, "neoclide/coc-html", None);

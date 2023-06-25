@@ -1,11 +1,15 @@
 [package]
-name = "environment"
+name = "clipboard_ssh"
 version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+chrono = "0.4.26"
+clap = "4.3.8"
+env_logger = "0.10.0"
+log = "0.4.19"
 
 [profile.release]
 opt-level = 'z'

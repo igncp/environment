@@ -9,15 +9,26 @@ use crate::base::{
 use super::{add_special_vim_map, install_nvim_package, lua::setup_nvim_lua};
 
 pub fn run_nvim_base(context: &mut Context) {
-    context
-        .system
-        .install_system_package("neovim", Some("nvim"));
+    if !context.system.get_has_binary("nvim") {
+        // https://github.com/neovim/neovim/releases/
+        System::run_bash_command(
+            r###"
+cd ~ ; rm -rf nvim-repo ; git clone https://github.com/neovim/neovim.git nvim-repo --depth 1 --branch release-0.9 ; cd nvim-repo
+# https://github.com/neovim/neovim/wiki/Building-Neovim#build-prerequisites
+sudo apt-get install -y ninja-build gettext libtool libtool-bin autoconf automake cmake g++ pkg-config unzip curl doxygen
+make CMAKE_BUILD_TYPE=Release
+make CMAKE_INSTALL_PREFIX=$HOME/nvim install
+cd ~ ; rm -rf nvim-repo
+"###,
+        );
+    }
 
     if !Path::new(&context.system.get_home_path(".check-files/neovim")).exists() {
         System::run_bash_command(
             r###"
 pip3 install neovim
-mkdir -p ~/.config
+mkdir -p ~/.config ~/.vim
+touch ~/.vimrc
 rm -rf ~/.config/nvim
 rm -rf ~/.vim/init.vim
 ln -s ~/.vim ~/.config/nvim
@@ -28,9 +39,6 @@ touch ~/.check-files/neovim
     }
 
     setup_nvim_lua(context);
-
-    // Faster than sed
-    System::run_bash_command("git config --global core.editor nvim");
 
     install_nvim_package(context, "airblade/vim-gitgutter", None); // https://github.com/airblade/vim-gitgutter
     install_nvim_package(context, "andrewRadev/splitjoin.vim", None); // gS, gJ
@@ -58,6 +66,12 @@ touch ~/.check-files/neovim
     install_nvim_package(context, "tpope/vim-repeat", None); // https://github.com/tpope/vim-repeat
     install_nvim_package(context, "tpope/vim-surround", None); // https://github.com/tpope/vim-surround
     install_nvim_package(context, "vim-scripts/AnsiEsc.vim", None); // https://github.com/vim-scripts/AnsiEsc.vim
+
+    // Themes
+    install_nvim_package(context, "morhetz/gruvbox", None); // https://github.com/morhetz/gruvbox
+                                                            // let g:gruvbox_contrast_dark = 'hard'
+    install_nvim_package(context, "cocopon/iceberg.vim", None); // https://github.com/cocopon/iceberg.vim
+    install_nvim_package(context, "dracula/vim", None); // https://github.com/cocopon/iceberg.vim
 
     context.files.append(
         &context.system.get_home_path(".vimrc"),
@@ -248,8 +262,8 @@ __add_n_completion() {
   ALL_CMDS="n sh RsyncDelete node l o GitAdd GitRevertCode nn ll"; sed -i "s|nvim $ALL_CMDS |nvim |; s|nvim |nvim $ALL_CMDS |" "$1";
   DIR_CMDS='mkdir tree'; sed -i "s|pushd $DIR_CMDS |pushd |; s|pushd |pushd $DIR_CMDS |" "$1";
 }
-__add_n_completion "$HOME"/.local/share/nvim/lazy/fzf/shell/completion.bash
-__add_n_completion "$HOME"/.fzf/shell/completion.bash
+__add_n_completion "$HOME"/.local/share/nvim/lazy/fzf/shell/completion.bash || true
+__add_n_completion "$HOME"/.fzf/shell/completion.bash || true
 "###,
     );
 

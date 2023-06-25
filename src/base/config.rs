@@ -8,7 +8,6 @@ pub enum Theme {
 }
 
 pub struct Config {
-    pub netcat_clipboard: bool,
     pub theme: Theme,
     pub without_coc_eslint: bool,
 }
@@ -16,7 +15,6 @@ pub struct Config {
 impl Config {
     pub fn new(system: &System) -> Self {
         Self {
-            netcat_clipboard: Self::has_config_file(system, ".config/netcat-clipboard"),
             theme: Theme::Dark,
             without_coc_eslint: Self::has_config_file(system, ".config/without-coc-eslint"),
         }

@@ -1,7 +1,7 @@
 use std::path::Path;
 
 use crate::base::config::Config;
-use crate::base::system::{LinuxDistro, System};
+use crate::base::system::System;
 use crate::base::Context;
 use crate::common_provision::js::install_node_modules;
 
@@ -105,9 +105,7 @@ rm -rf ~/hhighlighter
         System::run_bash_command("sudo ln -s /usr/bin/batcat /usr/bin/bat");
     }
 
-    if context.system.is_mac()
-        || context.system.linux_distro.clone().unwrap() != LinuxDistro::Ubuntu
-    {
+    if context.system.is_mac() || (!context.system.is_ubuntu() && !context.system.is_debian()) {
         // JSON viewer: https://github.com/antonmedv/fx
         context.system.install_system_package("fx", None);
 
@@ -126,4 +124,18 @@ rm -rf ~/hhighlighter
     setup_jira(context);
     setup_googler(context);
     setup_gh(context);
+
+    context.system.install_cargo_crate("sd", None); // https://github.com/chmln/sd
+    context.system.install_cargo_crate("hyperfine", None); // https://github.com/chmln/sd
+    context.system.install_cargo_crate("ast-grep", Some("sg")); // https://github.com/ast-grep/ast-grep
+    context
+        .system
+        .install_cargo_crate("git-delta", Some("delta")); // https://github.com/dandavison/delta
+
+    // https://github.com/ms-jpq/sad
+    if context.system.is_arch() {
+        context.system.install_system_package("sad", None);
+    } else if context.system.is_ubuntu() && !context.system.get_has_binary("sad") {
+        println!("Download and install sad from https://github.com/ms-jpq/sad/releases/latest")
+    }
 }

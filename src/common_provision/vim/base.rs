@@ -203,8 +203,6 @@ nnoremap <leader>jrW :call setreg("g", "<c-r>=expand("%:p")<cr>")<cr>
 " highlight last inserted text
   nnoremap gV `[v`]
 
-so ~/.vim/colors.vim
-
 " Know syntax type under cursor
 nnoremap <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
   \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
@@ -356,22 +354,6 @@ nnoremap <leader>jk :put =strftime(\"%Y-%m-%d %H:%M:%S\")<cr>
         context.system.get_home_path(".base-vimrc"),
     )
     .unwrap();
-
-    context.files.append(
-        &vim_file_path,
-        if context.config.netcat_clipboard {
-            r###"
-" copy to clipboard
-  vnoremap <leader>i y:call writefile(getreg('0', 1, 1), "/tmp/netcat-clipboard")<cr>:silent !sh ~/.scripts/netcat-clipboard.sh<cr>
-"###
-        } else {
-r###"
-" copy to clipboard
-  vnoremap <leader>i "+y
-  nnoremap <leader>i viw"+y
-  nnoremap <leader>I viW"+y
-"### },
-    );
 
     // Open an existing tab using FZF
     context.files.append(

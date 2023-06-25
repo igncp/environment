@@ -58,7 +58,7 @@ ufw --force enable
         System::run_bash_command(
             r###"
 mkdir -p /home/igncp/development
-cp -r /root/environment /home/igncp/development/environment
+cp -r /root/development/environment /home/igncp/development/environment
 chown -R igncp:igncp /home/igncp/development
 "###,
         );
