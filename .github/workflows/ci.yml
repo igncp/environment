@@ -109,7 +109,7 @@ jobs:
         shell: bash
         run: |
           cd project/target/${{ matrix.target }}/release
-          tar czvf ../../../../environment-${{ matrix.target }}.tar.gz environment
+          mv environment ../../../../environment-${{ matrix.target }}
           cd -
 
       - name: Publish
