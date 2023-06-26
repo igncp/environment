@@ -19,6 +19,6 @@ if [ -z "$BRANCH" ]; then
   exit 0
 fi
 
-CMD="gl $(echo "$REMOTE" | cut -d' ' -f1) $BRANCH"
+CMD="git pull $(echo "$REMOTE" | cut -d' ' -f1) $BRANCH"
 
 echo "$CMD"

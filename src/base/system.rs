@@ -1,4 +1,4 @@
-use std::{env, io::Write, path::Path, process::Command};
+use std::{env, io::Write, process::Command};
 
 use crate::base::system::os_commands::{parse_mac_package, parse_ubuntu_package};
 
@@ -83,10 +83,11 @@ impl System {
     }
 
     // It expects a bin file for each crate
+    #[cfg(target_family = "unix")]
     pub fn install_cargo_crate(&self, crate_name: &str, bin_name: Option<&str>) {
         let bin = bin_name.unwrap_or(crate_name);
 
-        if !Path::new(&format!("{}/.cargo/bin/{}", self.home, bin)).exists() {
+        if !std::path::Path::new(&format!("{}/.cargo/bin/{}", self.home, bin)).exists() {
             println!("Installing crate: {}", crate_name);
             System::run_bash_command(&format!("cargo install {crate_name}"));
         }
@@ -133,10 +134,12 @@ impl System {
         self.os == OS::Linux && self.linux_distro == Some(LinuxDistro::Debian)
     }
 
+    #[cfg(target_family = "unix")]
     pub fn is_arch(&self) -> bool {
         self.os == OS::Linux && self.linux_distro == Some(LinuxDistro::Arch)
     }
 
+    #[cfg(target_family = "unix")]
     pub fn is_ubuntu(&self) -> bool {
         self.os == OS::Linux && self.linux_distro == Some(LinuxDistro::Ubuntu)
     }

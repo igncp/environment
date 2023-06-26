@@ -13,5 +13,5 @@ BRANCH=$(git branch -a --color=always | grep -v '/HEAD\s' | sort |
   --preview 'git log --oneline --date=short --pretty="format:%C(auto)%cd %h%d %s" $(sed s/^..// <<< {} | cut -d" " -f1) |
   head -'$LINES | sed 's/^..//' | cut -d' ' -f1 | sed 's#^remotes/##; s#'"$REMOTE"'/##')
 
-CMD="gco $BRANCH"
+CMD="git checkout $BRANCH"
 echo "$CMD"

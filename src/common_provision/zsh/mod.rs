@@ -2,6 +2,10 @@ use std::path::Path;
 
 use crate::base::{system::System, Context};
 
+use self::unalias::setup_unalias;
+
+mod unalias;
+
 pub fn install_omzsh_plugin(context: &mut Context, repo: &str) {
     let name = repo.split('/').last().unwrap();
     let dir = context
@@ -201,4 +205,6 @@ curl -o ~/.zsh/_git https://raw.githubusercontent.com/git/git/master/contrib/com
     }
 
     context.files.appendln(&zsh_file, "fpath=(~/.zsh $fpath)");
+
+    setup_unalias(context);
 }
