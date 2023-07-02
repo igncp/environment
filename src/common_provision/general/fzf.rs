@@ -32,7 +32,6 @@ GitAddAll
 GitDiff HEAD -- ':!*package-lock.json' ':!*yarn.lock' | less -r
 git fetch
 cp .git/COMMIT_EDITMSG /tmp/COMMIT_EDITMSG
-(alias ; typeset -f) | NFZF
 git commit -m "$(head .git/COMMIT_EDITMSG  -n 1)"
 "###,
     );

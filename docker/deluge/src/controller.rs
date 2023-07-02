@@ -19,7 +19,7 @@ fn run_bash_command(command: &str) {
 pub struct Controller;
 
 impl Controller {
-    pub async fn display_info(is_watch: bool) {
+    pub async fn display_info(is_watch: bool, is_id: bool, is_download_rate: bool) {
         let mut client = DelugeHttpClient::new();
 
         loop {
@@ -28,11 +28,41 @@ impl Controller {
                 println!("No torrents");
             }
 
+            let download_rate_str =
+                format!("{:.1} MB/s", torrent_list.stats.get_download_rate_mb());
+
+            let total_torrents = torrent_list.torrents.len();
+
             for (torrent_id, torrent) in torrent_list.torrents.iter() {
+                let formatted_eta = if torrent.eta == 0 {
+                    if torrent.progress == 100.0 {
+                        "Done".to_string()
+                    } else {
+                        "∞".to_string()
+                    }
+                } else {
+                    let eta = chrono::Duration::seconds(torrent.eta as i64);
+                    let eta = chrono_humanize::HumanTime::from(eta);
+                    eta.to_string()
+                };
+                let id_str = if is_id {
+                    format!("[{}] ", torrent_id)
+                } else {
+                    "".to_string()
+                };
+                let download_rate_str = if is_download_rate && total_torrents == 1 {
+                    format!(": {}", download_rate_str)
+                } else {
+                    "".to_string()
+                };
                 println!(
-                    "- [{}]: '{}': {:.1}%",
-                    torrent_id, torrent.name, torrent.progress
+                    "- {}'{}': {:.1}% - {}{}",
+                    id_str, torrent.name, torrent.progress, formatted_eta, download_rate_str
                 );
+            }
+
+            if is_download_rate && total_torrents > 1 {
+                println!("Download rate: {}", download_rate_str);
             }
 
             if !is_watch || torrent_list.torrents.len() > 1 {

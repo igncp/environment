@@ -75,6 +75,12 @@ alias HostsEdit='sudo vim /c/Windows/System32/Drivers/etc/hosts'
 
 GitAdd() { git add -A $@; git status -u; }
 GitCommit() { eval "git commit -m '$@'"; }
+
+if [ -f ~/.fzf.key-bindings.bash ]; then
+    source ~/.fzf.key-bindings.bash
+else
+    echo "File ~/.fzf.key-bindings.bash missing (message from ~/.bash_profile)"
+fi
 "###,
     );
 

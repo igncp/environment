@@ -33,13 +33,21 @@ struct DelugeRequest<Params> {
 
 #[derive(Debug, Deserialize, Clone)]
 #[allow(dead_code)]
-struct Stats {
+pub struct Stats {
+    download_rate: f64,
     max_num_connections: u32,
+}
+
+impl Stats {
+    pub fn get_download_rate_mb(&self) -> f64 {
+        (self.download_rate / 1024.0) / 1024.0
+    }
 }
 
 #[derive(Debug, Deserialize, Clone)]
 #[allow(dead_code)]
 pub struct Torrent {
+    pub eta: i32,
     pub name: String,
     pub progress: f32,
 }
@@ -48,7 +56,7 @@ pub struct Torrent {
 #[allow(dead_code)]
 pub struct UpdateUI {
     connected: bool,
-    stats: Stats,
+    pub stats: Stats,
     pub torrents: HashMap<String, Torrent>,
 }
 
@@ -233,7 +241,7 @@ impl DelugeHttpClient {
         ];
 
         let response = self
-            .common_rpc_request::<Option<String>, _>("core.remove_torrent", params)
+            .common_rpc_request::<Option<bool>, _>("core.remove_torrent", params)
             .await;
 
         response.error.is_none()

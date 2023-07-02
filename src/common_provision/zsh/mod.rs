@@ -172,7 +172,7 @@ bindkey '^X' _zsh_cli_fg
 alias HistoryDisable='unset HISTFILE'
 
 # Expand aliases on tab
-zstyle ':completion:*' completer _expand_alias _complete _ignored
+# zstyle ':completion:*' completer _expand_alias _complete _ignored
 
 if [ -f ~/.check-files/zsh-history ]; then
   HISTFILE=$(cat ~/.check-files/zsh-history)

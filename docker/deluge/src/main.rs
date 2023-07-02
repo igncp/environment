@@ -19,6 +19,22 @@ async fn main() {
                         .help("Watches the torrents and updates the info")
                         .required(false)
                         .action(clap::ArgAction::SetTrue),
+                )
+                .arg(
+                    Arg::new("id")
+                        .short('i')
+                        .long("id")
+                        .help("Displays the torrent id")
+                        .required(false)
+                        .action(clap::ArgAction::SetTrue),
+                )
+                .arg(
+                    Arg::new("download_rate")
+                        .short('d')
+                        .long("download-rate")
+                        .help("Displays the download rate for all torrents")
+                        .required(false)
+                        .action(clap::ArgAction::SetTrue),
                 ),
         )
         .subcommand(Command::new("stop").about("Stops docker and/or the VPN"))
@@ -65,8 +81,10 @@ async fn main() {
 
     if let Some(matches) = matches.subcommand_matches("info") {
         let is_watch = matches.get_flag("watch");
+        let is_id = matches.get_flag("id");
+        let is_download_rate = matches.get_flag("download_rate");
 
-        Controller::display_info(is_watch).await;
+        Controller::display_info(is_watch, is_id, is_download_rate).await;
     } else if let Some(matches) = matches.subcommand_matches("rm") {
         let torrent_id = matches.get_one::<String>("torrent_id");
         let is_finished = matches.get_flag("finished");

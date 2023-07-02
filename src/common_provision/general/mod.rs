@@ -206,58 +206,6 @@ alias Xargs='xargs -I{}'
 alias CrontabUser='crontab -e'
 alias CrontabRoot='sudo EDITOR=vim crontab -e'
 
-GitAdd() { git add -A $@; git status -u; }
-GitCloneRepo() {
-  SOURCE=$1; TARGET=$2;
-  rm -rf "$TARGET"; mkdir -p "$TARGET";
-  cp -r "$SOURCE"/.git "$TARGET"
-  cd "$TARGET" && git reset --hard
-  echo "Moved to target: $TARGET"
-}
-GitFilesAddedDiff() {
-  GitAddAll 2>&1 > /dev/null;
-  R_PATH="$(git rev-parse --show-toplevel)";
-  git diff --name-only --diff-filter=A "$@" | sed 's|^|'"$R_PATH"'/|';
-}
-GitDiff() { git diff --color --relative $@; }
-GitsShow() { git show --color $@; }
-GitOpenStatusFiles() { $EDITOR -p $(git status --porcelain $1 | grep -vE "^ D" | sed s/^...//); }
-GitPrintRemoteUrl() { git config --get "remote.${1:-origin}.url"; }
-GitResetLastCommit() { LAST_COMMIT_MESSAGE=$(git log -1 --pretty=%B); \
-  git reset --soft HEAD^; git add -A .; git commit -m "$LAST_COMMIT_MESSAGE"; }
-GitRevertCode() { git reset "$1"; rm -rf "$1" ; git checkout -- "$1"; git status; }
-GitFilesByAuthor() {
-  DEFAULT_AUTHOR="$(git config user.name)"; AUTHOR="${1:-$DEFAULT_AUTHOR}"
-  git log \
-    --pretty="%H" \
-    --author="$AUTHOR" \
-  | while read commit_hash; do \
-      git show --oneline --name-only $commit_hash | tail -n+2; \
-    done \
-  | sort | uniq | grep .
-}
-GitFilesByAuthorLatest() {
-  git ls-files -z "$@" | \
-    xargs --null -I % \
-      sh -c "printf %' '; git annotate -p % | sed -nr '/^author /{s/^author (.*)/\1/;p}' | sort | uniq | awk '{printf (\$0 \" \")}END{print \"\"}'"
-}
-GitFilesByAuthorLatestGrep() {
-  GitFilesByAuthorLatest "${@:2}" | grep -i "$1" | grep -o '^[^ ]* '
-}
-
-alias GitAddAll='GitAdd .'
-alias GitBranchOrder='git branch -r --sort=creatordate --format "%(creatordate:relative);%(committername);%(refname)" | sed "s|refs/remotes/origin/||" | grep -v ";HEAD$" | column -s ";" -t | tac | less'
-GitCommit() { eval "git commit -m '$@'"; }
-alias GitConfig='"$EDITOR" .git/config'
-alias GitEditorCommit='git commit -v'
-alias GitListConflictFiles='git diff --name-only --relative --diff-filter=U'
-alias GitListFilesChangedHistory='git log --pretty=format: --name-only | sort | uniq -c | sort -rg' # can add `--author Foo`, --since, or remove files
-alias GitRebaseResetAuthorContinue='git commit --amend --reset-author --no-edit; git rebase --continue'
-alias GitStashApply='git stash apply' # can also use name here
-alias GitStashList='git stash list'
-alias GitStashName='git stash push -m'
-alias GitSubmodulesUpdate='git submodule update --init --recursive' # clones existing submodules
-
 alias Headers='curl -I' # e.g. Headers google.com
 alias NmapLocal='sudo nmap -sn 192.168.1.0/24 > /tmp/nmap-result && sed -i "s|Nmap|\nNmap|" /tmp/nmap-result && less /tmp/nmap-result'
 alias Ports='sudo netstat -tulanp'

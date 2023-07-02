@@ -8,13 +8,17 @@ use crate::common_provision::js::install_node_modules;
 use self::aws::setup_aws;
 use self::github::setup_gh;
 use self::googler::setup_googler;
+use self::hasura::setup_hasura;
 use self::jira::setup_jira;
+use self::postgres::setup_postgres;
 use self::scc::setup_scc;
 
 mod aws;
 mod github;
 mod googler;
+mod hasura;
 mod jira;
+mod postgres;
 mod scc;
 
 pub fn run_cli_tools(context: &mut Context) {
@@ -111,7 +115,7 @@ rm -rf ~/hhighlighter
 
         // https://github.com/dalance/procs
         context.system.install_system_package("procs", None);
-        System::run_bash_command("procs --gen-completion-out zsh >> ~/.scripts/procs_completion");
+        // System::run_bash_command("procs --gen-completion-out zsh >> ~/.scripts/procs_completion");
 
         context.files.appendln(
             &context.system.get_home_path(".zshrc"),
@@ -124,9 +128,19 @@ rm -rf ~/hhighlighter
     setup_jira(context);
     setup_googler(context);
     setup_gh(context);
+    setup_hasura(context);
+    setup_postgres(context);
+
+    // https://github.com/kislyuk/yq
+    if !context.system.get_has_binary("yq") {
+        System::run_bash_command("pip install yq");
+    }
+
+    // To hide output: `hurl --no-output /tmp/test.txt`
+    context.system.install_cargo_crate("hurl", None); // https://github.com/Orange-OpenSource/hurl
 
     context.system.install_cargo_crate("sd", None); // https://github.com/chmln/sd
-    context.system.install_cargo_crate("hyperfine", None); // https://github.com/chmln/sd
+    context.system.install_cargo_crate("hyperfine", None); // https://github.com/sharkdp/hyperfine
     context.system.install_cargo_crate("ast-grep", Some("sg")); // https://github.com/ast-grep/ast-grep
     context
         .system
