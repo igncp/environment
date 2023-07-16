@@ -1,6 +1,8 @@
 use std::{env, io::Write, process::Command};
 
-use crate::base::system::os_commands::{parse_mac_package, parse_ubuntu_package};
+use crate::base::system::os_commands::{
+    parse_mac_package, parse_pacman_package, parse_ubuntu_package,
+};
 
 mod os_commands;
 
@@ -15,6 +17,7 @@ pub enum OS {
 #[derive(Debug, Clone, PartialEq)]
 pub enum LinuxDistro {
     Arch,
+    NixOS,
     Ubuntu,
     Debian,
     Unknown,
@@ -50,7 +53,7 @@ impl System {
                         .arg("pacman")
                         .arg("-S")
                         .arg("--noconfirm")
-                        .arg(command_name)
+                        .arg(parse_pacman_package(command_name))
                         .status()
                         .unwrap(),
                     LinuxDistro::Ubuntu | LinuxDistro::Debian => Command::new("sudo")
@@ -60,6 +63,10 @@ impl System {
                             "apt-get install -y {}",
                             parse_ubuntu_package(command_name)
                         ))
+                        .status()
+                        .unwrap(),
+                    LinuxDistro::NixOS => Command::new("echo")
+                        .arg(format!("echo Command: {command_name}"))
                         .status()
                         .unwrap(),
                     other => {
@@ -74,6 +81,27 @@ impl System {
                     .unwrap(),
                 _ => panic!("Not implemented"),
             };
+
+            if !status.success() {
+                println!("Failed to install {}", command_name);
+                std::process::exit(1);
+            }
+        }
+    }
+
+    #[cfg(target_family = "unix")]
+    pub fn install_with_nix(&self, command_name: &str, binary: Option<&str>) {
+        let used_binary = match binary {
+            Some(b) => b,
+            None => command_name,
+        };
+
+        if self.find_it(used_binary).is_none() {
+            let status = Command::new("nix-env")
+                .arg("-iA")
+                .arg(format!("nixpkgs.{}", command_name))
+                .status()
+                .unwrap();
 
             if !status.success() {
                 println!("Failed to install {}", command_name);
@@ -132,6 +160,10 @@ impl System {
 
     pub fn is_debian(&self) -> bool {
         self.os == OS::Linux && self.linux_distro == Some(LinuxDistro::Debian)
+    }
+
+    pub fn is_nixos(&self) -> bool {
+        self.os == OS::Linux && self.linux_distro == Some(LinuxDistro::NixOS)
     }
 
     #[cfg(target_family = "unix")]
@@ -200,6 +232,8 @@ impl Default for System {
                     Some(LinuxDistro::Arch)
                 } else if distro.contains("ubuntu") {
                     Some(LinuxDistro::Ubuntu)
+                } else if distro.contains("nixos") {
+                    Some(LinuxDistro::NixOS)
                 } else if distro.contains("debian") {
                     Some(LinuxDistro::Debian)
                 } else {

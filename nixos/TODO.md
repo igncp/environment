@@ -1,0 +1,1 @@
+- Resolve the issue with certs and curl (and remove `-k`)

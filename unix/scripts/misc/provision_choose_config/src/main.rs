@@ -1,11 +1,14 @@
+use clap::Command;
 use crossterm::{
     event::{self, DisableMouseCapture, EnableMouseCapture, Event, KeyCode},
     execute,
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
+use std::io::Write;
 use std::{
     collections::{HashMap, HashSet},
     error::Error,
+    fs::File,
     io,
     time::{Duration, Instant},
 };
@@ -144,11 +147,11 @@ fn get_default_values() -> HashMap<String, String> {
 
 // This has been extended from: https://github.com/fdehau/tui-rs/blob/master/Cargo.toml
 fn main() -> Result<(), Box<dyn Error>> {
-    enable_raw_mode()?;
-    let mut stdout = io::stdout();
-    execute!(stdout, EnterAlternateScreen, EnableMouseCapture)?;
-    let backend = CrosstermBackend::new(stdout);
-    let mut terminal = Terminal::new(backend)?;
+    let matches = Command::new("provision_choose_config")
+        .version("1.0.0")
+        .about("Handle provision configuration")
+        .subcommand(Command::new("fzf").about("Instead of the ncurses gui, it pipes to fzf and sh"))
+        .get_matches();
 
     let home_dir = std::env::var("HOME").expect("No home dir found");
 
@@ -182,6 +185,45 @@ fn main() -> Result<(), Box<dyn Error>> {
                 .insert(x.to_string(), existing_files_content[x].clone());
         }
     });
+
+    if let Some(_) = matches.subcommand_matches("fzf") {
+        let mut lines: Vec<String> = vec![];
+
+        for item in app.items.items.iter() {
+            let is_enabled = app.enabled.contains(item);
+
+            if is_enabled {
+                lines.push(format!(
+                    "rm ~/development/environment/project/.config/{item}"
+                ));
+            } else {
+                lines.push(format!(
+                    "touch ~/development/environment/project/.config/{item}"
+                ));
+            }
+        }
+
+        let file_path = "/tmp/provision_choose_config";
+        let mut file = File::create(file_path).expect("Unable to create file");
+        file.write_all(lines.join("\n").as_bytes())
+            .expect("Unable to write data");
+
+        std::process::Command::new("bash")
+            .arg("-c")
+            .arg(format!(
+                "cat {file_path} | fzf | sh && cd ~/development/environment && cargo run --release"
+            ))
+            .status()
+            .expect("Failed to execute command");
+
+        return Ok(());
+    }
+
+    enable_raw_mode()?;
+    let mut stdout = io::stdout();
+    execute!(stdout, EnterAlternateScreen, EnableMouseCapture)?;
+    let backend = CrosstermBackend::new(stdout);
+    let mut terminal = Terminal::new(backend)?;
 
     let res = run_app(&mut terminal, app, tick_rate);
 

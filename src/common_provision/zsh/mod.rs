@@ -33,6 +33,7 @@ pub fn run_zsh(context: &mut Context) {
         System::run_bash_command(
             r###"
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh) --unattended --keep-zshrc"
+mkdir -p ~/.cache/zsh
 "###,
         );
     }
@@ -48,6 +49,7 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
         r###"
 # https://upload.wikimedia.org/wikipedia/commons/1/15/Xterm_256color_chart.svg
 export ZSH="$HOME/.oh-my-zsh"
+export ZSH_COMPDUMP=$HOME/.cache/zsh/.zcompdump-$HOST
 CASE_SENSITIVE="true"
 DISABLE_UNTRACKED_FILES_DIRTY="true"
 plugins=(
@@ -145,7 +147,7 @@ precmd () {
   jobscount=${(M)#${jobstates%%:*}:#running}r/${(M)#${jobstates%%:*}:#suspended}s
   if [[ $jobscount == s0 ]]; then jobscount=; fi
 }
-PS1='$(~/.scripts/cargo_target/release/ps1 $jobscount)'
+PS1='$(~/.scripts/cargo_target/release/ps1 zsh $jobscount)'
 NEXT_TASK='$(__get_next_task)'
 RPROMPT="[$NEXT_TASK]"
 
@@ -184,6 +186,11 @@ ZSH_HIGHLIGHT_STYLES[dollar-double-quoted-argument]='fg=green,bold'
 
 alias ZshBrowseAllAliases='zsh -ixc : 2>&1 | l'
 "###,
+    );
+
+    context.home_appendln(
+        ".shellrc",
+        r#"alias ShellChangeToZsh='sudo chsh -s /bin/zsh igncp; exit'"#,
     );
 
     if context.system.is_linux() {

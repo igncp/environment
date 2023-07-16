@@ -57,7 +57,7 @@ pub fn run_git(context: &mut Context) {
 
     System::run_bash_command("git config --global pull.rebase false");
 
-    if !Path::new("/usr/local/bin/git-extras").exists() {
+    if !Path::new("/usr/local/bin/git-extras").exists() && !context.system.is_nixos() {
         System::run_bash_command(
             r###"
 rm -rf ~/.git-extras

@@ -3,7 +3,9 @@
 # Installation scripts for UEFI Boot as host
 # Follow VM installation, adding here only the different parts
 
-# Windows: Use UUI to setup a Live USB: https://www.pendrivelinux.com/universal-usb-installer-easy-as-1-2-3/
+# Windows:
+  # Use Rufus to setup a Live USB: https://rufus.ie/
+  # Choose 500MB of persistent partition size
 # Linux: Use `bsdtar`: https://wiki.archlinux.org/index.php/USB_flash_installation_media
     # This allows to include the wifi script in the same usb
     # Use a FAT partition of 1.5GB
@@ -12,6 +14,7 @@
         # sudo sh -c 'umount /mnt ; fatlabel /dev/sdXn ARCH_YYYYMM' # The unmount can take a while
 
 # Can connect to WIFI after partitioning disks so you can save the password in file in disk
+  # Of course, if using ethernet can just SSH directly without setup
 # Copy the script in the live USB (encrypt the file with gpg)
     # Check the device with: `iwctl device list`
     # iwctl --passphrase=PASS station DEVICE connect SSID ; sleep 5 ; ping archlinux.org
@@ -21,21 +24,22 @@
 # Check the machine BIOS key
 # Create a new partition of type EFI System (500M), either in the computer or
 # in a separate USB flash drive.
+#
 # If there are existing partitions, can just clear them
     # dd if=/dev/zero of=/dev/mapper/cryptroot bs=4096 status=progress
 
-# disable annoying bell
+# Disable the annoying bell
 setterm -blength 0
 
-# increase font size
+# Increase font size
 setfont /usr/share/kbd/consolefonts/ter-132n.psf.gz
 
-# troubleshoot network
+# Troubleshooting network
 # First, try to set down the network:
   ip link set $(cat /proc/net/wireless | perl -ne '/(\w+):/ && print $1') down
 rfkill list # if wifi is softblocked, try pressing the airplane key
 
-# connect to internet
+# Connect to the internet
 # dhcpcd # needed in some cases
 iwctl # https://wiki.archlinux.org/index.php/Iwd#iwctl
   # device list
@@ -51,10 +55,13 @@ mkfs.fat -F32 /dev/sda1 # Boot partition
 mkdir /mnt/boot
 mount /dev/sda1 /mnt/boot
 
-# inside arch-chroot session
+# Inside arch-chroot session
 pacman -S --noconfirm grub efibootmgr dosfstools os-prober mtools
 pacman -S --noconfirm netctl dialog wpa_supplicant dhcpcd # for wifi-menu
-# don't enable dhcpcd.service as it doesn't work well with netctl
+# Don't enable dhcpcd.service as it doesn't work well with netctl
+
+# If can connect via ethernet but the DNS doesn't work, enable:
+# sudo systemctl enable --now systemd-resolved.service
 
 # The `--removable` flag is important when mounting `/boot` in a separate USB
 # flash drive. If that is the case, `/dev/DEVICE` should still be the hard
@@ -62,6 +69,7 @@ pacman -S --noconfirm netctl dialog wpa_supplicant dhcpcd # for wifi-menu
 grub-install /dev/DEVICE --removable --target=x86_64-efi --bootloader-id=grub_uefi \
   --recheck --efi-directory=/boot # replace DEVICE, e.g. /dev/sda
 grub-mkconfig -o /boot/grub/grub.cfg
+
 # **Important** - If mounting `/boot` in a USB drive, may have to update
 # /boot/grub/grub.cfg , all `hd2` instances to `hd1`
 

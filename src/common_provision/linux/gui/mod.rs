@@ -2,8 +2,9 @@ use std::path::Path;
 
 use crate::base::{config::Config, system::System, Context};
 
-use self::{lxde::setup_lxde, vscode::setup_vscode};
+use self::{i3::setup_i3, lxde::setup_lxde, vscode::setup_vscode};
 
+mod i3;
 mod lxde;
 mod vscode;
 
@@ -32,10 +33,6 @@ alias XClipCopy='xclip -selection clipboard' # usage: echo foo | XClipCopy
 alias XClipPaste='xclip -selection clipboard -o'
 "###,
     );
-
-    context
-        .system
-        .install_system_package("tigervnc", Some("vncserver")); // VNC client and server
 
     // This setup requires that the user is already logged in in the main console
     // Use SSH tunneling from the client and don't open the port:
@@ -68,8 +65,8 @@ alias VNCServerPassword='vncpasswd'
 
         // Don't enable, just manually start or stop
         // Until reboot, have to: `systemctl --user daemon-reload`
-        context.files.append(
-            &context.system.get_home_path(".config/systemd/user/x11vnc.service"),
+        context.home_append(
+            ".config/systemd/user/x11vnc.service",
             r###"
 [Unit]
 Description=VNC Server for X11
@@ -100,5 +97,15 @@ fi
     }
 
     setup_lxde(context);
+    setup_i3(context);
     setup_vscode(context);
+
+    // Bluetooth
+    // For dual boot:
+    // - Copy the key in /var/lib/bluetooth/MAC/DEVICE_MAC/info
+    // - If the other OS is Windows, use PSExec64 to extract it into a .reg
+    //   file, then remove the commas and convert to upper case
+    // https://wiki.archlinux.org/title/bluetooth#For_Windows
+    // - Power off the device after pairing with the 1st OS, copy it in the 2nd,
+    //   reboot (without reboot, it didn't work), and only then power on device
 }

@@ -5,7 +5,7 @@ pub fn run_vim_base(context: &mut Context) {
     let vim_file_path = context.system.get_home_path(".vimrc");
     context.files.append(
         &vim_file_path,
-        r###"
+        r#"
 set background=light
 filetype plugin indent on
 syntax on
@@ -173,6 +173,11 @@ au BufNewFile,BufRead *.ejs set filetype=html
 " always open file in new tab
   nnoremap gf <c-w>gf
 
+nnoremap dd <Plug>(coc-definition)
+nnoremap ds <Plug>(coc-references)
+nnoremap df <c-w>gf
+nnoremap D <Plug>(coc-definition)
+
 nnoremap <leader>kv :%s/\t/  /g<cr>
 inoremap <c-e> <esc>A
 inoremap <c-a> <esc>I
@@ -338,7 +343,7 @@ endfunction
 map <c-d> :call CloseTab()<CR>
 
 nnoremap <leader>jk :put =strftime(\"%Y-%m-%d %H:%M:%S\")<cr>
-"###,
+"#,
     );
 
     if context.config.theme == Theme::Dark {
@@ -358,7 +363,7 @@ nnoremap <leader>jk :put =strftime(\"%Y-%m-%d %H:%M:%S\")<cr>
     // Open an existing tab using FZF
     context.files.append(
         &vim_file_path,
-        r###"
+        r#"
 " http://ericnode.info/post/fzf_jump_to_tab_in_vim/
 function TabName(n)
   let buflist = tabpagebuflist(a:n)
@@ -378,7 +383,7 @@ nnoremap <silent> e :call fzf#run({
 \   'sink':    function('<sid>JumpToTab'),
 \   'down':    tabpagenr('$') + 2
 \ })<CR>
-"###,
+"#,
     );
 
     let multi_os_vim_str = get_vim_multi_os_provision();

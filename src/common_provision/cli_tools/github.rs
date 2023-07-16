@@ -12,13 +12,14 @@ pub fn setup_gh(context: &mut Context) {
                 context.system.install_system_package("gh", None);
             } else {
                 if context.system.is_arm() {
-                    System::run_bash_command("wget https://github.com/cli/cli/releases/download/v2.21.1/gh_2.21.1_linux_arm64.tar.gz");
+                    System::run_bash_command("cd ~/gh_cli && wget https://github.com/cli/cli/releases/download/v2.21.1/gh_2.21.1_linux_arm64.tar.gz");
                 } else {
-                    System::run_bash_command("wget https://github.com/cli/cli/releases/download/v2.21.1/gh_2.21.1_linux_amd64.tar.gz");
+                    System::run_bash_command("cd ~/gh_cli && wget https://github.com/cli/cli/releases/download/v2.21.1/gh_2.21.1_linux_amd64.tar.gz");
                 }
 
                 System::run_bash_command(
                     r###"
+cd ~/gh_cli
 tar xvzf *.tar.gz
 rm -rf *.tar.gz
 sudo mv gh_*/bin/gh /usr/local/bin

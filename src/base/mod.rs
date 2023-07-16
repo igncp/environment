@@ -26,4 +26,15 @@ impl Context {
             self.write_file(file, false);
         }
     }
+
+    pub fn home_append(&mut self, path: &str, content: &str) {
+        self.files.append(&self.system.get_home_path(path), content);
+    }
+
+    // This is for windows until used
+    #[allow(dead_code)]
+    pub fn home_appendln(&mut self, path: &str, content: &str) {
+        self.files
+            .appendln(&self.system.get_home_path(path), content);
+    }
 }

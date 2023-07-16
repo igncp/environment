@@ -107,7 +107,8 @@ vnoremap <leader>jz y:!node -e "console.log(encodeURIComponent('<c-r>"'))" > /tm
     context.files.append(
         &context.system.get_home_path(".shellrc"),
         r###"
-alias ShellChangeToZsh='chsh -s /bin/zsh; exit'
+export PATH="$PATH:$HOME/.npm-packages/bin"
+NPMVersions() { npm view $1 versions --json; } # NPMVersions react
 "###,
     );
 
@@ -126,12 +127,15 @@ asdf global nodejs "$NODE_VERSION"
         );
     }
 
-    install_node_modules(context, ["http-server", "yarn", "zx"].to_vec());
+    install_node_modules(
+        context,
+        [("http-server", None), ("yarn", None), ("zx", None)].to_vec(),
+    );
 
     // https://github.com/sgentle/caniuse-cmd
-    install_node_modules(context, ["caniuse-cmd"].to_vec());
+    install_node_modules(context, [("caniuse-cmd", Some("caniuse"))].to_vec());
 
-    install_node_modules(context, ["markdown-toc"].to_vec());
+    install_node_modules(context, [("markdown-toc", None)].to_vec());
 
     add_special_vim_map(
         context,
@@ -270,9 +274,13 @@ i<\<c-c>\<right>%a>\<c-c>\<left>%\<left>
 
     let completion_path = &context.system.get_home_path(".npm-completion");
     if !Path::new(&completion_path).exists() {
-        System::run_bash_command(&format!(
-            ". $HOME/.asdf/asdf.sh ; npm completion > {completion_path}"
-        ))
+        if context.system.is_nixos() {
+            System::run_bash_command(&format!("npm completion > {completion_path}"));
+        } else {
+            System::run_bash_command(&format!(
+                ". $HOME/.asdf/asdf.sh ; npm completion > {completion_path}"
+            ));
+        }
     }
     let npm_completion = fs::read_to_string(completion_path).unwrap();
     context

@@ -55,6 +55,12 @@ pub fn run_common_provision(context: &mut Context) {
     run_cli_tools(context);
     setup_js_vue(context);
     setup_rust(context);
+    setup_go(context);
+
+    if context.system.is_nixos() {
+        return;
+    }
+
     setup_dotnet(context);
     setup_php(context);
     setup_ruby(context);
@@ -63,7 +69,6 @@ pub fn run_common_provision(context: &mut Context) {
     setup_brightscript(context);
     setup_haskell(context);
     setup_dart(context);
-    setup_go(context);
     setup_raspberry(context);
 
     if context.system.is_linux() {

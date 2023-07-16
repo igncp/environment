@@ -9,6 +9,8 @@ pub fn run_python(context: &mut Context) {
         System::run_bash_command(
             r###"
 brew install python@3.8
+
+cp /opt/homebrew/bin/pip3 /opt/homebrew/bin/pip
 "###,
         );
     }

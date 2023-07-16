@@ -155,7 +155,9 @@ touch ~/.check-files/tailscale
         );
     }
 
-    if !Path::new(&context.system.get_home_path(".check-files/oomd")).exists() {
+    if !Path::new(&context.system.get_home_path(".check-files/oomd")).exists()
+        && !context.system.is_nixos()
+    {
         System::run_bash_command(
             r###"
 if [ -n "$(systemctl list-units --full -all | grep systemd-oomd)" ]; then
@@ -189,7 +191,7 @@ touch ~/.check-files/netdata
     }
 
     // For arch
-    if !context.system.get_has_binary("crond") {
+    if !context.system.get_has_binary("crond") && !context.system.is_nixos() {
         // For ubuntu
         if !context.system.get_has_binary("cron") && !context.system.is_debian() {
             context

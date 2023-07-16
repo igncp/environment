@@ -56,12 +56,13 @@ asdf global golang 1.20.5
         )
     }
 
-    // Not installing `vim-go` as it created a few conflicts in key maps (e.g. `gd`), if necessary
-    // to have those mappings have to be disabled
     install_nvim_package(context, "josa42/coc-go", None);
+    install_nvim_package(context, "fatih/vim-go", None);
 
-    install_go_package(context, "github.com/kisielk/errcheck@latest", "errcheck");
-    install_go_package(context, "github.com/google/pprof@latest", "pprof"); // https://github.com/google/pprof
+    if !context.system.is_nixos() {
+        install_go_package(context, "github.com/kisielk/errcheck@latest", "errcheck");
+        install_go_package(context, "github.com/google/pprof@latest", "pprof"); // https://github.com/google/pprof
+    }
 
     context.files.appendln(
         &context.system.get_home_path(".vimrc"),
@@ -71,6 +72,9 @@ call add(g:coc_global_extensions, 'coc-go')
 " TODO: Alias for printing a log
 let GoPrintMapping="vnoremap <leader>kk yOprintln!(\"a {:?}\", a);<C-c>11hvpgvyf\"lllvp"
 autocmd filetype go :exe GoPrintMapping
+
+let g:go_def_mapping_enabled = 0
+let g:go_doc_keywordprg_enabled = 0
 "###,
     );
 
@@ -83,7 +87,4 @@ autocmd filetype go :exe GoPrintMapping
             "curl https://get.ignite.com/cli@{ignite_version}! | bash"
         ))
     }
-
-    // TODO: Install taskfile
-    // sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d
 }

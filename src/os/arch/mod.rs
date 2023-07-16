@@ -1,6 +1,10 @@
+pub use self::gui::run_arch_gui;
+pub use self::install::install_arch;
+use crate::base::{config::Config, system::System, Context};
 use std::path::Path;
 
-use crate::base::{config::Config, system::System, Context};
+mod gui;
+mod install;
 
 pub fn install_from_aur(context: &mut Context, binary: &str, repo: &str) {
     if !context.system.get_has_binary(binary) {
@@ -240,10 +244,4 @@ echo "" >> /etc/motd
     );
 
     System::run_bash_command("sudo chown root:root ~/.scripts/motd_update.sh");
-}
-
-pub fn run_arch_gui(context: &mut Context) {
-    context.system.install_system_package("pulseaudio", None);
-    context.system.install_system_package("pavucontrol", None); // For audio settings
-    context.system.install_system_package("gvim", None); // Adds support to clipboard to vim
 }

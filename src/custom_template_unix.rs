@@ -15,6 +15,10 @@ fn clone_dev_github_repo(context: &mut Context, repo: &str) {
 
 #[allow(dead_code)]
 pub fn run_custom(context: &mut Context) {
+    if context.system.is_nixos() {
+        return;
+    }
+
     context.files.append(
         &context.system.get_home_path(".shellrc"),
         r###"
@@ -79,7 +83,12 @@ autocmd! BufReadPost,BufNewFile * call SetupEnvironment()
 
     clone_dev_github_repo(context, "environment");
 
-    if Path::new(&context.system.get_home_path(".config/coc-settings.json")).exists() {
+    context.write_file(
+        &context.system.get_home_path(".vim/coc-settings.json"),
+        true,
+    );
+
+    if Path::new(&context.system.get_home_path(".vim/coc-settings.json")).exists() {
         System::run_bash_command(
             r#"jq -S "." ~/.vim/coc-settings.json | sponge ~/.vim/coc-settings.json"#,
         );

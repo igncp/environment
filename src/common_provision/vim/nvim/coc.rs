@@ -76,6 +76,9 @@ call add(g:coc_global_extensions, 'coc-json')
     install_nvim_package(context, "neoclide/coc-css", None);
     install_nvim_package(context, "neoclide/coc-tsserver", None);
 
+    // https://github.com/oxalica/nil
+    install_nvim_package(context, "nix-community/nixd", None);
+
     context.files.append(
         &context.system.get_home_path(".vimrc"),
         r###"
@@ -97,6 +100,10 @@ autocmd BufNewFile,BufRead *.tsx,*.jsx set filetype=typescriptreact
 {
   "suggest.noselect": true,
   "coc.preferences.jumpCommand": "tab drop",
+  "coc.preferences.formatOnSave": true,
+  "[markdown]": {
+    "coc.preferences.formatOnSave": false
+  },
   "diagnostic.enableHighlightLineNumber": false,
   "diagnostic.errorSign": "E",
   "diagnostic.infoSign": "I",
@@ -107,7 +114,12 @@ autocmd BufNewFile,BufRead *.tsx,*.jsx set filetype=typescriptreact
     "<C-k>": "command:CocPrev"
   },
   "snippets.userSnippetsDirectory": "$HOME/.vim-snippets",
-  "snippets.ultisnips.pythonPrompt": false
+  "languageserver": {
+    "nix": {
+      "command": "nixd",
+      "filetypes": ["nix"]
+    }},
+    "snippets.ultisnips.pythonPrompt": false
 }
 "###,
     );
@@ -164,20 +176,13 @@ highlight CocWarningSign ctermfg=white ctermbg=darkred
             &context.system.get_home_path(".vimrc"),
             "call add(g:coc_global_extensions, 'coc-prettier')",
         );
-
-        context.files.append_json(
-            &context.system.get_home_path(".vim/coc-settings.json"),
-            r###""coc.preferences.formatOnSaveFiletypes": ["typescriptreact", "typescript", "javascript"]"###
-        );
     }
 
     context.files.append_json(
         &context.system.get_home_path(".vim/coc-settings.json"),
         r###"
-"eslint.filetypes": ["javascript", "javascriptreact", "typescript", "typescriptreact", "vue"],
 "eslint.probe": ["javascript", "javascriptreact", "typescript", "typescriptreact", "vue"],
-"javascript.suggestionActions.enabled": false,
-"prettier.disableSuccessMessage": true
+"javascript.suggestionActions.enabled": false
 "###,
     );
 
@@ -206,27 +211,13 @@ highlight CocWarningSign ctermfg=white ctermbg=darkred
 
     if context.system.get_has_binary("rustc") {
         install_nvim_package(context, "neoclide/coc-rls", None);
-        context.files.append(
-            &context.system.get_home_path(".vimrc"),
-            r###"
-" TODO: Fix
-" call add(g:coc_global_extensions, 'coc-rls')
-"###,
-        );
-
-        context.files.append_json(
-            &context.system.get_home_path(".vim/coc-settings.json"),
-            r###"
-"rust.clippy_preference": "on"
-"###,
-        );
     }
 
     context.files.append_json(
         &context.system.get_home_path(".vim/coc-settings.json"),
         r###"
 "sumneko-lua.enableNvimLuaDev": true,
-"Lua.telemetry.enable": false
+"Lua.hint.enable": false
 "###,
     );
 }

@@ -4,8 +4,8 @@ use crate::base::{config::Config, system::System, Context};
 
 use self::{
     asdf::run_asdf, diagrams::setup_diagrams, fzf::run_fzf, git::run_git, gpg::setup_gpg,
-    hashi::setup_hashi, htop::run_htop, pi_hole::setup_pi_hole, python::run_python,
-    taskwarrior::setup_taskwarrior, tmux::setup_tmux,
+    hashi::setup_hashi, htop::run_htop, network::setup_network, nix::setup_nix,
+    pi_hole::setup_pi_hole, python::run_python, taskwarrior::setup_taskwarrior, tmux::setup_tmux,
 };
 
 mod asdf;
@@ -15,6 +15,8 @@ mod git;
 mod gpg;
 mod hashi;
 mod htop;
+mod network;
+mod nix;
 mod pi_hole;
 mod python;
 mod taskwarrior;
@@ -97,7 +99,7 @@ export PATH="$PATH:$HOME/.local/bin"
 if type pacman > /dev/null 2>&1 ; then
   sudo pacman -S --noconfirm bash-completion
 fi
-curl -o ~/.git-prompt https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh
+curl -k -o ~/.git-prompt https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh
 "###,
         );
     }
@@ -118,7 +120,7 @@ source_if_exists ~/.git-prompt
     if !Path::new(&context.system.get_home_path(".config/up/up.sh")).exists() {
         System::run_bash_command(
             r###"
-curl --create-dirs -o ~/.config/up/up.sh https://raw.githubusercontent.com/shannonmoeller/up/master/up.sh
+curl -k --create-dirs -o ~/.config/up/up.sh https://raw.githubusercontent.com/shannonmoeller/up/master/up.sh
 "###,
         );
     }
@@ -210,13 +212,19 @@ alias Headers='curl -I' # e.g. Headers google.com
 alias NmapLocal='sudo nmap -sn 192.168.1.0/24 > /tmp/nmap-result && sed -i "s|Nmap|\nNmap|" /tmp/nmap-result && less /tmp/nmap-result'
 alias Ports='sudo netstat -tulanp'
 alias NetstatConnections='netstat -nputw'
-alias RemoveAnsiColors="sed 's/\x1b\[[0-9;]*m//g'"
+alias AnsiColorsRemove="sed 's/\x1b\[[0-9;]*m//g'"
 
 WorktreeClone() { git clone --bare "$1" .bare; echo "gitdir: ./.bare" > .git; }
 
 alias n="$HOME/.scripts/cargo_target/release/n"
 
-alias ConfigProvisionList='~/.scripts/cargo_target/release/provision_choose_config && Provision'
+ConfigProvisionList() {
+    if [ -n "$1" ]; then
+        ~/.scripts/cargo_target/release/provision_choose_config "$1"
+        return
+    fi
+    ~/.scripts/cargo_target/release/provision_choose_config && Provision
+}
 
 CargoGenerateClean() {
     BIN_NAME=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[].targets[] | select( .kind | map(. == "bin") | any ) | .name')
@@ -239,7 +247,7 @@ CargoDevGenerate() {
 
     // https://github.com/TomWright/dasel
     // https://daseldocs.tomwright.me/
-    if !context.system.get_has_binary("dasel") {
+    if !context.system.get_has_binary("dasel") && !context.system.is_nixos() {
         if context.system.is_mac() {
             System::run_bash_command("brew install dasel");
         } else if context.system.is_linux() {
@@ -289,7 +297,7 @@ done
     if !Path::new(&context.system.get_home_path(".acd_func")).exists() {
         System::run_bash_command(
             r###"
-curl -o ~/.acd_func \
+curl -k -o ~/.acd_func \
     https://raw.githubusercontent.com/djoot/all-bash-history/master/acd_func.sh
 "###,
         );
@@ -334,7 +342,7 @@ export EDITOR=vim
 source ~/.shellrc
 source ~/.shell_sources
 
-PS1='$(~/.scripts/cargo_target/release/ps1 "$(jobs)")'
+PS1='$(~/.scripts/cargo_target/release/ps1 bash "$(jobs)")'
 "###,
     );
 
@@ -368,7 +376,7 @@ echo 'LANG=en_US.UTF-8' > /tmp/locale.conf
 sudo mv /tmp/locale.conf /etc/locale.conf
 
 if [[ ! -z $(sudo ufw status | grep inactive) ]]; then
-    sudo ufw --force allow ssh
+    sudo ufw allow ssh
     sudo ufw --force enable
     sudo systemctl enable --now ufw
 fi
@@ -431,6 +439,7 @@ EOF2
 "###,
     );
 
+    setup_nix(context);
     setup_gpg(context);
     run_asdf(context);
     run_git(context);
@@ -440,5 +449,6 @@ EOF2
     setup_taskwarrior(context);
     setup_hashi(context);
     setup_pi_hole(context);
+    setup_network(context);
     setup_diagrams(context);
 }

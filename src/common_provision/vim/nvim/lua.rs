@@ -141,6 +141,21 @@ for _,mode in ipairs({ 'x', 'o' }) do
     vim.api.nvim_set_keymap(mode, 'ii', ':<c-u>lua select_indent()<cr>', { noremap = true, silent = true })
     vim.api.nvim_set_keymap(mode, 'ai', ':<c-u>lua select_indent(true)<cr>', { noremap = true, silent = true })
 end
+
+local function file_exists(name)
+   local f=io.open(name,"r")
+   if f~=nil then io.close(f) return true else return false end
+end
+
+local theme_path = os.getenv("HOME") .. '/development/environment/project/.config/vim-theme'
+
+if file_exists(theme_path) then
+  local file = io.open(theme_path, "rb")
+  if not file then return nil end
+  local content = file:read "*a"
+  file:close()
+  vim.cmd("colorscheme " .. content)
+end
 "###,
     );
 }

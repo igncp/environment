@@ -84,12 +84,11 @@ hi rustDeriveTrait    cterm=NONE ctermfg=cyan  ctermbg=white
 "rust-analyzer.inlayHints.bindingModeHints.enable": false,
 "rust-analyzer.inlayHints.chainingHints.enable": false,
 "rust-analyzer.inlayHints.closingBraceHints.enable": false,
-"rust-analyzer.inlayHints.closureReturnTypeHints.enable": false,
-"rust-analyzer.inlayHints.lifetimeElisionHints.enable": false,
+"rust-analyzer.inlayHints.closureReturnTypeHints.enable": "never",
+"rust-analyzer.inlayHints.lifetimeElisionHints.enable": "never",
 "rust-analyzer.inlayHints.parameterHints.enable": false,
-"rust-analyzer.inlayHints.reborrowHints.enable": false,
-"rust-analyzer.inlayHints.typeHints.enable": false,
-"rust-analyzer.checkOnSave.command":"clippy"
+"rust-analyzer.inlayHints.reborrowHints.enable": "never",
+"rust-analyzer.inlayHints.typeHints.enable": false
 "###,
     );
 
@@ -108,5 +107,11 @@ if [ ! -f ~/.check-files/rust-cross-compile ] && type "apt-get" > /dev/null 2>&1
 fi
 "###,
         );
+    }
+
+    if !context.system.get_has_binary("wasm-pack") {
+        System::run_bash_command(
+            r#"curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh"#,
+        )
     }
 }

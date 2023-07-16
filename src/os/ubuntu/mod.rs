@@ -2,7 +2,7 @@ use std::path::Path;
 
 pub use self::gui::run_ubuntu_gui;
 pub use self::install::install_ubuntu;
-use crate::base::{config::Config, system::System, Context};
+use crate::base::{system::System, Context};
 
 mod gui;
 mod install;
@@ -62,21 +62,6 @@ sudo sed "s|#\$nrconf{restart}.*|\$nrconf{restart} = 'a';|" -i /etc/needrestart/
 sudo mv  /etc/sudoers.d/0pwfeedback.disabled
 "###,
         );
-    }
-
-    if Config::has_config_file(&context.system, ".config/network-analysis") {
-        if !context.system.get_has_binary("wireshark") {
-            System::run_bash_command(
-                r###"
-sudo add-apt-repository ppa:wireshark-dev/stable -y
-sudo apt-get update
-sudo apt-get install wireshark tshark -y
-sudo adduser $USER wireshark
-"###,
-            );
-        }
-
-        context.system.install_system_package("mitmproxy", None);
     }
 
     System::run_bash_command(

@@ -5,7 +5,7 @@ use crate::base::{
     Context,
 };
 
-use super::{disk_on_volume::setup_disk_on_volume, ubuntu};
+use super::{arch, disk_on_volume::setup_disk_on_volume, ubuntu};
 
 pub fn setup_os_install(context: &mut Context) {
     if context.system.is_windows() {
@@ -23,10 +23,18 @@ pub fn setup_os_install(context: &mut Context) {
     if !Path::new(&install_file).exists() {
         setup_disk_on_volume(context);
 
-        if context.system.os == OS::Linux
-            && context.system.linux_distro.clone().unwrap() == LinuxDistro::Ubuntu
-        {
-            ubuntu::install_ubuntu(context);
+        if context.system.os == OS::Linux {
+            let distro = context.system.linux_distro.clone().unwrap();
+
+            match distro {
+                LinuxDistro::Ubuntu | LinuxDistro::Debian => {
+                    ubuntu::install_ubuntu(context);
+                }
+                LinuxDistro::Arch => {
+                    arch::install_arch(context);
+                }
+                _ => {}
+            }
         }
 
         System::run_bash_command(&format!("mkdir -p ~/.check-files && touch {install_file}"));

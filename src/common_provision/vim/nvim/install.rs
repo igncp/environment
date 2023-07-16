@@ -50,18 +50,7 @@ pub fn update_vim_colors_theme(context: &mut Context) {
     }
 
     if Config::has_config_file(&context.system, ".config/vim-theme") {
-        let theme = std::fs::read_to_string(Config::get_config_file_path(
-            &context.system,
-            ".config/vim-theme",
-        ))
-        .unwrap();
-
-        if !theme.trim().is_empty() {
-            context.files.appendln(
-                &context.system.get_home_path(".vimrc"),
-                format!("colorscheme {theme}",).as_str(),
-            );
-        }
+        return;
     } else {
         context.files.appendln(
             &context.system.get_home_path(".vimrc"),

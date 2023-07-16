@@ -1,8 +1,6 @@
 use crate::base::Context;
 
 pub fn setup_unalias(context: &mut Context) {
-    let zsh_file = context.system.get_home_path(".zshrc");
-
     // These are set by: `~/.oh-my-zsh/plugins/git/git.plugin.zsh`
     let removed_aliases = vec![
         "g",
@@ -133,5 +131,5 @@ pub fn setup_unalias(context: &mut Context) {
         .collect::<Vec<String>>()
         .join("\n");
 
-    context.files.append(&zsh_file, &unalias_str);
+    context.home_append(".zshrc", &unalias_str);
 }

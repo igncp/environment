@@ -62,7 +62,7 @@ alias DODroplets='doctl compute droplet list'
     context.system.install_system_package("age", None); // https://github.com/FiloSottile/age
 
     if Config::has_config_file(&context.system, ".config/cli-vercel") {
-        install_node_modules(context, vec!["vercel"]);
+        install_node_modules(context, vec![("vercel", None)]);
     }
 
     // hhighlighter: `h` command
@@ -105,11 +105,14 @@ rm -rf ~/hhighlighter
 --style="numbers,changes,header"
 "###,
     );
-    if Path::new("/usr/bin/batcat").exists() && !Path::new("/usr/bin/bat").exists() {
+    if !context.system.is_nixos()
+        && Path::new("/usr/bin/batcat").exists()
+        && !Path::new("/usr/bin/bat").exists()
+    {
         System::run_bash_command("sudo ln -s /usr/bin/batcat /usr/bin/bat");
     }
 
-    if context.system.is_mac() || (!context.system.is_ubuntu() && !context.system.is_debian()) {
+    if context.system.is_mac() || context.system.is_arch() {
         // JSON viewer: https://github.com/antonmedv/fx
         context.system.install_system_package("fx", None);
 
@@ -136,8 +139,10 @@ rm -rf ~/hhighlighter
         System::run_bash_command("pip install yq");
     }
 
-    // To hide output: `hurl --no-output /tmp/test.txt`
-    context.system.install_cargo_crate("hurl", None); // https://github.com/Orange-OpenSource/hurl
+    if !context.system.is_mac() && !context.system.is_nixos() {
+        // To hide output: `hurl --no-output /tmp/test.txt`
+        context.system.install_cargo_crate("hurl", None); // https://github.com/Orange-OpenSource/hurl
+    }
 
     context.system.install_cargo_crate("sd", None); // https://github.com/chmln/sd
     context.system.install_cargo_crate("hyperfine", None); // https://github.com/sharkdp/hyperfine

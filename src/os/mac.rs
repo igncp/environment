@@ -1,6 +1,6 @@
 use std::path::Path;
 
-use crate::base::{config::Config, system::System, Context};
+use crate::base::{system::System, Context};
 
 pub fn run_mac_beginning(context: &mut Context) {
     std::fs::create_dir_all(context.system.get_home_path("Library/KeyBindings")).unwrap();
@@ -42,18 +42,6 @@ touch ~/.check-files/coreutils
     //     https://github.com/rime/squirrel/issues/471#issuecomment-748751617
     //   Use `~/Library/Rime/default.custom.yaml``
     //   The `patch` in the top level, above `schemas`, is necessary
-
-    if Config::has_config_file(&context.system, ".config/network-analysis") {
-        if !context.system.get_has_binary("wireshark") {
-            System::run_bash_command(
-                r###"
-brew install --cask wireshark
-"###,
-            );
-        }
-
-        context.system.install_system_package("mitmproxy", None);
-    }
 
     context.files.append(
         &context.system.get_home_path(".shellrc"),

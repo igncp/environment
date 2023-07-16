@@ -2,7 +2,7 @@ use std::path::Path;
 
 use crate::base::{
     config::{Config, Theme},
-    system::System,
+    system::{LinuxDistro, System, OS},
     Context,
 };
 
@@ -10,12 +10,36 @@ use super::{add_special_vim_map, install_nvim_package, lua::setup_nvim_lua};
 
 pub fn run_nvim_base(context: &mut Context) {
     if !context.system.get_has_binary("nvim") {
+        // https://github.com/neovim/neovim/wiki/Building-Neovim#build-prerequisites
+        match context.system.os {
+            OS::Linux => {
+                let distro = context.system.linux_distro.as_ref().unwrap();
+                println!("distro {:?}", distro);
+
+                match distro {
+                    LinuxDistro::Ubuntu | LinuxDistro::Debian => {
+                        System::run_bash_command(
+                            r#"sudo apt-get install -y ninja-build gettext libtool libtool-bin autoconf automake cmake g++ pkg-config unzip curl doxygen"#,
+                        );
+                    }
+                    LinuxDistro::Arch => {
+                        System::run_bash_command(
+                            r#"sudo pacman -S --noconfirm base-devel cmake unzip ninja curl"#,
+                        );
+                    }
+                    _ => panic!("Not supported distro"),
+                };
+            }
+            OS::Mac => {
+                System::run_bash_command(r#"brew install ninja cmake gettext curl"#);
+            }
+            _ => panic!("Not supported OS"),
+        };
+
         // https://github.com/neovim/neovim/releases/
         System::run_bash_command(
             r###"
 cd ~ ; rm -rf nvim-repo ; git clone https://github.com/neovim/neovim.git nvim-repo --depth 1 --branch release-0.9 ; cd nvim-repo
-# https://github.com/neovim/neovim/wiki/Building-Neovim#build-prerequisites
-sudo apt-get install -y ninja-build gettext libtool libtool-bin autoconf automake cmake g++ pkg-config unzip curl doxygen
 make CMAKE_BUILD_TYPE=Release
 make CMAKE_INSTALL_PREFIX=$HOME/nvim install
 cd ~ ; rm -rf nvim-repo
@@ -24,9 +48,19 @@ cd ~ ; rm -rf nvim-repo
     }
 
     if !Path::new(&context.system.get_home_path(".check-files/neovim")).exists() {
+        if !context.system.is_nixos() {
+            System::run_bash_command(
+                r###"
+# https://stackoverflow.com/a/75722775
+sudo rm /usr/lib/python3.*/EXTERNALLY-MANAGED || true
+
+pip3 install neovim
+"###,
+            );
+        }
+
         System::run_bash_command(
             r###"
-pip3 install neovim
 mkdir -p ~/.config ~/.vim
 touch ~/.vimrc
 rm -rf ~/.config/nvim
@@ -69,12 +103,12 @@ touch ~/.check-files/neovim
 
     // Themes
     install_nvim_package(context, "morhetz/gruvbox", None); // https://github.com/morhetz/gruvbox
-                                                            // let g:gruvbox_contrast_dark = 'hard'
+    context.home_appendln(".vimrc", r#"let g:gruvbox_contrast_dark = 'hard'"#);
     install_nvim_package(context, "cocopon/iceberg.vim", None); // https://github.com/cocopon/iceberg.vim
     install_nvim_package(context, "dracula/vim", None); // https://github.com/cocopon/iceberg.vim
 
-    context.files.append(
-        &context.system.get_home_path(".vimrc"),
+    context.home_append(
+        ".vimrc",
         r###"
 lua require("extra_beginning")
 
@@ -86,7 +120,8 @@ lua require("extra_beginning")
   nnoremap <leader>P :CtrlPMRUFiles<cr>
   nnoremap <leader>kpk :CtrlPClearAllCaches<cr>
   let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
-  let g:ctrlp_user_command = 'ag %s -l --hidden --ignore "\.git/*" --nocolor -g ""'
+  " Disabling using ag until fixing it in nixos
+  " let g:ctrlp_user_command = 'ag %s -l --hidden --ignore "\.git/*" --nocolor -g ""'
   nnoremap <leader>O :let g:CustomZPDir='<c-r>=expand(getcwd())<cr>'
   nnoremap <leader>o :CtrlP <c-r>=expand(g:CustomZPDir)<cr><cr>
   if exists("g:CustomZPDir") == 0
@@ -142,8 +177,8 @@ map <leader>cf :call ShowHexColorUnderCursor()<CR>
 "###,
     );
 
-    context.files.append(
-        &context.system.get_home_path(".shellrc"),
+    context.home_append(
+        ".shellrc",
         r###"
 export EDITOR=nvim
 export TERM=xterm-256color
@@ -151,8 +186,8 @@ source "$HOME"/.shell_aliases # some aliases depend on $EDITOR
 "###,
     );
 
-    context.files.append(
-        &context.system.get_home_path(".shell_aliases"),
+    context.home_append(
+        ".shell_aliases",
         r###"
 alias nn='nvim -n -u NONE -i NONE -N' # nvim without vimrc, plugins, syntax, etc
 alias nb='nvim -n -u ~/.base-vimrc -i NONE -N' # nvim with base vimrc
@@ -191,8 +226,8 @@ NProfile() {
         ],
     );
 
-    context.files.append(
-        &context.system.get_home_path(".vim/colors.vim"),
+    context.home_append(
+        ".vim/colors.vim",
         r###"
 " http://vim.wikia.com/wiki/File:Xterm-color-table.png
   hi DiffAdd     ctermbg=22
@@ -237,8 +272,8 @@ NProfile() {
 "###,
     );
 
-    context.files.append(
-        &context.system.get_home_path(".vim-macros"),
+    context.home_append(
+        ".vim-macros",
         r###"
 Macros file.
 This file is automatically generated. For custom macros, add them in ~/development/environment/project/vim-macros-custom
@@ -281,8 +316,8 @@ __add_n_completion "$HOME"/.fzf/shell/completion.bash || true
         "bash ~/development/environment/unix/scripts/misc/create_vim_snippets.sh",
     );
 
-    context.files.append(
-            &context.system.get_home_path(".shell_aliases"),
+    context.home_append(
+        ".shell_aliases",
             r###"
 alias VimSnippetsModify='nvim ~/development/environment/unix/scripts/misc/create_vim_snippets.sh && Provision'
 alias VimCustomSnippetsModify='nvim ~/development/environment/project/custom_create_vim_snippets.sh && Provision'
@@ -290,8 +325,8 @@ alias VimCustomSnippetsModify='nvim ~/development/environment/project/custom_cre
         );
 
     // LOCAL: current branch, BASE: original file, REMOTE: file in opposite branch
-    context.files.append(
-        &context.system.get_home_path(".gitconfig"),
+    context.home_append(
+        ".gitconfig",
         r###"
 [merge]
   tool = vimdiff
@@ -305,14 +340,14 @@ alias VimCustomSnippetsModify='nvim ~/development/environment/project/custom_cre
 
     if Config::has_config_file(&context.system, ".config/copilot") {
         install_nvim_package(context, "github/copilot.vim", None);
-        context.files.appendln(
-            &context.system.get_home_path(".vim/colors.vim"),
+        context.home_appendln(
+            ".vim/colors.vim",
             "hi CopilotSuggestion guifg=#ff8700 ctermfg=208",
         );
 
         // This is due to the screen not cleaned when dismissing a suggestion
-        context.files.append(
-            &context.system.get_home_path(".vimrc"),
+        context.home_append(
+            ".vimrc",
             r###"
 function! CustomDismiss() abort
   unlet! b:_copilot_suggestion b:_copilot_completion

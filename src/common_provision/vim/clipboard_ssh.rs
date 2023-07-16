@@ -28,6 +28,7 @@ nnoremap <leader>I viW"+y
         &context.system.get_home_path(".shell_aliases"),
         r###"
 alias ClipboardSSHSend="~/.scripts/cargo_target/release/clipboard_ssh send"
+alias HostClipboardSSH="~/.scripts/cargo_target/release/clipboard_ssh host"
 "###,
     );
 }

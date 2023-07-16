@@ -89,9 +89,6 @@ if [ ! -f ~/development/environment/project/.config/common-gui-light ]; then
   install_system_package gimp
   install_system_package nautilus # drag-n-drop files
   install_system_package libreoffice-fresh libreoffice
-  install_system_package peek # for gif generation
-  install_system_package flameshot # for annotations in images
-  install_system_package lxappearance # gnome themes
 fi
 
 if [ -f ~/development/environment/project/.config/obs-studio ]; then install_system_package obs-studio obs; fi # for video recording

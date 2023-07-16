@@ -2,6 +2,28 @@ use std::path::Path;
 
 use chrono::prelude::*;
 
+const ANSI_COLOR_GREEN: &'static str = "\x1b[0;32m";
+const ANSI_COLOR_RED: &'static str = "\x1b[0;31m";
+const ANSI_COLOR_MAGENTA: &'static str = "\x1b[0;35m";
+const ANSI_COLOR_BLUE: &'static str = "\x1b[0;34m";
+const ANSI_COLOR_RESET: &'static str = "\x1b[0;0m";
+
+#[derive(Eq, PartialEq, Clone)]
+enum Shell {
+    Bash,
+    Zsh,
+}
+
+// https://miro.medium.com/max/4800/1*Q4WxN-bh4Exk8ULhwSexGQ.png
+fn translate_color_to_ansi(zsh_color: &str) -> &str {
+    match zsh_color {
+        "green" => ANSI_COLOR_GREEN,
+        "magenta" => ANSI_COLOR_MAGENTA,
+        "red" => ANSI_COLOR_RED,
+        _ => ANSI_COLOR_RESET,
+    }
+}
+
 async fn get_tmux_window_index() -> Option<String> {
     let tmux = std::env::var("TMUX").unwrap_or("".to_string());
 
@@ -53,7 +75,7 @@ async fn get_tmux_prefix() -> TaskResult {
     TaskResult::TmuxPrefix((tmux_prefix_a, tmux_prefix_b))
 }
 
-async fn get_ssh_notice() -> TaskResult {
+async fn get_ssh_notice(shell: Shell) -> TaskResult {
     let home_path = std::env::var("HOME").unwrap();
     let ssh_client = std::env::var("SSH_CLIENT").unwrap_or("".to_string());
     let ssh_tty = std::env::var("SSH_TTY").unwrap_or("".to_string());
@@ -82,14 +104,21 @@ async fn get_ssh_notice() -> TaskResult {
             if file_value.is_empty() {
                 ssh_notice = "[VM]".to_string();
             } else {
-                ssh_notice = format!("[{}]", file_value);
+                ssh_notice = format!("[{file_value}]");
             }
         } else {
             ssh_notice = "[SSH]".to_string();
         }
     }
 
-    let result = format!("%F{{{ssh_notice_color}}}{ssh_notice} %F{{green}}%1d");
+    let result = if shell == Shell::Zsh {
+        format!("%F{{{ssh_notice_color}}}{ssh_notice} %F{{green}}%1d")
+    } else {
+        let color = translate_color_to_ansi(&ssh_notice_color);
+        let current_dir = std::env::current_dir().unwrap();
+        let current_dir = current_dir.to_str().unwrap().split('/').last().unwrap();
+        format!("{color}{ssh_notice} {ANSI_COLOR_GREEN}{current_dir}")
+    };
 
     TaskResult::SSHNotice(result)
 }
@@ -100,7 +129,7 @@ fn get_time() -> String {
     format!("{:0>2}:{:0>2}", dt.hour(), dt.minute())
 }
 
-async fn get_git_ps1() -> TaskResult {
+async fn get_git_ps1(shell: Shell) -> TaskResult {
     let result = tokio::process::Command::new("bash")
         .arg("-c")
         .arg(". ~/.git-prompt && __git_ps1")
@@ -112,7 +141,11 @@ async fn get_git_ps1() -> TaskResult {
         .map(|x| x as char)
         .collect::<String>();
 
-    let result_color = format!("%F{{green}}{result}%F{{reset_color}}");
+    let result_color = if shell == Shell::Zsh {
+        format!("%F{{green}}{result}%F{{reset_color}}")
+    } else {
+        format!("{ANSI_COLOR_GREEN}{result}{ANSI_COLOR_RESET}")
+    };
     TaskResult::GitBranch(result_color)
 }
 
@@ -134,8 +167,10 @@ fn get_background_jobs(jobs_args: String) -> Option<String> {
 
 async fn get_tailscale_status() -> TaskResult {
     let home_path = std::env::var("HOME").unwrap();
+    // Added in a variable like this so it can be found in the config script
+    let config_file = ".config/ps1-no-tailscale";
     if Path::new(&format!(
-        "{home_path}/development/environment/project/.config/ps1-no-tailscale"
+        "{home_path}/development/environment/project/{config_file}"
     ))
     .exists()
     {
@@ -144,7 +179,9 @@ async fn get_tailscale_status() -> TaskResult {
 
     let tailscale_status = tokio::process::Command::new("bash")
         .arg("-c")
-        .arg("tailscale status --peers=false | grep -vq 'stopped' && echo connected || echo ''")
+        .arg(
+            "tailscale status --peers=false | grep -vqE '(stopped|Logged out)' && echo connected || echo ''",
+        )
         .output()
         .await
         .unwrap()
@@ -193,20 +230,24 @@ async fn get_vpn() -> TaskResult {
     TaskResult::Vpn("".to_string())
 }
 
-// This should support both bash and zsh. Currently it only supports zsh.
-// https://miro.medium.com/max/4800/1*Q4WxN-bh4Exk8ULhwSexGQ.png
 #[tokio::main]
 async fn main() {
     let args: Vec<String> = std::env::args().collect();
 
-    let jobs_args = args.get(1).unwrap_or(&"".to_string()).to_string();
+    let shell = args.get(1).unwrap_or(&"bash".to_string()).to_string();
+    let shell = if shell == "bash" {
+        Shell::Bash
+    } else {
+        Shell::Zsh
+    };
+    let jobs_args = args.get(2).unwrap_or(&"".to_string()).to_string();
     let jobs_prefix = get_background_jobs(jobs_args).unwrap_or("".to_string());
 
     let tasks: Vec<tokio::task::JoinHandle<TaskResult>> = vec![
         tokio::spawn(get_tmux_prefix()),
         tokio::spawn(get_vpn()),
-        tokio::spawn(get_ssh_notice()),
-        tokio::spawn(get_git_ps1()),
+        tokio::spawn(get_ssh_notice(shell.clone())),
+        tokio::spawn(get_git_ps1(shell.clone())),
         tokio::spawn(get_tailscale_status()),
     ];
 
@@ -241,10 +282,22 @@ async fn main() {
         _ => panic!(""),
     };
 
-    let ps1_start = format!("{tmux_prefix_a} {ssh_notice}{vpn_result}{tailscale}");
-    let ps1_middle = format!("{git_ps1}{jobs_prefix}");
-    let time = get_time();
-    let ps1_end = format!("%F{{39}}{}{}%F{{reset_color}}", time, tmux_prefix_b);
+    if shell.clone() == Shell::Zsh {
+        let ps1_start = format!("{tmux_prefix_a} {ssh_notice}{vpn_result}{tailscale}");
+        let ps1_middle = format!("{git_ps1}{jobs_prefix}");
+        let time = get_time();
+        let ps1_end = format!("%F{{39}}{}{}%F{{reset_color}}", time, tmux_prefix_b);
 
-    println!("\n\n{}{} {} ", ps1_start, ps1_middle, ps1_end);
+        println!("\n\n{}{} {} ", ps1_start, ps1_middle, ps1_end);
+    } else {
+        let ps1_start = format!("{tmux_prefix_a} {ssh_notice}{vpn_result}{tailscale}");
+        let ps1_middle = format!("{git_ps1}{jobs_prefix}");
+        let time = get_time();
+        let ps1_end = format!(
+            "{ANSI_COLOR_BLUE}{}{}{ANSI_COLOR_RESET}",
+            time, tmux_prefix_b
+        );
+
+        println!("\n\n{}{} {} ", ps1_start, ps1_middle, ps1_end);
+    }
 }

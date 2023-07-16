@@ -1,6 +1,9 @@
 use crate::base::{system::System, Context};
 
 pub fn run_asdf(context: &mut Context) {
+    if context.system.is_nixos() {
+        return;
+    }
     let shellrc_file = &context.system.get_home_path(".shellrc");
 
     context.files.append(

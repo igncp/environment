@@ -40,6 +40,9 @@ sed -i 's|view_mode=.*|view_mode=list|' ~/.config/pcmanfm/LXDE/pcmanfm.conf
         );
     }
 
+    // Things to automate:
+    // - Change the background color and fontsize of the panel below
+
     if Path::new(
         &context
             .system
@@ -53,4 +56,11 @@ sed -i 's|autohide=.*|autohide=1|' ~/.config/lxpanel/LXDE/panels/panel
 "###,
         );
     }
+
+    // To add a new custom application launcher (either in the menu or in the panel):
+    // - Copy a file in /usr/share/applications/*.desktop and adapt it
+    // - If it is a script, set `Terminal=true` in the .desktop file
+    // - Don't forget to have the same ownership and permissions as the other files
+    // - Copy `/usr/bin/lxterminal` into `/usr/bin/lxterminal` (with the same ownership and permissions)
+    // - To refresh: `killall lxpanel ; lxpanel --profile LXDE ; find ~/.cache/menus -name '*' -type f -print0 | xargs -0 rm ; lxpanel -p LXDE &`
 }

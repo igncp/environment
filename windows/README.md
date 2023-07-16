@@ -17,12 +17,15 @@ terminal, with admin privileges, run: `powercfg -hibernate off`
 ## Windows Terminal
 
 - To change the cursor's color, can change the settings.json file for the used theme (e.g. Campbell): `"cursorColor": "#C20064",`
+    - Can also change it directly in the UI by clicking the theme, which opens a window listing the colors
 - To be able to run Sublime Text, add it to the `Path` environment variable:
     - Search in settings for "Environment Variables"
     - Update the user's one with the path (e.g. `C:\Program Files\Sublime Text`)
     - Close the whole Windows Terminal program and open again
     - To confirm, run: `echo $Env:Path`
 - Edit the `hosts` file: Run alias `HostsEdit`
+- Change the Word Delimeter option characters ` ()[]{}"'` (it includes an space at the beginning)
+    - This is under "Interactions" in settings
 
 ## Useful keyboard shortcuts
 

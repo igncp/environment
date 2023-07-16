@@ -16,11 +16,6 @@ cat >> ~/.shellrc <<"EOF"
 alias WallpaperPrintCurrent="cat ~/.fehbg | grep --color=never -o '\/home\/.*jpg'"
 EOF
 
-check_file_exists ~/project/provision/fonts.conf
-mkdir -p ~/.config/fontconfig
-cp ~/project/provision/fonts.conf ~/.config/fontconfig
-echo 'alias FontsList="fc-list"' >> ~/.shell_aliases
-
 # GTK
   # https://www.gnome-look.org/browse/ord/rating/
   # Can run: lxappearance # including inside Rofi

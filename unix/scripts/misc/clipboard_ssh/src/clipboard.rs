@@ -15,14 +15,33 @@ pub fn check_host_support() {
     }
 }
 
-fn save_to_clipboard_common(cmd: &str, content: &str) {
-    let mut child = process::Command::new(cmd)
+fn save_to_clipboard_common(cmd: &str, content: &str, args: Vec<&str>) {
+    let mut child = process::Command::new(cmd);
+
+    for arg in args {
+        child.arg(arg);
+    }
+
+    let child = child
         .stdin(std::process::Stdio::piped())
         .stdout(std::process::Stdio::piped())
-        .spawn()
-        .unwrap();
+        .spawn();
 
-    let child_stdin = child.stdin.as_mut().unwrap();
+    if child.is_err() {
+        warn!("Failed to save stream into clipboard");
+        return;
+    }
+
+    let mut child = child.unwrap();
+
+    let child_stdin = child.stdin.as_mut();
+
+    if child_stdin.is_none() {
+        warn!("Failed to save stream into clipboard");
+        return;
+    }
+
+    let child_stdin = child_stdin.unwrap();
 
     let write_result = child_stdin.write_all(content.as_bytes());
 
@@ -31,11 +50,13 @@ fn save_to_clipboard_common(cmd: &str, content: &str) {
         return;
     }
 
-    let result = child.wait_with_output();
+    if cmd != "xclip" {
+        let result = child.wait_with_output();
 
-    if result.is_err() {
-        warn!("Failed to save stream into clipboard");
-        return;
+        if result.is_err() {
+            warn!("Failed to save stream into clipboard");
+            return;
+        }
     }
 
     info!("Saved stream into clipboard");
@@ -44,13 +65,13 @@ fn save_to_clipboard_common(cmd: &str, content: &str) {
 pub fn save_to_clipboard(content: &str) {
     match env::consts::OS {
         "windows" => {
-            save_to_clipboard_common("clip", content);
+            save_to_clipboard_common("clip", content, vec![]);
         }
         "linux" => {
-            save_to_clipboard_common("xclip", content);
+            save_to_clipboard_common("xclip", content, vec!["-selection", "clipboard"]);
         }
         "macos" => {
-            save_to_clipboard_common("pbcopy", content);
+            save_to_clipboard_common("pbcopy", content, vec![]);
         }
         other => {
             panic!("Copy to clipboard is not implemented for {other}");

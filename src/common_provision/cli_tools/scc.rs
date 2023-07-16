@@ -18,6 +18,7 @@ pub fn setup_scc(context: &mut Context) {
         let cmd = format!(
             r###"
 cd ~
+mkdir -p ~/.local/bin
 curl -s https://api.github.com/repos/boyter/scc/releases/latest \
   | grep browser \
   | grep gz \
@@ -27,7 +28,7 @@ curl -s https://api.github.com/repos/boyter/scc/releases/latest \
   | xargs wget
 tar -xf scc*.tar.gz
 rm -rf scc*.tar.gz
-sudo mv scc /usr/local/bin
+mv scc ~/.local/bin
 "###
         );
 
