@@ -15,8 +15,8 @@ export DEBIAN_FRONTEND=noninteractive
 "###,
     );
 
-    context.files.append(
-        &context.system.get_home_path(".shell_aliases"),
+    context.home_append(
+        ".shell_aliases",
         r###"
 alias SystemListInstalled='apt list --installed'
 alias SystemUpgrade='sudo apt-get upgrade -y'

@@ -31,6 +31,7 @@ pub struct System {
     pub node_version: Option<String>,
     pub os: OS,
     pub path: String,
+    pub is_nix_provision: bool,
 }
 
 impl System {
@@ -41,6 +42,10 @@ impl System {
         };
 
         if self.find_it(used_binary).is_none() {
+            if self.is_nix_provision {
+                println!("Requested to install: {}", used_binary);
+                return;
+            }
             println!("Installing: {}", command_name);
             let status = match self.os {
                 OS::Mac => Command::new("brew")
@@ -56,7 +61,7 @@ impl System {
                         .arg(parse_pacman_package(command_name))
                         .status()
                         .unwrap(),
-                    LinuxDistro::Ubuntu | LinuxDistro::Debian => Command::new("sudo")
+                    LinuxDistro::Ubuntu => Command::new("sudo")
                         .arg("bash")
                         .arg("-c")
                         .arg(format!(
@@ -65,8 +70,8 @@ impl System {
                         ))
                         .status()
                         .unwrap(),
-                    LinuxDistro::NixOS => Command::new("echo")
-                        .arg(format!("echo Command: {command_name}"))
+                    LinuxDistro::NixOS | LinuxDistro::Debian => Command::new("echo")
+                        .arg(format!("Not running any command"))
                         .status()
                         .unwrap(),
                     other => {
@@ -259,6 +264,7 @@ impl Default for System {
             node_version: None,
             os,
             path: env::var_os("PATH").unwrap().to_str().unwrap().to_string(),
+            is_nix_provision: false,
         }
     }
 }

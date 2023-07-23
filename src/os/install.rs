@@ -12,7 +12,7 @@ pub fn setup_os_install(context: &mut Context) {
         return;
     }
 
-    if context.system.is_linux() {
+    if context.system.is_linux() && !context.system.is_nixos() {
         context
             .system
             .install_system_package("arch-install-scripts", Some("genfstab"));

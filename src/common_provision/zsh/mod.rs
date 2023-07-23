@@ -44,9 +44,19 @@ mkdir -p ~/.cache/zsh
     install_omzsh_plugin(context, "zsh-users/zsh-syntax-highlighting");
     install_omzsh_plugin(context, "MichaelAquilina/zsh-you-should-use");
 
+    // If running through NixOS for example, SHELL will have a different value and it will be
+    // already set
+    let current_zsh_file = context.files.get(&context.system.get_home_path(".zshrc"));
+    if !current_zsh_file.contains("SHELL=") {
+        context.home_appendln(".zshrc", "SHELL=$(which zsh)");
+    }
+
     context.files.append(
         &zsh_file,
         r###"
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+
 # https://upload.wikimedia.org/wikipedia/commons/1/15/Xterm_256color_chart.svg
 export ZSH="$HOME/.oh-my-zsh"
 export ZSH_COMPDUMP=$HOME/.cache/zsh/.zcompdump-$HOST
@@ -150,8 +160,6 @@ precmd () {
 PS1='$(~/.scripts/cargo_target/release/ps1 zsh $jobscount)'
 NEXT_TASK='$(__get_next_task)'
 RPROMPT="[$NEXT_TASK]"
-
-SHELL=/bin/zsh
 
 # cd -[tab] to see options. `dirs -v` to list previous history
 setopt AUTO_PUSHD                  # pushes the old directory onto the stack

@@ -4,7 +4,8 @@
   config,
   ...
 }: let
-  has_gui = builtins.pathExists /home/igncp/development/environment/project/.config/gui;
+  has_gui = builtins.pathExists ../project/.config/gui;
+  has_android = builtins.pathExists ../project/.config/android;
   has_private = builtins.pathExists ./private.nix;
   has_custom = builtins.pathExists ./custom.nix;
 in {
@@ -14,14 +15,26 @@ in {
     ]
     ++ (lib.optional has_custom ./custom.nix)
     ++ (lib.optional has_private ./private.nix)
+    ++ (lib.optional has_android ./android.nix)
     ++ (lib.optional has_gui ./gui.nix);
 
   config = {
     boot.loader.systemd-boot.enable = true;
     boot.loader.efi.canTouchEfiVariables = true;
+    hardware.bluetooth.enable = true;
+    services.blueman.enable = true;
+    services.flatpak.enable = true;
+    hardware.bluetooth.settings = {
+      General = {
+        Enable = "Source,Sink,Media,Socket";
+      };
+    };
+
+    virtualisation.docker.enable = true;
 
     environment.systemPackages =
-      (import ./default_pkgs.nix pkgs).default_pkgs;
+      []
+      ++ (import ./default_pkgs.nix pkgs).default_pkgs;
 
     environment.variables = {
       CURL_CA_BUNDLE = "/etc/pki/tls/certs/ca-bundle.crt"; # Added for curl
@@ -29,7 +42,7 @@ in {
       PKG_CONFIG_PATH = "${pkgs.openssl.dev}/lib/pkgconfig"; # Added for Rust
     };
 
-    i18n.defaultLocale = "en_HK.UTF-8";
+    i18n.defaultLocale = "en_US.UTF-8";
 
     # Updates: /etc/nix/nix.conf
     # https://github.com/NixOS/nixpkgs/blob/nixos-23.05/nixos/modules/services/misc/nix-daemon.nix
@@ -41,6 +54,7 @@ in {
 
     services.openssh.enable = true;
     services.openssh.settings.PermitRootLogin = "yes";
+
     system.stateVersion = "23.05";
 
     time.timeZone = "Asia/Hong_Kong";
@@ -49,7 +63,7 @@ in {
     users.users.igncp = {
       isNormalUser = true;
       home = "/home/igncp";
-      extraGroups = ["wheel" "networkmanager"];
+      extraGroups = ["wheel" "docker" "audio" "video" "networkmanager"];
       shell = pkgs.zsh;
     };
   };

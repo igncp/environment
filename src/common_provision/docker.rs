@@ -9,11 +9,6 @@ pub fn setup_docker(context: &mut Context) {
 
     context.system.install_system_package("docker", None);
 
-    // TODO: option to set up https://github.com/chaifeng/ufw-docker
-    context
-        .system
-        .install_system_package("docker-compose", None);
-
     context.files.append(&context.system.get_home_path(".shell_aliases"), r###"
 alias DockerAttachLastContainer='docker start  `docker ps -q -l`; docker attach `docker ps -q -l`'
 alias DockerCleanAll='docker stop $(docker ps -aq); docker rm $(docker ps -aq); docker rmi $(docker images -q)'
@@ -66,7 +61,14 @@ alias DockerDive='docker run --rm -it -v /var/run/docker.sock:/var/run/docker.so
 
     std::fs::create_dir_all(context.system.get_home_path(".docker/cli-plugins")).unwrap();
 
-    if !Path::new(&context.system.get_home_path(".check-files/docker")).exists() {
+    if !Path::new(&context.system.get_home_path(".check-files/docker")).exists()
+        && !context.system.is_nixos()
+    {
+        // TODO: option to set up https://github.com/chaifeng/ufw-docker
+        context
+            .system
+            .install_system_package("docker-compose", None);
+
         System::run_bash_command(
             r###"
 sudo usermod -a -G docker "$USER" # may need reboot

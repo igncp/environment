@@ -4,13 +4,13 @@ use crate::base::Context;
 
 pub fn setup_aws(context: &mut Context) {
     if Config::has_config_file(&context.system, ".config/cli-aws") {
-        if context.system.is_arm() {
-            println!("Provision for ARM missing");
-            return;
-        }
-
         // https://docs.aws.amazon.com/cli/latest/reference/
         if !context.system.get_has_binary("aws") {
+            if context.system.is_arm() {
+                println!("Provision for ARM missing");
+                return;
+            }
+
             System::run_bash_command(
                 r###"
 mkdir -p /tmp/misc

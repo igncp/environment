@@ -1,33 +1,5 @@
 # misc START
 
-if [ ! -d ~/english-words ]; then
-  git clone https://github.com/dwyl/english-words ~/english-words
-fi
-
-# ssh greeting and session message
-  cat > /tmp/greeting.txt <<"EOF"
-
-  你好!
-
-EOF
-  sudo cp /tmp/greeting.txt /etc/motd
-  sudo sed -i "s|#PrintLastLog no|PrintLastLog no|" /etc/ssh/sshd_config
-  if [ ! -f ~/.check-files/ssh ]; then
-    sudo systemctl restart sshd.service
-    touch ~/.check-files/ssh
-  fi
-  cat >> ~/.shell_sources <<"EOF"
-echo ""
-echo "  -> task list"
-task list
-EOF
-
-# useful fonts: https://github.com/ryanoasis/nerd-fonts#patched-fonts
-  # using monofur at the moment
-
-# exercism
-install_from_aur exercism https://aur.archlinux.org/exercism-cli.git
-
 # mp4 utils
 if ! type mp4info > /dev/null 2>&1 ; then
   rm -rf /tmp/mp4info; mkdir /tmp/mp4info; cd /tmp/mp4info
@@ -87,17 +59,6 @@ EOF
 BrightnessNV() { echo "$1" | sudo tee /sys/class/backlight/nv_backlight/brightness; }
 BrightnessNVMax() { cat /sys/class/backlight/nv_backlight/max_brightness; }
 EOF
-
-# Automatic clone - Update for different providers / directories
-  clone_dev_github_repo() {
-    DIR_NAME="$HOME/development/$1";
-
-    if [ ! -d "$DIR_NAME" ]; then
-      git clone "git@github.com:igncp/$1.git" "$DIR_NAME"
-    fi
-  }
-
-  clone_dev_github_repo environment
 
 # Touchpad
   # xinput list # find devices

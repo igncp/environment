@@ -139,7 +139,7 @@ rm -rf ~/hhighlighter
         System::run_bash_command("pip install yq");
     }
 
-    if !context.system.is_mac() && !context.system.is_nixos() {
+    if !context.system.is_mac() && !context.system.is_nix_provision {
         // To hide output: `hurl --no-output /tmp/test.txt`
         context.system.install_cargo_crate("hurl", None); // https://github.com/Orange-OpenSource/hurl
     }
@@ -147,6 +147,7 @@ rm -rf ~/hhighlighter
     context.system.install_cargo_crate("sd", None); // https://github.com/chmln/sd
     context.system.install_cargo_crate("hyperfine", None); // https://github.com/sharkdp/hyperfine
     context.system.install_cargo_crate("ast-grep", Some("sg")); // https://github.com/ast-grep/ast-grep
+
     context
         .system
         .install_cargo_crate("git-delta", Some("delta")); // https://github.com/dandavison/delta

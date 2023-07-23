@@ -17,6 +17,16 @@ mkdir -p ~/.check-files && touch ~/.check-files/lightdm
         );
     }
 
+    if context.system.is_debian() {
+        context.home_append(
+            ".shell_aliases",
+            r###"
+# Useful for installing desktop environments
+alias Tasksel="sudo tasksel"
+"###,
+        );
+    }
+
     context
         .system
         .install_system_package("build-essential", Some("make"));

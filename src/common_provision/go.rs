@@ -28,20 +28,31 @@ pub fn setup_go(context: &mut Context) {
         return;
     }
 
-    let goroot = get_goroot();
-
-    context.files.append(
-        &context.system.get_home_path(".shellrc"),
+    context.home_append(
+        ".shellrc",
         &format!(
             r###"
-export GOROOT="{goroot}"
-export GOPATH="$HOME/.go-workspace"
-export GOBIN="$GOROOT/bin"
-export GO15VENDOREXPERIMENT=1
-export PATH=$PATH:$GOPATH/bin:$GOBIN
-"###,
+    export GOPATH="$HOME/.go-workspace"
+    export GO15VENDOREXPERIMENT=1
+    export PATH=$PATH:$GOPATH/bin
+    "###,
         ),
     );
+
+    if !context.system.is_nixos() {
+        let goroot = get_goroot();
+
+        context.home_append(
+            ".shellrc",
+            &format!(
+                r###"
+    export GOROOT="{goroot}"
+    export GOBIN="$GOROOT/bin"
+    export PATH=$PATH:$GOBIN
+    "###,
+            ),
+        );
+    }
 
     if !context.system.get_has_binary("go") {
         println!("Installing go");

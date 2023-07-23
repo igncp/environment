@@ -14,7 +14,6 @@ pub fn run_nvim_base(context: &mut Context) {
         match context.system.os {
             OS::Linux => {
                 let distro = context.system.linux_distro.as_ref().unwrap();
-                println!("distro {:?}", distro);
 
                 match distro {
                     LinuxDistro::Ubuntu | LinuxDistro::Debian => {
@@ -110,7 +109,9 @@ touch ~/.check-files/neovim
     context.home_append(
         ".vimrc",
         r###"
-lua require("extra_beginning")
+if has('nvim')
+  lua require("extra_beginning")
+endif
 
 " ctrlp
   let g:ctrlp_map = '<c-p>'
@@ -120,8 +121,7 @@ lua require("extra_beginning")
   nnoremap <leader>P :CtrlPMRUFiles<cr>
   nnoremap <leader>kpk :CtrlPClearAllCaches<cr>
   let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
-  " Disabling using ag until fixing it in nixos
-  " let g:ctrlp_user_command = 'ag %s -l --hidden --ignore "\.git/*" --nocolor -g ""'
+  let g:ctrlp_user_command = 'ag %s -l --hidden --ignore "\.git/*" --nocolor -g ""'
   nnoremap <leader>O :let g:CustomZPDir='<c-r>=expand(getcwd())<cr>'
   nnoremap <leader>o :CtrlP <c-r>=expand(g:CustomZPDir)<cr><cr>
   if exists("g:CustomZPDir") == 0
@@ -133,12 +133,14 @@ lua require("extra_beginning")
   \ sed "s\|$1\|\|" \| sed "1i _" \| sed "1i $1" \| sed "1i _" \| sed '4d' \| less; }
   \ && F <c-R>=expand("%:p:h")<cr>/ )<left><left>
 
-" don't have to press the extra key when exiting the terminal (nvim)
+if has('nvim')
+  " don't have to press the extra key when exiting the terminal (nvim)
   augroup terminal
     autocmd!
     autocmd TermClose * close
   augroup end
   autocmd TermOpen * startinsert
+endif
 
 " from fzf.vim
 function! s:key_sink(line)
@@ -180,7 +182,11 @@ map <leader>cf :call ShowHexColorUnderCursor()<CR>
     context.home_append(
         ".shellrc",
         r###"
-export EDITOR=nvim
+# This needs a check, as somtimes nvim is only available inside a nix shell
+if type nvim > /dev/null 2>&1 ; then
+    export EDITOR=nvim
+fi
+
 export TERM=xterm-256color
 source "$HOME"/.shell_aliases # some aliases depend on $EDITOR
 "###,

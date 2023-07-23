@@ -36,8 +36,13 @@ async fn get_tmux_window_index() -> Option<String> {
         .arg("-p")
         .arg("#I")
         .output()
-        .await
-        .unwrap();
+        .await;
+
+    if tmux_window_index.is_err() {
+        return None;
+    }
+
+    let tmux_window_index = tmux_window_index.unwrap();
 
     let parsed = tmux_window_index
         .stdout
@@ -102,12 +107,12 @@ async fn get_ssh_notice(shell: Shell) -> TaskResult {
             let file_value = file_value.trim_end().to_string();
 
             if file_value.is_empty() {
-                ssh_notice = "[VM]".to_string();
+                ssh_notice = " [VM]".to_string();
             } else {
-                ssh_notice = format!("[{file_value}]");
+                ssh_notice = format!(" [{file_value}]");
             }
         } else {
-            ssh_notice = "[SSH]".to_string();
+            ssh_notice = " [SSH]".to_string();
         }
     }
 
@@ -115,7 +120,11 @@ async fn get_ssh_notice(shell: Shell) -> TaskResult {
         format!("%F{{{ssh_notice_color}}}{ssh_notice} %F{{green}}%1d")
     } else {
         let color = translate_color_to_ansi(&ssh_notice_color);
-        let current_dir = std::env::current_dir().unwrap();
+        let current_dir = std::env::current_dir();
+        if current_dir.is_err() {
+            return TaskResult::SSHNotice("".to_string());
+        }
+        let current_dir = current_dir.unwrap();
         let current_dir = current_dir.to_str().unwrap().split('/').last().unwrap();
         format!("{color}{ssh_notice} {ANSI_COLOR_GREEN}{current_dir}")
     };
@@ -242,6 +251,7 @@ async fn main() {
     };
     let jobs_args = args.get(2).unwrap_or(&"".to_string()).to_string();
     let jobs_prefix = get_background_jobs(jobs_args).unwrap_or("".to_string());
+    let is_nix_develop = std::env::var("CD_INTO_NIX").unwrap_or("0".to_string());
 
     let tasks: Vec<tokio::task::JoinHandle<TaskResult>> = vec![
         tokio::spawn(get_tmux_prefix()),
@@ -281,16 +291,21 @@ async fn main() {
         TaskResult::Tailscale(a) => a,
         _ => panic!(""),
     };
+    let nix_prefix = if is_nix_develop == "1".to_string() {
+        " (NIX)"
+    } else {
+        ""
+    };
 
     if shell.clone() == Shell::Zsh {
-        let ps1_start = format!("{tmux_prefix_a} {ssh_notice}{vpn_result}{tailscale}");
+        let ps1_start = format!("{tmux_prefix_a}{nix_prefix}{ssh_notice}{vpn_result}{tailscale}");
         let ps1_middle = format!("{git_ps1}{jobs_prefix}");
         let time = get_time();
         let ps1_end = format!("%F{{39}}{}{}%F{{reset_color}}", time, tmux_prefix_b);
 
         println!("\n\n{}{} {} ", ps1_start, ps1_middle, ps1_end);
     } else {
-        let ps1_start = format!("{tmux_prefix_a} {ssh_notice}{vpn_result}{tailscale}");
+        let ps1_start = format!("{tmux_prefix_a}{nix_prefix}{ssh_notice}{vpn_result}{tailscale}");
         let ps1_middle = format!("{git_ps1}{jobs_prefix}");
         let time = get_time();
         let ps1_end = format!(

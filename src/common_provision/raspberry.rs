@@ -48,4 +48,10 @@ touch ~/.check-files/raspi-tools
     }
 
     // https://retropie.org.uk/docs/Nintendo-Switch-Controllers/
+
+    // To over-clock: https://www.zdnet.com/article/upgrading-your-pc-this-monster-graphics-card-is-200-off/
+    // In `/boot/config.txt` (only `arm_freq` is present in the config, but commented out)
+    // arm_freq=2000
+    // over_voltage=6
+    // gpu_freq = 750
 }

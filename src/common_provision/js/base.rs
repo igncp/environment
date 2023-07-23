@@ -10,6 +10,15 @@ use crate::{
 use super::install::install_node_modules;
 
 pub fn run_js_base(context: &mut Context) {
+    if context.system.is_nix_provision {
+        context.home_append(
+            ".npmrc",
+            r###"
+prefix = ${HOME}/.npm-packages
+"###,
+        );
+    }
+
     context.files.append(
         &context.system.get_home_path(".vimrc"),
         r###"

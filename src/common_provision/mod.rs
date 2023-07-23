@@ -2,6 +2,7 @@ use crate::base::Context;
 
 pub use self::vim::update_vim_colors_theme;
 use self::{
+    android::setup_android,
     brightscript::setup_brightscript,
     c::setup_c,
     cli_tools::run_cli_tools,
@@ -22,6 +23,7 @@ use self::{
     zsh::run_zsh,
 };
 
+mod android;
 mod brightscript;
 mod c;
 mod cli_tools;
@@ -56,22 +58,19 @@ pub fn run_common_provision(context: &mut Context) {
     setup_js_vue(context);
     setup_rust(context);
     setup_go(context);
-
-    if context.system.is_nixos() {
-        return;
-    }
-
-    setup_dotnet(context);
-    setup_php(context);
     setup_ruby(context);
-    setup_c(context);
-    setup_kotlin(context);
-    setup_brightscript(context);
-    setup_haskell(context);
-    setup_dart(context);
     setup_raspberry(context);
+    setup_c(context);
+    setup_brightscript(context);
 
     if context.system.is_linux() {
         setup_docker(context);
     }
+
+    setup_dotnet(context);
+    setup_php(context);
+    setup_kotlin(context);
+    setup_haskell(context);
+    setup_dart(context);
+    setup_android(context);
 }

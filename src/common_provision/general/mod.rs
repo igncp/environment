@@ -59,9 +59,12 @@ fi
     std::fs::create_dir_all(context.system.get_home_path(".scripts/toolbox")).unwrap();
     std::fs::create_dir_all(context.system.get_home_path("logs")).unwrap();
 
-    context
-        .system
-        .install_system_package("base-devel", Some("make"));
+    if !context.system.is_nixos() {
+        context
+            .system
+            .install_system_package("base-devel", Some("make"));
+    }
+
     context.system.install_system_package("curl", None);
     context
         .system
@@ -187,15 +190,16 @@ SSHListConnections() { sudo netstat -tnpa | grep 'ESTABLISHED.*sshd'; }
 alias AliasesReload='source ~/.shell_aliases'
 alias CleanNCurses='stty sane;clear;'
 alias EditProvision="(cd ~/development/environment && $EDITOR src/main.rs && cargo run --release)"
-alias Provision="(cd ~/development/environment && cargo run --release)"
-alias GeoInfo='curl -s ipinfo.io | jq .'
 alias FDisk='sudo fdisk /dev/sda'
 alias FilterLeaf=$'sort -r | awk \'a!~"^"$0{a=$0;print}\' | sort'
+alias FlatpackInit='flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo'
+alias GeoInfo='curl -s ipinfo.io | jq .'
 alias HierarchyManual='man hier'
 alias IPPublic='curl ifconfig.co'
-alias KillAllTmux='killall /usr/bin/tmux || true ; killall tmux'
+alias KillAllTmux='killall /usr/bin/tmux || true ; killall tmux || true ; killall $(which tmux) || true'
 alias LastColumn="awk '{print "'$NF'"}'"
 alias PathShow='echo $PATH | tr ":" "\n" | sort | uniq | less'
+alias Provision="(cd ~/development/environment && cargo run --release)"
 alias PsTree='pstree -pTUl | less -S'
 alias RsyncDelete='rsync -rhv --delete' # remember to add a slash at the end of source (dest doesn't matter)
 alias ShellChangeToBash='chsh -s /bin/bash; exit'
@@ -369,7 +373,7 @@ set show-all-if-ambiguous on
 "###,
     );
 
-    if context.system.is_linux() {
+    if context.system.is_linux() && !context.system.is_nixos() {
         System::run_bash_command(
             r###"
 echo 'LANG=en_US.UTF-8' > /tmp/locale.conf
@@ -388,8 +392,10 @@ fi
             .system
             .install_system_package("alsa-utils", Some("alsamixer"));
 
-        // UFW
-        context.system.install_system_package("ufw", None);
+        if !context.system.is_nixos() {
+            // UFW
+            context.system.install_system_package("ufw", None);
+        }
 
         context.files.append(
             &context.system.get_home_path(".shell_aliases"),

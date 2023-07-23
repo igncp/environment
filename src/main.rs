@@ -22,9 +22,12 @@ mod os;
 mod top;
 
 fn main() {
-    let system = System::default();
+    let mut system = System::default();
     let files = Files::default();
     let config = Config::new(&system);
+
+    system.is_nix_provision =
+        system.is_nixos() || Config::has_config_file(&system, ".config/nix-only");
 
     let mut context = Context {
         config,

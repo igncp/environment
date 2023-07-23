@@ -68,7 +68,7 @@ impl Files {
 
     #[cfg(target_family = "unix")]
     pub fn get(&self, path: &str) -> String {
-        self.data.get(path).unwrap().clone()
+        self.data.get(path).unwrap_or(&"".to_string()).clone()
     }
 
     #[cfg(target_family = "unix")]

@@ -1,0 +1,27 @@
+[global_config]
+[keybindings]
+  cycle_next = <Primary><Alt><Super>p
+  cycle_prev = <Primary><Alt><Super>o
+  next_tab = <Primary>Tab
+  prev_tab = <Primary><Shift>Tab
+  next_profile = <Primary><Alt><Super>semicolon
+[profiles]
+  [[default]]
+    cursor_blink = False
+    cursor_fg_color = "#ffbcfc"
+    cursor_bg_color = "#ffbcfc"
+    cursor_color_default = False
+    font = Monofur Nerd Font Propo 18
+    show_titlebar = False
+    scrollbar_position = hidden
+    word_chars = "-,./?%&#_~+@:"
+    use_system_font = False
+[layouts]
+  [[default]]
+    [[[window0]]]
+      type = Window
+      parent = ""
+    [[[child1]]]
+      type = Terminal
+      parent = window0
+[plugins]

@@ -139,12 +139,13 @@ sudo mv /tmp/nobeep.conf /etc/modprobe.d/
         );
     }
 
-    if Config::has_config_file(&context.system, ".config/tailscale")
-        && !Path::new(&context.system.get_home_path(".check-files/tailscale")).exists()
-    {
-        System::run_bash_command("curl -fsSL https://tailscale.com/install.sh | sh");
-        System::run_bash_command(
-            r###"
+    if !context.system.is_nixos() {
+        if Config::has_config_file(&context.system, ".config/tailscale")
+            && !Path::new(&context.system.get_home_path(".check-files/tailscale")).exists()
+        {
+            System::run_bash_command("curl -fsSL https://tailscale.com/install.sh | sh");
+            System::run_bash_command(
+                r###"
 if [ -n "$(sudo systemctl list-units | grep tailscaled || true)" ]; then
     sudo systemctl enable --now tailscaled
 else
@@ -152,7 +153,8 @@ else
 fi
 touch ~/.check-files/tailscale
 "###,
-        );
+            );
+        }
     }
 
     if !Path::new(&context.system.get_home_path(".check-files/oomd")).exists()

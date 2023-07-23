@@ -2,52 +2,6 @@
 
 # This file is intended only for Linux
 
-if [ "$PROVISION_OS" == 'LINUX' ]; then
-  cat > /tmp/.xinitrc <<"EOF"
-export GTK_IM_MODULE=ibus
-export XMODIFIERS=@im=ibus
-export QT_IM_MODULE=ibus
-export QT4_IM_MODULE=ibus
-EOF
-  cat ~/.xinitrc >> /tmp/.xinitrc
-  mv /tmp/.xinitrc ~/.xinitrc
-  echo 'GTK_THEME=Menta /usr/bin/ibus-daemon -rxd' >> ~/.scripts/gui_daemons.sh
-  if [ ! -d /usr/share/themes/Menta ]; then
-    install_system_package mate-themes
-  fi
-  if ! type rime_deployer > /dev/null 2>&1 ; then
-    install_system_package ibus
-    install_system_package ibus-rime
-  fi
-  if [ ! -f ~/.config/ibus/rime/default.yaml ]; then
-    mkdir -p ~/misc ~/.config/ibus/rime
-    rm -rf ~/misc/plum
-    git clone https://github.com/rime/plum.git ~/misc/plum
-    cd ~/misc/plum
-    ./rime-install rime-cantonese
-    ./rime-install gkovacs/rime-japanese
-    cp /usr/share/rime-data/default.yaml ~/.config/ibus/rime/
-  fi
-  # On RIME, press F4 to switch
-  # On IBusSettings, add English and Chinese - RIME
-  if [ ! -f "$HOME"/.check-files/ibus-shortcut-log ]; then
-    echo '[~/.check-files/ibus-shortcut-log]: In ibus settings, change the default Super+Space shortcut to switch IM to Alt+l (language)'
-  fi
-  cat >> ~/.shell_aliases <<"EOF"
-alias IBusDaemon='ibus-daemon -drx'
-alias IBusSettings='IBUS_PREFIX= python2 /usr/share/ibus/setup/main.py'
-EOF
-  check_file_exists ~/project/provision/rime-config.yaml
-  cp ~/project/provision/rime-config.yaml ~/.config/ibus/rime/default.yaml
-  cat >> ~/.shell_aliases <<"EOF"
-RimeConfigure() {
-  $EDITOR -p ~/project/provision/rime-config.yaml
-  cp ~/project/provision/rime-config.yaml ~/.config/ibus/rime/default.yaml
-  echo Copied Rime config file
-}
-EOF
-fi
-
 if [ -z "$ARM_ARCH" ]; then
 # alacritty
   install_system_package alacritty
@@ -159,25 +113,5 @@ BluetoothFixIntel() {
   sudo modprobe btintel ; sudo modprobe btusb
 }
 EOF
-
-if [ -f ~/development/environment/project/.config/copyq ]; then
-  install_system_package copyq
-  # https://copyq.readthedocs.io/en/latest/faq.html#how-to-omit-storing-text-copied-from-specific-windows-like-a-password-manager
-    # Create two items, one for the password manager and one for Entry
-    # Click: "Show Advance", then click "Advanced" tab and put text on "Window" input (instead of "Password")
-    if [ ! -f "$HOME"/.check-files/copyq-passwords ]; then
-      echo '[~/.check-files/copyq-passwords]: Add and test command to filter out copied passwords and remove this message'
-    fi
-  sed -i '1i(sleep 10s && copyq 2>&1 > /dev/null) &' ~/.xinitrc
-  cat >> ~/.shell_aliases <<"EOF"
-CopyQReadN() {
-  for i in {0..$1}; do
-    echo "$i"
-    copyq read "$i"
-    echo ""; echo ""
-  done
-}
-EOF
-fi
 
 # gui-common END

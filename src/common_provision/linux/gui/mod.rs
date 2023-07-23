@@ -1,11 +1,18 @@
-use std::path::Path;
+use std::os::unix::fs::PermissionsExt;
+use std::{
+    fs::{set_permissions, Permissions},
+    path::Path,
+};
 
 use crate::base::{config::Config, system::System, Context};
 
-use self::{i3::setup_i3, lxde::setup_lxde, vscode::setup_vscode};
+use self::copyq::setup_copyq;
+use self::{i3::setup_i3, lxde::setup_lxde, rime::setup_rime, vscode::setup_vscode};
 
+mod copyq;
 mod i3;
 mod lxde;
+mod rime;
 mod vscode;
 
 pub fn setup_gui(context: &mut Context) {
@@ -83,22 +90,31 @@ WantedBy=multi-user.target
 );
     }
 
-    System::run_bash_command(
-        r###"
+    if !context.system.is_nix_provision {
+        System::run_bash_command(
+            r###"
 if [ -z "$(groups | grep video || true)" ]; then
   sudo usermod -a -G video "$USER"
   sudo usermod -a -G audio "$USER"
 fi
 "###,
-    );
+        );
+    }
 
     if !context.system.is_debian() {
         context.system.install_system_package("acpi", None);
     }
 
-    setup_lxde(context);
-    setup_i3(context);
-    setup_vscode(context);
+    let terminator_config_path = &context.system.get_home_path(".config/terminator/config");
+    if Path::new(&terminator_config_path).exists() {
+        std::fs::copy(
+            &context
+                .system
+                .get_home_path("development/environment/unix/config-files/terminator-config"),
+            &terminator_config_path,
+        )
+        .unwrap();
+    }
 
     // Bluetooth
     // For dual boot:
@@ -108,4 +124,73 @@ fi
     // https://wiki.archlinux.org/title/bluetooth#For_Windows
     // - Power off the device after pairing with the 1st OS, copy it in the 2nd,
     //   reboot (without reboot, it didn't work), and only then power on device
+
+    let set_background_path = context.system.get_home_path(".scripts/set-background.sh");
+    context.files.append(
+        &set_background_path,
+        r###"
+feh --bg-fill "$1"
+cat ~/.fehbg | grep --color=never -o '\/home\/.*jpg' | sed 's|^|Image: |'
+"###,
+    );
+    let variety_dir = context.system.get_home_path(".config/variety/Downloaded");
+    let wallpaper_update_path = context.system.get_home_path(".scripts/wallpaper_update.sh");
+    context.files.append(
+        &wallpaper_update_path,
+        &format!(
+            r###"
+if [ -d {variety_dir} ]; then
+  find {variety_dir} -type f -name *.jpg | shuf -n 1 | xargs -I {{}} sh ~/.set-background.sh {{}}
+fi
+"###
+        ),
+    );
+
+    [set_background_path, wallpaper_update_path]
+        .iter()
+        .for_each(|file_path| {
+            context.write_file(file_path, true);
+            let perm = Permissions::from_mode(0o700);
+            set_permissions(file_path, perm).unwrap();
+        });
+
+    context.home_append(
+        ".shell_aliases",
+        &format!(
+            r###"
+alias WallpaperPrintCurrent="cat ~/.fehbg | grep --color=never -o '\/home\/.*jpg'"
+
+alias KeyboardLayoutGB='setxkbmap -layout gb'
+alias KeyboardLayoutUS='setxkbmap -layout us'
+alias KeyboardLayoutES='setxkbmap -layout es' # accents work when also enabling ibus
+alias KeyboardQuery='setxkbmap -query'
+alias KeyboardListKeys='xmodmap -pke'
+alias KeyboardRefreshConfig='sh ~/.keyboard-config.sh'
+
+alias XKBCompDump='xkbcomp $DISPLAY /tmp/xkb-config.xkb'
+alias XKBCompLoad='xkbcomp /tmp/xkb-config.xkb $DISPLAY'
+"###
+        ),
+    );
+
+    // GTK
+    //   https://www.gnome-look.org/browse/ord/rating/
+    //   Can run: lxappearance # including inside Rofi
+    //   Themes:
+    //   If downloaded and `.tar.xz` file, uncompress with `tar -xf ...`
+    //   Move the directory inside `~/.themes/`
+    //   Icons: Don't uncompress the file, import it directly from lxappearance
+    //   Currently using:
+    //   - Cursors: Comix (use the opaque) - https://www.gnome-look.org/p/999996/
+    //   - Icons: Flatery - https://www.gnome-look.org/s/Gnome/p/1332404
+    //   - Theme: Prof-Gnome-theme - https://www.gnome-look.org/p/1334194/
+    //   - Grub: Tela - https://www.gnome-look.org/p/1307852/
+
+    // Keyboard Setup (not only Arch): https://wiki.archlinux.org/index.php/X_keyboard_extension
+
+    setup_lxde(context);
+    setup_i3(context);
+    setup_vscode(context);
+    setup_rime(context);
+    setup_copyq(context);
 }

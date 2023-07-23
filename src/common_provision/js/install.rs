@@ -20,7 +20,7 @@ pub fn install_node_modules(context: &mut Context, names: Vec<(&str, Option<&str
     }
 
     for (module, cmd) in names {
-        if context.system.is_nixos() {
+        if context.system.is_nix_provision {
             let cmd_check = cmd.unwrap_or(module);
             let expected_module_path =
                 format!("{}/.npm-packages/bin/{}", context.system.home, cmd_check);

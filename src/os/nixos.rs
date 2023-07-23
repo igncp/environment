@@ -15,27 +15,15 @@ ConfigNixOsProvisionList() {
 }
 
 alias NixDevelopPath='nix develop path:$(pwd)' # Also possible to just run a command: `NixDevelopPath -c cargo build`
-
-NixFormat() {
-    if [ -n "$1" ]; then
-        alejandra $@
-        return
-    fi
-    alejandra ./**/*.nix
-}
+alias NixOsClearSpace='sudo nix-collect-garbage'
+alias NixOsListSystemGenerations='sudo nix-env --list-generations --profile /nix/var/nix/profiles/system'
+alias ProvisionNixOs="(RebuildNixOs && Provision)"
 
 # Different prefix due to being a common command
 RebuildNixOs() {
-    (cd ~/development/environment/nixos && \
-    sudo nixos-rebuild --show-trace switch -I nixos-config=$(pwd)/configuration.nix)
+    (cd ~/development/environment && \
+    sudo nixos-rebuild switch --flake path:$(pwd))
 }
-"###,
-    );
-
-    context.home_append(
-        ".npmrc",
-        r###"
-prefix = ${HOME}/.npm-packages
 "###,
     );
 
@@ -43,6 +31,7 @@ prefix = ${HOME}/.npm-packages
         ".zshrc",
         r###"
 eval "$(direnv hook zsh)"
+SHELL=/run/current-system/sw/bin/zsh
 "###,
     );
 
