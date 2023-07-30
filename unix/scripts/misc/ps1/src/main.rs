@@ -251,7 +251,9 @@ async fn main() {
     };
     let jobs_args = args.get(2).unwrap_or(&"".to_string()).to_string();
     let jobs_prefix = get_background_jobs(jobs_args).unwrap_or("".to_string());
-    let is_nix_develop = std::env::var("CD_INTO_NIX").unwrap_or("0".to_string());
+    let is_nix_develop = std::env::var("CD_INTO_NIX").unwrap_or_else(|_| {
+        return std::env::var("IN_NIX_SHELL").unwrap_or("0".to_string());
+    });
 
     let tasks: Vec<tokio::task::JoinHandle<TaskResult>> = vec![
         tokio::spawn(get_tmux_prefix()),
@@ -291,7 +293,7 @@ async fn main() {
         TaskResult::Tailscale(a) => a,
         _ => panic!(""),
     };
-    let nix_prefix = if is_nix_develop == "1".to_string() {
+    let nix_prefix = if is_nix_develop != "0".to_string() {
         " (NIX)"
     } else {
         ""

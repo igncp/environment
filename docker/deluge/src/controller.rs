@@ -147,7 +147,7 @@ impl Controller {
     pub fn stop_all() {
         run_bash_command(
             r###"
-docker-compose down || true
+docker compose down || true
 sudo bash -c "killall openvpn || true" > /dev/null 2>&1
 "###,
         );
@@ -157,7 +157,14 @@ sudo bash -c "killall openvpn || true" > /dev/null 2>&1
     pub fn run_all() {
         run_bash_command(
             r###"
-docker-compose up -d
+RUNNING_VPN=$(ps aux | grep openvpn | grep -v grep | wc -l)
+
+if [ "$RUNNING_VPN" -gt 0 ]; then
+    echo "VPN is already running"
+    exit 1
+fi
+
+docker compose up -d
 
 (cd ~/vpn && bash run.sh)
 "###,

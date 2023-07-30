@@ -9,7 +9,7 @@ use self::{
     dart::setup_dart,
     docker::setup_docker,
     dotnet::setup_dotnet,
-    general::run_general,
+    general::{run_general, run_general_end},
     go::setup_go,
     haskell::setup_haskell,
     js::{run_js, setup_js_vue},
@@ -73,4 +73,6 @@ pub fn run_common_provision(context: &mut Context) {
     setup_haskell(context);
     setup_dart(context);
     setup_android(context);
+
+    run_general_end(context);
 }

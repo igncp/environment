@@ -1,5 +1,15 @@
-{pkgs, ...}: let
-  base_config = ../project/.config;
+{
+  pkgs,
+  unstable,
+  ...
+}: let
+  base_config = ../../project/.config;
+  unstable_pkgs = import unstable {
+    system = pkgs.system;
+    config.allowUnfree = true;
+  };
+
+  emojify = import ./emojify.nix {inherit pkgs;};
 
   has_c = builtins.pathExists (base_config + "/c");
   has_cli_aws = builtins.pathExists (base_config + "/cli-aws");
@@ -7,9 +17,11 @@
   has_cli_openvpn = builtins.pathExists (base_config + "/cli-openvpn");
   has_go = builtins.pathExists (base_config + "/go");
   has_ruby = builtins.pathExists (base_config + "/ruby");
+  has_shellcheck = builtins.pathExists (base_config + "/shellcheck");
   has_tailscale = builtins.pathExists (base_config + "/tailscale");
+  has_hashi = builtins.pathExists (base_config + "/hashi");
 in {
-  default_pkgs = with pkgs;
+  environment.systemPackages = with pkgs;
     [
       ack
       age
@@ -22,7 +34,11 @@ in {
       direnv
       dnsutils
       docker
+      duf
+      emojify
+      fd
       figlet
+      file
       flameshot
       gcc
       git
@@ -46,11 +62,14 @@ in {
       openssl
       openvpn
       pandoc
+      pastel
       pkgconfig
+      ps_mem
       python3
       python3.pkgs.pip
       ranger
       rustup
+      scc
       silver-searcher
       speedtest-cli
       sqlite
@@ -58,6 +77,7 @@ in {
       taskwarrior
       tmux
       tree
+      unstable_pkgs.yt-dlp
       unzip
       valgrind
       vim
@@ -76,5 +96,9 @@ in {
     ++ (lib.optional has_c pkgs.clib)
     ++ (lib.optional has_c pkgs.ctags)
     ++ (lib.optional has_c pkgs.gcovr)
+    ++ (lib.optional has_hashi pkgs.terraform-ls)
+    ++ (lib.optional has_hashi pkgs.terraform)
+    ++ (lib.optional has_hashi pkgs.vagrant)
+    ++ (lib.optional has_shellcheck pkgs.shellcheck)
     ++ (lib.optional has_tailscale pkgs.tailscale);
 }

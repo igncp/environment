@@ -6,9 +6,11 @@ use std::{
 
 use crate::base::{config::Config, system::System, Context};
 
+use self::cinnamon::setup_cinnamon;
 use self::copyq::setup_copyq;
 use self::{i3::setup_i3, lxde::setup_lxde, rime::setup_rime, vscode::setup_vscode};
 
+mod cinnamon;
 mod copyq;
 mod i3;
 mod lxde;
@@ -173,6 +175,38 @@ alias XKBCompLoad='xkbcomp /tmp/xkb-config.xkb $DISPLAY'
         ),
     );
 
+    if Config::has_config_file(&context.system, ".config/gui-virtualbox")
+        && !context.system.is_nixos()
+    {
+        context.system.install_system_package("virtualbox", None);
+
+        if !Path::new(&context.system.get_home_path(".check-files/virtualbox")).exists() {
+            if context.system.is_arch() {
+                context
+                    .system
+                    .install_system_package("virtualbox-host-modules-arch", None);
+            }
+
+            System::run_bash_command(
+                r###"
+sudo usermod -a -G vboxusers "$USER"
+touch ~/.check-files/virtualbox
+"###,
+            );
+        }
+
+        if !Path::new(
+            &context
+                .system
+                .get_home_path(".local/share/applications/virtualbox-dark.desktop"),
+        )
+        .exists()
+        {
+            println!("Copy `.local/share/applications/virtualbox.desktop` into `.local/share/applications/virtualbox-dark.desktop`");
+            println!("and update the command into: `virtualbox --style FusionDark %U`");
+        }
+    }
+
     // GTK
     //   https://www.gnome-look.org/browse/ord/rating/
     //   Can run: lxappearance # including inside Rofi
@@ -193,4 +227,5 @@ alias XKBCompLoad='xkbcomp /tmp/xkb-config.xkb $DISPLAY'
     setup_vscode(context);
     setup_rime(context);
     setup_copyq(context);
+    setup_cinnamon(context);
 }

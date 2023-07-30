@@ -221,6 +221,16 @@ snippet => "Arrow function" i
   ${0}
 }
 endsnippet
+
+snippet xPlaywrightOnConsole
+page.on('console', (m) => {
+  const text = m.text();
+
+  if (text.includes('debug:')) {
+    console.log(text);
+  }
+});
+endsnippet
 EOF
 
 cp ~/.vim-snippets/javascript.snippets ~/.vim-snippets/typescript.snippets

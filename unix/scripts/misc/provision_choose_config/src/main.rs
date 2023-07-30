@@ -273,7 +273,7 @@ fn run_app<B: Backend>(
                             app.items.previous();
                         }
                     }
-                    KeyCode::Enter => app.toggle_selected(),
+                    KeyCode::Enter | KeyCode::Char(' ') => app.toggle_selected(),
                     _ => {}
                 }
             }

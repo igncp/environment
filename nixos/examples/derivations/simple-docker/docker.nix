@@ -14,28 +14,28 @@
       system: let
         pkgs = import nixpkgs {
           inherit system;
+          config = {
+            permittedInsecurePackages = ["nodejs-16.20.1"];
+          };
         };
-        all_pkgs = with pkgs; [nodejs rustup awscli2 vim openssl];
+        shell_pkgs = with pkgs; [nodejs_16 rustup awscli2 vim openssl];
         docker_local = pkgs.dockerTools.buildImage {
           name = "example-image";
           tag = "latest";
           config = {
             User = "igncp";
             WorkingDir = "/app";
+            Env = ["SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt"];
           };
-          copyToRoot = pkgs.buildEnv {
-            name = "image-root";
-            paths = with pkgs;
-              [
-                bashInteractive
-                coreutils
-                gcc
-                git
-                nix
-              ]
-              ++ all_pkgs;
-            pathsToLink = ["/bin"];
-          };
+          copyToRoot = with pkgs; [
+            bashInteractive
+            cacert
+            dockerTools.binSh
+            dockerTools.usrBinEnv
+            git
+            nix
+            openssl
+          ];
           runAsRoot = ''
             #!${pkgs.runtimeShell}
             ${pkgs.dockerTools.shadowSetup}
@@ -51,7 +51,7 @@
       in
         with pkgs; {
           devShells.default = mkShell {
-            buildInputs = all_pkgs;
+            buildInputs = shell_pkgs;
           };
           packages.docker_local = docker_local;
         }

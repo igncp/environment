@@ -118,14 +118,4 @@ cat > ~/.ctags <<"EOF"
 --regex-markdown=/^###[ \t]+(.*)/\1/k,Heading_L3/
 EOF
 
-install_system_package shellcheck
-echo 'SHELLCHECK_IGNORES="SC1090"' >> ~/.bashrc
-add_shellcheck_ignores() {
-  for DIRECTIVE in "$@"; do
-    echo 'SHELLCHECK_IGNORES="$SHELLCHECK_IGNORES,SC'"$DIRECTIVE"'"' >> ~/.bashrc
-  done
-}
-add_shellcheck_ignores 2016 2028 2046 2059 2086 2088 2143 2164 2181 1117
-echo 'export SHELLCHECK_OPTS="-e $SHELLCHECK_IGNORES"' >> ~/.bashrc
-
 # misc END

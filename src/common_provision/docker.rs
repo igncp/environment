@@ -34,6 +34,17 @@ DockerBashExec() { docker exec -it $1 /bin/bash; }
 DockerBashRun() { docker run -it $1 /bin/bash; }
 DockerHistory() { docker history --no-trunc $1 | less -S; }
 
+DockerTags() {
+   NAME=$1
+   ORG=${2:-library}
+   wget -q -O - \
+    "https://hub.docker.com/v2/namespaces/$ORG/repositories/$NAME/tags?page_size=100" \
+        | grep -o '"name": *"[^"]*' \
+        | grep -o '[^"]*$'
+}
+
+alias DockerSearch='docker search'
+
 # DockerContainerPortainer 9123
 DockerContainerPortainer() { docker run --rm -d -p $1:9000 --name portainer \
   -v /var/run/docker.sock:/var/run/docker.sock \

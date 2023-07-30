@@ -32,6 +32,9 @@ RebuildNixOs() {
         r###"
 eval "$(direnv hook zsh)"
 SHELL=/run/current-system/sw/bin/zsh
+
+# Uncomment this to hide direnv logs when entering a dir
+# export DIRENV_LOG_FORMAT=""
 "###,
     );
 

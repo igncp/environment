@@ -6,10 +6,14 @@
   unstable,
   ...
 }: let
-  has_i3 = builtins.pathExists ../project/.config/gui-i3;
-  has_rime = builtins.pathExists ../project/.config/rime;
-  has_copyq = builtins.pathExists ../project/.config/copyq;
-  has_nvidia = (builtins.readFile ../project/.config/nvidia) == "yes\n";
+  base_config = ../../project/.config;
+
+  has_copyq = builtins.pathExists (base_config + "/copyq");
+  has_i3 = builtins.pathExists (base_config + "/gui-i3");
+  has_nvidia = (builtins.readFile ../../project/.config/nvidia) == "yes\n";
+  has_rime = builtins.pathExists (base_config + "/rime");
+  has_virtualbox = builtins.pathExists (base_config + "/gui-virtualbox");
+
   unstable_pkgs = import unstable {
     system = pkgs.system;
     config.allowUnfree = true;
@@ -19,29 +23,35 @@ in {
     []
     ++ (lib.optional has_nvidia ./gui-nvidia.nix)
     ++ (lib.optional has_rime ./gui-rime.nix)
-    ++ (lib.optional has_i3 ./gui-i3.nix);
+    ++ (lib.optional has_i3 ./gui-i3.nix)
+    ++ (lib.optional has_virtualbox ./gui-virtualbox.nix);
 
   hardware.pulseaudio.enable = false;
+  services.flatpak.enable = true;
 
-  environment.systemPackages = with pkgs; [
-    acpi
-    arandr
-    blueberry
-    dropbox
-    feh
-    firefox
-    keepass
-    realvnc-vnc-viewer
-    rofi
-    rpi-imager
-    slack
-    steam
-    terminator
-    unstable_pkgs.google-chrome
-    variety
-    xclip
-    zoom-us
-  ] ++ (lib.optional has_copyq copyq);
+  environment.systemPackages = with pkgs;
+    [
+      acpi
+      arandr
+      blueberry
+      dropbox
+      feh
+      firefox
+      keepass
+      libsForQt5.qt5ct
+      realvnc-vnc-viewer
+      rofi
+      rpi-imager
+      slack
+      steam
+      terminator
+      unstable_pkgs.google-chrome
+      variety
+      xclip
+      xdotool
+      zoom-us
+    ]
+    ++ (lib.optional has_copyq copyq);
 
   xdg = {
     portal = {

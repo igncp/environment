@@ -39,7 +39,7 @@ pub fn setup_go(context: &mut Context) {
         ),
     );
 
-    if !context.system.is_nixos() {
+    if !context.system.is_nix_provision {
         let goroot = get_goroot();
 
         context.home_append(
@@ -54,7 +54,7 @@ pub fn setup_go(context: &mut Context) {
         );
     }
 
-    if !context.system.get_has_binary("go") {
+    if !context.system.get_has_binary("go") && !context.system.is_nix_provision {
         println!("Installing go");
 
         System::run_bash_command(
@@ -70,7 +70,7 @@ asdf global golang 1.20.5
     install_nvim_package(context, "josa42/coc-go", None);
     install_nvim_package(context, "fatih/vim-go", None);
 
-    if !context.system.is_nixos() {
+    if !context.system.is_nix_provision {
         install_go_package(context, "github.com/kisielk/errcheck@latest", "errcheck");
         install_go_package(context, "github.com/google/pprof@latest", "pprof"); // https://github.com/google/pprof
     }

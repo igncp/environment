@@ -77,7 +77,7 @@ GrubHideSetupTimeout() {
   sudo sed -i 's|^GRUB_TIMEOUT_STYLE=.*|GRUB_TIMEOUT_STYLE=hidden|' /etc/default/grub
 }
 
-SwappinessUpdate() {
+LinuxSwappinessUpdate() {
   echo 'vm.swappiness=10' > /tmp/99-swappiness.conf
   echo 'vm.vfs_cache_pressure=50' >> /tmp/99-swappiness.conf
   echo 'vm.dirty_ratio=3' >> /tmp/99-swappiness.conf

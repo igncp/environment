@@ -33,14 +33,6 @@ install_with_yay lxqt-sudo-git lxqt-sudo # for rofi
 if [ -f ~/development/environment/project/.config/figma ]; then install_with_yay figma-linux; fi
 
 if [ -z "$ARM_ARCH" ]; then
-  if [ -f ~/development/environment/project/.config/virtualbox-host ]; then
-    if ! type virtualbox > /dev/null 2>&1 ; then
-      install_system_package virtualbox-host-modules-arch
-      install_system_package virtualbox
-      sudo usermod -a -G vboxusers "$USER"
-    fi
-  fi
-
   if [ -f ~/development/environment/project/.config/espanso ]; then
     install_with_yay espanso
     check_file_exists ~/project/provision/espanso.yml

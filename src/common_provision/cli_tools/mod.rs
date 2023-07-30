@@ -11,7 +11,6 @@ use self::googler::setup_googler;
 use self::hasura::setup_hasura;
 use self::jira::setup_jira;
 use self::postgres::setup_postgres;
-use self::scc::setup_scc;
 
 mod aws;
 mod github;
@@ -19,7 +18,6 @@ mod googler;
 mod hasura;
 mod jira;
 mod postgres;
-mod scc;
 
 pub fn run_cli_tools(context: &mut Context) {
     if Config::has_config_file(&context.system, ".config/cli-openvpn") {
@@ -127,7 +125,6 @@ rm -rf ~/hhighlighter
     }
 
     setup_aws(context);
-    setup_scc(context);
     setup_jira(context);
     setup_googler(context);
     setup_gh(context);

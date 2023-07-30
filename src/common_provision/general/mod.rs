@@ -5,7 +5,8 @@ use crate::base::{config::Config, system::System, Context};
 use self::{
     asdf::run_asdf, diagrams::setup_diagrams, fzf::run_fzf, git::run_git, gpg::setup_gpg,
     hashi::setup_hashi, htop::run_htop, network::setup_network, nix::setup_nix,
-    pi_hole::setup_pi_hole, python::run_python, taskwarrior::setup_taskwarrior, tmux::setup_tmux,
+    pi_hole::setup_pi_hole, python::run_python, shellcheck::setup_shellcheck,
+    taskwarrior::setup_taskwarrior, tmux::setup_tmux,
 };
 
 mod asdf;
@@ -19,6 +20,7 @@ mod network;
 mod nix;
 mod pi_hole;
 mod python;
+mod shellcheck;
 mod taskwarrior;
 mod tmux;
 
@@ -208,6 +210,7 @@ alias Sudo='sudo -E ' # this preserves aliases and environment in root
 alias TreeDir='tree -d'
 alias Visudo='sudo env EDITOR=vim visudo'
 alias Xargs='xargs -I{}'
+alias YoutubeSubtitles='yt-dlp --all-subs --skip-download'
 
 alias CrontabUser='crontab -e'
 alias CrontabRoot='sudo EDITOR=vim crontab -e'
@@ -453,8 +456,12 @@ EOF2
     run_htop(context);
     run_python(context);
     setup_taskwarrior(context);
-    setup_hashi(context);
     setup_pi_hole(context);
     setup_network(context);
     setup_diagrams(context);
+    setup_shellcheck(context);
+}
+
+pub fn run_general_end(context: &mut Context) {
+    setup_hashi(context);
 }

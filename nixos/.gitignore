@@ -1,4 +1,4 @@
 hardware-configuration.nix
 custom.nix
-private.nix
 flake-config.nix
+result

@@ -118,7 +118,16 @@ autocmd BufNewFile,BufRead *.tsx,*.jsx set filetype=typescriptreact
     "nix": {
       "command": "nixd",
       "filetypes": ["nix"]
-    }},
+    },
+		"terraform": {
+			"command": "terraform-ls",
+			"args": ["serve"],
+			"filetypes": [
+				"terraform",
+				"tf"
+			],
+			"initializationOptions": {},
+			"settings": {}}},
     "snippets.ultisnips.pythonPrompt": false
 }
 "###,

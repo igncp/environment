@@ -2,28 +2,30 @@
   pkgs,
   lib,
   config,
+  home-manager,
   ...
 }: let
   has_gui = builtins.pathExists ../project/.config/gui;
   has_android = builtins.pathExists ../project/.config/android;
-  has_private = builtins.pathExists ./private.nix;
   has_custom = builtins.pathExists ./custom.nix;
+  hm_config_name = ".config/nix-home-manager";
+  has_hm = builtins.pathExists (../project + ("/" + hm_config_name));
 in {
   imports =
     [
       ./hardware-configuration.nix
+      ./config/default_pkgs.nix
     ]
     ++ (lib.optional has_custom ./custom.nix)
-    ++ (lib.optional has_private ./private.nix)
-    ++ (lib.optional has_android ./android.nix)
-    ++ (lib.optional has_gui ./gui.nix);
+    ++ (lib.optional has_android ./config/android.nix)
+    ++ (lib.optional has_hm ./config/home-manager-entry.nix)
+    ++ (lib.optional has_gui ./config/gui.nix);
 
   config = {
     boot.loader.systemd-boot.enable = true;
     boot.loader.efi.canTouchEfiVariables = true;
     hardware.bluetooth.enable = true;
     services.blueman.enable = true;
-    services.flatpak.enable = true;
     hardware.bluetooth.settings = {
       General = {
         Enable = "Source,Sink,Media,Socket";
@@ -32,14 +34,11 @@ in {
 
     virtualisation.docker.enable = true;
 
-    environment.systemPackages =
-      []
-      ++ (import ./default_pkgs.nix pkgs).default_pkgs;
-
     environment.variables = {
       CURL_CA_BUNDLE = "/etc/pki/tls/certs/ca-bundle.crt"; # Added for curl
       OPENSSL_DEV = pkgs.openssl.dev;
       PKG_CONFIG_PATH = "${pkgs.openssl.dev}/lib/pkgconfig"; # Added for Rust
+      QT_QPA_PLATFORMTHEME = lib.mkForce "qt5ct";
     };
 
     i18n.defaultLocale = "en_US.UTF-8";

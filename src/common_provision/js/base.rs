@@ -264,6 +264,7 @@ asdf global nodejs "$NODE_VERSION"
         &context.system.get_home_path(".shell_aliases"),
         r###"
 Serve() { PORT="$2"; http-server -c-1 -p "${PORT:=9000}" $1; }
+alias PlaywrightTrace='npx playwright show-trace'
 "###,
     );
 
