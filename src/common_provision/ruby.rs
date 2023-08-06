@@ -22,24 +22,11 @@ pub fn setup_ruby(context: &mut Context) {
     }
 
     if !context.system.get_has_binary("ruby") {
-        let default_version = "3.2.2";
-
         if context.system.is_linux()
             && context.system.linux_distro.clone().unwrap() == LinuxDistro::Ubuntu
         {
             System::run_bash_command("sudo apt-get install -y libyaml-dev libssl-dev");
         }
-
-        System::run_bash_command(&format!(
-            r###"
-asdf plugin add ruby
-
-# Depends on libssl-dev
-asdf install ruby {default_version}
-
-asdf global ruby {default_version}
-"###,
-        ));
     }
 
     install_ruby_gems(&["bundler", "lolcat", "fit-commit"]);

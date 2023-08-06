@@ -42,6 +42,7 @@ in {
       flameshot
       gcc
       git
+      gnumake
       gnupg
       graphviz
       htop
@@ -52,10 +53,12 @@ in {
       lshw
       lsof
       mitmproxy
+      mkcert
       moreutils
       ncdu
       neofetch
       neovim
+      nil
       nixopsUnstable
       nmap
       nodejs

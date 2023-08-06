@@ -1,10 +1,4 @@
-{
-  config,
-  lib,
-  pkgs,
-  modulesPath,
-  ...
-}: {
+{pkgs, ...}: {
   # Setup keyfile
   boot.initrd.secrets = {
     "/crypto_keyfile.bin" = null;

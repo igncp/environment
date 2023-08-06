@@ -76,9 +76,6 @@ call add(g:coc_global_extensions, 'coc-json')
     install_nvim_package(context, "neoclide/coc-css", None);
     install_nvim_package(context, "neoclide/coc-tsserver", None);
 
-    // https://github.com/oxalica/nil
-    install_nvim_package(context, "nix-community/nixd", None);
-
     context.files.append(
         &context.system.get_home_path(".vimrc"),
         r###"
@@ -116,7 +113,7 @@ autocmd BufNewFile,BufRead *.tsx,*.jsx set filetype=typescriptreact
   "snippets.userSnippetsDirectory": "$HOME/.vim-snippets",
   "languageserver": {
     "nix": {
-      "command": "nixd",
+      "command": "nil",
       "filetypes": ["nix"]
     },
 		"terraform": {

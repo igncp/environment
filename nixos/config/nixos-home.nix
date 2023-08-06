@@ -1,9 +1,4 @@
-{
-  pkgs,
-  lib,
-  config,
-  ...
-}: let
+{pkgs, ...}: let
   home_dir =
     if pkgs.system == "aarch64-darwin"
     then "/Users/igncp"

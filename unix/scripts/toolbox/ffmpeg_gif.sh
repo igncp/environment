@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-if ! type asdf > /dev/null 2>&1 ; then
-  echo 'echo ffmpeg missing'
-fi
-
 FILE_PATH=$(
   find . -type f -name '*.mp4' |
   fzf --height 100% --border -m --ansi \

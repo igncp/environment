@@ -1,11 +1,5 @@
 # jvm START
 
-if ! type java > /dev/null 2>&1 ; then
-  asdf plugin-add java https://github.com/halcyon/asdf-java.git
-  asdf install java adoptopenjdk-14.0.2+12
-  asdf global java adoptopenjdk-14.0.2+12
-fi
-
 # Oracle JDK:
 # https://www.oracle.com/java/technologies/javase-downloads.html
 

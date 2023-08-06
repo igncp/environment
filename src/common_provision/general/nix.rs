@@ -43,6 +43,13 @@ experimental-features = nix-command flakes
     );
 
     context.home_append(
+        ".zshrc",
+        r###"
+eval "$(direnv hook zsh)"
+"###,
+    );
+
+    context.home_append(
         ".shell_aliases",
         r###"
 alias NixClearSpace='nix-collect-garbage'

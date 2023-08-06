@@ -5,6 +5,7 @@ pub fn setup_cinnamon(context: &mut Context) {
         return;
     }
 
+    // Example of a xdotoool shortcut: `bash -c "sleep .2 && xdotool type 'foobar'"`
     context.home_append(
         ".shell_aliases",
         r###"

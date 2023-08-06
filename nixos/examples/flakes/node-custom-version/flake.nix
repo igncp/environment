@@ -18,7 +18,7 @@
           url = "https://github.com/NixOS/nixpkgs/archive/9748e9ad86159f62cc857a5c72bc78f434fd2198.tar.gz";
           sha256 = "1k6mdfnwwwy51f7szggyh2dxjwrf9q431c0cnbi17yb21m9d4n26";
         }) {inherit system;};
-      in rec {
+      in {
         packages.node = pkgs.nodejs-8_x;
         devShells.default = nixpkgs.legacyPackages."${system}".mkShell {
           buildInputs = [pkgs.nodejs-8_x];

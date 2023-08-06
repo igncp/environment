@@ -79,14 +79,12 @@ fn main() {
         check_host_support();
 
         fn handle_client(stream: &mut TcpStream) {
-            let mut content = vec![];
-            content.resize(102400, 0);
-            let result = stream.read(&mut content);
+            let mut content = String::new();
+            let result = stream.read_to_string(&mut content);
             if result.is_err() {
                 warn!("Failed to read data from the client");
                 return;
             }
-            let content = String::from_utf8(content).unwrap();
 
             save_to_clipboard(&content);
         }

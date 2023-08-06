@@ -121,21 +121,6 @@ NPMVersions() { npm view $1 versions --json; } # NPMVersions react
 "###,
     );
 
-    if !Path::new(&context.system.get_home_path(".nvm")).exists()
-        && !context.system.get_has_binary("node")
-    {
-        System::run_bash_command(
-            r###"
-NODE_VERSION=16.20.0
-. $HOME/.asdf/asdf.sh
-(asdf plugin add nodejs || true)
-
-asdf install nodejs "$NODE_VERSION"
-asdf global nodejs "$NODE_VERSION"
-"###,
-        );
-    }
-
     install_node_modules(
         context,
         [("http-server", None), ("yarn", None), ("zx", None)].to_vec(),
@@ -284,13 +269,7 @@ i<\<c-c>\<right>%a>\<c-c>\<left>%\<left>
 
     let completion_path = &context.system.get_home_path(".npm-completion");
     if !Path::new(&completion_path).exists() {
-        if context.system.is_nixos() {
-            System::run_bash_command(&format!("npm completion > {completion_path}"));
-        } else {
-            System::run_bash_command(&format!(
-                ". $HOME/.asdf/asdf.sh ; npm completion > {completion_path}"
-            ));
-        }
+        System::run_bash_command(&format!("npm completion > {completion_path}"));
     }
     let npm_completion = fs::read_to_string(completion_path).unwrap();
     context

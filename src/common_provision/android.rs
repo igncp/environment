@@ -1,3 +1,5 @@
+use std::path::Path;
+
 use crate::base::{config::Config, Context};
 
 pub fn setup_android(context: &mut Context) {
@@ -37,6 +39,21 @@ alias GradleDependencies='./gradlew -q buildEnvironment'
     "###,
         ),
     );
+
+    if Path::new(&context.system.get_home_path("Android/Sdk")).exists() {
+        context.home_append(
+            ".shellrc",
+            r###"
+export ANDROID_HOME=$HOME/Android/Sdk
+export ANDROID_SDK_ROOT=$HOME/Android/Sdk
+export PATH="$ANDROID_HOME/platform-tools:$PATH"
+export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
+export PATH="$ANDROID_HOME/emulator:$PATH"
+export PATH="$ANDROID_HOME/tools:$PATH"
+export PATH="$ANDROID_HOME/tools/bin:$PATH"
+"###,
+        );
+    }
 }
 
 // This is the outdated config for Arch. When using NixOS, many of these are automatic
@@ -68,16 +85,6 @@ alias GradleDependencies='./gradlew -q buildEnvironment'
 
 // ANDROID_PATH_FILE="$(cat ~/development/environment/project/.config/android-path)"
 // export ANDROID_HOME="$ANDROID_PATH_FILE"
-
-// export ANDROID_SDK_ROOT="$ANDROID_HOME"
-// # it is important that takes priority over .../tools/bin
-// export PATH="$PATH:$ANDROID_HOME/cmdline-tools/latest/bin"
-// export PATH="$PATH:$ANDROID_HOME/cmdline-tools/tools/bin"
-// export PATH="$PATH:$ANDROID_HOME/tools/bin/"
-// export PATH="$PATH:$ANDROID_HOME/platform-tools/"
-// export PATH="$PATH:$ANDROID_HOME/emulator/"
-// export PATH="$PATH:$HOME/android-studio/bin"
-// EOF
 
 // if [ "$PROVISION_OS" == "LINUX" ]; then
 //   cat >> /tmp/android-studio.desktop <<"EOF"

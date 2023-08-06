@@ -3,13 +3,12 @@ use std::path::Path;
 use crate::base::{config::Config, system::System, Context};
 
 use self::{
-    asdf::run_asdf, diagrams::setup_diagrams, fzf::run_fzf, git::run_git, gpg::setup_gpg,
-    hashi::setup_hashi, htop::run_htop, network::setup_network, nix::setup_nix,
-    pi_hole::setup_pi_hole, python::run_python, shellcheck::setup_shellcheck,
-    taskwarrior::setup_taskwarrior, tmux::setup_tmux,
+    diagrams::setup_diagrams, fzf::run_fzf, git::run_git, gpg::setup_gpg, hashi::setup_hashi,
+    htop::run_htop, network::setup_network, nix::setup_nix, pi_hole::setup_pi_hole,
+    python::run_python, shellcheck::setup_shellcheck, taskwarrior::setup_taskwarrior,
+    tmux::setup_tmux,
 };
 
-mod asdf;
 mod diagrams;
 mod fzf;
 mod git;
@@ -154,6 +153,7 @@ alias svim="sudo vim"
 alias tree="tree -a"
 alias wget="wget -c"
 
+alias ca="~/.scripts/cargo_target/release/canto-cli"
 alias gob="git checkout -b"
 
 alias Lsblk="lsblk -f | less -S"
@@ -448,9 +448,21 @@ EOF2
 "###,
     );
 
+    if !context.system.is_nix_provision {
+        // Used to run a local server with https
+        context.system.install_system_package("mkcert", None);
+        // To install the root CA under NixOS:
+        // - `mkcert localhost 127.0.0.1 ::1`
+        // - Open in Chrome: `chrome://settings/certificates` under the "Authorities tab
+        // - Import the root CA in ~/.local/share/mkcert
+        // - Restart Chrome
+        // - Uninstall when done as it can be used to intercept secure traffic (if the root CA
+        // shared)
+        // - It has the name `org-mkcert development CA`
+    }
+
     setup_nix(context);
     setup_gpg(context);
-    run_asdf(context);
     run_git(context);
     run_fzf(context);
     run_htop(context);

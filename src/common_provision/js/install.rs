@@ -20,32 +20,13 @@ pub fn install_node_modules(context: &mut Context, names: Vec<(&str, Option<&str
     }
 
     for (module, cmd) in names {
-        if context.system.is_nix_provision {
-            let cmd_check = cmd.unwrap_or(module);
-            let expected_module_path =
-                format!("{}/.npm-packages/bin/{}", context.system.home, cmd_check);
+        let cmd_check = cmd.unwrap_or(module);
+        let expected_module_path =
+            format!("{}/.npm-packages/bin/{}", context.system.home, cmd_check);
 
-            if !Path::new(&expected_module_path).exists() {
-                println!("Installing node module: {}", module);
-                System::run_bash_command(&format!(r###"npm i -g {module}"###));
-            }
-        } else {
-            let expected_module_path = format!(
-                "{}/.asdf/installs/nodejs/{}/lib/node_modules/{}",
-                context.system.home,
-                context.system.node_version.as_ref().unwrap(),
-                module
-            );
-
-            if !Path::new(&expected_module_path).exists() {
-                println!("Installing node module: {}", module);
-                System::run_bash_command(&format!(
-                    r###"
-. $HOME/.asdf/asdf.sh
-npm i -g {module}
-"###
-                ));
-            }
-        };
+        if !Path::new(&expected_module_path).exists() {
+            println!("Installing node module: {}", module);
+            System::run_bash_command(&format!(r###"npm i -g {module}"###));
+        }
     }
 }
