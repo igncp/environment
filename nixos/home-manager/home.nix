@@ -16,9 +16,9 @@
   base_config = home_dir + "/development/environment/project/.config";
 
   is_darwin = pkgs.system == "aarch64-darwin";
+  is_node_16 = builtins.pathExists (base_config + "/node16");
   has_go = builtins.pathExists (base_config + "/go");
   has_hashi = builtins.pathExists (base_config + "/hashi");
-  has_nix_node = builtins.pathExists (base_config + "/nix-node");
   has_ruby = builtins.pathExists (base_config + "/ruby");
 in {
   home.username = "igncp";
@@ -50,8 +50,8 @@ in {
       unstable_pkgs.age
       unzip
     ]
+    ++ (if is_node_16 then [pkgs.nodejs-16_x] else [pkgs.nodejs])
     ++ (lib.optional has_ruby pkgs.ruby)
-    ++ (lib.optional has_nix_node pkgs.nodejs)
     ++ (lib.optional has_hashi pkgs.terraform-ls)
     ++ (lib.optional has_hashi pkgs.vagrant)
     ++ (lib.optional has_hashi pkgs.terraform)

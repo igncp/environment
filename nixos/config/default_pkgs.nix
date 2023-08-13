@@ -29,8 +29,8 @@ in {
       alsa-utils
       bat
       cacert
+      cachix
       dbus
-      diesel-cli
       direnv
       dnsutils
       docker
@@ -66,6 +66,7 @@ in {
       openvpn
       pandoc
       pastel
+      pgcli
       pkgconfig
       ps_mem
       python3
@@ -85,7 +86,6 @@ in {
       valgrind
       vim
       vnstat
-      wasm-pack
       wget
       yq
       zip

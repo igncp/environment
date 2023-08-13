@@ -1,36 +1,10 @@
 use clap::{Arg, Command};
-use std::io::Read;
+use controller::find_binary;
+use std::{collections::HashMap, io::Read};
 
-fn run_bash_command(cmd: &str) {
-    let full_cmd = format!("set -e\n{}", cmd);
-    let status = std::process::Command::new("bash")
-        .arg("-c")
-        .arg(full_cmd)
-        .status()
-        .unwrap();
+use crate::controller::{run_bash_command, select_only_chars};
 
-    if !status.success() {
-        println!("Failed to run command: {}", cmd);
-        std::process::exit(1);
-    }
-}
-
-fn find_binary(exe_name: &str) -> Option<String> {
-    let path = std::env::var_os("PATH")
-        .unwrap()
-        .to_str()
-        .unwrap()
-        .to_string();
-
-    std::env::split_paths(&path).find_map(|dir| {
-        let full_path = dir.join(exe_name);
-        if full_path.is_file() {
-            Some(full_path.to_str().unwrap().to_string())
-        } else {
-            None
-        }
-    })
-}
+mod controller;
 
 fn main() {
     let app = Command::new("canto-cli")
@@ -44,6 +18,18 @@ fn main() {
             Command::new("sub")
                 .about("Download subtitles from a youtube video (requires yt-dlp)")
                 .arg(Arg::new("video_url").required(true)),
+        )
+        .subcommand(
+            Command::new("jp")
+                .about("Add jyutping to text")
+                .arg(Arg::new("dict_path").required(false))
+                .arg(
+                    Arg::new("no-filter")
+                        .short('n')
+                        .long("no-filter")
+                        .required(false)
+                        .action(clap::ArgAction::SetTrue),
+                ),
         )
         .subcommand(
             Command::new("filter-chars")
@@ -71,12 +57,62 @@ fn main() {
         let mut buffer = String::new();
         std::io::stdin().read_to_string(&mut buffer).unwrap();
 
-        let filtered = buffer
-            .chars()
-            .filter(|c| *c == '\n' || (!c.is_ascii() && !c.is_ascii_punctuation()))
-            .collect::<String>();
+        let filtered = select_only_chars(buffer);
 
         println!("{}", filtered);
+    } else if let Some(_) = matches.subcommand_matches("jp") {
+        let mut buffer = String::new();
+        std::io::stdin().read_to_string(&mut buffer).unwrap();
+        let no_filter_text = matches.get_one::<String>("no-filter");
+
+        let filtered = if no_filter_text.is_some() {
+            select_only_chars(buffer)
+        } else {
+            buffer
+        };
+
+        let home_dir = env!("HOME");
+        let dict_path = format!("{home_dir}/misc/rime-cantonese/jyut6ping3.chars.dict.yaml");
+        let file_content = std::fs::read_to_string(dict_path).unwrap();
+        let mut lines = file_content.lines();
+        let start_line = lines.position(|line| line == "...").unwrap() + 1;
+        let mut dict_map: HashMap<&str, (String, u32)> = HashMap::new();
+
+        lines.skip(start_line).for_each(|line| {
+            let mut parts = line.split_whitespace();
+
+            let key = parts.next().unwrap();
+            let value = parts.next().unwrap();
+            let perc = parts.next().unwrap_or("100%");
+            let perc = if perc == "" { "100%" } else { perc };
+            let perc = perc.replace("%", "").parse::<u32>().unwrap_or(0);
+
+            let existing_value = dict_map.get(key);
+
+            if existing_value.is_some() && existing_value.unwrap().1 > perc {
+                return;
+            }
+
+            dict_map.insert(key, (value.to_string(), perc));
+        });
+
+        let full_text: String = filtered
+            .split("")
+            .map(|c| {
+                let jyutping = dict_map.get(&c);
+                if jyutping.is_none() {
+                    return c.to_string();
+                }
+                let jyutping = jyutping.unwrap();
+                let jyutping = jyutping.0.as_str();
+                return format!("{c}[{jyutping}] ");
+            })
+            .collect::<Vec<String>>()
+            .join("")
+            .trim()
+            .to_string();
+
+        println!("full_text {:?}", full_text);
     } else if let Some(_) = matches.subcommand_matches("doctor") {
         let is_yt_dlp_installed = find_binary("yt-dlp").is_some();
 

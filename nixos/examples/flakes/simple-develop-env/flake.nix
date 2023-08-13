@@ -1,4 +1,9 @@
 # Can run `nix develop` to start the shell
+
+# In `.envrc` you can specify a flake in a different directory, for example:
+# `use flake ~/env-job-nix --impure` : Here `--impure` is needed if installing
+# packages like node16 which require a config in the home directory
+
 {
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs";
