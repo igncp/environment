@@ -4,9 +4,8 @@ use crate::base::{config::Config, system::System, Context};
 
 use self::{
     diagrams::setup_diagrams, fzf::run_fzf, git::run_git, gpg::setup_gpg, hashi::setup_hashi,
-    htop::run_htop, network::setup_network, nix::setup_nix, pi_hole::setup_pi_hole,
-    python::run_python, shellcheck::setup_shellcheck, taskwarrior::setup_taskwarrior,
-    tmux::setup_tmux,
+    htop::run_htop, network::setup_network, pi_hole::setup_pi_hole, python::run_python,
+    shellcheck::setup_shellcheck, taskwarrior::setup_taskwarrior, tmux::setup_tmux,
 };
 
 mod diagrams;
@@ -16,7 +15,6 @@ mod gpg;
 mod hashi;
 mod htop;
 mod network;
-mod nix;
 mod pi_hole;
 mod python;
 mod shellcheck;
@@ -206,7 +204,6 @@ alias PsTree='pstree -pTUl | less -S'
 alias RsyncDelete='rsync -rhv --delete' # remember to add a slash at the end of source (dest doesn't matter)
 alias ShellChangeToBash='chsh -s /bin/bash; exit'
 alias SocketSearch='sudo ss -lntup'
-alias Sudo='sudo -E ' # this preserves aliases and environment in root
 alias TreeDir='tree -d'
 alias Visudo='sudo env EDITOR=vim visudo'
 alias Xargs='xargs -I{}'
@@ -461,7 +458,6 @@ EOF2
         // - It has the name `org-mkcert development CA`
     }
 
-    setup_nix(context);
     setup_gpg(context);
     run_git(context);
     run_fzf(context);

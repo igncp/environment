@@ -73,17 +73,15 @@ call add(g:coc_global_extensions, 'coc-json')
     }
 
     install_nvim_package(context, "neoclide/coc-html", None);
-    install_nvim_package(context, "neoclide/coc-css", None);
     install_nvim_package(context, "neoclide/coc-tsserver", None);
 
     context.files.append(
         &context.system.get_home_path(".vimrc"),
         r###"
 call add(g:coc_global_extensions, 'coc-html')
-call add(g:coc_global_extensions, 'coc-css')
 
 " https://github.com/neoclide/coc-css#install
-autocmd FileType scss setl iskeyword+=@-@
+" autocmd FileType scss setl iskeyword+=@-@
 
 call add(g:coc_global_extensions, 'coc-tsserver')
 
@@ -135,10 +133,15 @@ autocmd BufNewFile,BufRead *.tsx,*.jsx set filetype=typescriptreact
     // Confirm with: `CocList`
     if !context.config.without_coc_eslint {
         install_nvim_package(context, "neoclide/coc-eslint", None);
+        install_nvim_package(context, "neoclide/coc-stylelint", None);
 
         context.files.appendln(
             &context.system.get_home_path(".vimrc"),
             "call add(g:coc_global_extensions, 'coc-eslint')",
+        );
+        context.files.appendln(
+            &context.system.get_home_path(".vimrc"),
+            "call add(g:coc_global_extensions, 'coc-stylelint')",
         );
     }
 

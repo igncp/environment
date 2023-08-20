@@ -158,7 +158,7 @@ touch ~/.check-files/tailscale
     }
 
     if !Path::new(&context.system.get_home_path(".check-files/oomd")).exists()
-        && !context.system.is_nixos()
+        && !context.system.is_nix_provision
     {
         System::run_bash_command(
             r###"

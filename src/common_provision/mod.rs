@@ -15,6 +15,7 @@ use self::{
     js::{run_js, setup_js_vue},
     kotlin::setup_kotlin,
     linux::setup_linux,
+    nix::setup_nix,
     php::setup_php,
     raspberry::setup_raspberry,
     ruby::setup_ruby,
@@ -36,6 +37,7 @@ mod haskell;
 mod js;
 mod kotlin;
 mod linux;
+mod nix;
 mod php;
 mod raspberry;
 mod ruby;
@@ -44,6 +46,7 @@ mod vim;
 mod zsh;
 
 pub fn run_common_provision(context: &mut Context) {
+    setup_nix(context);
     run_zsh(context);
     run_general(context);
 
@@ -62,11 +65,7 @@ pub fn run_common_provision(context: &mut Context) {
     setup_raspberry(context);
     setup_c(context);
     setup_brightscript(context);
-
-    if context.system.is_linux() {
-        setup_docker(context);
-    }
-
+    setup_docker(context);
     setup_dotnet(context);
     setup_php(context);
     setup_kotlin(context);

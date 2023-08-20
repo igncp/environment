@@ -1,4 +1,6 @@
-use crate::base::{system::System, Context};
+use std::path::Path;
+
+use crate::base::{config::Config, system::System, Context};
 
 pub fn setup_nix(context: &mut Context) {
     if !context.system.get_has_binary("nix") {
@@ -17,6 +19,23 @@ sh <(curl -L https://nixos.org/nix/install) --daemon
             );
         }
     }
+
+    if !Path::new(&context.system.get_home_path(".pip")).exists() {
+        System::run_bash_command(
+            r###"
+mkdir -p ~/.pip
+"###,
+        )
+    }
+
+    context.home_appendln(
+        ".shellrc",
+        r###"
+export PIP_PREFIX=$HOME/.pip
+export PYTHONPATH=$(echo $HOME/.pip/lib/*/site-packages | tr " " ":")
+export PATH="$HOME/.pip/bin:$PATH"
+"###,
+    );
 
     if !context.system.is_nixos() {
         context.home_appendln(
@@ -70,6 +89,8 @@ alias NixDevelopBasePath='NIX_SHELL_LEVEL=1 nix develop path:$(pwd)'
 alias HomeManagerInitFlake='nix run home-manager/release-23.05 -- init'
 alias HomeManagerDeleteGenerations='home-manager expire-generations "-1 second"'
 
+alias SudoNix='sudo --preserve-env=PATH env'
+
 SwitchHomeManager() {
     # Impure is needed for now to read the config
     home-manager switch --impure --flake ~/development/environment/nixos/home-manager
@@ -97,4 +118,12 @@ NixFormat() {
 }
 "###,
     );
+
+    if Config::has_config_file(&context.system, ".config/nix-only")
+        && !context.system.get_has_binary("home-manager")
+    {
+        println!("You need to install home-manager packages");
+        println!("Run: `nix-shell -p home-manager` and then `SwitchHomeManager`");
+        std::process::exit(1);
+    }
 }

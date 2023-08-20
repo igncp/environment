@@ -108,10 +108,4 @@ fi
 "###,
         );
     }
-
-    if !context.system.get_has_binary("wasm-pack") {
-        System::run_bash_command(
-            r#"curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh"#,
-        )
-    }
 }

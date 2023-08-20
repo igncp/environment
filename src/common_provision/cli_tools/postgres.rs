@@ -7,7 +7,7 @@ pub fn setup_postgres(context: &mut Context) {
         return;
     }
 
-    if !context.system.get_has_binary("pgcli") {
+    if !context.system.get_has_binary("pgcli") && !context.system.is_nix_provision {
         // https://www.pgcli.com/docs
         System::run_bash_command(
             r###"
@@ -20,10 +20,11 @@ pip install pgcli
     // Using with nix: https://mgdm.net/weblog/postgresql-in-a-nix-shell/
 
     context.home_append(
-        ".shell_alias",
+        ".shell_aliases",
         r###"
-# For when using nix. To run `createdb` need to pass the host, which will be `localhost`
-alias PostgresInitLocal='pg_ctl -D .tmp/mydb -l logfile -o "--unix_socket_directories=$PWD" start'
+# Example to connect when started: `pgcli -h localhost -d postgres`
+alias PostgresInitLocal='initdb -D .tmp/mydb'
+alias PostgresStartLocal='pg_ctl -D .tmp/mydb -l logfile -o "--unix_socket_directories=$PWD" start'
 alias PostgresStopLocal='pg_ctl -D .tmp/mydb -l logfile -o "--unix_socket_directories=$PWD" stop'
 "###,
     );

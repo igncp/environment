@@ -47,7 +47,7 @@ cd ~ ; rm -rf nvim-repo
     }
 
     if !Path::new(&context.system.get_home_path(".check-files/neovim")).exists() {
-        if !context.system.is_nixos() {
+        if !context.system.is_nix_provision {
             System::run_bash_command(
                 r###"
 # https://stackoverflow.com/a/75722775

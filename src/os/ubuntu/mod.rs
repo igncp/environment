@@ -19,7 +19,7 @@ export DEBIAN_FRONTEND=noninteractive
         ".shell_aliases",
         r###"
 alias SystemListInstalled='apt list --installed'
-alias SystemUpgrade='sudo apt-get upgrade -y'
+alias SystemUpgrade='sudo apt-get update && sudo apt-get upgrade -y'
 
 alias AptLog='tail -f /var/log/apt/term.log'
 alias UbuntuVersion='lsb_release -a'
@@ -33,7 +33,7 @@ alias UbuntuFindPackageByFile="dpkg-query -S" # e.g. UbuntuFindPackageByFile '/u
         .install_system_package("python3-pip", Some("pip3"));
 
     if !context.system.get_has_binary("pip3") {
-        System::run_bash_command("sudo cp /usr/bin/pip3 /usr/bin/pip");
+        // System::run_bash_command("sudo cp /usr/bin/pip3 /usr/bin/pip");
     }
 
     if !Path::new(&context.system.get_home_path(".check-files/ubuntu-dev")).exists() {

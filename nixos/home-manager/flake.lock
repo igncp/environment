@@ -18,6 +18,22 @@
         "type": "github"
       }
     },
+    "go-21": {
+      "locked": {
+        "lastModified": 1691530538,
+        "narHash": "sha256-wnvVAKRaLy92U/9fSzmnqYwLqCLKJK5VE4s+jPEhloI=",
+        "owner": "qowoz",
+        "repo": "nixpkgs",
+        "rev": "1bf8d5f5d53f2f5fdd4debe04cae45b4cb32641e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "qowoz",
+        "ref": "go-riscv",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -58,6 +74,7 @@
     "root": {
       "inputs": {
         "flake-utils": "flake-utils",
+        "go-21": "go-21",
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs",
         "unstable": "unstable"

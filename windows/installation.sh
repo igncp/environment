@@ -13,11 +13,10 @@
 
 # IME
     # Download and install: https://rime.im/
-    # Right click in bottom right, package manager > Install `rime-cantonese`
-    #   - An alternative way is via Plum: Download the windows installer from:
-    #       - https://github.com/rime/plum#windows
-    #       - Download: https://github.com/rime/plum-windows-bootstrap/archive/master.zip
-    #       - Download as zip: https://github.com/rime/rime-cantonese/archive/refs/heads/main.zip
-    #       - After downloaded and installed, can go to the IME settings in the taskbar icon and choose it
+    # Right click in the 中 symbol in the taskbar in the bottom right
+    # Choose the first menu option ("S")
+    # In the dialog, click the bottom right button with: 獲取更多轉入方案
+    # A terminal window is opened with some instructions, install: `rime/rime-cantonese`
+    # Exit the terminal, select the checkbox in the list for: 粵語拼音
     # F4 or Ctrl+` for settings
 

@@ -81,6 +81,7 @@ in {
       taskwarrior
       tmux
       tree
+      unstable_pkgs.nix-init # https://github.com/nix-community/nix-init
       unstable_pkgs.yt-dlp
       unzip
       valgrind

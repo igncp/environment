@@ -7,9 +7,7 @@ pub fn setup_docker(context: &mut Context) {
         return;
     }
 
-    context.system.install_system_package("docker", None);
-
-    context.files.append(&context.system.get_home_path(".shell_aliases"), r###"
+    context.home_append(".shell_aliases", r###"
 alias DockerAttachLastContainer='docker start  `docker ps -q -l`; docker attach `docker ps -q -l`'
 alias DockerCleanAll='docker stop $(docker ps -aq); docker rm $(docker ps -aq); docker rmi $(docker images -q)'
 alias DockerCleanContainers='docker stop $(docker ps -aq); docker rm $(docker ps -aq)'
@@ -53,6 +51,17 @@ DockerContainerPortainer() { docker run --rm -d -p $1:9000 --name portainer \
 
 # Only AMD for now
 alias DockerDive='docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock wagoodman/dive:latest'
+
+# Common applications examples using docker
+alias DockerRunApache='docker run --rm --name apache -p 127.0.0.1:9000:80 -v $(pwd):/usr/local/apache2/htdocs httpd'
+# AWSDocker -v "$(pwd):/var/foo"
+DockerRunAWS() {
+  docker run --rm -it --entrypoint '' \
+    -v "$HOME"/.aws/credentials.json:/root/.aws/credentials.json \
+    $@ \
+    amazon/aws-cli /bin/bash
+}
+alias DockerRunPostgres='docker run --rm --name pg -p 127.0.0.1:1234:5432 -e POSTGRES_PASSWORD=secret -v $HOME/misc/pg:/var/lib/postgresql/data postgres'
 "###);
 
     context.files.appendln(
@@ -61,13 +70,31 @@ alias DockerDive='docker run --rm -it -v /var/run/docker.sock:/var/run/docker.so
     );
 
     context.files.appendln(
-        &context.system.get_home_path(".shellrc"),
-        r#"export PATH=$PATH:/usr/local/lib/docker/bin"#,
-    );
-
-    context.files.appendln(
         &context.system.get_home_path(".shell_sources"),
         r#"source_if_exists ~/.docker-completion.sh"#,
+    );
+
+    if context.system.is_mac() {
+        return;
+    }
+
+    if Config::has_config_file(&context.system, ".config/nix-only")
+        && context.system.is_linux()
+        && !context.system.get_has_binary("docker")
+    {
+        System::run_bash_command(
+            r###"
+curl -fsSL https://get.docker.com  | sh
+sudo usermod -a -G docker igncp
+"###,
+        );
+    }
+
+    context.system.install_system_package("docker", None);
+
+    context.files.appendln(
+        &context.system.get_home_path(".shellrc"),
+        r#"export PATH=$PATH:/usr/local/lib/docker/bin"#,
     );
 
     std::fs::create_dir_all(context.system.get_home_path(".docker/cli-plugins")).unwrap();
@@ -188,17 +215,4 @@ alias DockerBuildXDriver='docker buildx create --use --name build --node build -
 "###
         );
     }
-
-    context.files.append(
-        &context.system.get_home_path(".shell_aliases"),
-        r###"
-# AWSDocker -v "$(pwd):/var/foo"
-AWSDocker() {
-  docker run --rm -it --entrypoint '' \
-    -v "$HOME"/.aws/credentials.json:/root/.aws/credentials.json \
-    $@ \
-    amazon/aws-cli /bin/bash
-}
-"###,
-    );
 }

@@ -49,11 +49,6 @@ terminal, with admin privileges, run: `powercfg -hibernate off`
 - Control + Shift + p: Command paletter
 - Powershell History: subl.exe ~\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadLine
 
-### VNC
-
-- When logging into a Mac: AltL = Cmd
-- To move to host (by minifying): F8 + n
-
 ## Misc
 
 - Take a screenshot: Snipping tool
@@ -79,23 +74,6 @@ Shortcuts:
 - F12: Go to definition
 - F8: Go to the next error
 - gh: Show hover
-
-## Misc
-
-- Take a screenshot: Snipping tool
-
-### VNC
-
-- When logging into a Mac: AltL = Cmd
-- To move to host (by minifying): F8 + n
-
-### VS Code
-
-- Control + .: Show code action
-- Control + /: Toggle comment
-- Control + b: Toggle sidebar
-- F12: Go to definition
-- F8: Go to the next error
 
 ## Misc
 

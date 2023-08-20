@@ -18,6 +18,17 @@ pub fn setup_go(context: &mut Context) {
         ),
     );
 
+    context.home_append(
+        ".shell_aliases",
+        r###"
+# This is for vim-go
+GoInitEditor() {
+    (cd ~ && go install golang.org/x/tools/gopls@latest)
+    echo "You have to run :GoInstallBinaries inside nvim"
+}
+    "###,
+    );
+
     install_nvim_package(context, "josa42/coc-go", None);
     install_nvim_package(context, "fatih/vim-go", None);
 

@@ -196,9 +196,22 @@ alias ZshBrowseAllAliases='zsh -ixc : 2>&1 | l'
 "###,
     );
 
-    context.home_appendln(
-        ".shellrc",
-        r#"alias ShellChangeToZsh='sudo chsh -s /bin/zsh igncp; exit'"#,
+    context.home_append(
+        ".shell_aliases",
+        r###"
+ShellChangeToZsh() {
+  SHELL_PATH=$(which zsh)
+  if [ -f ~/development/environment/project/.config/nix-only ] && [ -n "$(which zsh | grep nix)" ]; then
+    if [ -z "$(cat /etc/shells | grep nix)" ]; then
+      cat /etc/shells > /tmp/shells
+      which zsh >> /tmp/shells
+      sudo mv /tmp/shells /etc/shells
+      sudo chown root:root /etc/shells
+    fi
+  fi
+  chsh -s $(which zsh); exit
+}
+"###,
     );
 
     if context.system.is_linux() {

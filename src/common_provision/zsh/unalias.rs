@@ -15,6 +15,7 @@ pub fn setup_unalias(context: &mut Context) {
         "gco",
         "gd",
         "gf",
+        "gfo",
         "ggpull",
         "ggpur",
         "ggpush",
