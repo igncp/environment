@@ -64,7 +64,7 @@ rm -rf ~/.git-extras
 git clone https://github.com/tj/git-extras.git ~/.git-extras
 cd ~/.git-extras
 git checkout $(git describe --tags $(git rev-list --tags --max-count=1))
-sudo make install
+sudo --preserve-env=PATH env make install
 cd ~ && rm -rf ~/.git-extras
 "###,
         );

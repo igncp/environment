@@ -110,7 +110,7 @@ rm -rf ~/hhighlighter
         System::run_bash_command("sudo ln -s /usr/bin/batcat /usr/bin/bat");
     }
 
-    if context.system.is_mac() || context.system.is_arch() {
+    if context.system.is_arch() {
         // JSON viewer: https://github.com/antonmedv/fx
         context.system.install_system_package("fx", None);
 

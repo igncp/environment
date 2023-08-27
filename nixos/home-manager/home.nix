@@ -50,11 +50,11 @@ in {
       openvpn
       pandoc
       pastel
+      pkg-config
       python3
       python3.pkgs.pip
       ranger
       rsync
-      rustup
       scc
       silver-searcher
       speedtest-cli
@@ -64,6 +64,8 @@ in {
       unstable_pkgs.age
       unstable_pkgs.nil
       unzip
+      watchman
+      wget
       yq
       zip
       zsh

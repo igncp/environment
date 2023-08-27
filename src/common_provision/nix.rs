@@ -31,9 +31,11 @@ mkdir -p ~/.pip
     context.home_appendln(
         ".shellrc",
         r###"
-export PIP_PREFIX=$HOME/.pip
-export PYTHONPATH=$(echo $HOME/.pip/lib/*/site-packages | tr " " ":")
-export PATH="$HOME/.pip/bin:$PATH"
+if [ -d $HOME/.pip/lib ]; then
+    export PIP_PREFIX=$HOME/.pip
+    export PYTHONPATH=$(echo $HOME/.pip/lib/*/site-packages | tr " " ":")
+    export PATH="$HOME/.pip/bin:$PATH"
+fi
 "###,
     );
 

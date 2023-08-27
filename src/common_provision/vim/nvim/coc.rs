@@ -43,6 +43,7 @@ nnoremap <leader>ds :CocCommand<cr>
 nnoremap <leader>dl <Plug>(coc-codelens-action)
 nnoremap <leader>do <Plug>(coc-codeaction)
 nnoremap <leader>dr <Plug>(coc-rename)
+nnoremap <leader>dv <Plug>(coc-refactor)
 command! -nargs=? Fold :call CocAction('fold', <f-args>)
 
 call add(g:coc_global_extensions, 'coc-snippets')
@@ -100,6 +101,7 @@ autocmd BufNewFile,BufRead *.tsx,*.jsx set filetype=typescriptreact
     "coc.preferences.formatOnSave": false
   },
   "diagnostic.enableHighlightLineNumber": false,
+  "Lua.workspace.checkThirdParty": false,
   "diagnostic.errorSign": "E",
   "diagnostic.infoSign": "I",
   "diagnostic.warningSign": "W",
@@ -109,6 +111,8 @@ autocmd BufNewFile,BufRead *.tsx,*.jsx set filetype=typescriptreact
     "<C-k>": "command:CocPrev"
   },
   "snippets.userSnippetsDirectory": "$HOME/.vim-snippets",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "javascript.updateImportsOnFileMove.enabled": "always",
   "languageserver": {
     "nix": {
       "command": "nil",

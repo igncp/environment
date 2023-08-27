@@ -12,7 +12,7 @@ use self::{
     general::{run_general, run_general_end},
     go::setup_go,
     haskell::setup_haskell,
-    js::{run_js, setup_js_vue},
+    js::{run_js, setup_js_react, setup_js_vue},
     kotlin::setup_kotlin,
     linux::setup_linux,
     nix::setup_nix,
@@ -59,6 +59,7 @@ pub fn run_common_provision(context: &mut Context) {
     run_nvim_coc(context);
     run_cli_tools(context);
     setup_js_vue(context);
+    setup_js_react(context);
     setup_rust(context);
     setup_go(context);
     setup_ruby(context);

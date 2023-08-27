@@ -2,10 +2,7 @@ use std::fs;
 use std::path::Path;
 
 use crate::base::system::System;
-use crate::{
-    base::Context,
-    common_provision::{vim::add_special_vim_map, zsh::install_omzsh_plugin},
-};
+use crate::{base::Context, common_provision::zsh::install_omzsh_plugin};
 
 use super::install::install_node_modules;
 
@@ -45,9 +42,6 @@ prefix = ${HOME}/.npm-packages
   augroup JsonToJsonc
     autocmd! FileType json set filetype=jsonc
   augroup END
-
-" add return to JS function (e.g. in arrow function)
-  vnoremap <leader>er di{}<c-c>i<cr>return <c-c>p
 
 function! g:RunCtrlPWithFilterInNewTab(query)
   let g:ctrlp_default_input=a:query
@@ -131,139 +125,11 @@ NPMVersions() { npm view $1 versions --json; } # NPMVersions react
 
     install_node_modules(context, [("markdown-toc", None)].to_vec());
 
-    add_special_vim_map(
-        context,
-        [
-            "cpfat",
-            r#":call RunCtrlPWithFilterInNewTab(\'<c-r>=expand("%:t:r")<cr>test\')<cr> "#,
-            "ctrlp filename adding test",
-        ],
-    );
-
-    add_special_vim_map(
-        context,
-        [
-            "cpfrt",
-            r#":call RunCtrlPWithFilterInNewTab(\'<c-r>=expand("%:t:r")<cr><bs><bs><bs><bs><bs>\')<cr>"#,
-            "ctrlp filename removing test",
-        ],
-    );
-
-    add_special_vim_map(
-        context,
-        [
-            "ctit",
-            r#"? it(<cr>V$%y$%o<cr><c-c>Vpf(2l"#,
-            "test copy it test case content",
-        ],
-    );
-
-    add_special_vim_map(
-        context,
-        [
-            "ctde",
-            r#"? describe(<cr>V$%y$%o<cr><c-c>Vpf(2l"#,
-            "test copy describe test content",
-        ],
-    );
-
-    add_special_vim_map(
-        context,
-        [
-            "eeq",
-            r#"iXexpectEqual<c-o>:call feedkeys("<c-l>", "t")<cr>"#,
-            "test expect toEqual",
-        ],
-    );
-
-    add_special_vim_map(
-        context,
-        ["sjsfun", "v/[^,] {<cr><right>%", "select js function"],
-    );
-
-    add_special_vim_map(
-        context,
-        ["djsfun", "v/[^,] {<cr><right>%d", "cut js function"],
-    );
-
-    add_special_vim_map(
-        context,
-        [
-            "tjmvs",
-            r#"I<c-right><right><c-c>viwy?describe(<cr>olet <c-c>pa;<c-c><c-o><left>v_<del>"#,
-            "jest move variable outside of it",
-        ],
-    );
-
-    add_special_vim_map(
-        context,
-        [
-            "titr",
-            r#"_ciwconst<c-c>/from<cr>ciw= require(<del><c-c>$a)<c-c>V:<c-u>%s/\%V\C;//g<cr>"#,
-            "transform import to require",
-        ],
-    );
-
-    add_special_vim_map(
-        context,
-        ["jimc", "a.mock.calls<c-c>", "jest instert mock calls"],
-    );
-
-    add_special_vim_map(
-        context,
-        [
-            "jimi",
-            "a.mockImplementation(() => )<left>",
-            "jest instert mock implementation",
-        ],
-    );
-
-    add_special_vim_map(
-        context,
-        [
-            "jirv",
-            "a.mockReturnValue()<left>",
-            "jest instert mock return value",
-        ],
-    );
-
-    add_special_vim_map(
-        context,
-        [
-            "ftcrefuntype",
-            r#"viwyi<c-right><left>: <c-c>pviwyO<c-c>Otype <c-c>pa = () => <c-c>4hi"#,
-            "typescript create function type",
-        ],
-    );
-
-    add_special_vim_map(
-        context,
-        [
-            "jrct",
-            r"gv:<c-u>%s/\%V\C+//ge<cr>:<c-u>%s/\%V\CObject //ge<cr>:<c-u>%s/\%V\CArray //ge<cr>:<c-u>%s/\%V\C\[Fun.*\]/expect.any(Function)/ge<cr>",
-            "jest replace copied text from terminal",
-        ],
-    );
-
     context.files.append(
         &context.system.get_home_path(".shell_aliases"),
         r###"
 Serve() { PORT="$2"; http-server -c-1 -p "${PORT:=9000}" $1; }
 alias PlaywrightTrace='npx playwright show-trace'
-"###,
-    );
-
-    context.files.append(
-        &context.system.get_home_path(".vim-macros"),
-        r###"
-" Convert jsx prop to object property
-_f=i\<del>: \<c-c>\<right>%s,\<c-c>``s\<c-c>``j
-
-" Create test property
-_f:v$\<left>\<del>A: \<c-c>_viwyA''\<c-c>\<left>paValue\<c-c>A,\<c-c>_\<down>
-
-" wrap type object in tag
-i<\<c-c>\<right>%a>\<c-c>\<left>%\<left>
 "###,
     );
 

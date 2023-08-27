@@ -1,4 +1,6 @@
-pub use self::nvim::{add_special_vim_map, install_nvim_package, update_vim_colors_theme};
+pub use self::nvim::{
+    add_special_vim_map, add_special_vim_map_re, install_nvim_package, update_vim_colors_theme,
+};
 use self::{
     base::run_vim_base, clipboard_ssh::setup_clipboard_ssh, nvim::run_vim_nvim, root::run_vim_root,
 };

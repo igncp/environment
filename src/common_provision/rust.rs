@@ -74,7 +74,9 @@ hi rustDeriveTrait    cterm=NONE ctermfg=cyan  ctermbg=white
     }
 
     // Will add commands like: `cargo add`, `cargo rm` and `cargo upgrade`
-    if !context.system.get_has_binary("cargo-add") {
+    if !context.system.get_has_binary("cargo-add")
+        && !Config::has_config_file(&context.system, ".config/no-cargo-add")
+    {
         System::run_bash_command("cargo install cargo-edit");
     }
 

@@ -6,6 +6,7 @@ pub fn setup_taskwarrior(context: &mut Context) {
     context
         .system
         .install_system_package("taskwarrior", Some("task"));
+
     let task_file = context.system.get_home_path(".taskrc");
 
     context.files.append(
@@ -29,7 +30,7 @@ alias.a=add
                 .files
                 .appendln(&task_file, "include /usr/share/doc/task/rc/no-color.theme");
         }
-    } else if context.system.is_mac() {
+    } else if context.system.is_mac() && Path::new("/opt/homebrew/Cellar/task").exists() {
         let theme_path = System::get_bash_command_output(
             r#"find /opt/homebrew/Cellar/task -type f -name "no-color.theme" "#,
         );

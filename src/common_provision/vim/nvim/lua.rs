@@ -56,6 +56,9 @@ vim.api.nvim_set_keymap("n", "<leader>jw", ":Windows!<cr>", { noremap = true })
 vim.api.nvim_set_keymap("n", "<leader>jf", ":Filetypes!<cr>", { noremap = true })
 vim.api.nvim_set_keymap("n", "<leader>je", ":AnsiEsc!<cr>", { noremap = true })
 
+--- vim-expand-region
+vim.api.nvim_set_keymap("v", "K", "<Plug>(expand_region_expand)", {})
+
 -- Vista
 vim.g.vista_default_executive = 'coc'
 vim.g.vista_sidebar_width = 100
@@ -155,6 +158,12 @@ if file_exists(theme_path) then
   local content = file:read "*a"
   file:close()
   vim.cmd("colorscheme " .. content)
+end
+
+local custom_path = os.getenv("HOME") .. '/development/environment/project/.vim-custom.lua'
+
+if file_exists(custom_path) then
+  dofile(custom_path)
 end
 "###,
     );

@@ -87,6 +87,7 @@ in {
       valgrind
       vim
       vnstat
+      watchman
       wget
       yq
       zip

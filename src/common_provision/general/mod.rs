@@ -251,7 +251,7 @@ CargoDevGenerate() {
 
     // https://github.com/TomWright/dasel
     // https://daseldocs.tomwright.me/
-    if !context.system.get_has_binary("dasel") && !context.system.is_nixos() {
+    if !context.system.get_has_binary("dasel") && !context.system.is_nix_provision {
         if context.system.is_mac() {
             System::run_bash_command("brew install dasel");
         } else if context.system.is_linux() {

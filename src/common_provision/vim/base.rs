@@ -41,9 +41,11 @@ inoremap <c-s> <esc>:update<cr>
     let @@ = temp
   endf
 
+nnoremap <leader>eE :tabnew ~/development/environment/project/.vim-custom.lua<cr>
+nnoremap <leader>er :lua dofile(os.getenv("HOME") .. '/development/environment/project/.vim-custom.lua')<cr>
+
 " useful maps for macros
-  nnoremap <leader>eE :tabnew ~/development/environment/project/vim-macros-custom<cr>
-  nnoremap <leader>ee :tabnew ~/.vim-macros<cr>
+  nnoremap <leader>ee :tabnew ~/development/environment/unix/config-files/.vim-macros.lua<cr>
   nnoremap <leader>ez _v$hy:let @="<c-r>""<C-home><right><right><right><right><right>
   " if adding to a register, use doube quotes and replace with:
     " \<C-[> => \<esc>
@@ -343,6 +345,9 @@ endfunction
 map <c-d> :call CloseTab()<CR>
 
 nnoremap <leader>jk :put =strftime(\"%Y-%m-%d %H:%M:%S\")<cr>
+
+" Select from the first non-blank non-indented line until the next one
+nnoremap <leader>v /^[^ ][^ ]*<cr>v?<cr>
 "#,
     );
 

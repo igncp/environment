@@ -21,14 +21,14 @@ pub fn install_nvim_package(context: &mut Context, repo: &str, extra_cmd: Option
 
 // These maps will be present in a fzf list (apart from working normally)
 // They must begin with <leader>zm (where <leader> == <Space>)
-pub fn add_special_vim_map(context: &mut Context, params: [&str; 3]) {
+fn add_special_vim_map_base(context: &mut Context, params: [&str; 3], map_type: &str) {
     let map_keys_after_leader = params[0];
     let map_end = params[1];
     let map_comment = params[2];
 
     context.files.appendln(
         &context.system.get_home_path(".vimrc"),
-        format!("nnoremap <leader>zm{map_keys_after_leader} {map_end}",).as_str(),
+        format!("{map_type} <leader>zm{map_keys_after_leader} {map_end}",).as_str(),
     );
 
     context.files.appendln(
@@ -37,6 +37,14 @@ pub fn add_special_vim_map(context: &mut Context, params: [&str; 3]) {
             .get_home_path(".special-vim-maps-from-provision.txt"),
         format!("<Space>zm{map_keys_after_leader} -- {map_comment}").as_str(),
     );
+}
+
+pub fn add_special_vim_map(context: &mut Context, params: [&str; 3]) {
+    add_special_vim_map_base(context, params, "nnoremap");
+}
+
+pub fn add_special_vim_map_re(context: &mut Context, params: [&str; 3]) {
+    add_special_vim_map_base(context, params, "nmap");
 }
 
 // https://upload.wikimedia.org/wikipedia/commons/1/15/Xterm_256color_chart.svg
