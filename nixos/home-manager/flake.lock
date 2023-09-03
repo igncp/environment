@@ -18,22 +18,6 @@
         "type": "github"
       }
     },
-    "go-21": {
-      "locked": {
-        "lastModified": 1691530538,
-        "narHash": "sha256-wnvVAKRaLy92U/9fSzmnqYwLqCLKJK5VE4s+jPEhloI=",
-        "owner": "qowoz",
-        "repo": "nixpkgs",
-        "rev": "1bf8d5f5d53f2f5fdd4debe04cae45b4cb32641e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "qowoz",
-        "ref": "go-riscv",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -74,7 +58,6 @@
     "root": {
       "inputs": {
         "flake-utils": "flake-utils",
-        "go-21": "go-21",
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs",
         "unstable": "unstable"
@@ -97,11 +80,11 @@
     },
     "unstable": {
       "locked": {
-        "lastModified": 1690548937,
-        "narHash": "sha256-x3ZOPGLvtC0/+iFAg9Kvqm/8hTAIkGjc634SqtgaXTA=",
+        "lastModified": 1693377291,
+        "narHash": "sha256-vYGY9bnqEeIncNarDZYhm6KdLKgXMS+HA2mTRaWEc80=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "2a9d660ff0f7ffde9d73be328ee6e6f10ef66b28",
+        "rev": "e7f38be3775bab9659575f192ece011c033655f0",
         "type": "github"
       },
       "original": {

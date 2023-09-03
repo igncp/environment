@@ -50,8 +50,45 @@ function OpenCorrespondingReactSCSS(search)
   end
 end
 
-vim.api.nvim_set_keymap("n", "<leader>mi", "<cmd>lua OpenCorrespondingReactSCSS(true)<CR>", { noremap = true })
+vim.api.nvim_set_keymap("n", "<leader>mo", "<cmd>lua OpenCorrespondingReactSCSS(true)<CR>", { noremap = true })
 vim.api.nvim_set_keymap("n", "<leader>me", "<cmd>lua OpenCorrespondingReactSCSS(false)<CR>", { noremap = true })
+
+function AddStylesImport(is_common)
+  local file_name = vim.fn.expand('%:t')
+
+  if string.match(file_name, '.*%.tsx') then
+    local file_name_base = string.gsub(file_name, '.tsx', '')
+    local function search_item()
+      if is_common then
+        vim.cmd('normal! /* as commonStyles\r')
+      else
+        vim.cmd('normal! /* as styles\r')
+      end
+    end
+    if pcall(search_item) then
+      -- Do nothing if the import already exists
+    elseif is_common then
+      vim.cmd('normal! ggOimport * as commonStyles from \'~/styles/common.module.scss\';\r')
+    else
+      vim.cmd('normal! ggOimport * as styles from \'./' .. file_name_base .. '.module.scss\';\r')
+    end
+    vim.cmd('normal! ``')
+  elseif string.match(file_name, '.*%.module.scss') then
+    local function search_item()
+      vim.cmd('normal! /sass.scss\r')
+    end
+    if pcall(search_item) then
+      -- Do nothing if the import already exists
+    else
+      vim.cmd('normal! ggO@import "src/styles/sass.scss";\r')
+    end
+    vim.cmd('normal! ``')
+  end
+end
+
+vim.api.nvim_set_keymap("n", "<leader>mi", "<cmd>lua AddStylesImport(false)<CR>", { noremap = true })
+vim.api.nvim_set_keymap("n", "<leader>mI", "<cmd>lua AddStylesImport(true)<CR>", { noremap = true })
+vim.api.nvim_set_keymap("n", "<leader>mr", ":CocCommand eslint.executeAutofix<CR>", { noremap = true })
 "###,
     );
 }

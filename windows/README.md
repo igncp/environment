@@ -80,7 +80,7 @@ Shortcuts:
 - Take a screenshot: Snipping tool
 - Clipboard setup:
     - Create a shortcut file, and in the shortcut file properties
-        - Add: `"C:\Program Files\Git\bin\sh.exe" --login -c "/c/Users/Ignacio/development/environment/project/target/release/clipboard_ssh host"`
+        - In the target add: `"C:\Program Files\Git\bin\sh.exe" --login -c "/c/Users/Ignacio/development/environment/project/target/release/clipboard_ssh host"`
         - Update the icon (can find many in `shell32.dll`)
         - Change to be opened minimized
     - Move it to the taskbar

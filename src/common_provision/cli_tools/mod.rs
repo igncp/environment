@@ -57,8 +57,6 @@ alias DODroplets='doctl compute droplet list'
         );
     }
 
-    context.system.install_system_package("age", None); // https://github.com/FiloSottile/age
-
     if Config::has_config_file(&context.system, ".config/cli-vercel") {
         install_node_modules(context, vec![("vercel", None)]);
     }
@@ -78,21 +76,10 @@ rm -rf ~/hhighlighter
     );
     context.system.install_system_package("ack", None);
 
-    if !context.system.is_arm() {
-        context.system.install_system_package("pandoc", None); // document conversion
-    }
-
-    context
-        .system
-        .install_system_package("graphviz", Some("dot"));
-
     // Potential installs:
     // - https://github.com/firebase/firebase-tools
     // - https://support.crowdin.com/cli-tool/
 
-    // https://github.com/sharkdp/bat
-    context.system.install_system_package("bat", None);
-    std::fs::create_dir_all(context.system.get_home_path(".config/bat")).unwrap();
     context.files.append(
         &context.system.get_home_path(".config/bat/config"),
         r###"
@@ -111,11 +98,6 @@ rm -rf ~/hhighlighter
     }
 
     if context.system.is_arch() {
-        // JSON viewer: https://github.com/antonmedv/fx
-        context.system.install_system_package("fx", None);
-
-        // https://github.com/dalance/procs
-        context.system.install_system_package("procs", None);
         // System::run_bash_command("procs --gen-completion-out zsh >> ~/.scripts/procs_completion");
 
         context.files.appendln(
@@ -130,29 +112,4 @@ rm -rf ~/hhighlighter
     setup_gh(context);
     setup_hasura(context);
     setup_postgres(context);
-
-    // https://github.com/kislyuk/yq
-    if !context.system.get_has_binary("yq") {
-        System::run_bash_command("pip install yq");
-    }
-
-    if !context.system.is_mac() && !context.system.is_nix_provision {
-        // To hide output: `hurl --no-output /tmp/test.txt`
-        context.system.install_cargo_crate("hurl", None); // https://github.com/Orange-OpenSource/hurl
-    }
-
-    context.system.install_cargo_crate("sd", None); // https://github.com/chmln/sd
-    context.system.install_cargo_crate("hyperfine", None); // https://github.com/sharkdp/hyperfine
-    context.system.install_cargo_crate("ast-grep", Some("sg")); // https://github.com/ast-grep/ast-grep
-
-    context
-        .system
-        .install_cargo_crate("git-delta", Some("delta")); // https://github.com/dandavison/delta
-
-    // https://github.com/ms-jpq/sad
-    if context.system.is_arch() {
-        context.system.install_system_package("sad", None);
-    } else if context.system.is_ubuntu() && !context.system.get_has_binary("sad") {
-        println!("Download and install sad from https://github.com/ms-jpq/sad/releases/latest")
-    }
 }

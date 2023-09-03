@@ -81,8 +81,10 @@ snippet xExpectJustCallsToEqual
 expect(${1}.mock.calls).toEqual([${0}])
 endsnippet
 
-snippet >
-(${1}) => ${2:null}${0}
+snippet _>
+(() => {
+  ${0}
+})()
 endsnippet
 
 snippet xJestJustMock

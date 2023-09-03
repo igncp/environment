@@ -27,6 +27,8 @@ local nvim_plugins = {
 
 require("lazy").setup(nvim_plugins)
 
+require('gitsigns').setup()
+
 function try_marks()
   require('marks').setup({
     default_mappings = true,
@@ -56,8 +58,8 @@ vim.api.nvim_set_keymap("n", "<leader>jw", ":Windows!<cr>", { noremap = true })
 vim.api.nvim_set_keymap("n", "<leader>jf", ":Filetypes!<cr>", { noremap = true })
 vim.api.nvim_set_keymap("n", "<leader>je", ":AnsiEsc!<cr>", { noremap = true })
 
---- vim-expand-region
-vim.api.nvim_set_keymap("v", "K", "<Plug>(expand_region_expand)", {})
+-- Snippets display
+vim.api.nvim_set_keymap("n", "<leader>ms", ":CocCommand snippets.openSnippetFiles<cr>", { noremap = true })
 
 -- Vista
 vim.g.vista_default_executive = 'coc'

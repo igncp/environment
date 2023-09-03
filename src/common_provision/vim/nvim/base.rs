@@ -73,7 +73,6 @@ touch ~/.check-files/neovim
 
     setup_nvim_lua(context);
 
-    install_nvim_package(context, "airblade/vim-gitgutter", None); // https://github.com/airblade/vim-gitgutter
     install_nvim_package(context, "andrewRadev/splitjoin.vim", None); // gS, gJ
     install_nvim_package(context, "bogado/file-line", None); // https://github.com/bogado/file-line
     install_nvim_package(context, "chentoast/marks.nvim", None); // https://github.com/chentoast/marks.nvim
@@ -81,10 +80,11 @@ touch ~/.check-files/neovim
     install_nvim_package(context, "elzr/vim-json", None); // https://github.com/elzr/vim-json
     install_nvim_package(context, "google/vim-searchindex", None); // https://github.com/google/vim-searchindex
     install_nvim_package(context, "haya14busa/incsearch.vim", None); // https://github.com/haya14busa/incsearch.vim
-    install_nvim_package(context, "honza/vim-snippets", None); // ind ~/.local/share/nvim/lazy/vim-snippets/snippets/ -type f | xargs sed -i 's|:\${VISUAL}||'"
+    install_nvim_package(context, "honza/vim-snippets", None); // https://github.com/honza/vim-snippets
     install_nvim_package(context, "jiangmiao/auto-pairs", None); // https://github.com/jiangmiao/auto-pairs
     install_nvim_package(context, "junegunn/limelight.vim", None); // https://github.com/junegunn/limelight.vim
     install_nvim_package(context, "junegunn/vim-peekaboo", None); // https://github.com/junegunn/vim-peekaboo
+    install_nvim_package(context, "lewis6991/gitsigns.nvim", None); // https://github.com/lewis6991/gitsigns.nvim
     install_nvim_package(context, "liuchengxu/vista.vim", None); // https://github.com/liuchengxu/vista.vim
     install_nvim_package(context, "mbbill/undotree", None); // https://github.com/mbbill/undotree
     install_nvim_package(context, "ntpeters/vim-better-whitespace", None); // https://github.com/ntpeters/vim-better-whitespace
@@ -93,7 +93,6 @@ touch ~/.check-files/neovim
     install_nvim_package(context, "ryanoasis/vim-devicons", None); // if not supported, add in custom: rm -rf ~/.local/share/nvim/lazy/vim-devicons/*
     install_nvim_package(context, "scrooloose/nerdcommenter", None); // https://github.com/scrooloose/nerdcommenter
     install_nvim_package(context, "sindrets/diffview.nvim", None); // https://github.com/sindrets/diffview.nvim
-    install_nvim_package(context, "terryma/vim-expand-region", None); // https://github.com/terryma/vim-expand-region
     install_nvim_package(context, "tommcdo/vim-exchange", None); // https://github.com/tommcdo/vim-exchange
     install_nvim_package(context, "tpope/vim-eunuch", None); // https://github.com/tpope/vim-eunuch
     install_nvim_package(context, "tpope/vim-fugitive", None); // https://github.com/tpope/vim-fugitive
