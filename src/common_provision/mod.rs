@@ -2,15 +2,12 @@ use crate::base::Context;
 
 pub use self::vim::update_vim_colors_theme;
 use self::{
-    android::setup_android,
     brightscript::setup_brightscript,
     c::setup_c,
     cli_tools::run_cli_tools,
-    dart::setup_dart,
     docker::setup_docker,
     dotnet::setup_dotnet,
-    general::{run_general, run_general_end},
-    go::setup_go,
+    general::run_general,
     haskell::setup_haskell,
     js::{run_js, setup_js_react, setup_js_vue},
     kotlin::setup_kotlin,
@@ -24,15 +21,12 @@ use self::{
     zsh::run_zsh,
 };
 
-mod android;
 mod brightscript;
 mod c;
 mod cli_tools;
-mod dart;
 mod docker;
 mod dotnet;
 mod general;
-mod go;
 mod haskell;
 mod js;
 mod kotlin;
@@ -61,7 +55,6 @@ pub fn run_common_provision(context: &mut Context) {
     setup_js_vue(context);
     setup_js_react(context);
     setup_rust(context);
-    setup_go(context);
     setup_ruby(context);
     setup_raspberry(context);
     setup_c(context);
@@ -71,8 +64,4 @@ pub fn run_common_provision(context: &mut Context) {
     setup_php(context);
     setup_kotlin(context);
     setup_haskell(context);
-    setup_dart(context);
-    setup_android(context);
-
-    run_general_end(context);
 }

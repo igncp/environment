@@ -2,6 +2,7 @@
   pkgs,
   lib,
   unstable,
+  bun,
   ...
 }: let
   unstable_pkgs = import unstable {
@@ -16,42 +17,27 @@
 
   base_config = home_dir + "/development/environment/project/.config";
 
-  is_arm_darwin = pkgs.system == "aarch64-darwin";
   has_hashi = builtins.pathExists (base_config + "/hashi");
   has_ruby = builtins.pathExists (base_config + "/ruby");
   has_pg = builtins.pathExists (base_config + "/postgres");
+
+  cli-pkgs = import ./cli.nix {inherit base_config unstable_pkgs pkgs lib;};
+  node-pkgs = import ./node.nix {inherit base_config pkgs lib unstable_pkgs bun;};
+  go-pkgs = import ./go.nix {inherit base_config pkgs lib unstable;};
 in {
-  imports = [
-    (import ./cli.nix {inherit base_config unstable_pkgs;})
-    (import ./go.nix {inherit base_config is_arm_darwin;})
-    (import ./node.nix {inherit base_config;})
-  ];
   home.username = "igncp";
   home.homeDirectory = home_dir;
   home.stateVersion = "23.05";
-  home.packages = with pkgs;
-    [
-      moreutils
-      neovim
-      nmap
-      openvpn
-      pkg-config
-      python3
-      python3.pkgs.pip
-      unstable_pkgs.nil
-      watchman
-      zsh
-    ]
+  home.packages =
+    []
+    ++ cli-pkgs.pkgs-list
+    ++ node-pkgs.pkgs-list
+    ++ go-pkgs.pkgs-list
     ++ (lib.optional has_ruby pkgs.ruby)
     ++ (lib.optional has_hashi pkgs.terraform-ls)
     ++ (lib.optional has_hashi pkgs.vagrant)
     ++ (lib.optional has_hashi pkgs.terraform)
-    ++ (lib.optional has_pg pkgs.postgresql)
-    ++ (
-      if is_arm_darwin
-      then [pkgs.libiconv]
-      else [pkgs.iotop pkgs.gnumake]
-    );
+    ++ (lib.optional has_pg pkgs.postgresql);
 
   programs.home-manager.enable = true;
 }

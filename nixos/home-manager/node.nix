@@ -1,11 +1,14 @@
-{base_config}: {
-  pkgs,
+{
+  base_config,
+  bun,
   lib,
-  ...
+  pkgs,
+  unstable_pkgs,
 }: let
   node_file = base_config + "/node";
   has_node = builtins.pathExists node_file;
   node_file_content = builtins.readFile node_file;
+  bun-pkgs = import bun {system = pkgs.system;};
   node_pkg = with pkgs;
     {
       "" = nodejs;
@@ -16,8 +19,11 @@
     }
     ."${node_file_content}";
 in {
-  home.packages =
-    if has_node
-    then [node_pkg]
-    else [pkgs.nodejs];
+  pkgs-list =
+    [bun-pkgs.bun]
+    ++ (
+      if has_node
+      then [node_pkg]
+      else [pkgs.nodejs]
+    );
 }

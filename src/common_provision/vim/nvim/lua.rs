@@ -29,6 +29,11 @@ require("lazy").setup(nvim_plugins)
 
 require('gitsigns').setup()
 
+-- https://stackoverflow.com/a/69142336/3244654
+local function t(str)
+  return vim.api.nvim_replace_termcodes(str, true, true, true)
+end
+
 function try_marks()
   require('marks').setup({
     default_mappings = true,

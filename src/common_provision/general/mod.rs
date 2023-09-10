@@ -3,8 +3,8 @@ use std::path::Path;
 use crate::base::{config::Config, system::System, Context};
 
 use self::{
-    diagrams::setup_diagrams, fzf::run_fzf, git::run_git, gpg::setup_gpg, hashi::setup_hashi,
-    htop::run_htop, network::setup_network, pi_hole::setup_pi_hole, python::run_python,
+    diagrams::setup_diagrams, fzf::run_fzf, git::run_git, gpg::setup_gpg, htop::run_htop,
+    network::setup_network, pi_hole::setup_pi_hole, python::run_python,
     shellcheck::setup_shellcheck, taskwarrior::setup_taskwarrior, tmux::setup_tmux,
 };
 
@@ -12,7 +12,6 @@ mod diagrams;
 mod fzf;
 mod git;
 mod gpg;
-mod hashi;
 mod htop;
 mod network;
 mod pi_hole;
@@ -468,8 +467,4 @@ EOF2
     setup_network(context);
     setup_diagrams(context);
     setup_shellcheck(context);
-}
-
-pub fn run_general_end(context: &mut Context) {
-    setup_hashi(context);
 }

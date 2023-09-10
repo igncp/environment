@@ -21,6 +21,14 @@ mod os;
 #[cfg(target_family = "unix")]
 mod top;
 
+fn run_bash_provision(context: &mut Context) {
+    if context.system.is_windows() {
+        return;
+    }
+
+    System::run_bash_command("bash src/main.sh");
+}
+
 fn main() {
     let mut system = System::default();
     let files = Files::default();
@@ -49,6 +57,8 @@ fn main() {
     run_custom(&mut context);
 
     context.write_files();
+
+    run_bash_provision(&mut context);
 
     println!("The provision finished successfully");
 }

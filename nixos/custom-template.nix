@@ -14,8 +14,5 @@
   networking.hostName = "nixos"; # Define your hostname.
   networking.networkmanager.enable = true;
 
-  services.openssh.settings.PasswordAuthentication = false;
   users.users.igncp.openssh.authorizedKeys.keys = ["THE KEY HERE"];
-
-  environment.systemPackages = [pkgs.killall];
 }

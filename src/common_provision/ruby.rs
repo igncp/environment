@@ -1,8 +1,4 @@
-use crate::base::{
-    config::Config,
-    system::{LinuxDistro, System},
-    Context,
-};
+use crate::base::{config::Config, system::System, Context};
 
 use super::vim::install_nvim_package;
 
@@ -19,14 +15,6 @@ fn install_ruby_gems(gems: &[&str]) {
 pub fn setup_ruby(context: &mut Context) {
     if !Config::has_config_file(&context.system, ".config/ruby") {
         return;
-    }
-
-    if !context.system.get_has_binary("ruby") {
-        if context.system.is_linux()
-            && context.system.linux_distro.clone().unwrap() == LinuxDistro::Ubuntu
-        {
-            System::run_bash_command("sudo apt-get install -y libyaml-dev libssl-dev");
-        }
     }
 
     install_ruby_gems(&["bundler", "lolcat", "fit-commit"]);

@@ -8,6 +8,10 @@ function OpenCorrespondingReactSCSS(search)
   local word_to_search = ""
   if search then
     word_to_search = vim.fn.expand('<cword>')
+    if word_to_search == "styles" then
+      vim.cmd(t('normal! f.l'))
+      word_to_search = vim.fn.expand('<cword>')
+    end
   end
 
   local file_name = vim.fn.expand('%:t')
@@ -38,7 +42,7 @@ function OpenCorrespondingReactSCSS(search)
     -- Move left first in case it was already in the word
     vim.cmd('normal! h')
     local function search_item()
-      vim.cmd('normal! /' .. word_to_search .. '\r')
+      vim.cmd('normal! /\\<' .. word_to_search .. '\\>\r')
     end
 
     if pcall(search_item) then
@@ -89,6 +93,7 @@ end
 vim.api.nvim_set_keymap("n", "<leader>mi", "<cmd>lua AddStylesImport(false)<CR>", { noremap = true })
 vim.api.nvim_set_keymap("n", "<leader>mI", "<cmd>lua AddStylesImport(true)<CR>", { noremap = true })
 vim.api.nvim_set_keymap("n", "<leader>mr", ":CocCommand eslint.executeAutofix<CR>", { noremap = true })
+vim.api.nvim_set_keymap("n", "<leader>mj", "vi}S]%a.join(' ')<c-c>F]i, ", { noremap = false })
 "###,
     );
 }

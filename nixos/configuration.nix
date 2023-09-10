@@ -31,7 +31,6 @@ in {
     };
 
     virtualisation.docker.enable = true;
-
     environment.variables = {
       CURL_CA_BUNDLE = "/etc/pki/tls/certs/ca-bundle.crt"; # Added for curl
       OPENSSL_DEV = pkgs.openssl.dev;
@@ -50,7 +49,8 @@ in {
     programs.zsh.enable = true;
 
     services.openssh.enable = true;
-    services.openssh.settings.PermitRootLogin = "yes";
+    services.openssh.settings.PermitRootLogin = "no";
+    services.openssh.settings.PasswordAuthentication = false;
 
     system.stateVersion = "23.05";
 

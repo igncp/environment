@@ -35,6 +35,7 @@ in {
       dropbox
       feh
       firefox
+      flameshot
       keepass
       libsForQt5.qt5ct
       realvnc-vnc-viewer
