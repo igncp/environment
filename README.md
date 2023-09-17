@@ -11,6 +11,16 @@ By design (to decrease compilation times) the provision script has no crates as
 dependencies. The utility scripts that don't change often, which are compiled
 separately, can have dependencies, like crates, npm modules, etc.
 
+The sections are:
+
+- Bash provision scripts in [src](./src)
+- Nix configuration in [nix](./nix) for NixOS and [Home Manager](https://github.com/nix-community/home-manager) (used in other Unix operating systems)
+    - For both cases the main entry point is the [flake.nix](./flake.nix) file
+- Lua files for the neovim config in [src/lua](./src/lua/)
+- Dot and config files in [unix/config-files](./unix/config-files)
+- Some rust CLI applications in [unix/scripts](unix/scripts)
+- Additionally there are some [docker scripts](./docker) and [notes](./notes)
+
 ## License
 
 MIT

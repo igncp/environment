@@ -1,5 +1,5 @@
 use clap::{Arg, Command};
-use controller::find_binary;
+use controller::{find_binary, get_dict_path};
 use std::{collections::HashMap, io::Read};
 
 use crate::controller::{run_bash_command, select_only_chars};
@@ -115,11 +115,19 @@ fn main() {
         println!("full_text {:?}", full_text);
     } else if let Some(_) = matches.subcommand_matches("doctor") {
         let is_yt_dlp_installed = find_binary("yt-dlp").is_some();
+        let dict_path = get_dict_path();
 
         if is_yt_dlp_installed {
             println!("✅ yt-dlp is installed");
         } else {
             println!("❌ yt-dlp is not installed");
+        }
+
+        if std::path::Path::new(&dict_path).exists() {
+            println!("✅ the dictionary file exists");
+        } else {
+            println!("❌ the dictionary file does not exist: {dict_path}");
+            println!("   - Clone the repo: https://github.com/rime/rime-cantonese.git");
         }
     }
 }

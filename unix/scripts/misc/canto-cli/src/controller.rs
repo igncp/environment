@@ -34,3 +34,10 @@ pub fn select_only_chars(s: String) -> String {
         .filter(|c| *c == '\n' || (!c.is_ascii() && !c.is_ascii_punctuation()))
         .collect::<String>()
 }
+
+pub fn get_dict_path() -> String {
+    let home_dir = env!("HOME");
+    let dict_path = format!("{home_dir}/misc/rime-cantonese/jyut6ping3.chars.dict.yaml");
+
+    dict_path
+}

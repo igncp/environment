@@ -7,6 +7,11 @@ while and learnt they would be remove from here.
 
 - Convert from json to yml: `cat FILE  | dasel -r json -w yaml`
 
+## `dust`
+
+- Used in similar cases of  `du` and `ncdu`, although it doesn't seem to have an interactive mode
+- Show the size grouped by the file type: `dust -t .`
+
 ## `entr`
 
 - Run command clearing the screen: `echo /tmp/foo.sql | PAGER='' PGPASSWORD=postgres entr -c psql -h 0.0.0.0 -U postgres -d postgres -f /_`

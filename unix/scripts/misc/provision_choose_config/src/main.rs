@@ -114,7 +114,7 @@ impl App {
 }
 
 fn get_all_possible_config() -> Vec<String> {
-    let mut all_possible_config = std::process::Command::new("bash")
+    let possible_config_rust = std::process::Command::new("bash")
         .arg("-c")
         .arg(r#"grep --no-file -rEo '".config/([_a-zA-Z0-9-])*"' ~/development/environment | sort | uniq"#)
         .output()
@@ -126,11 +126,69 @@ fn get_all_possible_config() -> Vec<String> {
         .split('\n')
         .map(|x| x.to_string())
         .map(|x| x.replace(".config/", ""))
-        .map(|x| x.replace('"', ""))
+        .collect::<Vec<String>>();
+
+    let possible_config_bash = std::process::Command::new("bash")
+        .arg("-c")
+        .arg(
+            r#"grep --no-file -rEo 'PROVISION_CONFIG[^ ]* ' ~/development/environment/src | sort | uniq"#,
+        )
+        .output()
+        .expect("Failed to execute command")
+        .stdout
+        .iter()
+        .map(|x| *x as char)
+        .collect::<String>()
+        .split('\n')
+        .map(|x| x.to_string())
+        .map(|x| x.replace("PROVISION_CONFIG", ""))
+        .collect::<Vec<String>>();
+
+    let possible_config_lua = std::process::Command::new("bash")
+        .arg("-c")
+        .arg(
+            r#"grep --no-file -rEo "(get_config_file_path|has_config)\([^a-z][a-z0-9-]*[^a-z]\)" ~/development/environment/src | sort | uniq"#,
+        )
+        .output()
+        .expect("Failed to execute command")
+        .stdout
+        .iter()
+        .map(|x| *x as char)
+        .collect::<String>()
+        .split('\n')
+        .map(|x| x.to_string())
+        .map(|x| x.replace("get_config_file_path", ""))
+        .map(|x| x.replace("has_config", ""))
+        .collect::<Vec<String>>();
+
+    let possible_config_nix = std::process::Command::new("bash")
+        .arg("-c")
+        .arg(
+            r#"grep --no-file -rEo 'base_config \+ "[/a-z0-9-]*"' ~/development/environment/nix | sort | uniq"#,
+        )
+        .output()
+        .expect("Failed to execute command")
+        .stdout
+        .iter()
+        .map(|x| *x as char)
+        .collect::<String>()
+        .split('\n')
+        .map(|x| x.to_string())
+        .map(|x| x.replace("base_config +", ""))
+        .collect::<Vec<String>>();
+
+    let mut all_possible_config = possible_config_rust
+        .iter()
+        .chain(possible_config_bash.iter())
+        .chain(possible_config_lua.iter())
+        .chain(possible_config_nix.iter())
+        .map(|x| x.replace(&['(', ')', '"', '\'', '/'][..], ""))
+        .map(|x| x.trim().to_string())
         .filter(|x| !x.is_empty())
         .collect::<Vec<String>>();
 
     all_possible_config.sort();
+    all_possible_config.dedup();
 
     all_possible_config
 }
@@ -210,9 +268,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
         std::process::Command::new("bash")
             .arg("-c")
-            .arg(format!(
-                "cat {file_path} | fzf | sh && cd ~/development/environment && cargo run --release"
-            ))
+            .arg(format!("cat {file_path} | fzf | sh"))
             .status()
             .expect("Failed to execute command");
 

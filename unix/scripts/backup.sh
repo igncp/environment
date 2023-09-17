@@ -4,20 +4,28 @@
 # `backup.sh`.
 #
 # The part to change is between the `+++` lines
-# Example usage: sh backup.sh /mnt/backup_laptop
-    # Here, /mnt/backup_laptop should be a directory
+# Example usage: `bash backup.sh`
 #
 # It keeps the uncompressed files in the path plus an encrypted and
-# password-protected zip file with the same contents inside the directory
+# password-protected zip file with the same contents inside the directory.
+#
+# You can pass `-u` as the first argument to upload the file to S3.
+#
+# If when unzipping the file there are data-corruption issues, use `7z x
+# FILENAME.zip` to uncompress.
 
 set -ex
 
-BACKUP_PATH="$1"
-BACKUP_FILE_ZIP="$(basename $BACKUP_PATH)-$(date +"%Y-%m-%d").zip"
-BACKUP_FILE_AGE="$(basename $BACKUP_PATH)-$(date +"%Y-%m-%d").enc"
+# This should be a directory, don't add a slash at the end. **It will be
+# removed**. Better to change than leaving the default.
+BACKUP_PATH="$HOME/backup_env_$(hostname --short)"
+S3_BUCKET_NAME="@TODO" # Optional, only used if `-u` is passed
+
+BACKUP_FILE_ZIP="$(date +"%Y-%m-%d")-$(basename $BACKUP_PATH).zip"
+BACKUP_FILE_AGE="$(date +"%Y-%m-%d")-$(basename $BACKUP_PATH).enc"
 
 if [ -z "$BACKUP_PATH" ]; then
-  echo "Missing backup path as first argument"
+  echo "Missing backup path"
   exit 1
 fi
 
@@ -27,7 +35,12 @@ mkdir -p "$BACKUP_PATH"
 rsync -rh --delete /etc/hosts "$BACKUP_PATH/hosts"
 rsync -rh --delete ~/development/environment/ "$BACKUP_PATH/environment/"
 # +++ Add here the rest of things to copy (review checklist of things to backup)
-# ...
+# Examples:
+# rsync -rh --delete ~/Downloads/ "$BACKUP_PATH/Downloads/"
+# rsync -rh --delete ~/Document/ "$BACKUP_PATH/Documents/"
+# rsync -rh --delete ~/misc/minecraft/world/ "$BACKUP_PATH/minecraft_world/"
+# rsync -rh --delete --exclude=*.foo ~/RetroPie/roms/ "$BACKUP_PATH/retropie_roms/"
+# rsync -rh --delete ~/.ssh/ "$BACKUP_PATH/ssh/"
 # +++
 
 mkdir -p ~/backups/
@@ -43,6 +56,10 @@ age -e -p "$BACKUP_PATH/$BACKUP_FILE_ZIP" > "$BACKUP_PATH/$BACKUP_FILE_AGE"
 rm -rf "$BACKUP_PATH/$BACKUP_FILE_ZIP"
 rm -rf ~/backups/
 
-echo "Remember to upload $BACKUP_PATH/$BACKUP_FILE_AGE to the cloud"
+if [ "$1" == "-u" ]; then
+  aws cp $BACKUP_PATH/$BACKUP_FILE_AGE s3://$S3_BUCKET_NAME/$BACKUP_FILE_AGE
+else
+  echo "Remember to upload $BACKUP_/$BACKUP_FILE_AGE to the cloud"
+fi
 
 echo "Backup finished successfully"

@@ -2,12 +2,18 @@
 
 set -e
 
-. src/bash/entry.sh
+if [ ! -f ~/.check-files/first-run ]; then
+  echo "This is the first run"
+  set -x
+fi
+
+. src/entry.sh
 
 provision_main() {
   provision_setup_with_bash
+  touch ~/.check-files/first-run
 
-  echo "Bash provision finished successfully"
+  echo "The provision finished successfully"
 }
 
 provision_main
