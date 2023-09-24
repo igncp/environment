@@ -7,6 +7,7 @@ alias ll="ls -lah --color=always"
 alias lsblk="lsblk -f"
 alias mkdir="mkdir -p"
 alias r="ranger"
+alias ta="tmux attach"
 alias rm="rm -rf"
 alias svim="sudo vim"
 alias tree="tree -a"
@@ -51,6 +52,22 @@ VisudoUser() { sudo env EDITOR=vim visudo -f /etc/sudoers.d/$1; }
 alias ClipboardSSHSend="~/.scripts/cargo_target/release/clipboard_ssh send"
 alias HostClipboardSSH="~/.scripts/cargo_target/release/clipboard_ssh host"
 
+# Cross-platform (including remote VM) function which accepts text from a pipe
+ClipboardCopyPipe() {
+  read INPUT
+  if [ -z "$INPUT" ]; then return; fi
+  if [ "$(uname)" = "Darwin" ]; then
+    echo "$INPUT" | pbcopy
+  elif [ -f ~/development/environment/project/.config/clipboard-ssh ]; then
+    echo "$INPUT" | ~/.scripts/cargo_target/release/clipboard_ssh send
+  else
+    echo "$INPUT" | xclip -selection clipboard
+  fi
+}
+
+# Sample of alias using ClipboardCopyPipe and bitwarden
+alias BWAliasExample=$'bw list items --search myapp | jq \'.[0].login.password\' -r | ClipboardCopyPipe'
+
 alias SSHAgent='eval `ssh-agent`'
 SSHGeneratePemPublicKey() {
   FILE=$1
@@ -64,6 +81,14 @@ alias SSHListLocalForwardedPorts='ps x -ww -o pid,command | ag ssh | grep --colo
 SSHForwardPortLocal() { ssh -fN -L "$1":localhost:"$1" ${@:2}; } # SSHForwardPort 1234 192.168.1.40
 alias SSHDConfig='sudo sshd -T'
 SSHListConnections() { sudo netstat -tnpa | grep 'ESTABLISHED.*sshd'; }
+
+# Example to how to manually add a key with a timeout
+SSHExampleConfigure() {
+  if [ -n "$(ssh-add -L | grep some_key || true)" ]; then return; fi
+
+  eval $(ssh-agent)
+  ssh-add -t 1h ~/.ssh/some_key
+}
 
 alias AliasesReload='source ~/.shell_aliases'
 alias CleanNCurses='stty sane;clear;'

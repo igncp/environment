@@ -4,6 +4,7 @@ set -e
 
 . src/js/ts.sh
 . src/js/vue.sh
+. src/js/yarn_workspaces.sh
 
 install_node_modules() {
   local NAME="$1"
@@ -154,4 +155,5 @@ EOF
 
   provision_setup_js_ts
   provision_setup_js_vue
+  provision_setup_js_yarn_workspaces
 }

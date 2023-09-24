@@ -83,6 +83,7 @@ EOF
 
   install_tmux_plugin tmux-plugins/tpm
   install_tmux_plugin tmux-plugins/tmux-resurrect
+  install_tmux_plugin schasse/tmux-jump # ctrl+ b + j # https://github.com/schasse/tmux-jump
   install_tmux_plugin tmux-plugins/tmux-sessionist
   install_tmux_plugin tmux-plugins/tmux-copycat
 

@@ -35,8 +35,14 @@ fn main() {
     let first_path = args.get(1);
 
     let default_string = ".".to_string();
-    let resolved_path = first_path.unwrap_or(&default_string);
-    let correct_path = find_correct_path(resolved_path);
+    let mut resolved_path = first_path.unwrap_or(&default_string).clone();
+
+    if resolved_path.starts_with("a/") || resolved_path.starts_with("b/") {
+        println!("Path starts with a/ or b/, removing prefix, asumming it is from a diff");
+        resolved_path = String::from(&resolved_path[2..]);
+    }
+
+    let correct_path = find_correct_path(&resolved_path);
 
     let full_path = match correct_path {
         Some(path) => path,

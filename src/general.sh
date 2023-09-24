@@ -133,6 +133,7 @@ EOF
 MsgFmtPo() { FILE_NO_EXT="$(echo $1 | sed 's|.po$||')" ; msgfmt -o "$1".mo "$1".po ; }
 EOF
 
+  # @TODO
   #     // Only for bash, zsh uses `dirs -v` and `cd -[tab]`
   #     if !Path::new(&context.system.get_home_path(".acd_func")).exists() {
   #         System::run_bash_command(
@@ -203,6 +204,7 @@ set show-all-if-ambiguous on
 "[1;5B":menu-complete-backward # ctrl-down
 EOF
 
+  # @TODO
   #     if context.system.is_linux() && !context.system.is_nixos() {
   #         System::run_bash_command(
   #             r###"
@@ -276,6 +278,10 @@ EOF2
   curl -w "@/tmp/curl_measure_time.txt" -o /dev/null -s $@
 }
 EOF
+
+  if [ -f "$PROVISION_CONFIG"/stripe ]; then
+    echo 'export STRIPE_CLI_TELEMETRY_OPTOUT=1' >>~/.shellrc
+  fi
 
   provision_setup_general_diagrams
   provision_setup_general_fzf

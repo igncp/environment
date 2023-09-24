@@ -10,6 +10,7 @@
   has_hashi = builtins.pathExists (base_config + "/hashi");
   has_pg = builtins.pathExists (base_config + "/postgres");
   has_shellcheck = builtins.pathExists (base_config + "/shellcheck");
+  has_stripe = builtins.pathExists (base_config + "/stripe");
   has_tailscale = builtins.pathExists (base_config + "/tailscale");
 
   is_linux =
@@ -78,6 +79,7 @@ in {
       tree
       unstable_pkgs.age # https://github.com/FiloSottile/age
       unstable_pkgs.ast-grep # https://github.com/chmln/sd
+      unstable_pkgs.bitwarden-cli # https://github.com/bitwarden/clients
       unstable_pkgs.git
       unstable_pkgs.nil # https://github.com/oxalica/nil
       unstable_pkgs.nix
@@ -115,5 +117,6 @@ in {
     ++ (lib.optional has_cli_hasura pkgs.hasura-cli)
     ++ (lib.optional has_cli_openvpn pkgs.openvpn)
     ++ (lib.optional has_pg pkgs.postgresql)
+    ++ (lib.optional has_stripe pkgs.stripe-cli) # https://github.com/stripe/stripe-cli
     ++ (lib.optional has_tailscale pkgs.tailscale);
 }

@@ -1,26 +1,3 @@
-# @TODO
-# use std::{fs, path::Path};
-
-# use crate::{
-#     base::{system::System, Context},
-#     os::disk_on_volume::sync_fstab,
-# };
-
-# pub fn install_ubuntu(context: &mut Context) {
-#     if !Path::new(&context.system.get_home_path(".check-files/apt-update")).exists() {
-#         System::run_bash_command(
-#             "apt-get update && mkdir -p ~/.check-files && touch ~/.check-files/apt-update",
-#         );
-#     }
-
-#     if !context.system.get_has_binary("sudo") {
-#         System::run_bash_command("apt-get install -y sudo");
-#     }
-
-#     context.system.install_system_package("ufw", None);
-#     context.system.install_system_package("rsync", None);
-#     context.system.install_system_package("git", None);
-
 #     let users = fs::read_to_string("/etc/passwd").unwrap();
 
 #     if !users.contains("igncp:") {

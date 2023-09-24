@@ -1,11 +1,10 @@
-# @TODO
 # ctv START
 
 # lg webos
 #   Important: Ubuntu 14/16 is required (5Gb for VM is enough)
 #   Download installation from: http://webostv.developer.lge.com/sdk/installation
 #   Unzip and follow GUI installation
-cat >>~/.bashrc <<"EOF"
+cat >>~/.shellrc <<"EOF"
 export PATH="$PATH:/usr/local/share/webOS_TV_SDK/CLI/bin"
 EOF
 
@@ -15,7 +14,7 @@ EOF
 #   sudo add-apt-repository ppa:webupd8team/java ; sudo apt update; sudo apt install -y oracle-java8-installer
 #   sudo apt-get install -y rpm2cpio libwebkitgtk-1.0-0 expect gettext ruby
 
-cat >>~/.bashrc <<"EOF"
+cat >>~/.shellrc <<"EOF"
 export PATH="$PATH:/home/igncp/tizen-studio/ide"
 export PATH="$PATH:/home/igncp/tizen-studio/tools"
 export PATH="$PATH:/home/igncp/tizen-studio/tools/ide/bin/"

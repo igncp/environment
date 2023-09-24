@@ -78,17 +78,25 @@ scriptsPrint () {
   LBUFFER=${text_to_add}
   zle accept-line # enter
 }
+openFzf () {
+  FILE=$(fd . --type f | fzf)
+  if [ -z "$FILE" ]; then return ; fi
+  LBUFFER="n $FILE"
+  zle accept-line # enter
+}
 
 zle -N bookmarksJustInput
 zle -N bookmarksFull
 zle -N scriptsJustInput
 zle -N scriptsPrint
 zle -N scriptsFull
+zle -N openFzf
 
 bindkey "\C-q\C-q" bookmarksJustInput
 bindkey "\C-q\C-w" bookmarksFull
 bindkey "\C-q\C-a" scriptsJustInput
 bindkey "\C-q\C-s" scriptsFull
+bindkey "\C-q\C-l" openFzf
 bindkey "\C-p" scriptsPrint
 bindkey "\C-k" edit-command-line
 
@@ -161,7 +169,7 @@ fi
 ZSH_HIGHLIGHT_STYLES[comment]='fg=yellow,bold'
 ZSH_HIGHLIGHT_STYLES[dollar-double-quoted-argument]='fg=green,bold'
 
-alias ZshBrowseAllAliases='zsh -ixc : 2>&1 | l'
+alias ZshBrowseAllAliases='zsh -ixc : 1>&1 | l'
 EOF
 
   echo "SHELL=$(which zsh)" >>~/.zshrc

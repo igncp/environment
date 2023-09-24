@@ -3,6 +3,9 @@
 set -e
 
 provision_setup_os_debian() {
+  install_system_package_os sudo
+  install_system_package_os ufw
+
   cat >>~/.shellrc <<"EOF"
 export DEBIAN_FRONTEND=noninteractive
 EOF

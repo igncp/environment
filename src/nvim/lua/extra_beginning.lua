@@ -246,9 +246,8 @@ silent call writefile(getreg('0', 1, 1), "/tmp/clipboard-ssh")
 silent !cat /tmp/clipboard-ssh | ~/.scripts/cargo_target/release/clipboard_ssh send
 ]])
   else
-    vim.cmd([[
-setreg('+', getreg('0', 1, 1))
-]])
+    local current_register = vim.fn.getreg('0')
+    vim.fn.setreg('+', current_register)
   end
 end
 

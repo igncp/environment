@@ -1,3 +1,34 @@
+#!/usr/bin/env bash
+
+set -e
+
+provision_setup_js_yarn_workspaces() {
+  cat >>~/.zshrc <<"EOF"
+zle -N custom_yarn_workspace
+custom_yarn_workspace () {
+  if [ ! -f .env ]; then return ; fi
+  PROJECT_NAME=$(cat .env | grep PROJECT_NAME | cut -d '=' -f2)
+  if [ -z "$PROJECT_NAME" ]; then return ; fi
+  FILE=$(fd . apps/$PROJECT_NAME --type f | fzf)
+  if [ -z "$FILE" ]; then return ; fi
+  LBUFFER="n $FILE"
+  zle accept-line # enter
+}
+bindkey "\C-q\C-i" custom_yarn_workspace
+
+zle -N custom_yarn_workspace_ui
+custom_yarn_workspace_ui () {
+  FILE=$(fd . packages/ui --type f | fzf)
+  if [ -z "$FILE" ]; then return ; fi
+  LBUFFER="n $FILE"
+  zle accept-line # enter
+}
+bindkey "\C-q\C-o" custom_yarn_workspace_ui
+EOF
+
+  echo 'require("yarn_workspace")' >>~/.vim/lua/extra_beginning.lua
+
+  cat >~/.vim/lua/yarn_workspace.lua <<"EOF"
 vim.cmd([[
 function! s:yarn_workspaces_sink_base(line)
   redraw
@@ -82,3 +113,5 @@ vim.api.nvim_set_keymap("n", "<leader>mD",
       OpenCorrespondingNodeWorkspaceUI(true, true)
     end
   })
+EOF
+}
