@@ -11,6 +11,8 @@ provision_setup_nix() {
 
     if [ "$IS_MAC" ]; then
       sh <(curl -L https://nixos.org/nix/install)
+      sudo mkdir -p /nix/var/nix/profiles/per-user/igncp
+      sudo chown igncp /nix/var/nix/profiles/per-user/igncp
     else
       if ! type curl >/dev/null 2>&1; then
         if [ "$IS_DEBIAN" == "1" ]; then
@@ -42,7 +44,8 @@ EOF
   else
     if ! type home-manager >/dev/null 2>&1; then
       echo "You need to install packages"
-      echo 'Run: `nix-shell -p git home-manager` and then `. ~/.shell_aliases && SwitchHomeManager`'
+      echo 'Run: `nix-shell -p git home-manager`'
+      echo 'And then: `. unix/config-files/shell_aliases.sh && SwitchHomeManager`'
       exit 1
     fi
   fi

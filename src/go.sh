@@ -27,12 +27,10 @@ EOF
   cat >>~/.vimrc <<"EOF"
 call add(g:coc_global_extensions, 'coc-go')
 
-" TODO: Alias for printing a log
-let GoPrintMapping="vnoremap <leader>kk yOprintln!(\"a {:?}\", a);<C-c>11hvpgvyf\"lllvp"
-autocmd filetype go :exe GoPrintMapping
-
 let g:go_def_mapping_enabled = 0
 let g:go_doc_keywordprg_enabled = 0
+
+autocmd filetype go vnoremap <leader>kk "iyOfmt.Println("a", a);<c-c>6hidebug: <c-r>=expand('%:t')<cr>: <c-c>lv"ipf"lllv"ip
 EOF
 
   if [ -f "$PROVISION_CONFIG"/go-cosmos ]; then

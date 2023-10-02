@@ -14,7 +14,6 @@ provision_setup_zsh_unalias() {
     "gb"
     "gcb"
     "gco"
-    "gd"
     "gf"
     "gfo"
     "ggpull"

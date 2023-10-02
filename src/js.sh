@@ -133,12 +133,11 @@ EOF
   install_node_modules caniuse-cmd caniuse
 
   install_node_modules graphql-language-service-cli graphql-lsp
-  install_node_modules http-server
-  install_node_modules markdown-toc
-  install_node_modules zx
+  install_node_modules live-server
+  install_node_modules tldr
 
   cat >>~/.shell_aliases <<"EOF"
-Serve() { PORT="$2"; http-server -c-1 -p "${PORT:=9000}" $1; }
+Serve() { PORT="$2"; live-server --port="${PORT:=9000}" $1; }
 alias PlaywrightTrace='npx playwright show-trace'
 EOF
 

@@ -36,6 +36,7 @@ in {
       entr # https://github.com/eradman/entr
       exiftool # https://github.com/exiftool/exiftool
       fd # https://github.com/sharkdp/fd
+      ffmpeg
       fzf # https://github.com/junegunn/fzf
       gh # https://github.com/cli/cli
       gnupg
@@ -47,6 +48,7 @@ in {
       iredis # https://github.com/laixintao/iredis
       jq # https://github.com/jqlang/jq
       killall
+      kubectl
       libiconv
       lsof # https://github.com/lsof-org/lsof
       mitmproxy # https://github.com/mitmproxy/mitmproxy
@@ -55,6 +57,7 @@ in {
       ncdu
       neofetch # https://github.com/dylanaraps/neofetch
       neovim # https://github.com/neovim/neovim
+      neovim-remote # https://github.com/mhinz/neovim-remote.git
       nmap # https://github.com/nmap/nmap
       openvpn # https://github.com/OpenVPN/openvpn
       p7zip

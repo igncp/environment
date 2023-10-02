@@ -32,11 +32,9 @@ in {
       gcc
       gnupg
       lshw
-      nixopsUnstable
       openssl
       ps_mem
       rustup
-      sqlite
       statix
       unstable_pkgs.nix-init # https://github.com/nix-community/nix-init
       valgrind

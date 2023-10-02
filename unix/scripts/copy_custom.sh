@@ -26,6 +26,8 @@ fi
 
 rsync -rhv --delete --exclude=.gitignore unix/scripts/bootstrap/ custom/bootstrap/
 rsync -rhv --delete src/custom.sh custom/custom.sh
+rsync -rhv --delete /etc/hosts custom/hosts
+rsync -rhv --delete ~/.ssh/config custom/ssh_config
 rsync -rhv --delete project/.vim-custom.lua custom/.vim-custom.lua
 rsync -rhv --delete project/vim-macros-custom custom/vim-macros-custom
 rsync -rhv --delete project/custom_create_vim_snippets.sh custom/custom_create_vim_snippets.sh
@@ -37,8 +39,14 @@ fi
 git add -A .
 git commit -m "Update custom branch" || true
 
-git push origin custom
+ERROR_PUSHING=
+git push origin custom || ERROR_PUSHING="true"
 
 if [ "$BRANCH_NAME" != "custom" ]; then
   git checkout "$BRANCH_NAME"
+
+  if [ "$ERROR_PUSHING" = "true" ]; then
+    echo "Error pushing custom branch, exiting..."
+    exit 1
+  fi
 fi

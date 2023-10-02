@@ -261,6 +261,27 @@ vim.api.nvim_set_keymap("n", "<leader>mf", "", {
   silent = true,
 })
 
+vim.api.nvim_set_keymap("n", "<leader>mF", "", {
+  callback = function()
+    local file_path = vim.fn.expand("%:P")
+    vim.fn.setreg("0", file_path)
+    SaveRegisterIntoClipboard()
+    print(file_path)
+  end,
+  silent = true,
+})
+
+local eslint_rules = {
+  { "no-console",                         "c" },
+  { "playwright/no-conditional-in-test",  "t" },
+  { "@typescript-eslint/no-explicit-any", "a" },
+  { "@typescript-eslint/no-var-requires", "v" },
+}
+for _, map in ipairs(eslint_rules) do
+  vim.api.nvim_set_keymap("n", "<leader>ml" .. map[2], "O// eslint-disable-next-line " .. map[1] .. "<esc>",
+    { noremap = true, silent = true })
+end
+
 -- In the host `.ssh/config` file add this to forward the remote port into the local
 -- RemoteForward 2030 localhost:2030
 local clipboard_maps = {

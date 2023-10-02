@@ -12,10 +12,6 @@ provision_setup_cli_tools() {
     install_node_modules vercel
   fi
 
-  cat >>~/.shell_aliases <<"EOF"
-alias f='fd --type f'
-EOF
-
   # https://nixos.wiki/wiki/OpenVPN
   if [ -f "$PROVISION_CONFIG"/cli-openvpn ]; then
     install_system_package "openvpn"

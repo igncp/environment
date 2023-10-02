@@ -13,6 +13,7 @@ provision_setup_nvim_base() {
     touch ~/.check-files/neovim
   fi
 
+  install_nvim_package LnL7/vim-nix                   # https://github.com/LnL7/vim-nix
   install_nvim_package andrewRadev/splitjoin.vim      # gS, gJ
   install_nvim_package bogado/file-line               # https://github.com/bogado/file-line
   install_nvim_package chentoast/marks.nvim           # https://github.com/chentoast/marks.nvim
@@ -130,6 +131,7 @@ EOF
 alias nn='nvim -n -u NONE -i NONE -N' # nvim without vimrc, plugins, syntax, etc
 alias nb='nvim -n -u ~/.base-vimrc -i NONE -N' # nvim with base vimrc
 alias XargsNvim='xargs nvim -p'
+alias NvimRemoteXargs='xargs -I{} nvr -c "tab drop "{} -c "tabprevious"'
 alias CheckVimSnippets='nvim ~/.local/share/nvim/lazy/vim-snippets/snippets'
 # https://vi.stackexchange.com/a/277
 NProfile() {

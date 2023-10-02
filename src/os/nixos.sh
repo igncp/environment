@@ -22,7 +22,7 @@ alias ProvisionNixOs="(RebuildNixOs && Provision)"
 # Different prefix due to being a common command
 RebuildNixOs() {
     (cd ~/development/environment && \
-    sudo nixos-rebuild switch --flake path:$(pwd))
+    sudo nixos-rebuild switch --show-trace --flake path:$(pwd))
 }
 EOF
 

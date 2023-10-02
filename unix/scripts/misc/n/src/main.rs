@@ -48,10 +48,11 @@ fn main() {
         Some(path) => path,
         None => resolved_path.clone(),
     };
-    let editor = std::env::var("EDITOR").unwrap_or("vim".to_string());
 
-    Command::new(editor)
-        .arg(full_path)
+    let cmd_args = &["-s", "-c", &format!("tab drop {}", full_path)];
+
+    Command::new("nvr")
+        .args(cmd_args)
         .args(if args.len() > 2 { &args[2..] } else { &[] })
         .status()
         .expect("Failed to open file");
