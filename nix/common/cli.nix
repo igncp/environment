@@ -34,6 +34,7 @@ in {
       du-dust # https://github.com/bootandy/dust
       duf # https://github.com/muesli/duf
       entr # https://github.com/eradman/entr
+      etcd # https://github.com/etcd-io/etcd/tree/main/etcdctl
       exiftool # https://github.com/exiftool/exiftool
       fd # https://github.com/sharkdp/fd
       ffmpeg
@@ -69,6 +70,7 @@ in {
       python3
       python3.pkgs.pip
       ranger # https://github.com/ranger/ranger
+      redis # For `redis-cli` (to complement `iredis`) - https://redis.io/docs/ui/cli/
       rsync # https://github.com/WayneD/rsync
       sad # https://github.com/ms-jpq/sad
       scc # https://github.com/boyter/scc

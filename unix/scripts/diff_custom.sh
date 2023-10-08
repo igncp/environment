@@ -2,6 +2,9 @@
 
 set -e
 
+# This diff script displays the effect of copying external files into the
+# custom directory
+
 cd ~/development/environment
 
 if [ -d project/scripts ] || [ -d custom/scripts ]; then
@@ -9,6 +12,20 @@ if [ -d project/scripts ] || [ -d custom/scripts ]; then
   diff -r --color=always \
     custom/scripts \
     project/scripts || true
+fi
+
+if [ -f custom/hosts ]; then
+  echo '- custom/hosts:'
+  diff -r --color=always \
+    custom/hosts \
+    /etc/hosts || true
+fi
+
+if [ -f custom/ssh_config ]; then
+  echo '- custom/ssh_config:'
+  diff -r --color=always \
+    custom/ssh_config \
+    ~/.ssh/config || true
 fi
 
 echo '- custom/bootstrap:'

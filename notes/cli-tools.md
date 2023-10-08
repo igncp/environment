@@ -7,6 +7,12 @@ while and learnt they would be remove from here.
 
 - Convert from json to yml: `cat FILE  | dasel -r json -w yaml`
 
+## `etcdctl`
+
+- Save a snapshot: `etcdctl snapshot save snapshot.db`
+    - More info: https://etcd.io/docs/v3.3/op-guide/recovery/
+- Print all keys: `etcdctl get "" --prefix --keys-only`
+
 ## `dust`
 
 - Used in similar cases of  `du` and `ncdu`, although it doesn't seem to have an interactive mode
@@ -19,9 +25,6 @@ while and learnt they would be remove from here.
 
 ## `psql`
 
-- Run query file: `PGPASSWORD=postgres psql -h 0.0.0.0 -U postgres -d postgres -f /tmp/foo.sql | less -S`
 - To output in a CSV format can use the `--csv` flag
-
-## `sad`
-
-- Replace without confirmation: `fd . -type f | sad -k 'foo' 'bar'`
+- To not print the columns headers can pass the `-t` command
+- Describe a table (including indexes): `\d+ TABLE_NAME` (`\dt` lists tables)

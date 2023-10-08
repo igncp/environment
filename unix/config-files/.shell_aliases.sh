@@ -4,16 +4,19 @@ alias b='bash'
 alias cp="cp -r"
 alias f='fd --type f .'
 alias gd="git diff HEAD"
+alias gr="git remote -v"
+alias gs="git show"
 alias htop="htop --no-color"
 alias l="less -i"
 alias ll="ls -lah --color=always"
 alias lsblk="lsblk -f"
 alias m="mkdir -p"
 alias rm="rm -rf"
+alias s='sd'
 alias ta="tmux attach"
 alias tree="tree -a"
 alias wget="wget -c"
-s() { fd --type f . $1 | sad "${@:2}"; }
+S() { fd --type f . $1 | sad "${@:2}"; }
 
 alias ca="~/.scripts/cargo_target/release/canto-cli"
 alias gob="git checkout -b"

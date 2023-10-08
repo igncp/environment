@@ -70,4 +70,11 @@ EOF
   echo 'fpath=(~/.zsh $fpath)' >>~/.zshrc
 
   provision_setup_zsh_unalias
+
+  # Having this at the end to allow setting some aliases that were removed in
+  # `provision_setup_zsh_unalias`
+  cat >>~/.zshrc <<"EOF"
+source $HOME/.shellrc
+source $HOME/.shell_sources
+EOF
 }

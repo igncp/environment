@@ -283,6 +283,9 @@ EOF
     echo 'export STRIPE_CLI_TELEMETRY_OPTOUT=1' >>~/.shellrc
   fi
 
+  # https://lzone.de/cheat-sheet/etcd
+  echo 'export ETCDCTL_API=3' >>~/.shellrc
+
   provision_setup_general_diagrams
   provision_setup_general_fzf
   provision_setup_general_git

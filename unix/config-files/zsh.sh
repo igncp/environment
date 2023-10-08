@@ -65,9 +65,6 @@ bindkey "\C-q\C-l" openFzf
 bindkey "\C-p" scriptsPrint
 bindkey "\C-k" edit-command-line
 
-source $HOME/.shellrc
-source $HOME/.shell_sources
-
 export WORDCHARS='*?_-.[]~=&;!#$%^(){}<>/|'
 
 backward-kill-dir () {
