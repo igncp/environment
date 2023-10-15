@@ -34,7 +34,6 @@ in {
       du-dust # https://github.com/bootandy/dust
       duf # https://github.com/muesli/duf
       entr # https://github.com/eradman/entr
-      etcd # https://github.com/etcd-io/etcd/tree/main/etcdctl
       exiftool # https://github.com/exiftool/exiftool
       fd # https://github.com/sharkdp/fd
       ffmpeg
@@ -92,6 +91,7 @@ in {
       unzip
       vim
       watchman # https://github.com/facebook/watchman
+      websocat # https://github.com/vi/websocat
       wget
       yq # https://github.com/mikefarah/yq
       zip
@@ -108,6 +108,7 @@ in {
         with pkgs; [
           lshw
           dmidecode
+          etcd # https://github.com/etcd-io/etcd/tree/main/etcdctl # Marked as broken in macOS
           iotop
           strace
           gnumake

@@ -66,7 +66,7 @@ nnoremap <leader>er :lua dofile(os.getenv("HOME") .. '/development/environment/p
   nnoremap <leader>ka :!<c-r>=g:File_cmd<cr> %<cr>:e<cr>
 
 " remove trailing spaces
-  nmap <leader>t :%s/\s\+$<cr><c-o>
+  nmap <leader>T :%s/\s\+$<cr><c-o>
 
 " override Ex mode
   nnoremap gQ vipgq

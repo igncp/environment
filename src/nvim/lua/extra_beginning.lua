@@ -77,6 +77,10 @@ vim.api.nvim_set_keymap("n", "g/", "<Plug>(incsearch-stay)", {})
 
 -- nerdcommenter
 vim.g.NERDSpaceDelims = 1
+vim.api.nvim_set_keymap("n", "<leader>cp", "mavip:call nerdcommenter#Comment('x', 'AlignLeft')<cr>`a:delm a<cr>ll",
+  { noremap = true })
+vim.api.nvim_set_keymap("n", "<leader>cP", "mavip:call nerdcommenter#Comment('x', 'Uncomment')<cr>`a:delm a<cr>hh",
+  { noremap = true })
 
 -- vim fugitive
 vim.cmd('set diffopt+=vertical')

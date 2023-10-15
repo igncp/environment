@@ -62,6 +62,7 @@ endif
   nnoremap <leader>p :CtrlP %:p:h<cr> " CtrlP in file's dir
   nnoremap <leader>P :CtrlPMRUFiles<cr>
   nnoremap <leader>kpk :CtrlPClearAllCaches<cr>
+  nnoremap <leader>t :tabnew<cr>:CtrlP <left><right>
   let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
   let g:ctrlp_user_command = 'ag %s -l --hidden --ignore "\.git/*" --nocolor -g ""'
   nnoremap <leader>O :let g:CustomZPDir='<c-r>=expand(getcwd())<cr>'

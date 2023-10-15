@@ -2,8 +2,13 @@ alias ag="ag --hidden  --color-match 7"
 alias agg='ag --hidden --ignore node_modules --ignore .git'
 alias b='bash'
 alias cp="cp -r"
+alias dp="docker ps -a"
 alias f='fd --type f .'
+alias gbd="git branch -D"
+alias gc="git checkout -B"
+alias gca="git commit --amend"
 alias gd="git diff HEAD"
+alias gl="git l"
 alias gr="git remote -v"
 alias gs="git show"
 alias htop="htop --no-color"
@@ -16,6 +21,7 @@ alias s='sd'
 alias ta="tmux attach"
 alias tree="tree -a"
 alias wget="wget -c"
+
 S() { fd --type f . $1 | sad "${@:2}"; }
 
 alias ca="~/.scripts/cargo_target/release/canto-cli"

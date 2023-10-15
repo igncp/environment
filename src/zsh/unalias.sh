@@ -12,6 +12,8 @@ provision_setup_zsh_unalias() {
     "gams"
     "gamscp"
     "gb"
+    "gc"
+    "gca"
     "gcb"
     "gco"
     "gf"

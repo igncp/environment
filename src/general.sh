@@ -286,6 +286,36 @@ EOF
   # https://lzone.de/cheat-sheet/etcd
   echo 'export ETCDCTL_API=3' >>~/.shellrc
 
+  if [ -f "$PROVISION_CONFIG"/ssh_agent_shared ]; then
+    if [ "$IS_MAC" == "1" ]; then
+      cat >>~/.shellrc <<"EOF"
+export SSH_AUTH_SOCK="$(find /tmp/com.apple.launchd.*/Listeners -type s)"
+EOF
+    else
+      cat >>~/.shellrc <<"EOF"
+SSH_ENV="$HOME/.ssh-agent-environment"
+
+function start_agent {
+  printf "Initialising a new SSH agent... "
+  /usr/bin/ssh-agent | sed 's/^echo/#echo/' >"$SSH_ENV"
+  printf "succeeded\n"
+  chmod 600 "$SSH_ENV"
+  . "$SSH_ENV" >/dev/null
+  /usr/bin/ssh-add
+}
+
+if [ -f "$SSH_ENV" ]; then
+  . "$SSH_ENV" >/dev/null
+  ps -ef | grep $SSH_AGENT_PID | grep 'ssh-agent$' >/dev/null && echo "Connecting to the SSH agent" || {
+    start_agent
+  }
+else
+  start_agent
+fi
+EOF
+    fi
+  fi
+
   provision_setup_general_diagrams
   provision_setup_general_fzf
   provision_setup_general_git
