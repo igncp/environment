@@ -22,8 +22,8 @@ if [ -z "$TMUX" ]; then
     echo 'there is already a tmux client, not attaching to session'
   elif [ -n "$(pgrep tmux)" ]; then
     tmux attach
-  elif [ -f "$HOME"/development/environment/unix/scripts/bootstrap/Bootstrap_common.sh ]; then
-    sh "$HOME"/development/environment/unix/scripts/bootstrap/Bootstrap_common.sh
+  elif [ -f "$HOME"/development/environment/src/scripts/bootstrap/Bootstrap_common.sh ]; then
+    sh "$HOME"/development/environment/src/scripts/bootstrap/Bootstrap_common.sh
   elif [ ! -f $HOME/development/environment/project/.config/no-auto-tmux ]; then
     tmux
   fi

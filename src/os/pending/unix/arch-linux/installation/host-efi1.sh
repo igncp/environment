@@ -49,7 +49,7 @@ iwctl # https://wiki.archlinux.org/index.php/Iwd#iwctl
 # station DEVICE connect SSID
 ping archlinux.org # to confirm that network works
 # ip a | grep 192 # get the ip
-# rsync -r ./unix/os/arch-linux/installation/ root@192.168.1.x:/root/
+# rsync -r ./src/os/arch-linux/installation/ root@192.168.1.x:/root/
 # after this, can run some parts of this script with shell via ssh
 
 mkfs.fat -F32 /dev/sda1 # Boot partition

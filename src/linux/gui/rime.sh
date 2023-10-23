@@ -54,7 +54,7 @@
 # cd ~/misc/plum
 # ./rime-install rime-cantonese
 # ./rime-install gkovacs/rime-japanese
-# cp ~/development/environment/unix/config-files/rime-config.yaml {config_path}
+# cp ~/development/environment/src/config-files/rime-config.yaml {config_path}
 # "###,
 #         ));
 #     }
@@ -78,8 +78,8 @@
 # alias IBusDaemon='ibus-daemon -drx'
 # alias IBusSettings='IBUS_PREFIX= python2 /usr/share/ibus/setup/main.py'
 # RimeConfigure() {{
-#   $EDITOR -p ~/development/environment/unix/config-files/rime-config.yaml
-#   cp ~/development/environment/unix/config-files/rime-config.yaml {config_path}
+#   $EDITOR -p ~/development/environment/src/config-files/rime-config.yaml
+#   cp ~/development/environment/src/config-files/rime-config.yaml {config_path}
 #   echo Copied Rime config file
 # }}
 # "###,
@@ -90,7 +90,7 @@
 #         std::fs::copy(
 #             &context
 #                 .system
-#                 .get_home_path("development/environment/unix/config-files/rime-config.yaml"),
+#                 .get_home_path("development/environment/src/config-files/rime-config.yaml"),
 #             &config_path,
 #         )
 #         .unwrap();

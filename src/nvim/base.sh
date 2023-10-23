@@ -160,10 +160,10 @@ EOF
     touch ~/development/environment/project/.vim-custom.lua
   fi
 
-  bash ~/development/environment/unix/scripts/misc/create_vim_snippets.sh
+  bash ~/development/environment/src/scripts/misc/create_vim_snippets.sh
 
   cat >>~/.shell_aliases <<"EOF"
-alias VimSnippetsModify='nvim ~/development/environment/unix/scripts/misc/create_vim_snippets.sh && Provision'
+alias VimSnippetsModify='nvim ~/development/environment/src/scripts/misc/create_vim_snippets.sh && Provision'
 alias VimCustomSnippetsModify='nvim ~/development/environment/project/custom_create_vim_snippets.sh && Provision'
 EOF
 

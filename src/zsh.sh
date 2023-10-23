@@ -32,7 +32,7 @@ provision_setup_zsh() {
   # If running through NixOS for example, SHELL will have a different value and it will be
   # already set
 
-  cat ~/development/environment/unix/config-files/zsh.sh >>~/.zshrc
+  cat ~/development/environment/src/config-files/zsh.sh >>~/.zshrc
 
   echo "SHELL=$(which zsh)" >>~/.zshrc
 

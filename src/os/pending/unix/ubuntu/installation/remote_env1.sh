@@ -124,7 +124,7 @@ sudo apt-get purge -y droplet-agent || true
   mkdir -p ~/development/environment/project/.config
   echo 'REMOTE_HOSTNAME' > ~/development/environment/project/.config/ssh-notice
   # touch ~/development/environment/project/.config/gui-install # Opt-in GUI
-  sh /home/igncp/environment/unix/os/ubuntu/installation/remote_env2.sh
+  sh /home/igncp/environment/src/os/ubuntu/installation/remote_env2.sh
   sudo umount /home/igncp ; sudo cryptsetup close cryptmain
 # If not the first time
   sudo rm -rf /home/igncp ; sudo mkdir -p /home/igncp ; sudo chown -R igncp:igncp /home/igncp

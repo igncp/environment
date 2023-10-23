@@ -1,5 +1,5 @@
 # @TODO
-# Initial instructions in: `unix/os/arch-linux/installation/surface.sh`
+# Initial instructions in: `src/os/arch-linux/installation/surface.sh`
 
 # https://github.com/linux-surface/linux-surface/wiki/Installation-and-Setup
 
@@ -7,7 +7,7 @@
 
 # Press and hold the volume-down button on the Surface. While you're doing
 # this, press and release the power button. Or if from Windows, can boot from
-# the settings like explained in `unix/os/arch-linux/installation/surface.sh`
+# the settings like explained in `src/os/arch-linux/installation/surface.sh`
 
 # Choose:
 # - Minimal installation (browser and basic utilities)

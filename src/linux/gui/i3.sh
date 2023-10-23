@@ -71,8 +71,8 @@
 #     System::run_bash_command(
 #         r#"
 # mkdir -p ~/.config/i3
-# cp ~/development/environment/unix/config-files/i3-config ~/.config/i3/config
-# bash $HOME/development/environment/unix/config-files/i3blocks.sh
+# cp ~/development/environment/src/config-files/i3-config ~/.config/i3/config
+# bash $HOME/development/environment/src/config-files/i3blocks.sh
 # "#,
 #     );
 
@@ -81,7 +81,7 @@
 #         context.system.install_system_package("picom", None);
 #         System::run_bash_command(
 #             r###"
-# cp ~/development/environment/unix/config-files/picom.conf ~/.config/picom.conf
+# cp ~/development/environment/src/config-files/picom.conf ~/.config/picom.conf
 # echo 'exec --no-startup-id picom' >> ~/.config/i3/config # remove this line to disable if performance slow
 # echo "alias PicomModify='$EDITOR ~/project/provision/picom.conf && cp ~/project/provision/picom.conf ~/.config/picom.conf'" >> ~/.shell_aliases
 # "###,

@@ -262,6 +262,7 @@ vim.api.nvim_set_keymap("n", "<leader>mf", "", {
     SaveRegisterIntoClipboard()
     print(file_path)
   end,
+  desc = "Copy file relative path to clipboard",
   silent = true,
 })
 
@@ -272,6 +273,7 @@ vim.api.nvim_set_keymap("n", "<leader>mF", "", {
     SaveRegisterIntoClipboard()
     print(file_path)
   end,
+  desc = "Copy file absolute path to clipboard",
   silent = true,
 })
 
@@ -296,6 +298,7 @@ for _, map in ipairs(clipboard_maps) do
     {
       noremap = true,
       silent = true,
+      desc = "Copy to clipboard or register",
       callback = function()
         vim.cmd("normal! " .. map[3])
         SaveRegisterIntoClipboard()

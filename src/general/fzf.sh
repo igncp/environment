@@ -38,7 +38,7 @@ __FZFBookmarkedCommands() {
   fzf --height 100% --border -m --ansi --no-sort --reverse --multi --bind 'ctrl-s:toggle-sort' --header 'Press CTRL-S to toggle sort'
 }
 __FZFScriptsRaw() {
-  FILES=$(find ~/development/environment/unix/scripts -mindepth 2 -type f ! -name "*.md" | grep -v node_modules | grep ".sh" | grep -v misc)
+  FILES=$(find ~/development/environment/src/scripts -mindepth 2 -type f ! -name "*.md" | grep -v node_modules | grep ".sh" | grep -v misc)
   FILES="$FILES\n$(find ~/.scripts/toolbox -type f)"
   echo "$FILES" | fzf --height 100% --border -m -q "'" --ansi --no-sort --reverse --multi --bind 'ctrl-s:toggle-sort' --header 'Press CTRL-S to toggle sort'
 }

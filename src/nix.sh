@@ -45,7 +45,7 @@ EOF
     if ! type home-manager >/dev/null 2>&1; then
       echo "You need to install packages"
       echo 'Run: `nix-shell -p git home-manager`'
-      echo 'And then: `. unix/config-files/shell_aliases.sh && SwitchHomeManager`'
+      echo 'And then: `. src/config-files/.shell_aliases.sh && SwitchHomeManager`'
       exit 1
     fi
   fi

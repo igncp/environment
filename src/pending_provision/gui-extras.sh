@@ -8,7 +8,7 @@ if ! xhost >& /dev/null && [ -z "$SSH_CLIENT" ] && [ -z "$SSH_TTY" ]; then
 fi
 EOF
 
-# Check `unix/scripts/misc/vlc_playlist.sh`
+# Check `src/scripts/misc/vlc_playlist.sh`
 install_system_package vlc
 
 install_system_package android-file-transfer

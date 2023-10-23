@@ -11,8 +11,8 @@
   node_file_content = builtins.readFile node_file;
   node_pkg = with unstable_pkgs;
     {
-      "" = nodejs;
-      "\n" = nodejs;
+      "" = nodejs_20;
+      "\n" = nodejs_20;
       "16\n" = nodejs_16;
       "18\n" = nodejs_18;
       "20\n" = nodejs_20;
@@ -24,7 +24,7 @@ in {
     ++ (
       if has_node
       then [node_pkg]
-      else [unstable_pkgs.nodejs]
+      else [unstable_pkgs.nodejs_20]
     )
     ++ (
       if has_yarn_berry

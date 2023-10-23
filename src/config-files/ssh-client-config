@@ -1,0 +1,43 @@
+# This is a sample SSH config file
+
+# AddKeysToAgent yes # Only input passphrase once per agent
+
+# Host *
+# Host 192.168.1.*
+
+Host foo
+  # Automatically use a certain user
+  User bar
+
+  # Don't check for existing record
+  StrictHostKeyChecking no
+
+  # Don't save host in record after connecting
+  UserKnownHostsFile /dev/null
+
+  # Use a specific SSH key
+  IdentitiesOnly yes
+  IdentityFile /home/igncp/.ssh/foo
+
+  # Helps to not freeze connection when idle
+  ServerAliveInterval 240
+
+  # Equivalent to: `ssh user@remote-server.com -R 5556:localhost:5556`
+  # This and `LocalForward` are useful when running `ssh -fN host`
+  RemoteForward 5556 localhost:5556
+
+  # The default one for sharing the clipboard from `src/scripts/misc/clipboard_ssh`
+  # RemoteForward 2030 localhost:2030
+
+  # Equivalent to: `ssh user@remote-server.com -L 8000:localhost:8000`
+  LocalForward 8000 localhost:8000
+
+  # Use the local agent in the remote machine
+  ForwardAgent yes
+
+  # Use a different agent socket
+  IdentityAgent "..."
+
+Host 192.168.1.*
+  StrictHostKeyChecking no
+  UserKnownHostsFile /dev/null

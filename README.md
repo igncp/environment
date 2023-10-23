@@ -17,8 +17,8 @@ The sections are:
 - Nix configuration in [nix](./nix) for NixOS and [Home Manager](https://github.com/nix-community/home-manager) (used in other Unix operating systems)
     - For both cases the main entry point is the [flake.nix](./flake.nix) file
 - Lua files for the neovim config in [src/lua](./src/lua/)
-- Dot and config files in [unix/config-files](./unix/config-files)
-- Some rust CLI applications in [unix/scripts](unix/scripts)
+- Dot and config files in [src/config-files](./src/config-files)
+- Some rust and bash CLI applications in [src/scripts](src/scripts)
 - Additionally there are some [docker scripts](./docker) and [notes](./notes)
 
 ## License

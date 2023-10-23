@@ -11,16 +11,16 @@ fi
 mkdir -p ~/project/provision
 mkdir -p ~/project/scripts
 
-cp environment/unix/config-files/create_vim_snippets.sh ~/project/provision
+cp environment/src/config-files/create_vim_snippets.sh ~/project/provision
 
 if [ -f ~/development/environment/project/.config/gui-install ]; then
-  cat environment/unix/provision/gui-base.sh >>~/project/provision/provision.sh
-  cat environment/unix/os/ubuntu/provision/ubuntu-gui.sh >>~/project/provision/provision.sh
-  cat environment/unix/provision/gui-common.sh >>~/project/provision/provision.sh
-  cat environment/unix/provision/gui-xfce.sh >>~/project/provision/provision.sh
-  cp environment/unix/config-files/alacritty.yml ~/project/provision/alacritty.yml
-  cp environment/unix/config-files/fonts.conf ~/project/provision/
-  cp environment/unix/config-files/rime-config.yaml ~/project/provision/
+  cat environment/src/provision/gui-base.sh >>~/project/provision/provision.sh
+  cat environment/src/os/ubuntu/provision/ubuntu-gui.sh >>~/project/provision/provision.sh
+  cat environment/src/provision/gui-common.sh >>~/project/provision/provision.sh
+  cat environment/src/provision/gui-xfce.sh >>~/project/provision/provision.sh
+  cp environment/src/config-files/alacritty.yml ~/project/provision/alacritty.yml
+  cp environment/src/config-files/fonts.conf ~/project/provision/
+  cp environment/src/config-files/rime-config.yaml ~/project/provision/
   touch ~/development/environment/project/.config/common-gui-light
   touch ~/development/environment/project/.config/headless-xorg
   touch ~/development/environment/project/.config/x11-vnc-server

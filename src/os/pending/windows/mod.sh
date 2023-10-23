@@ -96,7 +96,7 @@
 #     let vim_str = std::fs::read_to_string(
 #         context
 #             .system
-#             .get_home_path("development/environment/unix/config-files/mult-os.vim"),
+#             .get_home_path("development/environment/src/config-files/mult-os.vim"),
 #     )
 #     .unwrap_or("".to_string());
 #     let vim_str = format!(
@@ -143,7 +143,7 @@
 #     .exists()
 #     {
 #         System::run_bash_command(
-#             "cd ~/development/environment/unix/scripts/misc/clipboard_ssh && cargo build --release",
+#             "cd ~/development/environment/src/scripts/misc/clipboard_ssh && cargo build --release",
 #         );
 #     }
 # }

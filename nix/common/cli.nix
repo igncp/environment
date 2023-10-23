@@ -21,6 +21,7 @@ in {
   pkgs-list = with pkgs;
     [
       alejandra # https://github.com/kamadorueda/alejandra
+      aria2 # https://github.com/aria2/aria2
       bandwhich # https://github.com/imsnif/bandwhich
       bash
       bat # https://github.com/sharkdp/bat
@@ -31,7 +32,7 @@ in {
       direnv # https://github.com/direnv/direnv
       doctl # https://github.com/digitalocean/doctl
       dogdns # https://github.com/ogham/dog
-      du-dust # https://github.com/bootandy/dust
+      dua # https://github.com/Byron/dua-cli
       duf # https://github.com/muesli/duf
       entr # https://github.com/eradman/entr
       exiftool # https://github.com/exiftool/exiftool
@@ -49,12 +50,12 @@ in {
       jq # https://github.com/jqlang/jq
       killall
       kubectl
+      lazydocker # https://github.com/jesseduffield/lazydocker
       libiconv
       lsof # https://github.com/lsof-org/lsof
       mitmproxy # https://github.com/mitmproxy/mitmproxy
       mkcert # https://github.com/FiloSottile/mkcert
       moreutils
-      ncdu
       neofetch # https://github.com/dylanaraps/neofetch
       neovim # https://github.com/neovim/neovim
       neovim-remote # https://github.com/mhinz/neovim-remote.git
@@ -79,6 +80,7 @@ in {
       speedtest-cli # https://github.com/sivel/speedtest-cli
       taskwarrior # https://github.com/GothenburgBitFactory/taskwarrior
       tmux # https://github.com/tmux/tmux
+      translate-shell # https://github.com/soimort/translate-shell
       tre-command # https://github.com/dduan/tre
       tree
       unstable_pkgs.age # https://github.com/FiloSottile/age
@@ -89,6 +91,7 @@ in {
       unstable_pkgs.nix
       unstable_pkgs.yt-dlp # https://github.com/yt-dlp/yt-dlp
       unzip
+      up # https://github.com/akavel/up
       vim
       watchman # https://github.com/facebook/watchman
       websocat # https://github.com/vi/websocat

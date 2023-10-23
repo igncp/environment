@@ -69,9 +69,10 @@ GitFilesByAuthorLatestGrep() {
   GitFilesByAuthorLatest "${@:2}" | grep -i "$1" | grep -o '^[^ ]* '
 }
 
+g() { eval "git commit -m '$@'"; }
+
 alias GitAddAll='GitAdd $(git rev-parse --show-toplevel)'
 alias GitBranchOrder='git branch -r --sort=creatordate --format "%(creatordate:relative);%(committername);%(refname)" | sed "s|refs/remotes/origin/||" | grep -v ";HEAD$" | column -s ";" -t | tac | less'
-GitCommit() { eval "git commit -m '$@'"; }
 alias GitConfig='"$EDITOR" .git/config'
 alias GitEditorCommit='git commit -v'
 alias GitSameEditorCommit='git commit -v -t $(git rev-parse --show-toplevel)/.git/COMMIT_EDITMSG'
@@ -130,4 +131,5 @@ EOF
   fi
 
   git config --global pull.rebase false
+  git config --global push.autoSetupRemote true
 }

@@ -74,7 +74,7 @@
 # EOF
 
 # mkdir -p ~/.config/fontconfig
-# cp ~/development/environment/unix/config-files/fonts.conf ~/.config/fontconfig
+# cp ~/development/environment/src/config-files/fonts.conf ~/.config/fontconfig
 # "###,
 #     );
 

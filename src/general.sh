@@ -26,7 +26,6 @@ provision_setup_general() {
 [build]
 target-dir = "$HOME/.scripts/cargo_target"
 EOF
-  cp ~/.cargo/config unix/.cargo
 
   mkdir -p $HOME/.scripts/toolbox
 
@@ -34,7 +33,6 @@ EOF
 [build]
 target-dir = "$HOME/.scripts/cargo_target"
 EOF
-  cp ~/.cargo/config ~/development/environment/unix/.cargo/
 
   while IFS= read -r -d '' FILE_PATH; do
     FILE_NAME=$(basename "$FILE_PATH")
@@ -43,7 +41,7 @@ EOF
         cargo build --release --jobs 1 &&
         cp $HOME/.scripts/cargo_target/release/"$FILE_NAME" $HOME/.scripts/toolbox/)
     fi
-  done < <(find ~/development/environment/unix/scripts/toolbox -maxdepth 1 -mindepth 1 -type d -print0)
+  done < <(find ~/development/environment/src/scripts/toolbox -maxdepth 1 -mindepth 1 -type d -print0)
 
   while IFS= read -r -d '' FILE_PATH; do
     FILE_NAME=$(basename "$FILE_PATH")
@@ -51,7 +49,7 @@ EOF
       (cd "$FILE_PATH" &&
         cargo build --release --jobs 1)
     fi
-  done < <(find ~/development/environment/unix/scripts/misc -maxdepth 1 -mindepth 1 -type d -print0)
+  done < <(find ~/development/environment/src/scripts/misc -maxdepth 1 -mindepth 1 -type d -print0)
 
   # This increases re-compilation times but these dirs can get very large
   rm -rf ~/.scripts/cargo_target/release/deps
@@ -60,7 +58,7 @@ EOF
 
   if [ ! -f ~/.ssh/config ]; then
     mkdir -p ~/.ssh
-    cp ~/development/environment/unix/config-files/ssh-client-config ~/.ssh/config
+    cp ~/development/environment/src/config-files/ssh-client-config ~/.ssh/config
   fi
 
   install_system_package "curl"
@@ -96,10 +94,6 @@ EOF
     curl -k -o ~/.git-prompt https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh
   fi
 
-  if [ ! -f ~/.config/up/up.sh ]; then
-    curl -k --create-dirs -o ~/.config/up/up.sh https://raw.githubusercontent.com/shannonmoeller/up/master/up.sh
-  fi
-
   cat >~/.shell_sources <<"EOF"
 source_if_exists() {
   FILE_PATH=$1
@@ -108,10 +102,9 @@ source_if_exists() {
 
 source_if_exists ~/.shell_aliases
 source_if_exists ~/.git-prompt
-source_if_exists ~/.config/up/up.sh
 EOF
 
-  cat ~/development/environment/unix/config-files/.shell_aliases.sh >>~/.shell_aliases
+  cat ~/development/environment/src/config-files/.shell_aliases.sh >>~/.shell_aliases
 
   if [ "$IS_LINUX" == "1" ]; then
     if [ ! -d ~/.dircolors ]; then
@@ -255,8 +248,8 @@ EOF
   #     );
 
   cat >>~/.shellrc <<"EOF"
-export PATH="$PATH:$HOME/development/environment/unix/scripts"
-export PATH="$PATH:$HOME/development/environment/unix/scripts/bootstrap"
+export PATH="$PATH:$HOME/development/environment/src/scripts"
+export PATH="$PATH:$HOME/development/environment/src/scripts/bootstrap"
 export PATH="$PATH:$HOME/.local/bin"
 EOF
 

@@ -68,7 +68,7 @@
 #         std::fs::copy(
 #             &context
 #                 .system
-#                 .get_home_path("development/environment/unix/config-files/terminator-config"),
+#                 .get_home_path("development/environment/src/config-files/terminator-config"),
 #             &terminator_config_path,
 #         )
 #         .unwrap();

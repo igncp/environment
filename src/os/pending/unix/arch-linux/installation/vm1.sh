@@ -11,7 +11,7 @@ set -e
 # ARM: https://pkgbuild.com/~tpowa/archboot-images
 # Use `sha256sum -c /tmp/file.txt` to confirm the iso file is valid
 
-# You can use automatic VM creation script in unix/scripts/misc/create_vm_template.sh
+# You can use automatic VM creation script in src/scripts/misc/create_vm_template.sh
 
 # If LVM already exists, can remove some of them, for example: lvremove /dev/mapper/arch-lvroot
 
@@ -27,7 +27,7 @@ read -p "Do you want to continue? (yY) " -n 1 -r
 echo ''
 if ! [[ $REPLY =~ ^[Yy]$ ]]; then exit; fi
 
-# scp ./unix/os/arch-linux/installation/* root@192.168.1.X:/root/ # from the host
+# scp ./src/os/arch-linux/installation/* root@192.168.1.X:/root/ # from the host
 echo 'syntax off' >/root/.vimrc
 echo 'set mouse-=a' >>/root/.vimrc
 

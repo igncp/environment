@@ -36,7 +36,7 @@ TSMorphSyncToEnvironment() {
     --exclude build \
     --exclude node_modules \
       ~/.ts-morph/ \
-      ~/development/environment/unix/scripts/ts-morph/
+      ~/development/environment/src/scripts/ts-morph/
 }
 
 TSMorphSyncToHome() {
@@ -46,7 +46,7 @@ TSMorphSyncToHome() {
     rsync --delete -rhv \
       --exclude build \
       --exclude node_modules \
-        ~/development/environment/unix/scripts/ts-morph/ \
+        ~/development/environment/src/scripts/ts-morph/ \
         ~/.ts-morph/
     (cd ~/.ts-morph/ \
         && npm install \
