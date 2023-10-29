@@ -41,9 +41,11 @@ provision_setup_zsh() {
     bun completions >~/.bun/_bun
   fi
 
-  cat >>~/.shellrc <<"EOF"
+  cat >>~/.zshrc <<"EOF"
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
+EOF
 
+  cat >>~/.shellrc <<"EOF"
 ShellChangeToZsh() {
   SHELL_PATH=$(which zsh)
   if [ -n "$(which zsh | grep nix)" ]; then

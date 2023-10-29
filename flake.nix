@@ -24,7 +24,14 @@
     flake-utils.lib.eachDefaultSystem (
       system: let
         pkgs = nixpkgs.legacyPackages.${system};
+        rust-pkgs = import ./nix/common/rust.nix {inherit pkgs;};
       in {
+        # This devShell is used currently to build some rust packages, it
+        # should not be loaded with `direnv` to avoid the extra loading time
+        # every time changing to this dir (which happens quite often)
+        devShell = pkgs.mkShell {
+          packages = [] ++ rust-pkgs.pkgs-list;
+        };
         packages = {
           nixosConfigurations = {
             ${hostname} = nixpkgs.lib.nixosSystem {

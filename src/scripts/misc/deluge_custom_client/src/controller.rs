@@ -147,6 +147,7 @@ impl Controller {
     pub fn stop_all() {
         run_bash_command(
             r###"
+cd ~/misc/deluge
 docker compose down || true
 sudo bash -c "killall openvpn || true" > /dev/null 2>&1
 "###,
@@ -157,6 +158,8 @@ sudo bash -c "killall openvpn || true" > /dev/null 2>&1
     pub fn run_all() {
         run_bash_command(
             r###"
+cd ~/misc/deluge
+
 RUNNING_VPN=$(ps aux | grep openvpn | grep -v grep | wc -l)
 
 if [ "$RUNNING_VPN" -gt 0 ]; then
@@ -196,5 +199,21 @@ docker compose up -d
         let ip = DelugeHttpClient::new().get_external_ip().await;
 
         println!("The external IP: {ip}");
+    }
+
+    pub async fn init() {
+        run_bash_command(
+            r###"
+mkdir -p ~/misc/deluge
+cp ~/development/environment/src/scripts/misc/deluge_custom_client/docker-compose.yml \
+    ~/misc/deluge
+if [ ! -d ~/vpn ]; then
+  echo "VPN directory missing in ~/vpn"
+  exit 1
+fi
+"###,
+        );
+
+        println!("Initialized correctly, use ~/misc/deluge");
     }
 }

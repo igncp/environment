@@ -1,4 +1,3 @@
-# @TODO
 #!/usr/bin/env bash
 
 # Installation scripts for UEFI Boot as host

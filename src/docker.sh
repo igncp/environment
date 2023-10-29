@@ -33,8 +33,6 @@ alias DockerCommit='docker commit -m'
 alias DockerPruneAll='docker system prune --volumes --all'
 alias DockerSystemSpace='docker system df --verbose'
 
-DockerBashExec() { docker exec -it $1 /bin/bash; }
-DockerBashRun() { docker run -it $1 /bin/bash; }
 DockerHistory() { docker history --no-trunc $1 | less -S; }
 
 DockerTags() {

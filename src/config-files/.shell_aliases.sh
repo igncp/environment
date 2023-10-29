@@ -28,6 +28,25 @@ alias wget="wget -c"
 S() { fd --type f . $1 | sad "${@:2}"; }
 gd() { git diff ${1:-HEAD} "${@:2}"; }
 
+dl() {
+  CONTAINER="$(docker ps -a | grep $1 | awk '{ print $1; }' || true)"
+  echo "$CONTAINER"
+  if [ "$(echo $CONTAINER | wc -l)" = "1" ]; then
+    docker logs $CONTAINER "${@:2}"
+  else
+    docker logs "$@"
+  fi
+}
+
+de() {
+  CONTAINER="$(docker ps | grep $1 | awk '{print $1}' || true)"
+  if [ -n "$CONTAINER" ]; then docker exec -it $CONTAINER /bin/bash; fi
+}
+
+drb() {
+  docker run -it --rm "${@:2}" $1 /bin/bash
+}
+
 alias ca="~/.scripts/cargo_target/release/canto-cli"
 
 alias Lsblk="lsblk -f | less -S"
@@ -104,6 +123,8 @@ SSHExampleConfigure() {
   ssh-add -t 1h ~/.ssh/some_key
 }
 
+alias lang='b ~/development/environment/src/scripts/misc/lang.sh'
+
 alias AliasesReload='source ~/.shell_aliases'
 alias CleanNCurses='stty sane;clear;'
 alias EditProvision="(cd ~/development/environment && $EDITOR src/main.sh && cargo run --release)"
@@ -135,6 +156,8 @@ alias NmapLocal='sudo nmap -sn 192.168.1.0/24 > /tmp/nmap-result && sed -i "s|Nm
 alias Ports='sudo netstat -tulanp'
 alias NetstatConnections='netstat -nputw'
 alias AnsiColorsRemove="sed 's/\x1b\[[0-9;]*m//g'"
+
+alias deluge_custom_client='~/.scripts/cargo_target/release/deluge_custom_client'
 
 WorktreeClone() {
   git clone --bare "$1" .bare

@@ -14,6 +14,7 @@
   node-pkgs = import ../common/node.nix {inherit base_config pkgs lib unstable_pkgs;};
   go-pkgs = import ../common/go.nix {inherit base_config pkgs lib unstable;};
   ruby-pkgs = import ../common/ruby.nix {inherit base_config pkgs;};
+  rust-pkgs = import ../common/rust.nix {inherit pkgs;};
 
   has_c = builtins.pathExists (base_config + "/c");
 
@@ -33,17 +34,16 @@ in {
       gnupg
       lshw
       openssl
+      openssl.dev
       ps_mem
-      rustup
       statix
-      unstable_pkgs.nix-init # https://github.com/nix-community/nix-init
-      valgrind
       vnstat
     ]
     ++ cli-pkgs.pkgs-list
     ++ node-pkgs.pkgs-list
     ++ go-pkgs.pkgs-list
     ++ ruby-pkgs.pkgs-list
+    ++ rust-pkgs.pkgs-list
     ++ (lib.optional has_c pkgs.clib)
     ++ (lib.optional has_c pkgs.ctags)
     ++ (lib.optional has_c pkgs.gcovr);

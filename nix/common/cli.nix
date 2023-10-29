@@ -25,6 +25,7 @@ in {
       bandwhich # https://github.com/imsnif/bandwhich
       bash
       bat # https://github.com/sharkdp/bat
+      bats # https://github.com/sstephenson/bats
       btop # https://github.com/aristocratos/btop
       ctop # https://github.com/bcicen/ctop
       dasel # https://github.com/TomWright/dasel
@@ -89,6 +90,7 @@ in {
       unstable_pkgs.git
       unstable_pkgs.nil # https://github.com/oxalica/nil
       unstable_pkgs.nix
+      unstable_pkgs.nix-init # https://github.com/nix-community/nix-init
       unstable_pkgs.yt-dlp # https://github.com/yt-dlp/yt-dlp
       unzip
       up # https://github.com/akavel/up
@@ -109,12 +111,14 @@ in {
       if is_linux
       then
         with pkgs; [
-          lshw
           dmidecode
           etcd # https://github.com/etcd-io/etcd/tree/main/etcdctl # Marked as broken in macOS
-          iotop
-          strace
           gnumake
+          iotop
+          lshw
+          strace
+          valgrind
+
           # If installing `gcc` in macOS, there are errors related to `-liconv`
           # when building with rust
           gcc

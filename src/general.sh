@@ -15,46 +15,7 @@ set -e
 . src/general/tmux.sh
 
 provision_setup_general() {
-  if ! type "rustc" >/dev/null 2>&1; then
-    curl https://sh.rustup.rs -sSf | sh -s -- --no-modify-path -y --default-toolchain nightly
-    source "$HOME/.cargo/env"
-    rustup component add rust-src
-    cargo install cargo-edit
-  fi
-
-  cat >~/.cargo/config <<EOF
-[build]
-target-dir = "$HOME/.scripts/cargo_target"
-EOF
-
   mkdir -p $HOME/.scripts/toolbox
-
-  cat >~/.cargo/config <<EOF
-[build]
-target-dir = "$HOME/.scripts/cargo_target"
-EOF
-
-  while IFS= read -r -d '' FILE_PATH; do
-    FILE_NAME=$(basename "$FILE_PATH")
-    if [ ! -f "$HOME/.scripts/toolbox/$FILE_NAME" ]; then
-      (cd "$FILE_PATH" &&
-        cargo build --release --jobs 1 &&
-        cp $HOME/.scripts/cargo_target/release/"$FILE_NAME" $HOME/.scripts/toolbox/)
-    fi
-  done < <(find ~/development/environment/src/scripts/toolbox -maxdepth 1 -mindepth 1 -type d -print0)
-
-  while IFS= read -r -d '' FILE_PATH; do
-    FILE_NAME=$(basename "$FILE_PATH")
-    if [ ! -f "$HOME/.scripts/cargo_target/release/$FILE_NAME" ]; then
-      (cd "$FILE_PATH" &&
-        cargo build --release --jobs 1)
-    fi
-  done < <(find ~/development/environment/src/scripts/misc -maxdepth 1 -mindepth 1 -type d -print0)
-
-  # This increases re-compilation times but these dirs can get very large
-  rm -rf ~/.scripts/cargo_target/release/deps
-  rm -rf ~/.scripts/cargo_target/release/build
-  rm -rf ~/.scripts/cargo_target/debug
 
   if [ ! -f ~/.ssh/config ]; then
     mkdir -p ~/.ssh
@@ -172,9 +133,12 @@ export HISTCONTROL=ignoreboth:erasedups
 export EDITOR=vim
 
 source ~/.shellrc
+source ~/.shell_aliases
 source ~/.shell_sources
 
-PS1='$(~/.scripts/cargo_target/release/ps1 bash "$(jobs)")'
+. ~/development/environment/src/scripts/misc/ps1.sh
+
+PS1='$(provision_get_ps1 "$(jobs)")'
 EOF
 
   cat >~/.inputrc <<"EOF"

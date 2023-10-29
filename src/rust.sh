@@ -18,7 +18,38 @@ install_cargo_crate() {
 provision_setup_rust() {
   cat >>~/.shell_aliases <<"EOF"
 alias CargoClippy='CMD="# rm -rf target && cargo clippy --all-targets --all-features -- -D warnings"; echo $CMD; history -s $CMD'
+_RustBuildProvisionPackages() {
+  while IFS= read -r -d '' FILE_PATH; do
+    FILE_NAME=$(basename "$FILE_PATH")
+    if [ ! -f "$HOME/.scripts/toolbox/$FILE_NAME" ]; then
+      (cd "$FILE_PATH" &&
+        cargo build --release --jobs 1 &&
+        cp $HOME/.scripts/cargo_target/release/"$FILE_NAME" $HOME/.scripts/toolbox/)
+    fi
+  done < <(find ~/development/environment/src/scripts/toolbox -maxdepth 1 -mindepth 1 -type d -print0)
+
+  while IFS= read -r -d '' FILE_PATH; do
+    FILE_NAME=$(basename "$FILE_PATH")
+    if [ ! -f "$HOME/.scripts/cargo_target/release/$FILE_NAME" ]; then
+      (cd "$FILE_PATH" &&
+        cargo build --release --jobs 1)
+    fi
+  done < <(find ~/development/environment/src/scripts/misc -maxdepth 1 -mindepth 1 -type d -print0)
+}
+alias RustBuildProvisionPackages="(cd ~/development/environment &&
+  nix develop -c bash -c '. ~/.shellrc ; _RustBuildProvisionPackages')"
 EOF
+
+  mkdir -p ~/.cargo
+  cat >~/.cargo/config <<EOF
+[build]
+target-dir = "$HOME/.scripts/cargo_target"
+EOF
+
+  # This increases re-compilation times but these dirs can get very large
+  rm -rf ~/.scripts/cargo_target/release/deps
+  rm -rf ~/.scripts/cargo_target/release/build
+  rm -rf ~/.scripts/cargo_target/debug
 
   install_nvim_package cespare/vim-toml
   install_nvim_package rust-lang/rust.vim

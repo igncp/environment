@@ -1,4 +1,3 @@
-# @TODO
 #!/usr/bin/env bash
 
 # First install the firmware updates via Windows

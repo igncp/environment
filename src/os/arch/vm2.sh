@@ -1,4 +1,3 @@
-# @TODO
 #!/usr/bin/env bash
 
 # This file is intended to be run as root in chroot mode

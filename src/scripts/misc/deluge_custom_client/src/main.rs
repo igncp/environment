@@ -38,6 +38,7 @@ async fn main() {
                 ),
         )
         .subcommand(Command::new("stop").about("Stops docker and/or the VPN"))
+        .subcommand(Command::new("init").about("Initialise the deluge dir"))
         .subcommand(
             Command::new("rm")
                 .arg(Arg::new("torrent_id").required(false))
@@ -110,5 +111,7 @@ async fn main() {
         } else if let Some(_matches) = matches.subcommand_matches("ip") {
             Controller::get_external_ip().await;
         }
+    } else if matches.subcommand_matches("init").is_some() {
+        Controller::init().await;
     }
 }

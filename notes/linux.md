@@ -1,3 +1,11 @@
+# Linux bootable USB
+
+- From mac: Balena Etcher - https://etcher.balena.io/#download-etcher
+
+# Dual boot
+
+- Windows + Linux: Install first the Windows OS
+
 # Arch Linux Tips
 
 ## As Host

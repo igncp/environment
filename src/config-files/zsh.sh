@@ -91,23 +91,17 @@ else
   tmux -L "$SOCKET_NAME" set-option status on
 fi
 
-__get_next_task() {
-  ID=$(task next limit:1 2>&1 | grep -v 'No matches.' | tail -n +4 | head -n 1 | sed "s/^ //" | cut -d " " -f1 | grep .)
-  if [ -z "$ID" ]; then
-    printf "-"
-  else
-    task _get "$ID".description
-  fi
-}
-
 setopt PROMPT_SUBST
 precmd () {
   jobscount=${(M)#${jobstates%%:*}:#running}r/${(M)#${jobstates%%:*}:#suspended}s
   if [[ $jobscount == s0 ]]; then jobscount=; fi
 }
-PS1='$(~/.scripts/cargo_target/release/ps1 zsh $jobscount)'
-NEXT_TASK='$(__get_next_task)'
-RPROMPT="[$NEXT_TASK]"
+
+if ! type -f provision_get_ps1 &> /dev/null; then
+  source "$HOME"/development/environment/src/scripts/misc/ps1.sh
+fi
+PS1="\$(provision_get_ps1 \$jobscount)"
+RPROMPT="\$(provision_get_ps1_right)"
 
 # cd -[tab] to see options. `dirs -v` to list previous history
 setopt AUTO_PUSHD                  # pushes the old directory onto the stack

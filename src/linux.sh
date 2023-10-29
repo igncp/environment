@@ -93,7 +93,7 @@ EOF
   # Performance
   if [ -f /proc/sys/kernel/nmi_watchdog ]; then
     if [ ! -f ~/.check-files/watchdog ]; then
-      if [ -n "$(grep 1 /proc/sys/kernel/nmi_watchdog)" ] && [ -f /boot/grub/grub.cfg ] && [ -z "$(grep watchdog /boot/grub/grub.cfg)" ]; then
+      if [ -n "$(grep 1 /proc/sys/kernel/nmi_watchdog)" ] && [ -f /boot/grub/grub.cfg ] && [ -z "$(sudo grep watchdog /boot/grub/grub.cfg)" ]; then
         echo "[~/.check-files/watchdog]: Add 'nmi_watchdog=0' to the kernel params in grub to disable watchdog or hide this message"
       fi
     fi

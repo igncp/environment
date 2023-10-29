@@ -1,4 +1,3 @@
-# @TODO
 # Modified from: https://bbs.archlinux.org/viewtopic.php?pid=947805#p947805
 # To place in `/lib/initcpio/hooks/ssldec`
 

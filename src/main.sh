@@ -3,7 +3,7 @@
 set -e
 
 if [ ! -f ~/.check-files/first-run ]; then
-  echo "This is the first run"
+  echo "The provision hasn't been run completely yet"
   set -x
 fi
 

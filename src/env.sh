@@ -68,4 +68,16 @@ provision_setup_env() {
     echo "$CONTENT" >>"$FILENAME"
     echo "}" >>"$FILENAME"
   }
+
+  mkdir -p ~/development/environment/project
+  cat >~/development/environment/project/backup.sh <<"EOF"
+# Don't run this script directly, it is used by `src/scripts/backup.sh`
+set -x
+rsync -rh --delete /etc/hosts "$BACKUP_PATH/hosts"
+rsync -rh --delete ~/development/environment/ "$BACKUP_PATH/environment/"
+# Examples, uncomment via cusom.sh to apply:
+# rsync -rh --delete ~/Downloads/ "$BACKUP_PATH/Downloads/"
+# rsync -rh --delete ~/Document/ "$BACKUP_PATH/Documents/"
+# rsync -rh --delete ~/.ssh/ "$BACKUP_PATH/ssh/"
+EOF
 }
