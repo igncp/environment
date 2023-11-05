@@ -68,15 +68,17 @@ EOF
   cat ~/development/environment/src/config-files/.shell_aliases.sh >>~/.shell_aliases
 
   if [ "$IS_LINUX" == "1" ]; then
-    if [ ! -d ~/.dircolors ]; then
-      dircolors -p >~/.dircolors
-      COLOR_ITEMS=(FIFO OTHER_WRITABLE STICKY_OTHER_WRITABLE CAPABILITY SETGID SETUID ORPHAN CHR BLK)
-      for COLOR_ITEM in "${COLOR_ITEMS[@]}"; do
-        sed -i 's|^'"$COLOR_ITEM"' .* #|'"$COLOR_ITEM"' 01;35 #|' ~/.dircolors
-      done
-    fi
+    if type dircolors >/dev/null 2>&1; then
+      if [ ! -d ~/.dircolors ]; then
+        dircolors -p >~/.dircolors
+        COLOR_ITEMS=(FIFO OTHER_WRITABLE STICKY_OTHER_WRITABLE CAPABILITY SETGID SETUID ORPHAN CHR BLK)
+        for COLOR_ITEM in "${COLOR_ITEMS[@]}"; do
+          sed -i 's|^'"$COLOR_ITEM"' .* #|'"$COLOR_ITEM"' 01;35 #|' ~/.dircolors
+        done
+      fi
 
-    echo 'eval "$(dircolors ~/.dircolors)"' >>~/.shellrc
+      echo 'eval "$(dircolors ~/.dircolors)"' >>~/.shellrc
+    fi
   fi
 
   if [ ! -f "$PROVISION_CONFIG"/ssh-notice-color ]; then

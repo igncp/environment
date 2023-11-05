@@ -61,11 +61,20 @@ ShellChangeToZsh() {
 EOF
 
   if [ "$IS_LINUX" == "1" ]; then
-    echo 'eval "$(dircolors /home/$USER/.dircolors)"' >>~/.zshrc
-
+    if type "dircolors" >/dev/null 2>&1; then
+      echo 'eval "$(dircolors /home/$USER/.dircolors)"' >>~/.zshrc
+    fi
     if [ ! -f ~/.zsh/_git ]; then
       mkdir -p ~/.zsh
-      curl -o ~/.zsh/_git https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.zsh
+      local url="https://raw.githubusercontent.com/felipec/git-completion"
+      local version="1.3.7"
+      cd ~/.zsh
+      # All of these three are used by zsh, even if it seems that only _git is
+      curl -s -o _git "${url}/v${version}/git-completion.zsh" &&
+        curl -s -o git-completion.bash "${url}/v${version}/git-completion.bash" &&
+        curl -s -o git-prompt.sh "${url}/v${version}/git-prompt.sh"
+      unset url version
+      cd ~/development/environment
     fi
   fi
 

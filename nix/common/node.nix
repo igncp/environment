@@ -29,6 +29,6 @@ in {
     ++ (
       if has_yarn_berry
       then [unstable_pkgs.yarn-berry]
-      else [unstable_pkgs.yarn]
+      else []
     );
 }

@@ -82,8 +82,6 @@ EOF
     sudo usermod -a -G docker igncp
   fi
 
-  install_system_package docker
-
   echo 'export PATH=$PATH:/usr/local/lib/docker/bin' >>~/.shellrc
 
   mkdir -p ~/.docker/cli-plugins

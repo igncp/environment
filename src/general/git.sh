@@ -69,13 +69,23 @@ GitFilesByAuthorLatestGrep() {
   GitFilesByAuthorLatest "${@:2}" | grep -i "$1" | grep -o '^[^ ]* '
 }
 
+alias gbd="git branch -D"
+alias gc="git checkout -B"
+alias gca="git commit --amend"
+alias gl="git l"
+alias gp="git push"
+alias gr="git remote -v"
+alias grh="git reset --hard"
+alias gs="git show"
+alias gss='git commit -v -t $(git rev-parse --show-toplevel)/.git/COMMIT_EDITMSG'
+
+gd() { git diff ${1:-HEAD} "${@:2}"; }
 g() { eval "git commit -m '$@'"; }
 
 alias GitAddAll='GitAdd $(git rev-parse --show-toplevel)'
 alias GitBranchOrder='git branch -r --sort=creatordate --format "%(creatordate:relative);%(committername);%(refname)" | sed "s|refs/remotes/origin/||" | grep -v ";HEAD$" | column -s ";" -t | tac | less'
 alias GitConfig='"$EDITOR" .git/config'
 alias GitEditorCommit='git commit -v'
-alias GitSameEditorCommit='git commit -v -t $(git rev-parse --show-toplevel)/.git/COMMIT_EDITMSG'
 alias GitListConflictFiles='git diff --name-only --relative --diff-filter=U'
 alias GitListFilesChangedHistory='git log --pretty=format: --name-only | sort | uniq -c | sort -rg' # can add `--author Foo`, --since, or remove files
 alias GitRebaseResetAuthorContinue='git commit --amend --reset-author --no-edit; git rebase --continue'

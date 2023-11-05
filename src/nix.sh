@@ -43,6 +43,8 @@ EOF
     fi
   else
     if ! type home-manager >/dev/null 2>&1; then
+      su -c 'mkdir -p /nix/var/nix/profiles/per-user/igncp'
+      su -c 'chown igncp /nix/var/nix/profiles/per-user/igncp'
       echo "You need to install packages"
       echo 'Run: `nix-shell -p git home-manager`'
       echo 'And then: `. src/config-files/.shell_aliases.sh && SwitchHomeManager`'
@@ -74,4 +76,7 @@ if [ -f $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh ]; then
 fi
 EOF
   fi
+
+  # To use `nix` inside of a cron script, can add this inside the crontab
+  # `PATH=/home/igncp/.nix-profile/bin`
 }

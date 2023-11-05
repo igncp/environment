@@ -124,4 +124,10 @@ EOF
 "rust-analyzer.inlayHints.parameterHints.enable": false,
 "rust-analyzer.inlayHints.reborrowHints.enable": "never",
 "rust-analyzer.inlayHints.typeHints.enable": false'
+
+  if [ ! -f ~/.check-files/init-rust ]; then
+    rustup install stable
+    rustup component add rust-analyzer
+    touch ~/.check-files/init-rust
+  fi
 }

@@ -19,7 +19,7 @@ The sections are:
 - Lua files for the neovim config in [src/lua](./src/lua/)
 - Dot and config files in [src/config-files](./src/config-files)
 - Some rust and bash CLI applications in [src/scripts](src/scripts)
-- Additionally there are some [docker scripts](./docker) and [notes](./notes)
+- Additionally there are some [personal notes](./notes)
 
 ## License
 

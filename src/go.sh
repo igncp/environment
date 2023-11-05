@@ -19,6 +19,7 @@ GoInitEditor() {
   (cd ~ && go install golang.org/x/tools/gopls@latest)
   echo "You have to run :GoInstallBinaries inside nvim"
 }
+alias gmt='go mod tidy'
 EOF
 
   install_nvim_package "josa42/coc-go"
@@ -36,7 +37,7 @@ EOF
   if [ -f "$PROVISION_CONFIG"/go-cosmos ]; then
     if ! type "ignite" >/dev/null 2>&1; then
       echo "Installing ignite"
-      curl https://get.ignite.com/cli@v0.22.1! | bash
+      curl https://get.ignite.com/cli@! | bash
     fi
   fi
 }

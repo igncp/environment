@@ -2,6 +2,7 @@
 
 set -e
 
+. src/linux/apk.sh
 . src/linux/gui.sh
 
 provision_setup_linux() {
@@ -129,4 +130,6 @@ EOF
       touch ~/.check-files/tailscale
     fi
   fi
+
+  provision_setup_linux_apk
 }

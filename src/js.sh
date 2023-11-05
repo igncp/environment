@@ -129,6 +129,9 @@ EOF
   fi
   cat ~/.npm-completion >>~/.shellrc
 
+  # Used by nvim coc
+  install_node_modules yarn
+
   # https://github.com/sgentle/caniuse-cmd
   install_node_modules caniuse-cmd caniuse
 

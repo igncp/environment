@@ -5,16 +5,8 @@ alias cp="cp -r"
 alias di='SudoNix dua interactive'
 alias dp="docker ps -a"
 alias f='fd --type f .'
-alias gbd="git branch -D"
-alias gc="git checkout -B"
-alias gca="git commit --amend"
-alias gl="git l"
-alias gp="git push"
-alias gr="git remote -v"
-alias grh="git reset --hard"
-alias gs="git show"
 alias htop="htop --no-color"
-alias l="less -i"
+alias l="less"
 alias ll="ls -lahv --color=always"
 alias lsblk="lsblk -f"
 alias m="mkdir -p"
@@ -26,7 +18,6 @@ alias up='up -o /tmp/up-result.sh'
 alias wget="wget -c"
 
 S() { fd --type f . $1 | sad "${@:2}"; }
-gd() { git diff ${1:-HEAD} "${@:2}"; }
 
 dl() {
   CONTAINER="$(docker ps -a | grep $1 | awk '{ print $1; }' || true)"

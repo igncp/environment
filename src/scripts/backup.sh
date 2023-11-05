@@ -17,7 +17,7 @@ set -ex
 
 # This should be a directory, don't add a slash at the end. **It will be
 # removed**. Better to change than leaving the default.
-export BACKUP_PATH=${BACKUP_PATH:-"$HOME/backup_env_$(hostname --short)"}
+export BACKUP_PATH=${BACKUP_PATH:-"$HOME/backup_env_$(hostname -s)"}
 S3_BUCKET_NAME="$S3_BUCKET_NAME" # Optional, only used if `-u` is passed
 
 BACKUP_FILE_ZIP="$(date +"%Y-%m-%d-%H%M%S")-$(basename $BACKUP_PATH).zip"

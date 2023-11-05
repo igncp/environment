@@ -84,6 +84,10 @@ provision_get_ps1() {
   }
 
   get_tailscale_status() {
+    if ! type tailscale >/dev/null 2>&1; then
+      return
+    fi
+
     if [ -f "$HOME/development/environment/project/.config/ps1-no-tailscale" ]; then
       return
     fi

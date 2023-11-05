@@ -26,7 +26,9 @@ in {
       bash
       bat # https://github.com/sharkdp/bat
       bats # https://github.com/sstephenson/bats
+      bc
       btop # https://github.com/aristocratos/btop
+      buf # https://github.com/bufbuild/buf
       ctop # https://github.com/bcicen/ctop
       dasel # https://github.com/TomWright/dasel
       delta # https://github.com/dandavison/delta
@@ -44,6 +46,7 @@ in {
       gnupg
       gnused
       graphviz # https://gitlab.com/graphviz/graphviz
+      hostname # If using Alpine, the Busybox hostname is different
       htop # https://github.com/htop-dev/htop
       hurl # https://github.com/Orange-OpenSource/hurl
       hyperfine # https://github.com/sharkdp/hyperfine

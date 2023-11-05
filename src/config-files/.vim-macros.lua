@@ -10,3 +10,6 @@ vim.cmd([===[let @X = "_f:v$\<left>\<del>A: \<c-c>_viwyA''\<c-c>\<left>paValue\<
 
 -- Wrap type object in tag
 vim.cmd([===[let @X = "i<\<c-c>\<right>%a>\<c-c>\<left>%\<left>"]===])
+
+-- `t` function for a text in a JSX tag
+vim.cmd([===[let @X = "vitS}vi}S)vi)S'hit\<c-c>lli,\<c-c>i'\<c-o>q"]===])

@@ -49,7 +49,7 @@ provision_setup_env() {
         elif [ "$IS_ARCH" = "1" ]; then
           sudo pacman -S --noconfirm "$PACKAGE"
         else
-          echo "Unknown linux distribution"
+          echo "Unknown linux distribution: $PACKAGE"
           exit 1
         fi
       elif [ "$IS_MAC" = "1" ]; then
