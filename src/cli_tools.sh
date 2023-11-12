@@ -5,6 +5,7 @@ set -e
 . src/cli_tools/aws.sh
 . src/cli_tools/github.sh
 . src/cli_tools/hasura.sh
+. src/cli_tools/mysql.sh
 . src/cli_tools/postgres.sh
 
 provision_setup_cli_tools() {
@@ -56,5 +57,6 @@ EOF
 
   provision_setup_cli_tools_aws
   provision_setup_cli_tools_hasura
+  provision_setup_cli_tools_mysql
   provision_setup_cli_tools_postgres
 }

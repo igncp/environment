@@ -17,5 +17,7 @@ provision_setup_linux_apk() {
 alias SystemUpdate='sudo apk update && sudo apk upgrade'
 
 alias ApkInfo='apk info -v'
+
+alias shutdown='poweroff'
 EOF
 }

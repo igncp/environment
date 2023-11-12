@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
 
-# This file is intended to be run as root in chroot mode
+# This file is intended to be run by the root user in chroot mode, or via SSH in
+# an existing UTM VM
+
+# If installing a UTM pre-built VM, first do:
+# - Resize the VM in UTM
+# - Configure other settings of VM in UTM (network, memory)
+# - Use `cfdisk` (already installed) to resize the partition
+# - Install `rsync` and clone the environment repo into the machine
 
 set -e
 
@@ -12,8 +19,6 @@ pacman -S sudo --noconfirm
 echo "# igncp ALL=(ALL) ALL" >>/etc/sudoers
 echo "igncp ALL=(ALL) NOPASSWD:ALL" >>/etc/sudoers # For the initial installation
 echo "alias ll='ls -lah'" >>/home/igncp/.bashrc
-pacman -S --noconfirm dhcpcd
-pacman -S --noconfirm openssh rsync
 
 ssh-keygen -A
 
@@ -22,15 +27,15 @@ ssh-keygen -A
 # usermod -G vboxsf -a igncp
 # systemctl enable vboxservice.service
 
-systemctl enable dhcpcd.service
-systemctl enable sshd.service
-
-# For rust installation
-sudo pacman -S base-devel --noconfirm
+# # Uncomment if not UTM pre-built VM
+# pacman -S --noconfirm dhcpcd
+# pacman -S --noconfirm openssh rsync
+# systemctl enable dhcpcd.service
+# systemctl enable sshd.service
 
 pacman -S --noconfirm ufw
 
-systemctl enable systemd-timesyncd.service
+systemctl enable --now systemd-timesyncd.service
 
 sed -i 's|#en_US\.UTF|en_US.UTF|' /etc/locale.gen
 locale-gen
@@ -52,6 +57,5 @@ chmod -R 700 /boot /etc/iptables
 
 echo 'FONT=latarcyrheb-sun32' >/etc/vconsole.conf
 
-cp /root/vm3.sh /home/igncp/
 chown -R igncp:igncp /home/igncp/
-rm -f ~/vm2.sh
+rm -f ~/vm2.sh || true

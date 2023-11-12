@@ -61,6 +61,7 @@ RandomStrGenerator() {
   echo
 }
 SedLines() { if [ "$#" -eq 1 ]; then sed -n "$1,$1p"; else sed -n "$1,$2p"; fi; }
+SortJSON() { cat "$1" | jq -S | sponge "$1"; }
 TopCPU() { ps aux | sort -nr -k 3 | head "$@" | sed -e 'G;G;'; }    # e.g. TopCPU -n 5 | less -S
 TopMemory() { ps aux | sort -nr -k 4 | head "$@" | sed -e 'G;G;'; } # e.g. TopMemory -n 5 | less -S
 USBClone() {
@@ -125,7 +126,7 @@ alias FlatpackInit='flatpak remote-add --if-not-exists flathub https://flathub.o
 alias GeoInfo='curl -s ipinfo.io | jq .'
 alias HierarchyManual='man hier'
 alias IPPublic='curl ifconfig.co'
-alias KillAllTmux='killall /usr/bin/tmux || true ; killall tmux || true ; killall $(which tmux) || true'
+alias KillAllTmux='(killall /usr/bin/tmux || true ; killall tmux || true ; killall $(which tmux) || true) > /dev/null 2>&1'
 alias LastColumn="awk '{print "'$NF'"}'"
 alias PathShow='echo $PATH | tr ":" "\n" | sort | uniq | less'
 alias Provision="(cd ~/development/environment && bash src/main.sh)"
@@ -214,7 +215,10 @@ alias NixDevelopBasePath='NIX_SHELL_LEVEL=1 nix develop path:$(pwd)'
 alias HomeManagerInitFlake='nix run home-manager/release-23.05 -- init'
 alias HomeManagerDeleteGenerations='home-manager expire-generations "-1 second"'
 
-alias SudoNix='sudo --preserve-env=PATH env'
+# The space is important to be able to also run other aliases (not only Nix
+# binaries):
+# https://linuxhandbook.com/run-alias-as-sudo/
+alias SudoNix='sudo --preserve-env=PATH env '
 
 SwitchHomeManager() {
   # Impure is needed for now to read the config

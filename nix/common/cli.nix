@@ -29,9 +29,11 @@ in {
       bc
       btop # https://github.com/aristocratos/btop
       buf # https://github.com/bufbuild/buf
+      csvq # https://github.com/mithrandie/csvq
       ctop # https://github.com/bcicen/ctop
       dasel # https://github.com/TomWright/dasel
       delta # https://github.com/dandavison/delta
+      dig
       direnv # https://github.com/direnv/direnv
       doctl # https://github.com/digitalocean/doctl
       dogdns # https://github.com/ogham/dog
@@ -97,6 +99,7 @@ in {
       unstable_pkgs.yt-dlp # https://github.com/yt-dlp/yt-dlp
       unzip
       up # https://github.com/akavel/up
+      usql # https://github.com/xo/usql
       vim
       watchman # https://github.com/facebook/watchman
       websocat # https://github.com/vi/websocat
@@ -132,6 +135,7 @@ in {
     ++ (lib.optional has_cli_aws pkgs.awscli2)
     ++ (lib.optional has_cli_hasura pkgs.hasura-cli)
     ++ (lib.optional has_cli_openvpn pkgs.openvpn)
+    ++ (lib.optional has_cli_openvpn pkgs.update-resolv-conf)
     ++ (lib.optional has_pg pkgs.postgresql)
     ++ (lib.optional has_stripe pkgs.stripe-cli) # https://github.com/stripe/stripe-cli
     ++ (lib.optional has_tailscale pkgs.tailscale);

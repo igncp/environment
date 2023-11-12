@@ -24,7 +24,11 @@ provision_setup_env() {
 
   IS_DEBIAN=$(uname -a | grep -c Debian || uname -a | grep -c Ubuntu || true)
   IS_NIXOS=$(uname -a | grep -c NixOS || true)
-  IS_ARCH=$(uname -a | grep -c archlinux || true) # @TODO - test
+  IS_ARCH="0"
+
+  if [ -f /etc/os-release ] && [ -n "$(cat /etc/os-release | grep 'Arch Linux' || true)" ]; then
+    IS_ARCH="1"
+  fi
 
   mkdir -p ~/.check-files
 

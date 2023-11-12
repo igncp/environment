@@ -1,26 +1,8 @@
+#!/usr/bin/env bash
+
+set -e
+
 # @TODO
-# pub use self::gui::run_arch_gui;
-# pub use self::install::install_arch;
-# use crate::base::{config::Config, system::System, Context};
-# use std::path::Path;
-
-# mod gui;
-# mod install;
-
-# pub fn install_from_aur(context: &mut Context, binary: &str, repo: &str) {
-#     if !context.system.get_has_binary(binary) {
-#         System::run_bash_command(&format!(
-#             r###"
-# TMP_DIR=$(mktemp -d)
-# cd "$TMP_DIR"
-# git clone "{repo}"
-# cd ./*
-# makepkg -si --noconfirm
-# cd; rm -rf "$TMP_DIR"
-# "###
-#         ));
-#     }
-# }
 
 # pub fn install_with_yay(context: &mut Context, package_name: &str, binary: Option<&str>) {
 #     let used_binary = match binary {
@@ -50,39 +32,6 @@
 # "###
 #         ))
 #     }
-
-#     if !context.system.get_has_binary("yay") {
-#         // Required by yay
-#         System::run_bash_command("sudo pacman -S --noconfirm base-devel");
-#     }
-
-#     install_from_aur(context, "yay", "https://aur.archlinux.org/yay-git.git");
-
-#     context.files.append(
-#         &context.system.get_home_path(".shell_aliases"),
-#         r###"
-# TimeManualSet() {
-#   sudo systemctl stop systemd-timesyncd.service
-#   sudo timedatectl set-time "$1" # "yyyy-MM-DD HH:MM:SS"
-# }
-
-# alias TimeManualUnset='sudo systemctl restart systemd-timesyncd.service'
-
-# alias PacmanCacheCleanHard='sudo pacman -Scc'
-# alias PacmanCacheCleanLight='sudo pacman -Sc'
-# alias PacmanFindPackageOfFile='pacman -Qo'
-# alias PacmanListExplicitPackages='pacman -Qe'
-# alias PacmanListFilesOfPackage='pacman -Ql'
-# alias PacmanListInstalledPackages='sudo pacman -Qs'
-# alias PacmanListPackagesByDate="expac --timefmt='%Y-%m-%d %T' '%l\t%n' | sort"
-# alias PacmanListUpdates='sudo pacman -Sy ; pacman -Sup'
-# alias PacmanSearchPackage='pacman -F'
-# alias PacmanUpdateRepos='sudo pacman -Sy'
-
-# alias SystemClean='sudo pacman -Sc'
-# alias SystemUpgrade='sudo pacman -Syu && yay -Syu --noconfirm'
-# "###,
-#     );
 
 #     // network
 #     context.files.append(
@@ -246,3 +195,63 @@
 
 #     System::run_bash_command("sudo chown root:root ~/.scripts/motd_update.sh");
 # }
+
+install_from_aur() {
+  local binary="$1"
+  local repo="$2"
+
+  if [ ! -f "$CONFIG_PATH"/yay ]; then
+    return
+  fi
+
+  if ! type "$binary" >/dev/null 2>&1; then
+    cd
+    local tmp_dir
+    tmp_dir="$(mktemp -d)"
+    cd "$tmp_dir"
+    git clone "$repo"
+    cd ./*
+    makepkg -si --noconfirm
+    cd
+    rm -rf "$tmp_dir"
+  fi
+}
+
+provision_setup_os_arch() {
+  cat >>~/.shell_aliases <<"EOF"
+TimeManualSet() {
+  sudo systemctl stop systemd-timesyncd.service
+  sudo timedatectl set-time "$1" # "yyyy-MM-DD HH:MM:SS"
+}
+
+alias TimeManualUnset='sudo systemctl restart systemd-timesyncd.service'
+
+alias PacmanCacheCleanHard='sudo pacman -Scc'
+alias PacmanCacheCleanLight='sudo pacman -Sc'
+alias PacmanFindPackageOfFile='pacman -Qo'
+alias PacmanListExplicitPackages='pacman -Qe'
+alias PacmanListFilesOfPackage='pacman -Ql'
+alias PacmanListInstalledPackages='sudo pacman -Qs'
+alias PacmanListPackagesByDate="expac --timefmt='%Y-%m-%d %T' '%l\t%n' | sort"
+alias PacmanListUpdates='sudo pacman -Sy ; pacman -Sup'
+alias PacmanSearchPackage='pacman -F'
+alias PacmanUpdateRepos='sudo pacman -Sy'
+
+alias SystemClean='sudo pacman -Sc'
+
+SystemUpgrade() {
+  sudo pacman -Syu
+  if type yay >/dev/null 2>&1; then
+    yay -Syu --noconfirm
+  fi
+}
+EOF
+
+  if [ -f "$CONFIG_PATH"/yay ]; then
+    if ! type yay >/dev/null 2>&1; then
+      sudo pacman -S --noconfirm base-devel
+    fi
+  fi
+
+  install_from_aur yay https://aur.archlinux.org/yay-git.git
+}
