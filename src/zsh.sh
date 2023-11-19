@@ -50,7 +50,7 @@ ShellChangeToZsh() {
   SHELL_PATH=$(which zsh)
   if [ -n "$(which zsh | grep nix)" ]; then
     if [ -z "$(cat /etc/shells | grep nix)" ]; then
-      cat /etc/shells > /tmp/shells
+      sudo cat /etc/shells > /tmp/shells
       which zsh >> /tmp/shells
       sudo mv /tmp/shells /etc/shells
       sudo chown root:root /etc/shells

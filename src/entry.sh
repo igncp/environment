@@ -29,6 +29,7 @@ set -e
 . src/raspberry.sh
 . src/gaming.sh
 . src/ruby.sh
+. src/crypto.sh
 
 . src/custom.sh
 
@@ -62,6 +63,7 @@ provision_setup_with_bash() {
   provision_setup_raspberry
   provision_setup_gaming
   provision_setup_ruby
+  provision_setup_crypto
 
   provision_setup_custom
 }

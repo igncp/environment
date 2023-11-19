@@ -17,7 +17,7 @@ USED_PROFILE=${USED_PROFILE:-$(find . -name '*.ovpn' | sort -V | head -n 1)}
 sed -i 's|^auth-user-pass.*$|auth-user-pass pass.txt|' \
   "$USED_PROFILE"
 
-sudo openvpn \
+sudo --preserve-env=PATH env openvpn \
   --config "$USED_PROFILE" \
   --script-security 2 \
   --up "$UPDATE_SCRIPT" \

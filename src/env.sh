@@ -11,10 +11,7 @@ provision_setup_env() {
     IS_MAC="1"
   fi
 
-  if [ ! -d "$PROVISION_CONFIG" ]; then
-    echo "Please create a .config file in $PROVISION_CONFIG"
-    exit 1
-  fi
+  mkdir -p "$PROVISION_CONFIG"
 
   if [ ! -f "$PROVISION_CONFIG"/theme ]; then
     echo 'dark' >"$PROVISION_CONFIG"/theme

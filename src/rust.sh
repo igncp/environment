@@ -109,7 +109,7 @@ EOF
   fi
 
   # Will add commands like: `cargo add`, `cargo rm` and `cargo upgrade`
-  if [ ! -f "$PROVISION_CONFIG"/no-cargo-add ]; then
+  if [ -f "$PROVISION_CONFIG"/cargo-add ]; then
     if ! type "cargo-add" >/dev/null 2>&1; then
       cargo install cargo-edit
     fi

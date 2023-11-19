@@ -43,8 +43,9 @@ EOF
     fi
   else
     if ! type home-manager >/dev/null 2>&1; then
-      su -c 'mkdir -p /nix/var/nix/profiles/per-user/igncp'
-      su -c 'chown igncp /nix/var/nix/profiles/per-user/igncp'
+      # The user should be in the sudoers file for this to work
+      sudo mkdir -p /nix/var/nix/profiles/per-user/igncp
+      sudo chown igncp /nix/var/nix/profiles/per-user/igncp
       echo "You need to install packages"
       echo 'Run: `nix-shell -p git home-manager`'
       echo 'And then: `. src/config-files/.shell_aliases.sh && SwitchHomeManager`'

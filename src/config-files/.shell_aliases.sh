@@ -11,6 +11,7 @@ alias ll="ls -lahv --color=always"
 alias lsblk="lsblk -f"
 alias m="mkdir -p"
 alias rm="rm -rf"
+alias rsr="rsync --remove-source-files -av --progress"
 alias s='sd'
 alias ta="tmux attach"
 alias tree="tree -a"

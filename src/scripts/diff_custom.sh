@@ -62,3 +62,8 @@ if [ -d ~/development/nix-envs ]; then
     ~/development/nix-envs \
     custom/nix-envs/ || true
 fi
+
+echo '- custom/.config:'
+delta --diff-so-fancy --pager never \
+  project/.config \
+  custom/.config || true

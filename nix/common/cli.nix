@@ -90,7 +90,6 @@ in {
       tre-command # https://github.com/dduan/tre
       tree
       unstable_pkgs.age # https://github.com/FiloSottile/age
-      unstable_pkgs.ast-grep # https://github.com/chmln/sd
       unstable_pkgs.bitwarden-cli # https://github.com/bitwarden/clients
       unstable_pkgs.git
       unstable_pkgs.nil # https://github.com/oxalica/nil
@@ -116,26 +115,28 @@ in {
     ++ (
       if is_linux
       then
-        with pkgs; [
-          dmidecode
-          etcd # https://github.com/etcd-io/etcd/tree/main/etcdctl # Marked as broken in macOS
-          gnumake
-          iotop
-          lshw
-          strace
-          valgrind
+        with pkgs;
+          [
+            dmidecode
+            etcd # https://github.com/etcd-io/etcd/tree/main/etcdctl # Marked as broken in macOS
+            gnumake
+            iotop
+            lshw
+            strace
+            unstable_pkgs.ast-grep # https://ast-grep.github.io/
+            valgrind
 
-          # If installing `gcc` in macOS, there are errors related to `-liconv`
-          # when building with rust
-          gcc
-        ]
+            # If installing `gcc` in macOS, there are errors related to `-liconv`
+            # when building with rust
+            gcc
+          ]
+          ++ (lib.optional has_cli_openvpn pkgs.update-resolv-conf)
       else []
     )
     ++ (lib.optional has_shellcheck pkgs.shellcheck)
     ++ (lib.optional has_cli_aws pkgs.awscli2)
     ++ (lib.optional has_cli_hasura pkgs.hasura-cli)
     ++ (lib.optional has_cli_openvpn pkgs.openvpn)
-    ++ (lib.optional has_cli_openvpn pkgs.update-resolv-conf)
     ++ (lib.optional has_pg pkgs.postgresql)
     ++ (lib.optional has_stripe pkgs.stripe-cli) # https://github.com/stripe/stripe-cli
     ++ (lib.optional has_tailscale pkgs.tailscale);

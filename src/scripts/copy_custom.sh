@@ -31,6 +31,7 @@ rsync -rhv --delete ~/.ssh/config custom/ssh_config
 rsync -rhv --delete project/.vim-custom.lua custom/.vim-custom.lua
 rsync -rhv --delete project/vim-macros-custom custom/vim-macros-custom
 rsync -rhv --delete project/custom_create_vim_snippets.sh custom/custom_create_vim_snippets.sh
+rsync -rhv --delete project/.config/ custom/.config/
 
 if [ -n "$JUST_COMMIT" ]; then
   exit 0
