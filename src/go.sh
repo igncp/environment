@@ -24,6 +24,10 @@ EOF
   # Issue with this plugin was fixed with: `sudo rm -rf ~/.config/coc/extensions/coc-go-data/`
   install_nvim_package "josa42/coc-go"
 
+  if ! type gorun >/dev/null 2>&1; then
+    go install github.com/erning/gorun@latest
+  fi
+
   cat >>~/.vimrc <<"EOF"
 call add(g:coc_global_extensions, 'coc-go')
 

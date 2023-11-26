@@ -1,14 +1,31 @@
 {pkgs}: let
-  rust-pkgs = import ./common/rust.nix {inherit pkgs;};
+  rust-config = import ./common/rust.nix {inherit pkgs;};
 in {
-  # This devShell is used currently to build some rust packages, it
-  # should not be loaded with `direnv` to avoid the extra loading time
-  # every time changing to this dir (which happens quite often)
-  default = pkgs.mkShell {
-    packages = [] ++ rust-pkgs.pkgs-list;
+  cosmos = pkgs.mkShell {
+    packages = with pkgs; [clang protobuf];
+  };
+  load-testing = pkgs.mkShell {
+    packages = with pkgs; [vegeta];
+    shellHook = ''
+      set -a
+      Vegeta() { echo foo; }
+      set +a
+    '';
+  };
+  rust = pkgs.mkShell {
+    packages = rust-config.pkgs-list;
+    shellHook = rust-config.shellHook;
   };
   solana = pkgs.mkShell {
     LIBCLANG_PATH = "${pkgs.libclang.lib}/lib";
-    packages = with pkgs; [rustup pkgconfig udev clang protobuf];
+    shellHook = rust-config.shellHook;
+    packages = with pkgs;
+      [pkgconfig clang protobuf]
+      ++ rust-config.pkgs-list
+      ++ (
+        if system == "aarch64-darwin"
+        then []
+        else [udev]
+      );
   };
 }

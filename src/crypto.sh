@@ -5,10 +5,9 @@ set -e
 provision_setup_crypto() {
   # Requires GO
   if [ -f "$PROVISION_CONFIG"/go-cosmos ]; then
-    if ! type "ignite" >/dev/null 2>&1; then
-      echo "Installing ignite"
-      curl https://get.ignite.com/cli@! | bash
-    fi
+    cat >>~/.shell_aliases <<'EOF'
+alias Ignite='docker run --rm -v $(pwd):/app -w /app ignitehq/cli'
+EOF
   fi
 
   if [ -f "$PROVISION_CONFIG"/solana ]; then
@@ -18,7 +17,9 @@ provision_setup_crypto() {
       cd ~/development/environment
       nix develop .#solana -c bash \
         -c 'cd ~/solana && ./cargo build -p solana-cli -p solana-keygen --release'
-      sudo cp ~/.scripts/cargo_target/release/solana* /usr/local/bin/
+      sudo cp ~/.scripts/cargo_target/release/solana* /usr/local/bin/environment_scripts/
+      sudo chmod +x /usr/local/bin/environment_scripts/solana*
+      sudo chown $USER /usr/local/bin/environment_scripts/solana*
       sudo rm -rf ~/solana
     fi
 

@@ -17,27 +17,24 @@ install_cargo_crate() {
 
 provision_setup_rust() {
   cat >>~/.shell_aliases <<"EOF"
-alias CargoClippy='CMD="# rm -rf target && cargo clippy --all-targets --all-features -- -D warnings"; echo $CMD; history -s $CMD'
 _RustBuildProvisionPackages() {
   while IFS= read -r -d '' FILE_PATH; do
     FILE_NAME=$(basename "$FILE_PATH")
-    if [ ! -f "$HOME/.scripts/toolbox/$FILE_NAME" ]; then
+    if [ ! -f "/usr/local/bin/environment_scripts/$FILE_NAME" ] || [ "$1" == "-f" ]; then
       (cd "$FILE_PATH" &&
-        cargo build --release --jobs 1 &&
-        cp $HOME/.scripts/cargo_target/release/"$FILE_NAME" $HOME/.scripts/toolbox/)
-    fi
-  done < <(find ~/development/environment/src/scripts/toolbox -maxdepth 1 -mindepth 1 -type d -print0)
-
-  while IFS= read -r -d '' FILE_PATH; do
-    FILE_NAME=$(basename "$FILE_PATH")
-    if [ ! -f "$HOME/.scripts/cargo_target/release/$FILE_NAME" ]; then
-      (cd "$FILE_PATH" &&
-        cargo build --release --jobs 1)
+        cargo build --release --jobs 1 && \
+        sudo cp $HOME/.scripts/cargo_target/release/"$FILE_NAME" /usr/local/bin/environment_scripts/ && \
+        sudo chmod +x /usr/local/bin/environment_scripts/"$FILE_NAME" && \
+        sudo chown $USER /usr/local/bin/environment_scripts/"$FILE_NAME")
     fi
   done < <(find ~/development/environment/src/scripts/misc -maxdepth 1 -mindepth 1 -type d -print0)
+
+  rm -rf ~/.scripts/cargo_target/release/deps
+  rm -rf ~/.scripts/cargo_target/release/build
+  rm -rf ~/.scripts/cargo_target/debug
 }
-alias RustBuildProvisionPackages="(cd ~/development/environment &&
-  nix develop -c bash -c '. ~/.shellrc ; _RustBuildProvisionPackages')"
+RustBuildProvisionPackages() { (nix develop ~/development/environment#rust \
+  -c bash -c ". ~/.shellrc ; _RustBuildProvisionPackages $@"); }
 EOF
 
   mkdir -p ~/.cargo
@@ -68,14 +65,11 @@ nnoremap <leader>lk :CocCommand rust-analyzer.moveItemUp<CR>
 EOF
 
   cat >>~/.shellrc <<"EOF"
+export PATH="/usr/local/bin/environment_scripts:$PATH"
 export PASTEL_COLOR_MODE=24bit
 EOF
 
   install_nvim_package fannheyward/coc-rust-analyzer
-
-  if ! type cargo-clippy >/dev/null 2>&1; then
-    rustup component add clippy
-  fi
 
   if [ -f "$PROVISION_CONFIG"/rust-cross-compile ]; then
     if [ ! -f ~/.check-files/rust-cross-compile ] && type "apt-get" >/dev/null 2>&1; then
@@ -89,8 +83,6 @@ EOF
       touch ~/.check-files/rust-cross-compile
     fi
   fi
-
-  install_cargo_crate rustfmt # https://github.com/rust-lang/rustfmt
 
   if [ -f "$PROVISION_CONFIG"/extra-crates ]; then
     install_system_package perf
@@ -124,10 +116,4 @@ EOF
 "rust-analyzer.inlayHints.parameterHints.enable": false,
 "rust-analyzer.inlayHints.reborrowHints.enable": "never",
 "rust-analyzer.inlayHints.typeHints.enable": false'
-
-  if [ ! -f ~/.check-files/init-rust ]; then
-    rustup install stable
-    rustup component add rust-analyzer
-    touch ~/.check-files/init-rust
-  fi
 }

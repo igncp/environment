@@ -9,10 +9,12 @@ use env_logger::Builder;
 use log::{info, warn, LevelFilter};
 
 use crate::clipboard::{check_host_support, save_to_clipboard};
+use crate::install::install;
 
 const DEFAULT_PORT: u16 = 2030;
 
 mod clipboard;
+mod install;
 
 fn main() {
     Builder::new()
@@ -41,6 +43,7 @@ fn main() {
         )
         .subcommand(Command::new("send").about("Sends the data from stdin"))
         .subcommand(Command::new("host").about("Listens for data to add into clipboard"))
+        .subcommand(Command::new("install").about("Installs the script as a service in the OS"))
         .arg_required_else_help(true);
 
     let matches = app.clone().get_matches();
@@ -100,6 +103,8 @@ fn main() {
                 warn!("Error stream");
             }
         }
+    } else if matches.subcommand_matches("install").is_some() {
+        install();
     } else {
         println!("No command specified");
         app.print_help().unwrap();

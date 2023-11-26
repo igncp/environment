@@ -28,6 +28,8 @@ provision_setup_env() {
   fi
 
   mkdir -p ~/.check-files
+  sudo mkdir -p /usr/local/bin/environment_scripts
+  sudo chown $USER /usr/local/bin/environment_scripts
 
   # This assumes now that the OS is using `nix`
   install_system_package() {

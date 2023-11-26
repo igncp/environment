@@ -73,6 +73,7 @@ in {
       pgcli # https://github.com/dbcli/pgcli
       pkg-config
       procs # https://github.com/dalance/procs
+      pstree
       python3
       python3.pkgs.pip
       ranger # https://github.com/ranger/ranger
@@ -98,7 +99,6 @@ in {
       unstable_pkgs.yt-dlp # https://github.com/yt-dlp/yt-dlp
       unzip
       up # https://github.com/akavel/up
-      usql # https://github.com/xo/usql
       vim
       watchman # https://github.com/facebook/watchman
       websocat # https://github.com/vi/websocat
@@ -124,6 +124,7 @@ in {
             lshw
             strace
             unstable_pkgs.ast-grep # https://ast-grep.github.io/
+            unstable_pkgs.usql # https://github.com/xo/usql
             valgrind
 
             # If installing `gcc` in macOS, there are errors related to `-liconv`

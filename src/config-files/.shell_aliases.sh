@@ -75,20 +75,14 @@ USBClone() {
 Vidir() { vidir -v -; }
 VidirFind() { find $@ | vidir -v -; }
 VisudoUser() { sudo env EDITOR=vim visudo -f /etc/sudoers.d/$1; }
-alias ClipboardSSHSend="~/.scripts/cargo_target/release/clipboard_ssh send"
-alias HostClipboardSSH="~/.scripts/cargo_target/release/clipboard_ssh host"
+alias ClipboardSSHSend="clipboard_ssh send"
+alias HostClipboardSSH="clipboard_ssh host"
 
 # Cross-platform (including remote VM) function which accepts text from a pipe
 ClipboardCopyPipe() {
   read INPUT
   if [ -z "$INPUT" ]; then return; fi
-  if [ "$(uname)" = "Darwin" ]; then
-    echo "$INPUT" | pbcopy
-  elif [ -f ~/development/environment/project/.config/clipboard-ssh ]; then
-    echo "$INPUT" | ~/.scripts/cargo_target/release/clipboard_ssh send
-  else
-    echo "$INPUT" | xclip -selection clipboard
-  fi
+  echo "$INPUT" | clipboard_ssh send
 }
 
 # Sample of alias using ClipboardCopyPipe and bitwarden
@@ -124,6 +118,7 @@ alias EditProvision="(cd ~/development/environment && $EDITOR src/main.sh && car
 alias FDisk='sudo fdisk /dev/sda'
 alias FilterLeaf=$'sort -r | awk \'a!~"^"$0{a=$0;print}\' | sort'
 alias FlatpackInit='flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo'
+alias FormatProto='clang-format -i'
 alias GeoInfo='curl -s ipinfo.io | jq .'
 alias HierarchyManual='man hier'
 alias IPPublic='curl ifconfig.co'
@@ -131,14 +126,14 @@ alias KillAllTmux='(killall /usr/bin/tmux || true ; killall tmux || true ; killa
 alias LastColumn="awk '{print "'$NF'"}'"
 alias PathShow='echo $PATH | tr ":" "\n" | sort | uniq | less'
 alias Provision="(cd ~/development/environment && bash src/main.sh)"
-alias PsTree='pstree -pTUl | less -S'
+alias PsTree='pstree -s'
 alias RsyncDelete='rsync -rhv --delete' # remember to add a slash at the end of source (dest doesn't matter)
 alias ShellChangeToBash='chsh -s /bin/bash; exit'
 alias SocketSearch='sudo ss -lntup'
 alias SyncProvisionCustom='(cd ~/development/environment && bash src/scripts/copy_custom.sh)'
 alias TreeDir='tree -d'
 alias Visudo='sudo env EDITOR=vim visudo'
-alias Xargs='xargs -I{}'
+alias Xargs='xargs -I{} '
 alias YoutubeSubtitles='yt-dlp --all-subs --skip-download'
 
 alias CrontabUser='crontab -e'
@@ -171,7 +166,7 @@ n() {
 }
 
 ConfigProvisionList() {
-  ~/.scripts/cargo_target/release/provision_choose_config $@ &&
+  /usr/local/bin/environment_scripts/provision_choose_config $@ &&
     SwitchHomeManager &&
     Provision
 }
@@ -198,7 +193,7 @@ CargoDevGenerate() {
 }
 
 alias NixClearSpace='nix-collect-garbage'
-alias NixEvalFile='nix-instantiate --eval'
+alias NixFileEval='nix-instantiate --eval'
 alias NixFlakeUpdateInput='nix flake lock --update-input'
 alias NixInstallPackage='nix-env -iA'
 alias NixListChannels='nix-channel —-list'
@@ -207,6 +202,9 @@ alias NixListPackages='nix-env --query "*"'
 alias NixListReferrers='nix-store --query --referrers' # Add the full path of the store item
 alias NixRemovePackage='nix-env -e'
 alias NixUpdate='nix-env -u && nix-channel --update && nix-env -u'
+
+NixEnvShell() { nix develop "$HOME/development/environment#$1" -c zsh; }
+NixEnvShellList() { grep mkShell ~/development/environment/nix/shells.nix; }
 
 alias NixDevelop='NIX_SHELL_LEVEL=1 nix develop -c zsh'
 alias NixDevelopPath='NIX_SHELL_LEVEL=1 nix develop path:$(pwd) -c zsh'
@@ -246,3 +244,11 @@ NixFormat() {
   fi
   alejandra ./**/*.nix
 }
+
+if type vegeta >/dev/null 2>&1; then
+  VegetaAttack() {
+    # Example usage: VegetaAttack -rate=100 -duration=10s -targets=targets.txt
+    vegeta attack $@ | tee /tmp/vegeta-results.bin | vegeta report
+  }
+  alias VegetaDocs='echo https://www.scaleway.com/en/docs/tutorials/load-testing-vegeta/'
+fi

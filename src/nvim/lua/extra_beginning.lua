@@ -244,15 +244,10 @@ vim.api.nvim_create_autocmd("BufWritePost",
   })
 
 function SaveRegisterIntoClipboard()
-  if M.has_config("clipboard-ssh") then
-    vim.cmd([[
+  vim.cmd([[
 silent call writefile(getreg('0', 1, 1), "/tmp/clipboard-ssh")
-silent !cat /tmp/clipboard-ssh | ~/.scripts/cargo_target/release/clipboard_ssh send
+silent !cat /tmp/clipboard-ssh | ~/.scripts/cargo_target/release/clipboard_ssh send && rm /tmp/clipboard-ssh
 ]])
-  else
-    local current_register = vim.fn.getreg('0')
-    vim.fn.setreg('+', current_register)
-  end
 end
 
 vim.api.nvim_set_keymap("n", "<leader>mf", "", {

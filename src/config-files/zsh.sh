@@ -20,8 +20,10 @@ bindkey "\C-g" vi-forward-blank-word
 bindkey "\C-f" vi-backward-blank-word
 bindkey "\C-u" kill-region
 
-bashCalls () {
-  text_to_add="$(cat $HISTFILE | cut -d';' -f2- | ag '^b ' | sort | uniq | fzf)"
+nixShells () {
+  SHELL_NAME="$(grep mkShell ~/development/environment/nix/shells.nix | sed 's| =.*||' | fzf)"
+  SHELL_NAME="$(echo -e "${SHELL_NAME}" | tr -d '[:space:]')"
+  text_to_add="nix develop ~/development/environment#$SHELL_NAME -c zsh"
   LBUFFER=${text_to_add}
   zle accept-line # enter
 }
@@ -57,7 +59,7 @@ openFzf () {
   zle accept-line # enter
 }
 
-zle -N bashCalls
+zle -N nixShells
 zle -N bookmarksFull
 zle -N openEnvironment
 zle -N openFiles
@@ -65,7 +67,7 @@ zle -N openFzf
 zle -N scriptsFull
 zle -N scriptsPrint
 
-bindkey "\C-q\C-q" bashCalls
+bindkey "\C-q\C-q" nixShells
 bindkey "\C-q\C-w" bookmarksFull
 bindkey "\C-q\C-a" openFiles
 bindkey "\C-q\C-s" scriptsFull

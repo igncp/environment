@@ -28,3 +28,7 @@ while and learnt they would be remove from here.
 - To output in a CSV format can use the `--csv` flag
 - To not print the columns headers can pass the `-t` command
 - Describe a table (including indexes): `\d+ TABLE_NAME` (`\dt` lists tables)
+
+## `pstree`
+
+- It can check a string, for example: `pstree -s node`
