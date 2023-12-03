@@ -23,13 +23,11 @@ provision_setup_general() {
   fi
 
   install_system_package "curl"
-  install_system_package "dnsutils" "dig"
   install_system_package "git"
   install_system_package "jq"
   install_system_package "lsof"
   install_system_package "neofetch"
   install_system_package "nmap"
-  install_system_package "ranger"
   install_system_package "rsync"
   install_system_package "tree"
   install_system_package "unzip"

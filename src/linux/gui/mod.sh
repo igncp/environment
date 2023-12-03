@@ -63,17 +63,6 @@
 #         context.system.install_system_package("acpi", None);
 #     }
 
-#     let terminator_config_path = &context.system.get_home_path(".config/terminator/config");
-#     if Path::new(&terminator_config_path).exists() {
-#         std::fs::copy(
-#             &context
-#                 .system
-#                 .get_home_path("development/environment/src/config-files/terminator-config"),
-#             &terminator_config_path,
-#         )
-#         .unwrap();
-#     }
-
 #     // Bluetooth
 #     // For dual boot:
 #     // - Copy the key in /var/lib/bluetooth/MAC/DEVICE_MAC/info

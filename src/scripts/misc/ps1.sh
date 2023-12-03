@@ -72,7 +72,7 @@ provision_get_ps1() {
   }
 
   get_vpn() {
-    if [ "$(cat ~/development/environment/project/.config/vpn_check 2>/dev/null || true)" != "yes" ]; then
+    if [ "$(cat ~/development/environment/project/".config/vpn_check" 2>/dev/null || true)" != "yes" ]; then
       return
     fi
 

@@ -1,36 +1,90 @@
 use std::{env, process};
 
-pub fn install() {
-    match env::consts::OS {
-        "windows" => {
-            panic!("Install is not implemented for Windows");
-        }
-        "linux" => {
-            panic!("Install is not implemented for Linux (yet)");
-        }
-        "macos" => {
-            let exists_code = process::Command::new("launchctl")
-                .arg("list")
-                .arg("service-clipboard-ssh")
-                .stdout(process::Stdio::piped())
-                .spawn()
-                .unwrap()
-                .wait()
-                .unwrap()
-                .code()
-                .unwrap();
+fn install_linux() {
+    let exists_code = process::Command::new("systemctl")
+        .arg("is-active")
+        .arg("service-clipboard-ssh")
+        .stdout(process::Stdio::piped())
+        .spawn()
+        .unwrap()
+        .wait()
+        .unwrap()
+        .code()
+        .unwrap();
 
-            if exists_code == 0 {
-                println!("Service already installed");
+    if exists_code == 0 {
+        println!("Service already installed");
 
-                return;
-            }
+        return;
+    }
 
-            // Write file into "$HOME/foo"
-            let mut file_path = env::var("HOME").unwrap();
-            file_path.push_str("/Library/LaunchAgents/service-clipboard-ssh.plist");
+    let mut dir_path = env::var("HOME").unwrap();
+    dir_path.push_str("/.config/systemd/user");
 
-            std::fs::write(&file_path, r###"
+    std::fs::create_dir_all(&dir_path).unwrap();
+
+    let file_path = format!("{}{}", dir_path.clone(), "/service-clipboard-ssh.service");
+
+    std::fs::write(
+        file_path,
+        r###"
+[Unit]
+Description=Clipboard SSH
+After=network.target
+
+[Service]
+ExecStart=/usr/local/bin/environment_scripts/clipboard_ssh host
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+"###
+        .trim(),
+    )
+    .unwrap();
+
+    let start_code = process::Command::new("systemctl")
+        .arg("--user")
+        .arg("enable")
+        .arg("--now")
+        .arg("service-clipboard-ssh")
+        .stdout(process::Stdio::piped())
+        .spawn()
+        .unwrap()
+        .wait()
+        .unwrap()
+        .code()
+        .unwrap();
+
+    if start_code != 0 {
+        panic!("Failed to install service");
+    }
+
+    println!("Service installed");
+}
+
+fn install_macos() {
+    let exists_code = process::Command::new("launchctl")
+        .arg("list")
+        .arg("service-clipboard-ssh")
+        .stdout(process::Stdio::piped())
+        .spawn()
+        .unwrap()
+        .wait()
+        .unwrap()
+        .code()
+        .unwrap();
+
+    if exists_code == 0 {
+        println!("Service already installed");
+
+        return;
+    }
+
+    let mut file_path = env::var("HOME").unwrap();
+    file_path.push_str("/Library/LaunchAgents/service-clipboard-ssh.plist");
+
+    std::fs::write(&file_path, r###"
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -48,23 +102,35 @@ pub fn install() {
 </plist>
 "###.trim()).unwrap();
 
-            let start_code = process::Command::new("launchctl")
-                .arg("load")
-                .arg("-w")
-                .arg(file_path)
-                .stdout(process::Stdio::piped())
-                .spawn()
-                .unwrap()
-                .wait()
-                .unwrap()
-                .code()
-                .unwrap();
+    let start_code = process::Command::new("launchctl")
+        .arg("load")
+        .arg("-w")
+        .arg(file_path)
+        .stdout(process::Stdio::piped())
+        .spawn()
+        .unwrap()
+        .wait()
+        .unwrap()
+        .code()
+        .unwrap();
 
-            if start_code != 0 {
-                panic!("Failed to install service");
-            }
+    if start_code != 0 {
+        panic!("Failed to install service");
+    }
 
-            println!("Service installed");
+    println!("Service installed");
+}
+
+pub fn install() {
+    match env::consts::OS {
+        "windows" => {
+            panic!("Install is not implemented for Windows");
+        }
+        "linux" => {
+            install_linux();
+        }
+        "macos" => {
+            install_macos();
         }
         other => {
             panic!("Copy to clipboard is not implemented for {other}");

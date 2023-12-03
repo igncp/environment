@@ -90,7 +90,7 @@ EOF
     install_system_package_os 'docker-compose'
   fi
 
-  if [ "$PROVISION_CONFIG"/docker-buildx ]; then
+  if [ -f "$PROVISION_CONFIG"/docker-buildx ]; then
     cat >>~/.shellrc <<"EOF"
 export DOCKER_BUILDKIT=1
 EOF

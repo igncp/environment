@@ -4,6 +4,7 @@ set -e
 
 . src/linux/apk.sh
 . src/linux/gui.sh
+. src/linux/gui_apps.sh
 
 provision_setup_linux() {
   if [ "$IS_LINUX" != "1" ]; then
@@ -18,6 +19,8 @@ EOF
   install_system_package "dmidecode"
 
   cat >>~/.shell_aliases <<"EOF"
+alias systemctl='systemctl --user'
+
 alias LinuxLsHardwareMemory='sudo dmidecode --type 17'
 
 alias JournalctlDiskUsage='sudo journalctl --disk-usage'
@@ -132,4 +135,5 @@ EOF
   fi
 
   provision_setup_linux_apk
+  provision_setup_linux_gui_apps
 }

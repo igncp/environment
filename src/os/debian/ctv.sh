@@ -1,5 +1,13 @@
 # ctv START
 
+# Libreelec
+# # ~/.kodi/userdata/advancedsettings.xml
+# # <advancedsettings version="1.0">
+# #   <video>
+# #     <subsdelayrange>120</subsdelayrange>
+# #   </video>
+# # </advancedsettings>
+
 # lg webos
 #   Important: Ubuntu 14/16 is required (5Gb for VM is enough)
 #   Download installation from: http://webostv.developer.lge.com/sdk/installation

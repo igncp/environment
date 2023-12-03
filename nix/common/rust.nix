@@ -1,6 +1,6 @@
 {pkgs}: {
   pkgs-list = with pkgs;
-    [openssl openssl.dev pkgconfig libiconv rustup]
+    [openssl openssl.dev pkg-config libiconv rustup]
     ++ (
       if system == "aarch64-darwin"
       then [

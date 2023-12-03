@@ -23,7 +23,7 @@ bindkey "\C-u" kill-region
 nixShells () {
   SHELL_NAME="$(grep mkShell ~/development/environment/nix/shells.nix | sed 's| =.*||' | fzf)"
   SHELL_NAME="$(echo -e "${SHELL_NAME}" | tr -d '[:space:]')"
-  text_to_add="nix develop ~/development/environment#$SHELL_NAME -c zsh"
+  text_to_add="nix develop ~/development/environment#$SHELL_NAME -c zsh && exit"
   LBUFFER=${text_to_add}
   zle accept-line # enter
 }

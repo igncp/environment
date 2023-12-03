@@ -21,37 +21,19 @@ in {
   pkgs-list = with pkgs;
     [
       alejandra # https://github.com/kamadorueda/alejandra
-      aria2 # https://github.com/aria2/aria2
-      bandwhich # https://github.com/imsnif/bandwhich
       bash
       bat # https://github.com/sharkdp/bat
-      bats # https://github.com/sstephenson/bats
-      bc
-      btop # https://github.com/aristocratos/btop
-      buf # https://github.com/bufbuild/buf
-      csvq # https://github.com/mithrandie/csvq
-      ctop # https://github.com/bcicen/ctop
-      dasel # https://github.com/TomWright/dasel
       delta # https://github.com/dandavison/delta
-      dig
       direnv # https://github.com/direnv/direnv
-      doctl # https://github.com/digitalocean/doctl
-      dogdns # https://github.com/ogham/dog
       dua # https://github.com/Byron/dua-cli
-      duf # https://github.com/muesli/duf
       entr # https://github.com/eradman/entr
-      exiftool # https://github.com/exiftool/exiftool
       fd # https://github.com/sharkdp/fd
-      ffmpeg
       fzf # https://github.com/junegunn/fzf
       gh # https://github.com/cli/cli
       gnupg
       gnused
-      graphviz # https://gitlab.com/graphviz/graphviz
       hostname # If using Alpine, the Busybox hostname is different
       htop # https://github.com/htop-dev/htop
-      hurl # https://github.com/Orange-OpenSource/hurl
-      hyperfine # https://github.com/sharkdp/hyperfine
       iredis # https://github.com/laixintao/iredis
       jq # https://github.com/jqlang/jq
       killall
@@ -59,8 +41,6 @@ in {
       lazydocker # https://github.com/jesseduffield/lazydocker
       libiconv
       lsof # https://github.com/lsof-org/lsof
-      mitmproxy # https://github.com/mitmproxy/mitmproxy
-      mkcert # https://github.com/FiloSottile/mkcert
       moreutils
       neofetch # https://github.com/dylanaraps/neofetch
       neovim # https://github.com/neovim/neovim
@@ -68,27 +48,20 @@ in {
       nmap # https://github.com/nmap/nmap
       openvpn # https://github.com/OpenVPN/openvpn
       p7zip
-      pandoc # https://github.com/jgm/pandoc
-      pastel # https://github.com/sharkdp/pastel
       pgcli # https://github.com/dbcli/pgcli
       pkg-config
-      procs # https://github.com/dalance/procs
       pstree
       python3
       python3.pkgs.pip
-      ranger # https://github.com/ranger/ranger
-      redis # For `redis-cli` (to complement `iredis`) - https://redis.io/docs/ui/cli/
       rsync # https://github.com/WayneD/rsync
       sad # https://github.com/ms-jpq/sad
       scc # https://github.com/boyter/scc
       sd # https://github.com/chmln/sd
       shfmt # https://github.com/mvdan/sh
       silver-searcher # https://github.com/ggreer/the_silver_searcher
-      speedtest-cli # https://github.com/sivel/speedtest-cli
       taskwarrior # https://github.com/GothenburgBitFactory/taskwarrior
       tmux # https://github.com/tmux/tmux
       translate-shell # https://github.com/soimort/translate-shell
-      tre-command # https://github.com/dduan/tre
       tree
       unstable_pkgs.age # https://github.com/FiloSottile/age
       unstable_pkgs.bitwarden-cli # https://github.com/bitwarden/clients

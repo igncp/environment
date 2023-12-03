@@ -78,6 +78,8 @@ VisudoUser() { sudo env EDITOR=vim visudo -f /etc/sudoers.d/$1; }
 alias ClipboardSSHSend="clipboard_ssh send"
 alias HostClipboardSSH="clipboard_ssh host"
 
+alias Vpn='(cd ~/development/environment && bash src/scripts/misc/vpn.sh)'
+
 # Cross-platform (including remote VM) function which accepts text from a pipe
 ClipboardCopyPipe() {
   read INPUT
@@ -140,10 +142,16 @@ alias CrontabUser='crontab -e'
 alias CrontabRoot='sudo EDITOR=vim crontab -e'
 
 alias Headers='curl -I' # e.g. Headers google.com
-alias NmapLocal='sudo nmap -sn 192.168.1.0/24 > /tmp/nmap-result && sed -i "s|Nmap|\nNmap|" /tmp/nmap-result && less /tmp/nmap-result'
 alias Ports='sudo netstat -tulanp'
 alias NetstatConnections='netstat -nputw'
 alias AnsiColorsRemove="sed 's/\x1b\[[0-9;]*m//g'"
+
+NmapLocal() {
+  THIRD_NUM=${1:-1}
+  sudo --preserve-env=PATH env nmap -sn "192.168.$THIRD_NUM.0/24" >/tmp/nmap-result
+  sed -i "s|Nmap|\nNmap|" /tmp/nmap-result
+  less /tmp/nmap-result
+}
 
 alias deluge_custom_client='~/.scripts/cargo_target/release/deluge_custom_client'
 
@@ -166,8 +174,12 @@ n() {
 }
 
 ConfigProvisionList() {
-  /usr/local/bin/environment_scripts/provision_choose_config $@ &&
-    SwitchHomeManager &&
+  INITIAL_SHA=$(find ~/development/environment/project/.config -type f | sort -V | sha256sum | awk '{print $1}')
+  /usr/local/bin/environment_scripts/provision_choose_config $@ || return
+  AFTER_SHA=$(find ~/development/environment/project/.config -type f | sort -V | sha256sum | awk '{print $1}')
+  # Stop if no changes
+  if [ "$INITIAL_SHA" = "$AFTER_SHA" ]; then return; fi
+  SwitchHomeManager &&
     Provision
 }
 
@@ -197,6 +209,7 @@ alias NixFileEval='nix-instantiate --eval'
 alias NixFlakeUpdateInput='nix flake lock --update-input'
 alias NixInstallPackage='nix-env -iA'
 alias NixListChannels='nix-channel —-list'
+alias NixListGCRoots=$'nix-store --gc --print-roots | ag -v censored | awk \'{ print $1; }\''
 alias NixListGenerations="nix-env --list-generations"
 alias NixListPackages='nix-env --query "*"'
 alias NixListReferrers='nix-store --query --referrers' # Add the full path of the store item

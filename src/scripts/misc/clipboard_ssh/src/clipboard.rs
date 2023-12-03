@@ -1,16 +1,42 @@
 use std::{env, io::prelude::*, process};
 
-use log::{info, warn};
+use log::{error, info, warn};
 
 pub fn check_host_support() {
     let host = env::consts::OS;
     match host {
         "windows" | "linux" | "macos" => {
+            if host == "linux" {
+                let result = process::Command::new("xclip")
+                    .arg("-version")
+                    .stdout(std::process::Stdio::piped())
+                    .spawn();
+
+                if result.is_err() {
+                    error!("xclip is not installed");
+                    process::exit(1);
+                }
+
+                let result = result.unwrap().wait_with_output();
+
+                if result.is_err() {
+                    error!("xclip is not installed");
+                    process::exit(1);
+                }
+
+                let result = result.unwrap();
+
+                if !result.status.success() {
+                    error!("xclip is not installed");
+                    process::exit(1);
+                }
+            }
+
             info!("Host {host} is supported")
         }
         other => {
             warn!("Host {other} is not supported");
-            process::exit(1);
+            process::exit(1)
         }
     }
 }
@@ -28,7 +54,10 @@ fn save_to_clipboard_common(cmd: &str, content: &str, args: Vec<&str>) {
         .spawn();
 
     if child.is_err() {
-        warn!("Failed to save stream into clipboard");
+        warn!(
+            "Failed to save stream into clipboard: {}",
+            child.err().unwrap()
+        );
         return;
     }
 
