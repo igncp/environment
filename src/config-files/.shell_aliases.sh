@@ -212,10 +212,17 @@ alias NixListChannels='nix-channel —-list'
 alias NixListGCRoots=$'nix-store --gc --print-roots | ag -v censored | awk \'{ print $1; }\''
 alias NixListGenerations="nix-env --list-generations"
 alias NixListPackages='nix-env --query "*"'
-alias NixListReferrers='nix-store --query --referrers' # Add the full path of the store item
 alias NixRemovePackage='nix-env -e'
 alias NixUpdate='nix-env -u && nix-channel --update && nix-env -u'
 
+NixListReferrers() {
+  # This is useful when copying from dua result
+  ITEM="$1"
+  if [ -z "$(echo $ITEM | grep -F /nix/store || true)" ]; then
+    ITEM="/nix/store$ITEM"
+  fi
+  nix-store --query --referrers $ITEM
+}
 NixEnvShell() { nix develop "$HOME/development/environment#$1" -c zsh; }
 NixEnvShellList() { grep mkShell ~/development/environment/nix/shells.nix; }
 

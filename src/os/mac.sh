@@ -14,17 +14,25 @@ provision_setup_os_mac() {
 
   cat >>~/.shellrc <<"EOF"
 umask 027
-
-eval "$(/opt/homebrew/bin/brew shellenv)"
-export PATH="/opt/homebrew/opt/gnu-sed/libexec/gnubin:$PATH"
 export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
 EOF
+
+  echo 'set backspace=indent,eol,start' >>~/.vimrc
 
   cat >~/Library/KeyBindings/DefaultKeyBinding.dict <<EOF
 {
   /* Map # to § key*/
   "§" = ("insertText:", "#");
 }
+EOF
+
+  if [ ! -f "$PROVISION_CONFIG"/mac_brew ]; then
+    return
+  fi
+
+  cat >>~/.shellrc <<"EOF"
+eval "$(/opt/homebrew/bin/brew shellenv)"
+export PATH="/opt/homebrew/opt/gnu-sed/libexec/gnubin:$PATH"
 EOF
 
   if ! type "brew" >/dev/null 2>&1; then
@@ -98,5 +106,4 @@ EOF
   mkdir -p ~/.gnupg
   echo "pinentry-program /opt/homebrew/bin/pinentry-tty" >~/.gnupg/gpg-agent.conf
 
-  echo 'set backspace=indent,eol,start' >>~/.vimrc
 }

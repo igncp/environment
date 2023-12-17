@@ -47,8 +47,11 @@ EOF
       sudo mkdir -p /nix/var/nix/profiles/per-user/igncp
       sudo chown igncp /nix/var/nix/profiles/per-user/igncp
       echo "You need to install packages"
-      echo 'Run: `nix-shell -p git home-manager`'
-      echo 'And then: `. src/config-files/.shell_aliases.sh && SwitchHomeManager`'
+      rm -f /tmp/nix_shell.sh
+      echo ". /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh" >>/tmp/nix_shell.sh
+      echo 'nix-shell -p git home-manager' >>/tmp/nix_shell.sh
+      echo "Enter a nix shell with 'bash /tmp/nix_shell.sh'"
+      echo 'And then: . src/config-files/.shell_aliases.sh && SwitchHomeManager'
       exit 1
     fi
   fi

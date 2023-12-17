@@ -167,6 +167,7 @@ au BufNewFile,BufRead *.ejs set filetype=html
 
 nnoremap dd <Plug>(coc-definition)
 nnoremap ds <Plug>(coc-references)
+nnoremap di <Plug>(coc-implementation)
 nnoremap df <c-w>gf
 nnoremap D <Plug>(coc-definition)
 
