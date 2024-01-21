@@ -102,6 +102,8 @@ EOF
   name = Foo Bar
 [core]
   editor = vim
+  # 改進終端中 unicode 字元的顯示 (例如文件中的漢字)
+  quotepath = off
 [alias]
   l = log --pretty=format:'%Cred%h%Creset%C(yellow)%d%Creset %s %C(bold blue)%an %Cgreen%cd%Creset' --date=short
 [pull]
