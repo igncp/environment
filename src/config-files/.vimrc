@@ -1,6 +1,7 @@
 set background=light
 filetype plugin indent on
 syntax on
+set termguicolors
 set sessionoptions+=globals
 let mapleader = "\<Space>"
 syntax off " This is removed in update_vim_colors_theme, in case an error in provision

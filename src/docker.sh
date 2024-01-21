@@ -67,6 +67,10 @@ DockerRunAWS() {
 alias DockerRunPostgres='docker run --rm --name pg -p 127.0.0.1:1234:5432 -e POSTGRES_PASSWORD=secret -v $HOME/misc/pg:/var/lib/postgresql/data postgres'
 
 alias DockerKillAll='docker kill $(docker ps -q)'
+
+if type minikube >/dev/null 2>&1; then
+  alias MinikubeDashboard='minikube dashboard --port=9000 --url=true'
+fi
 EOF
 
   if [ -f "$PROVISION_CONFIG"/docker-skip ]; then

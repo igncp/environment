@@ -23,6 +23,7 @@ in {
       alejandra # https://github.com/kamadorueda/alejandra
       bash
       bat # https://github.com/sharkdp/bat
+      curl
       delta # https://github.com/dandavison/delta
       direnv # https://github.com/direnv/direnv
       dua # https://github.com/Byron/dua-cli
@@ -37,7 +38,6 @@ in {
       iredis # https://github.com/laixintao/iredis
       jq # https://github.com/jqlang/jq
       killall
-      kubectl
       lazydocker # https://github.com/jesseduffield/lazydocker
       libiconv
       lsof # https://github.com/lsof-org/lsof
@@ -46,7 +46,6 @@ in {
       neovim # https://github.com/neovim/neovim
       neovim-remote # https://github.com/mhinz/neovim-remote.git
       nmap # https://github.com/nmap/nmap
-      openvpn # https://github.com/OpenVPN/openvpn
       p7zip
       pgcli # https://github.com/dbcli/pgcli
       pkg-config
@@ -64,14 +63,11 @@ in {
       translate-shell # https://github.com/soimort/translate-shell
       tree
       unstable_pkgs.age # https://github.com/FiloSottile/age
-      unstable_pkgs.bitwarden-cli # https://github.com/bitwarden/clients
       unstable_pkgs.git
       unstable_pkgs.nil # https://github.com/oxalica/nil
       unstable_pkgs.nix
-      unstable_pkgs.nix-init # https://github.com/nix-community/nix-init
       unstable_pkgs.yt-dlp # https://github.com/yt-dlp/yt-dlp
       unzip
-      up # https://github.com/akavel/up
       vim
       watchman # https://github.com/facebook/watchman
       websocat # https://github.com/vi/websocat
@@ -91,18 +87,11 @@ in {
         with pkgs;
           [
             dmidecode
-            etcd # https://github.com/etcd-io/etcd/tree/main/etcdctl # Marked as broken in macOS
             gnumake
             iotop
             lshw
             strace
             unstable_pkgs.ast-grep # https://ast-grep.github.io/
-            unstable_pkgs.usql # https://github.com/xo/usql
-            valgrind
-
-            # If installing `gcc` in macOS, there are errors related to `-liconv`
-            # when building with rust
-            gcc
           ]
           ++ (lib.optional has_cli_openvpn pkgs.update-resolv-conf)
       else []
@@ -110,7 +99,7 @@ in {
     ++ (lib.optional has_shellcheck pkgs.shellcheck)
     ++ (lib.optional has_cli_aws pkgs.awscli2)
     ++ (lib.optional has_cli_hasura pkgs.hasura-cli)
-    ++ (lib.optional has_cli_openvpn pkgs.openvpn)
+    ++ (lib.optional has_cli_openvpn pkgs.openvpn) # https://github.com/OpenVPN/openvpn
     ++ (lib.optional has_pg pkgs.postgresql)
     ++ (lib.optional has_stripe pkgs.stripe-cli) # https://github.com/stripe/stripe-cli
     ++ (lib.optional has_tailscale pkgs.tailscale);

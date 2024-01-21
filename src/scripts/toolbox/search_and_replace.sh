@@ -1,12 +1,10 @@
 #!/usr/bin/env bash
 
-# depends on highlighter in: ~/hhighlighter/h.sh
-
 ABSOLUTE_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]}")"
 
 if [ $# -eq 0 ]; then
   DIR=$(find . -type d ! -path "*.git*" ! -path "*node_modules*" |
-    fzf --height 100% --border -m  --ansi)
+    fzf --height 100% --border -m --ansi)
 
   [[ -z "$DIR" ]] && exit 0
 
@@ -14,11 +12,10 @@ if [ $# -eq 0 ]; then
   exit 0
 fi
 
-source ~/hhighlighter/h.sh
-
 ask_with_default() {
-  NAME="$1"; DEFAULT="$2"
-  printf "$NAME [$DEFAULT]: " > /dev/stderr
+  NAME="$1"
+  DEFAULT="$2"
+  printf "$NAME [$DEFAULT]: " >/dev/stderr
   read -r VAR
   if [[ -z $VAR ]]; then VAR=$DEFAULT; fi
   echo "$VAR"
@@ -44,9 +41,11 @@ fi
 EXTRA_FIND_ARGS=$(ask_with_default "extra find arguments" "-name '*'")
 CASE_SENSITIVE=$(ask_with_default "case sensitive" "yes")
 
-GREP_OPTS=""; SED_OPTS="g"
+GREP_OPTS=""
+SED_OPTS="g"
 if [ "$CASE_SENSITIVE" != "yes" ]; then
-  GREP_OPTS=" -i "; SED_OPTS="I"
+  GREP_OPTS=" -i "
+  SED_OPTS="I"
 fi
 
 CMD_SEARCH="find $DIR_TO_FIND -type f $EXTRA_FIND_ARGS | xargs grep --color=always $GREP_OPTS -E "'"'"$SEARCH_REGEX"'"'" | less -r"
@@ -63,7 +62,7 @@ echo "$CMD_SEARCH"
 echo ""
 echo "$CMD_REPLACE"
 
-printf "\nIf you want to replace with the previous command, type: yes\n" | h yes
+printf "\nIf you want to replace with the previous command, type: yes\n"
 
 read -r RESPONSE
 

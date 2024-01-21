@@ -56,12 +56,10 @@ EOF
     fi
   fi
 
-  cat >>~/.shellrc <<"EOF"
-if [ -d $HOME/.pip/lib ]; then
-  export PIP_PREFIX=$HOME/.pip
-  export PYTHONPATH=$(echo $HOME/.pip/lib/*/site-packages | tr " " ":")
-  export PATH="$HOME/.pip/bin:$PATH"
-fi
+  cat >>~/.shell_aliases <<"EOF"
+# You can run `pip install --upgrade pip` to upgrade pip
+alias PythonEnvCreate='python3 -m venv ~/.local --system-site-packages'
+alias PythonEnvActivate='source ~/.local/bin/activate'
 EOF
 
   cat >>~/.zshrc <<"EOF"

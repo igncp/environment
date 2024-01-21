@@ -43,14 +43,6 @@ alias DODroplets='doctl compute droplet list'
 EOF
   fi
 
-  # hhighlighter: `h` command
-  if [ ! -f ~/hhighlighter/h.sh ]; then
-    rm -rf ~/hhighlighter
-    git clone --depth 1 https://github.com/paoloantinori/hhighlighter.git ~/hhighlighter
-  fi
-
-  echo 'source_if_exists ~/hhighlighter/h.sh' >>~/.shell_sources
-
   # Potential installs:
   # - https://github.com/firebase/firebase-tools
   # - https://support.crowdin.com/cli-tool/

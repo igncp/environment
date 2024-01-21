@@ -14,6 +14,7 @@ provision_setup_nvim_base() {
   fi
 
   install_nvim_package LnL7/vim-nix                   # https://github.com/LnL7/vim-nix
+  install_nvim_package NvChad/nvim-colorizer.lua      # https://github.com/NvChad/nvim-colorizer.lua
   install_nvim_package andrewRadev/splitjoin.vim      # gS, gJ
   install_nvim_package bogado/file-line               # https://github.com/bogado/file-line
   install_nvim_package chentoast/marks.nvim           # https://github.com/chentoast/marks.nvim
@@ -139,6 +140,8 @@ NProfile() {
   nvim --startuptime /tmp/nvim-profile-log.txt "$@"
   cat /tmp/nvim-profile-log.txt  | grep '^[0-9]' | sort -r -k 2 | less
 }
+alias NSJson="nvim -c ':set syntax=json' -c ':set nofoldenable'"
+alias NSYml="yq -S | nvim -c ':set syntax=json' -c ':set nofoldenable'"
 EOF
 
   mkdir -p ~/.vim-snippets

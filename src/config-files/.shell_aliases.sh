@@ -5,6 +5,7 @@ alias cp="cp -r"
 alias di='SudoNix dua interactive'
 alias dp="docker ps -a"
 alias f='fd --type f .'
+alias h="sad"
 alias htop="htop --no-color"
 alias l="less"
 alias ll="ls -lahv --color=always"
@@ -79,6 +80,15 @@ alias ClipboardSSHSend="clipboard_ssh send"
 alias HostClipboardSSH="clipboard_ssh host"
 
 alias Vpn='(cd ~/development/environment && bash src/scripts/misc/vpn.sh)'
+
+FfmpegSubs() {
+  if [ -z "$1" ]; then
+    echo "缺少影片路徑" && exit 1
+  fi
+
+  # 第一個參數是影片的檔案路徑
+  ffmpeg -i $1 -map 0:s:${2:-0} ${3:-$1}.srt
+}
 
 # Cross-platform (including remote VM) function which accepts text from a pipe
 ClipboardCopyPipe() {
