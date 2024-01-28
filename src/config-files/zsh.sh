@@ -21,8 +21,12 @@ bindkey "\C-f" vi-backward-blank-word
 bindkey "\C-u" kill-region
 
 nixShells () {
-  SHELL_NAME="$(grep mkShell ~/development/environment/nix/shells.nix | sed 's| =.*||' | fzf)"
+  echo $'cat ~/development/environment/nix/shells/*.nix | grep -Pzo --color=never "$1 = (.|\\\\n)+?  }" | bat --color=always -l nix -p' \
+    > /tmp/nix_shell_preview.sh
+  SHELL_NAME="$(grep --no-filename -r 'mkShell.*$' ~/development/environment/nix/shells/ | \
+    sed 's| =.*||; s|^[ ]*||' | sort | fzf --preview ' bash /tmp/nix_shell_preview.sh {}')"
   SHELL_NAME="$(echo -e "${SHELL_NAME}" | tr -d '[:space:]')"
+  if [ -z "$SHELL_NAME" ]; then return ; fi
   text_to_add="nix develop ~/development/environment#$SHELL_NAME -c zsh && exit"
   LBUFFER=${text_to_add}
   zle accept-line # enter

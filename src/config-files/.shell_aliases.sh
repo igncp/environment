@@ -81,14 +81,16 @@ alias HostClipboardSSH="clipboard_ssh host"
 
 alias Vpn='(cd ~/development/environment && bash src/scripts/misc/vpn.sh)'
 
-FfmpegSubs() {
-  if [ -z "$1" ]; then
-    echo "缺少影片路徑" && exit 1
-  fi
+if type ffmpeg >/dev/null 2>&1; then
+  FfmpegSubs() {
+    if [ -z "$1" ]; then
+      echo "缺少影片路徑" && exit 1
+    fi
 
-  # 第一個參數是影片的檔案路徑
-  ffmpeg -i $1 -map 0:s:${2:-0} ${3:-$1}.srt
-}
+    # 第一個參數是影片的檔案路徑
+    ffmpeg -i $1 -map 0:s:${2:-0} ${3:-$1}.srt
+  }
+fi
 
 # Cross-platform (including remote VM) function which accepts text from a pipe
 ClipboardCopyPipe() {
@@ -214,7 +216,7 @@ CargoDevGenerate() {
   echo "Binary '$BIN_NAME' built and moved to current directory"
 }
 
-alias NixClearSpace='nix-collect-garbage'
+alias NixClearSpace=' SwitchHomeManager ; nix-collect-garbage -d && SwitchHomeManager'
 alias NixFileEval='nix-instantiate --eval'
 alias NixFlakeUpdateInput='nix flake lock --update-input'
 alias NixInstallPackage='nix-env -iA'
@@ -233,8 +235,15 @@ NixListReferrers() {
   fi
   nix-store --query --referrers $ITEM
 }
+NixListClosure() {
+  # This is useful when copying from dua result
+  ITEM="$1"
+  if [ -z "$(echo $ITEM | grep -F /nix/store || true)" ]; then
+    ITEM="/nix/store$ITEM"
+  fi
+  nix-store --query --referrers-closure $ITEM
+}
 NixEnvShell() { nix develop "$HOME/development/environment#$1" -c zsh; }
-NixEnvShellList() { grep mkShell ~/development/environment/nix/shells.nix; }
 
 alias NixDevelop='NIX_SHELL_LEVEL=1 nix develop -c zsh'
 alias NixDevelopPath='NIX_SHELL_LEVEL=1 nix develop path:$(pwd) -c zsh'

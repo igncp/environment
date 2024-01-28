@@ -26,7 +26,7 @@
     flake-utils.lib.eachDefaultSystem (
       system: let
         pkgs = nixpkgs.legacyPackages.${system};
-        shells = import ./nix/shells.nix {inherit pkgs;};
+        shells = import ./nix/shells/main.nix {inherit pkgs unstable;};
       in {
         devShells = shells;
         packages = {

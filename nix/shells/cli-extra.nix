@@ -1,11 +1,4 @@
-# Shell aliases should  be defined in the aliases files, checking if binary is
-# available
 {pkgs}: let
-  rust-config = import ./common/rust.nix {inherit pkgs;};
-  protobuf-pkgs = with pkgs; [
-    buf # https://github.com/bufbuild/buf
-    protobuf
-  ];
   is_linux =
     (pkgs.system == "x86_64-linux")
     || (pkgs.system == "aarch64-linux")
@@ -28,7 +21,6 @@ in {
         dogdns # https://github.com/ogham/dog
         duf # https://github.com/muesli/duf
         exiftool # https://github.com/exiftool/exiftool
-        ffmpeg
         graphviz # https://gitlab.com/graphviz/graphviz
         hurl # https://github.com/Orange-OpenSource/hurl
         hyperfine # https://github.com/sharkdp/hyperfine
@@ -54,40 +46,6 @@ in {
             ]
             ++ (lib.optional has_cli_openvpn pkgs.update-resolv-conf)
         else []
-      );
-  };
-  kube = pkgs.mkShell {
-    packages = with pkgs; [
-      kubectl
-      minikube
-    ];
-  };
-  nix = pkgs.mkShell {
-    packages = with pkgs; [
-      unstable_pkgs.nix-init # https://github.com/nix-community/nix-init
-    ];
-  };
-  cosmos = pkgs.mkShell {
-    packages = with pkgs; [clang protobuf-pkgs];
-  };
-  load-testing = pkgs.mkShell {
-    packages = with pkgs; [vegeta];
-  };
-  rust = pkgs.mkShell {
-    packages = rust-config.pkgs-list;
-    shellHook = rust-config.shellHook;
-  };
-  solana = pkgs.mkShell {
-    LIBCLANG_PATH = "${pkgs.libclang.lib}/lib";
-    shellHook = rust-config.shellHook;
-    packages = with pkgs;
-      [pkg-config]
-      ++ protobuf-pkgs
-      ++ rust-config.pkgs-list
-      ++ (
-        if system == "aarch64-darwin"
-        then []
-        else [udev]
       );
   };
 }

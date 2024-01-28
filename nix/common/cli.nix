@@ -4,7 +4,6 @@
   pkgs,
   lib,
 }: let
-  has_cli_aws = builtins.pathExists (base_config + "/cli-aws");
   has_cli_hasura = builtins.pathExists (base_config + "/cli-hasura");
   has_cli_openvpn = builtins.pathExists (base_config + "/cli-openvpn");
   has_hashi = builtins.pathExists (base_config + "/hashi");
@@ -46,7 +45,6 @@ in {
       neovim # https://github.com/neovim/neovim
       neovim-remote # https://github.com/mhinz/neovim-remote.git
       nmap # https://github.com/nmap/nmap
-      p7zip
       pgcli # https://github.com/dbcli/pgcli
       pkg-config
       pstree
@@ -67,13 +65,11 @@ in {
       unstable_pkgs.nil # https://github.com/oxalica/nil
       unstable_pkgs.nix
       unstable_pkgs.yt-dlp # https://github.com/yt-dlp/yt-dlp
-      unzip
       vim
       watchman # https://github.com/facebook/watchman
       websocat # https://github.com/vi/websocat
       wget
       yq # https://github.com/mikefarah/yq
-      zip
       zsh
     ]
     ++ (
@@ -97,7 +93,6 @@ in {
       else []
     )
     ++ (lib.optional has_shellcheck pkgs.shellcheck)
-    ++ (lib.optional has_cli_aws pkgs.awscli2)
     ++ (lib.optional has_cli_hasura pkgs.hasura-cli)
     ++ (lib.optional has_cli_openvpn pkgs.openvpn) # https://github.com/OpenVPN/openvpn
     ++ (lib.optional has_pg pkgs.postgresql)

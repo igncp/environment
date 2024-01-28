@@ -92,16 +92,17 @@ EOF
 
   if [ "$IS_LINUX" == "1" ] && [ "$IS_NIXOS" != "1" ]; then
     install_system_package_os 'docker-compose'
+    if [ -z "$(docker info | grep docker-buildx || true)" ]; then
+      install_system_package_os 'docker-buildx'
+    fi
   fi
 
-  if [ -f "$PROVISION_CONFIG"/docker-buildx ]; then
-    cat >>~/.shellrc <<"EOF"
+  cat >>~/.shellrc <<"EOF"
 export DOCKER_BUILDKIT=1
 EOF
-    cat >>~/.shell_aliases <<"EOF"
+  cat >>~/.shell_aliases <<"EOF"
 alias DockerBuildXInstall='docker run --privileged --rm tonistiigi/binfmt --install all'
 # Just run once, for allowing the `--push` flag on `docker buildx build`
 alias DockerBuildXDriver='docker buildx create --use --name build --node build --driver-opt network=host'
 EOF
-  fi
 }

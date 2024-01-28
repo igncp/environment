@@ -30,9 +30,7 @@ provision_setup_general() {
   install_system_package "nmap"
   install_system_package "rsync"
   install_system_package "tree"
-  install_system_package "unzip"
   install_system_package "wget"
-  install_system_package "zip"
 
   if [ "$IS_NIXOS" != "1" ]; then
     install_system_package "base-devel" "make"

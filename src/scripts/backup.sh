@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-# This file should be run directly or via `src/scripts/misc/backup_cron.sh`.
+# This file should be run
+# - Directly: `nix develop .#backup -c bash src/scripts/backup.sh`
+# - Via cron: `src/scripts/misc/backup_cron.sh`.
 #
 # It keeps the uncompressed files in the path plus an encrypted and
 # password-protected zip file with the same contents inside the directory.
