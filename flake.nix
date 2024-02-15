@@ -1,5 +1,5 @@
 {
-  description = "Root flake for NixOS and Home Manager";
+  description = "Root flake for NixOS, Nix shells and Home Manager";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";

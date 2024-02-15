@@ -40,6 +40,13 @@ EOF
     fi
   fi
 
+  # Install desktop environment:
+  # `sudo apt install xserver-xorg raspberrypi-ui-mods`
+
+  # Kodi:
+  # `sudo apt install -y kodi kodi-peripheral-joystick`
+  # sudo usermod -a -G audio,video,input,dialout,plugdev,netdev,users,cdrom,tty $USER
+
   # https://retropie.org.uk/docs/Nintendo-Switch-Controllers/
 
   # To over-clock: https://www.zdnet.com/article/upgrading-your-pc-this-monster-graphics-card-is-200-off/
@@ -47,4 +54,10 @@ EOF
   # arm_freq=2000
   # over_voltage=6
   # gpu_freq = 750
+
+  # Web based VNC client (noVNC), can be converted to a systemd service:
+  # https://github.com/novnc/noVNC
+
+  # Enable camera:
+  # `sudo modprobe bcm2835-v4l2`
 }

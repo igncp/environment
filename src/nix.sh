@@ -56,12 +56,6 @@ EOF
     fi
   fi
 
-  cat >>~/.shell_aliases <<"EOF"
-# You can run `pip install --upgrade pip` to upgrade pip
-alias PythonEnvCreate='python3 -m venv ~/.local --system-site-packages'
-alias PythonEnvActivate='source ~/.local/bin/activate'
-EOF
-
   cat >>~/.zshrc <<"EOF"
 eval "$(direnv hook zsh)"
 export DIRENV_LOG_FORMAT=""

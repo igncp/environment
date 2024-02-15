@@ -15,6 +15,18 @@ vim.opt.rtp:prepend(lazypath)
 
 -- This variable is populated with the packages
 local nvim_plugins = {
+  {
+    "yaegassy/coc-phpstan",
+    enabled = function()
+      return vim.fn.executable('php') == 1
+    end,
+  },
+  {
+    "josa42/coc-go",
+    enabled = function()
+      return vim.fn.executable('go') == 1
+    end,
+  }
 }
 
 require("lazy").setup(nvim_plugins)

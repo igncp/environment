@@ -42,7 +42,7 @@ provision_setup_zsh() {
   fi
 
   cat >>~/.zshrc <<"EOF"
-[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
+[ -f "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 EOF
 
   cat >>~/.shellrc <<"EOF"

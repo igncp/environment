@@ -17,7 +17,8 @@
   cli-pkgs = import ../common/cli.nix {inherit base_config unstable_pkgs pkgs lib;};
   node-pkgs = import ../common/node.nix {inherit base_config pkgs lib unstable_pkgs;};
   go-pkgs = import ../common/go.nix {inherit base_config pkgs lib unstable;};
-  ruby-pkgs = import ../common/ruby.nix {inherit base_config pkgs;};
+  ruby-pkgs = import ../common/php.nix {inherit base_config pkgs;};
+  php-pkgs = import ../common/ruby.nix {inherit base_config pkgs;};
 in {
   home.username = user;
   home.homeDirectory = home_dir;
@@ -27,6 +28,7 @@ in {
     ++ cli-pkgs.pkgs-list
     ++ node-pkgs.pkgs-list
     ++ go-pkgs.pkgs-list
+    ++ php-pkgs.pkgs-list
     ++ ruby-pkgs.pkgs-list;
 
   programs.home-manager.enable = true;

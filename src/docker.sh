@@ -92,8 +92,12 @@ EOF
 
   if [ "$IS_LINUX" == "1" ] && [ "$IS_NIXOS" != "1" ]; then
     install_system_package_os 'docker-compose'
-    if [ -z "$(docker info | grep docker-buildx || true)" ]; then
-      install_system_package_os 'docker-buildx'
+    if [ -z "$(docker info | grep buildx || true)" ]; then
+      if [ "$IS_DEBIAN" == "1" ]; then
+        install_system_package_os 'docker-buildx-plugin'
+      else
+        install_system_package_os 'docker-buildx'
+      fi
     fi
   fi
 

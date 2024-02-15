@@ -22,14 +22,17 @@ in {
       alejandra # https://github.com/kamadorueda/alejandra
       bash
       bat # https://github.com/sharkdp/bat
+      coreutils-full
       curl
       delta # https://github.com/dandavison/delta
       direnv # https://github.com/direnv/direnv
+      docker
       dua # https://github.com/Byron/dua-cli
       entr # https://github.com/eradman/entr
       fd # https://github.com/sharkdp/fd
       fzf # https://github.com/junegunn/fzf
       gh # https://github.com/cli/cli
+      gnugrep
       gnupg
       gnused
       hostname # If using Alpine, the Busybox hostname is different
@@ -48,8 +51,6 @@ in {
       pgcli # https://github.com/dbcli/pgcli
       pkg-config
       pstree
-      python3
-      python3.pkgs.pip
       rsync # https://github.com/WayneD/rsync
       sad # https://github.com/ms-jpq/sad
       scc # https://github.com/boyter/scc
@@ -65,7 +66,6 @@ in {
       unstable_pkgs.nil # https://github.com/oxalica/nil
       unstable_pkgs.nix
       unstable_pkgs.yt-dlp # https://github.com/yt-dlp/yt-dlp
-      vim
       watchman # https://github.com/facebook/watchman
       websocat # https://github.com/vi/websocat
       wget

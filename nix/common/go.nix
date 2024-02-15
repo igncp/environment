@@ -21,18 +21,21 @@
       "21\n" = unstable-pkgs.go_1_21;
     }
     ."${go_file_content}";
+  extra_deps = (
+    if is_arm_darwin
+    then []
+    else [unstable-pkgs.go-migrate unstable-pkgs.sqlc]
+  );
 in {
+  pkgs-shell = (
+    [unstable-pkgs.go_1_21]
+    ++ extra_deps
+  );
   pkgs-list = (
     if has_go
     then
-      (
-        [go_pkg]
-        ++ (
-          if is_arm_darwin
-          then []
-          else [unstable-pkgs.go-migrate unstable-pkgs.sqlc]
-        )
-      )
+      [go_pkg]
+      ++ extra_deps
     else []
   );
 }

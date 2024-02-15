@@ -221,11 +221,19 @@ alias NixFileEval='nix-instantiate --eval'
 alias NixFlakeUpdateInput='nix flake lock --update-input'
 alias NixInstallPackage='nix-env -iA'
 alias NixListChannels='nix-channel —-list'
-alias NixListGCRoots=$'nix-store --gc --print-roots | ag -v censored | awk \'{ print $1; }\''
 alias NixListGenerations="nix-env --list-generations"
 alias NixListPackages='nix-env --query "*"'
 alias NixRemovePackage='nix-env -e'
 alias NixUpdate='nix-env -u && nix-channel --update && nix-env -u'
+
+NixGCRoots() {
+  if [ -n "$1" ] && [ -n "$(echo $1 | grep .)" ]; then
+    nix-store --gc --print-roots 2>&1 | ag -v removing | ag -v censored | awk '{ print $1; }' |
+      ag $1 | xargs -I{} rm -rf {}
+  fi
+
+  nix-store --gc --print-roots 2>&1 | ag -v removing | ag -v censored | awk '{ print $1; }'
+}
 
 NixListReferrers() {
   # This is useful when copying from dua result
@@ -243,15 +251,61 @@ NixListClosure() {
   fi
   nix-store --query --referrers-closure $ITEM
 }
-NixEnvShell() { nix develop "$HOME/development/environment#$1" -c zsh; }
+NixPathInfo() {
+  # This is useful when copying from dua result
+  ITEM="$1"
+  if [ -z "$(echo $ITEM | grep -F /nix/store || true)" ]; then
+    ITEM="/nix/store$ITEM"
+  fi
+  nix path-info -Sh $ITEM
+}
 
 alias NixDevelop='NIX_SHELL_LEVEL=1 nix develop -c zsh'
 alias NixDevelopPath='NIX_SHELL_LEVEL=1 nix develop path:$(pwd) -c zsh'
 alias NixDevelopBase='NIX_SHELL_LEVEL=1 nix develop'
 alias NixDevelopBasePath='NIX_SHELL_LEVEL=1 nix develop path:$(pwd)'
 
+NixEnvironmentUpgrade() {
+  if [ -n "$(ps aux | ag 'tmux[ ]new-session')" ]; then
+    echo "You should stop tmux first so there are not nix shells opened"
+    return
+  fi
+  cd ~/development/environment
+  nix flake lock --update-input nixpkgs
+  nix flake lock --update-input unstable
+  nix flake lock --update-input home-manager
+  nix flake lock --update-input flake-utils
+  NixClearSpace
+  echo "You can clear now the garbage roots with: NixGCRoots"
+}
+
 alias HomeManagerInitFlake='nix run home-manager/release-23.05 -- init'
 alias HomeManagerDeleteGenerations='home-manager expire-generations "-1 second"'
+
+NixSyncInput() {
+  if [ -z "$1" ]; then
+    echo "Missing input"
+    return
+  fi
+  ENV_INPUT=$(nix flake metadata --json ~/development/environment | jq -r '.locks.nodes."'"$1"'"')
+  if [ -z "$ENV_INPUT" ]; then
+    echo "Input not found"
+    return
+  fi
+  if [ ! -f flake.lock ]; then
+    echo "flake.lock not found"
+    return
+  fi
+  if [ -z "$(cat flake.lock | grep $1)" ]; then
+    echo "Input not found in flake.lock"
+    return
+  fi
+  if [ -n "$(pwd | grep 'development.environment')" ]; then
+    echo "You can't use this command in the environment repo"
+    return
+  fi
+  cat flake.lock | jq '.nodes."'"$1"'"'" = $ENV_INPUT"'' | sponge flake.lock
+}
 
 # The space is important to be able to also run other aliases (not only Nix
 # binaries):

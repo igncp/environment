@@ -1,0 +1,29 @@
+version: "3"
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./docker_volumes/db-data:/var/lib/mysql
+  webserver:
+    image: nginx:latest
+    container_name: webserver
+    restart: unless-stopped
+    ports:
+      - 8000:8000
+    volumes:
+      - ./web:/var/www/web
+      - ./vendor:/var/www/vendor
+      - ./nginx-conf:/etc/nginx/conf.d
+  php-fpm:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.php-fpm
+
+    volumes:
+      - ./web:/var/www/web
+      - ./vendor:/var/www/vendor

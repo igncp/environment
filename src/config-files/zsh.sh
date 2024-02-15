@@ -21,7 +21,7 @@ bindkey "\C-f" vi-backward-blank-word
 bindkey "\C-u" kill-region
 
 nixShells () {
-  echo $'cat ~/development/environment/nix/shells/*.nix | grep -Pzo --color=never "$1 = (.|\\\\n)+?  }" | bat --color=always -l nix -p' \
+  echo $'cat ~/development/environment/nix/shells/*.nix | grep -Pzo --color=never "$1 = (.|\\\\n)+?  }" | bat -f -l nix -p' \
     > /tmp/nix_shell_preview.sh
   SHELL_NAME="$(grep --no-filename -r 'mkShell.*$' ~/development/environment/nix/shells/ | \
     sed 's| =.*||; s|^[ ]*||' | sort | fzf --preview ' bash /tmp/nix_shell_preview.sh {}')"

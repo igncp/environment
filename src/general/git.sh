@@ -94,6 +94,13 @@ alias GitStashApply='git stash apply' # can also use name here
 alias GitStashList='git stash list'
 alias GitStashName='git stash push -m'
 alias GitSubmodulesUpdate='git submodule update --init --recursive' # clones existing submodules
+
+# For example: `GitConfigureRepoSSH ~/.ssh/foo`
+GitConfigureRepoSSH() {
+  if [ -z "$1" ]; then echo "Missing SSH key path" && return; fi
+  if [ ! -f "$1" ]; then echo "The file path does not exist" && return; fi
+  git config core.sshCommand "ssh -i $1 -F /dev/null"
+}
 EOF
 
   cat >~/.gitconfig <<"EOF"
