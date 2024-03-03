@@ -9,13 +9,6 @@ provision_setup_nvim_coc() {
   # - Press `t` to open each case in new tab, press `enter` to open each file (unless already opened) in new tab
 
   install_nvim_package neoclide/coc.nvim
-  install_nvim_package josa42/coc-sh
-  install_nvim_package neoclide/coc-snippets
-  install_nvim_package neoclide/coc-git
-  install_nvim_package neoclide/coc-lists
-  install_nvim_package xiyaowong/coc-sumneko-lua
-
-  install_nvim_package neoclide/coc-json
 
   cat >>~/.vimrc <<"EOF"
 let g:coc_global_extensions = []
@@ -47,6 +40,8 @@ call add(g:coc_global_extensions, 'coc-sh')
 call add(g:coc_global_extensions, 'coc-git')
 call add(g:coc_global_extensions, 'coc-lists')
 call add(g:coc_global_extensions, 'coc-sumneko-lua')
+call add(g:coc_global_extensions, 'coc-yaml')
+call add(g:coc_global_extensions, 'coc-docker')
 
 let g:coc_snippet_next = '<c-d>'
 
@@ -62,9 +57,6 @@ EOF
     (cd ~/.local/share/nvim/lazy/coc.nvim && npm i) || true
   fi
 
-  install_nvim_package neoclide/coc-html
-  install_nvim_package neoclide/coc-tsserver
-
   cat >>~/.vimrc <<"EOF"
 call add(g:coc_global_extensions, 'coc-html')
 
@@ -74,6 +66,10 @@ call add(g:coc_global_extensions, 'coc-html')
 call add(g:coc_global_extensions, 'coc-tsserver')
 
 autocmd BufNewFile,BufRead *.tsx,*.jsx set filetype=typescriptreact
+
+if executable('pip')
+  call add(g:coc_global_extensions, 'coc-pyright')
+endif
 EOF
 
   cat >~/.vim/coc-settings.json <<"EOF"
@@ -97,6 +93,8 @@ EOF
   "snippets.userSnippetsDirectory": "$HOME/.vim-snippets",
   "typescript.updateImportsOnFileMove.enabled": "always",
   "javascript.updateImportsOnFileMove.enabled": "always",
+  "python.formatting.provider": "ruff",
+  "python.linting.ruffEnabled": true,
   "languageserver": {
     "graphql": {
       "command": "graphql-lsp",
@@ -106,6 +104,10 @@ EOF
     "nix": {
       "command": "nil",
       "filetypes": ["nix"]
+    },
+    "kotlin": {
+      "command": "$HOME/nix-dirs/.kotlin-language-server/server/build/install/server/bin/kotlin-language-server",
+      "filetypes": ["kotlin"]
     },
     "terraform": {
       "command": "terraform-ls",
@@ -125,9 +127,6 @@ EOF
   # Confirm with: `CocList`
 
   if [ ! -f "$PROVISION_CONFIG"/coc-eslint-skip ]; then
-    install_nvim_package neoclide/coc-eslint
-    install_nvim_package neoclide/coc-stylelint
-
     echo "call add(g:coc_global_extensions, 'coc-eslint')" >>~/.vimrc
     echo "call add(g:coc_global_extensions, 'coc-stylelint')" >>~/.vimrc
   fi
@@ -138,12 +137,7 @@ EOF
   # - https://github.com/neoclide/coc-jest
 
   if [ -f "$PROVISION_CONFIG"/coc-prettier ]; then
-    install_nvim_package neoclide/coc-prettier
     echo "call add(g:coc_global_extensions, 'coc-prettier')" >>~/.vimrc
-  fi
-
-  if type rustc >/dev/null 2>&1; then
-    install_nvim_package neoclide/coc-rls
   fi
 
   provision_append_json ~/.vim/coc-settings.json '

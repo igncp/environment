@@ -26,12 +26,32 @@ local nvim_plugins = {
     enabled = function()
       return vim.fn.executable('go') == 1
     end,
-  }
+  },
+  {
+    "vim-ruby/vim-ruby",
+    enabled = function()
+      return vim.fn.executable('ruby') == 1
+    end,
+  },
+  {
+    "udalov/kotlin-vim",
+    enabled = function()
+      return vim.fn.executable('kotlinc') == 1
+    end,
+  },
+  "smoka7/hop.nvim"
 }
 
 require("lazy").setup(nvim_plugins)
 
 require('gitsigns').setup()
+
+require('hop').setup({
+  -- Hop configuration goes there
+})
+
+vim.api.nvim_set_keymap("n", "E", ":HopChar2<cr>",
+  { silent = true, nowait = true })
 
 local function try_marks() require('marks').setup({ default_mappings = true }) end
 
@@ -258,7 +278,7 @@ vim.api.nvim_create_autocmd("BufWritePost",
 function SaveRegisterIntoClipboard()
   vim.cmd([[
 silent call writefile(getreg('0', 1, 1), "/tmp/clipboard-ssh")
-silent !cat /tmp/clipboard-ssh | ~/.scripts/cargo_target/release/clipboard_ssh send && rm /tmp/clipboard-ssh
+silent !cat /tmp/clipboard-ssh | /usr/local/bin/environment_scripts/clipboard_ssh send && rm /tmp/clipboard-ssh
 ]])
 end
 
@@ -298,7 +318,7 @@ end
 -- In the host `.ssh/config` file add this to forward the remote port into the local
 -- RemoteForward 2030 localhost:2030
 local clipboard_maps = {
-  { "v", "<leader>i", "y" }, { "n", "<leader>i", "viwy" }, { "n", "<leader>I", "viWy" }
+  { "v", "<leader>i", "y", false }, { "v", "<leader>I", "y", true }
 }
 for _, map in ipairs(clipboard_maps) do
   vim.api.nvim_set_keymap(map[1], map[2], "",
@@ -310,6 +330,9 @@ for _, map in ipairs(clipboard_maps) do
         vim.cmd("normal! " .. map[3])
         SaveRegisterIntoClipboard()
         vim.cmd("redraw")
+        if map[4] then
+          vim.cmd("q!")
+        end
       end,
     })
 end

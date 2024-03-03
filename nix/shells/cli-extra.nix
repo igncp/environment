@@ -20,21 +20,20 @@ in {
         doctl # https://github.com/digitalocean/doctl
         dogdns # https://github.com/ogham/dog
         duf # https://github.com/muesli/duf
+        entr # https://github.com/eradman/entr
         exiftool # https://github.com/exiftool/exiftool
         graphviz # https://gitlab.com/graphviz/graphviz
-        hurl # https://github.com/Orange-OpenSource/hurl
-        hyperfine # https://github.com/sharkdp/hyperfine
-        mitmproxy # https://github.com/mitmproxy/mitmproxy
         mkcert # https://github.com/FiloSottile/mkcert
+        nix-tree # https://github.com/utdemir/nix-tree
         pandoc # https://github.com/jgm/pandoc
-        pastel # https://github.com/sharkdp/pastel
         procs # https://github.com/dalance/procs
         ranger # https://github.com/ranger/ranger
         redis # For `redis-cli` (to complement `iredis`) - https://redis.io/docs/ui/cli/
         speedtest-cli # https://github.com/sivel/speedtest-cli
+        translate-shell # https://github.com/soimort/translate-shell
         tre-command # https://github.com/dduan/tre
         up # https://github.com/akavel/up
-        usql # https://github.com/xo/usql
+        websocat # https://github.com/vi/websocat
       ]
       ++ (
         if is_linux

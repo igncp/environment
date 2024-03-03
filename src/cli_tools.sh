@@ -15,8 +15,6 @@ provision_setup_cli_tools() {
 
   # https://nixos.wiki/wiki/OpenVPN
   if [ -f "$PROVISION_CONFIG"/cli-openvpn ]; then
-    install_system_package "openvpn"
-
     mkdir -p ~/.openvpn
 
     cat >~/.openvpn/_start_cli_template.sh <<"EOF"
@@ -34,14 +32,14 @@ EOF
   fi
 
   # The `doctl completion zsh` and the ohmyzsh plugin didn't work during tests
-  if type doctl >/dev/null 2>&1; then
-    cat >>~/.shell_aliases <<"EOF"
-# Keep the token encrypted and don't keep the user logged in
-alias DOLogin='doctl auth init'
-alias DOLogout='doctl auth remove --context default'
-alias DODroplets='doctl compute droplet list'
+  cat >>~/.shell_aliases <<"EOF"
+if type doctl >/dev/null 2>&1; then
+  # Keep the token encrypted and don't keep the user logged in
+  alias DOLogin='doctl auth init'
+  alias DOLogout='doctl auth remove --context default'
+  alias DODroplets='doctl compute droplet list'
+fi
 EOF
-  fi
 
   # Potential installs:
   # - https://github.com/firebase/firebase-tools

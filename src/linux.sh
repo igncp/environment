@@ -117,6 +117,7 @@ EOF
 
   # Disable the PC loud beep
   if [ ! -f /etc/modprobe.d/nobeep.conf ]; then
+    sudo mkdir -p /etc/modprobe.d
     echo 'blacklist pcspkr' | sudo tee /etc/modprobe.d/nobeep.conf
   fi
 

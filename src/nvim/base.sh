@@ -13,37 +13,38 @@ provision_setup_nvim_base() {
     touch ~/.check-files/neovim
   fi
 
-  install_nvim_package LnL7/vim-nix                   # https://github.com/LnL7/vim-nix
-  install_nvim_package NvChad/nvim-colorizer.lua      # https://github.com/NvChad/nvim-colorizer.lua
-  install_nvim_package andrewRadev/splitjoin.vim      # gS, gJ
-  install_nvim_package bogado/file-line               # https://github.com/bogado/file-line
-  install_nvim_package chentoast/marks.nvim           # https://github.com/chentoast/marks.nvim
-  install_nvim_package ctrlpvim/ctrlp.vim             # https://github.com/ctrlpvim/ctrlp.vim
-  install_nvim_package elzr/vim-json                  # https://github.com/elzr/vim-json
-  install_nvim_package google/vim-searchindex         # https://github.com/google/vim-searchindex
-  install_nvim_package haya14busa/incsearch.vim       # https://github.com/haya14busa/incsearch.vim
-  install_nvim_package honza/vim-snippets             # https://github.com/honza/vim-snippets
-  install_nvim_package iamcco/markdown-preview.nvim   # https://github.com/iamcco/markdown-preview.nvim
-  install_nvim_package jiangmiao/auto-pairs           # https://github.com/jiangmiao/auto-pairs
-  install_nvim_package jparise/vim-graphql            # https://github.com/jparise/vim-graphql
-  install_nvim_package junegunn/limelight.vim         # https://github.com/junegunn/limelight.vim
-  install_nvim_package junegunn/vim-peekaboo          # https://github.com/junegunn/vim-peekaboo
-  install_nvim_package lbrayner/vim-rzip              # https://github.com/lbrayner/vim-rzip
-  install_nvim_package lewis6991/gitsigns.nvim        # https://github.com/lewis6991/gitsigns.nvim
-  install_nvim_package liuchengxu/vista.vim           # https://github.com/liuchengxu/vista.vim
-  install_nvim_package mbbill/undotree                # https://github.com/mbbill/undotree
-  install_nvim_package ntpeters/vim-better-whitespace # https://github.com/ntpeters/vim-better-whitespace
-  install_nvim_package plasticboy/vim-markdown        # https://github.com/plasticboy/vim-markdown
-  install_nvim_package rhysd/clever-f.vim             # https://github.com/rhysd/clever-f.vim
-  install_nvim_package ryanoasis/vim-devicons         # if not supported, add in custom: rm -rf ~/.local/share/nvim/lazy/vim-devicons/*
-  install_nvim_package scrooloose/nerdcommenter       # https://github.com/scrooloose/nerdcommenter
-  install_nvim_package sindrets/diffview.nvim         # https://github.com/sindrets/diffview.nvim
-  install_nvim_package tommcdo/vim-exchange           # https://github.com/tommcdo/vim-exchange
-  install_nvim_package tpope/vim-eunuch               # https://github.com/tpope/vim-eunuch
-  install_nvim_package tpope/vim-fugitive             # https://github.com/tpope/vim-fugitive
-  install_nvim_package tpope/vim-repeat               # https://github.com/tpope/vim-repeat
-  install_nvim_package tpope/vim-surround             # https://github.com/tpope/vim-surround
-  install_nvim_package vim-scripts/AnsiEsc.vim        # https://github.com/vim-scripts/AnsiEsc.vim
+  install_nvim_package LnL7/vim-nix                    # https://github.com/LnL7/vim-nix
+  install_nvim_package NvChad/nvim-colorizer.lua       # https://github.com/NvChad/nvim-colorizer.lua
+  install_nvim_package andrewRadev/splitjoin.vim       # gS, gJ
+  install_nvim_package bogado/file-line                # https://github.com/bogado/file-line
+  install_nvim_package chentoast/marks.nvim            # https://github.com/chentoast/marks.nvim
+  install_nvim_package ctrlpvim/ctrlp.vim              # https://github.com/ctrlpvim/ctrlp.vim
+  install_nvim_package elzr/vim-json                   # https://github.com/elzr/vim-json
+  install_nvim_package google/vim-searchindex          # https://github.com/google/vim-searchindex
+  install_nvim_package haya14busa/incsearch.vim        # https://github.com/haya14busa/incsearch.vim
+  install_nvim_package honza/vim-snippets              # https://github.com/honza/vim-snippets
+  install_nvim_package iamcco/markdown-preview.nvim    # https://github.com/iamcco/markdown-preview.nvim
+  install_nvim_package jiangmiao/auto-pairs            # https://github.com/jiangmiao/auto-pairs
+  install_nvim_package jparise/vim-graphql             # https://github.com/jparise/vim-graphql
+  install_nvim_package junegunn/limelight.vim          # https://github.com/junegunn/limelight.vim
+  install_nvim_package junegunn/vim-peekaboo           # https://github.com/junegunn/vim-peekaboo
+  install_nvim_package lbrayner/vim-rzip               # https://github.com/lbrayner/vim-rzip
+  install_nvim_package lewis6991/gitsigns.nvim         # https://github.com/lewis6991/gitsigns.nvim
+  install_nvim_package liuchengxu/vista.vim            # https://github.com/liuchengxu/vista.vim
+  install_nvim_package mbbill/undotree                 # https://github.com/mbbill/undotree
+  install_nvim_package ntpeters/vim-better-whitespace  # https://github.com/ntpeters/vim-better-whitespace
+  install_nvim_package plasticboy/vim-markdown         # https://github.com/plasticboy/vim-markdown
+  install_nvim_package rhysd/clever-f.vim              # https://github.com/rhysd/clever-f.vim
+  install_nvim_package ryanoasis/vim-devicons          # if not supported, add in custom: rm -rf ~/.local/share/nvim/lazy/vim-devicons/*
+  install_nvim_package scrooloose/nerdcommenter        # https://github.com/scrooloose/nerdcommenter
+  install_nvim_package sindrets/diffview.nvim          # https://github.com/sindrets/diffview.nvim
+  install_nvim_package tommcdo/vim-exchange            # https://github.com/tommcdo/vim-exchange
+  install_nvim_package tpope/vim-eunuch                # https://github.com/tpope/vim-eunuch
+  install_nvim_package tpope/vim-fugitive              # https://github.com/tpope/vim-fugitive
+  install_nvim_package tpope/vim-repeat                # https://github.com/tpope/vim-repeat
+  install_nvim_package tpope/vim-surround              # https://github.com/tpope/vim-surround
+  install_nvim_package vim-scripts/AnsiEsc.vim         # https://github.com/vim-scripts/AnsiEsc.vim
+  install_nvim_package nvim-treesitter/nvim-treesitter # https://github.com/nvim-treesitter/nvim-treesitter
 
   # Themes
   install_nvim_package morhetz/gruvbox # https://github.com/morhetz/gruvbox

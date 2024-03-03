@@ -27,6 +27,8 @@ provision_setup_nix() {
       if [ -f /run/systemd/resolve/stub-resolv.conf ]; then
         sudo ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf || true
       fi
+
+      echo "安裝 nix"
       sh <(curl -L https://nixos.org/nix/install) --daemon --yes
     fi
   fi
@@ -45,14 +47,24 @@ EOF
     if ! type home-manager >/dev/null 2>&1; then
       # The user should be in the sudoers file for this to work
       sudo mkdir -p /nix/var/nix/profiles/per-user/igncp
-      sudo chown igncp /nix/var/nix/profiles/per-user/igncp
-      echo "You need to install packages"
-      rm -f /tmp/nix_shell.sh
-      echo ". /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh" >>/tmp/nix_shell.sh
-      echo 'nix-shell -p git home-manager' >>/tmp/nix_shell.sh
-      echo "Enter a nix shell with 'bash /tmp/nix_shell.sh'"
-      echo 'And then: . src/config-files/.shell_aliases.sh && SwitchHomeManager'
-      exit 1
+      sudo mkdir -p /nix/var/nix/db/
+      sudo mkdir -p /nix/var/nix/temproots/
+
+      sudo chown -R igncp /nix/var/nix/profiles/per-user
+      sudo chown -R igncp /nix/var/nix/gcroots/per-user || true
+      sudo chown -R igncp /nix/var/nix/db/
+      sudo chown -R igncp /nix/var/nix/temproots/
+
+      # Running in docker
+      if [ -z "$(ps aux | grep nix-daemon | grep -v grep || true)" ]; then
+        sudo /nix/var/nix/profiles/default/bin/nix-daemon 2>&1 >/dev/null &
+      else
+        echo "Nix daemon is already running"
+      fi
+
+      . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+      sleep 10
+      nix-shell -p git home-manager --run "bash -c '. src/config-files/.shell_aliases.sh && SwitchHomeManager'"
     fi
   fi
 

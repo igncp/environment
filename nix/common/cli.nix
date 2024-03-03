@@ -16,6 +16,10 @@
     (pkgs.system == "x86_64-linux")
     || (pkgs.system == "aarch64-linux")
     || pkgs.system == "armv7l-linux";
+
+  tmux-pkgs = with pkgs; [
+    tmux # https://github.com/tmux/tmux
+  ];
 in {
   pkgs-list = with pkgs;
     [
@@ -27,8 +31,9 @@ in {
       delta # https://github.com/dandavison/delta
       direnv # https://github.com/direnv/direnv
       docker
+      docker-buildx
+      docker-compose
       dua # https://github.com/Byron/dua-cli
-      entr # https://github.com/eradman/entr
       fd # https://github.com/sharkdp/fd
       fzf # https://github.com/junegunn/fzf
       gh # https://github.com/cli/cli
@@ -37,18 +42,14 @@ in {
       gnused
       hostname # If using Alpine, the Busybox hostname is different
       htop # https://github.com/htop-dev/htop
-      iredis # https://github.com/laixintao/iredis
       jq # https://github.com/jqlang/jq
       killall
-      lazydocker # https://github.com/jesseduffield/lazydocker
+      less
       libiconv
       lsof # https://github.com/lsof-org/lsof
       moreutils
       neofetch # https://github.com/dylanaraps/neofetch
-      neovim # https://github.com/neovim/neovim
       neovim-remote # https://github.com/mhinz/neovim-remote.git
-      nmap # https://github.com/nmap/nmap
-      pgcli # https://github.com/dbcli/pgcli
       pkg-config
       pstree
       rsync # https://github.com/WayneD/rsync
@@ -58,20 +59,28 @@ in {
       shfmt # https://github.com/mvdan/sh
       silver-searcher # https://github.com/ggreer/the_silver_searcher
       taskwarrior # https://github.com/GothenburgBitFactory/taskwarrior
-      tmux # https://github.com/tmux/tmux
-      translate-shell # https://github.com/soimort/translate-shell
       tree
       unstable_pkgs.age # https://github.com/FiloSottile/age
       unstable_pkgs.git
+      unstable_pkgs.git-extras
+      unstable_pkgs.neovim # https://github.com/neovim/neovim
       unstable_pkgs.nil # https://github.com/oxalica/nil
       unstable_pkgs.nix
       unstable_pkgs.yt-dlp # https://github.com/yt-dlp/yt-dlp
       watchman # https://github.com/facebook/watchman
-      websocat # https://github.com/vi/websocat
       wget
       yq # https://github.com/mikefarah/yq
       zsh
     ]
+    # 正在測試的新增內容
+    ++ [
+      bitwise # https://github.com/mellowcandle/bitwise
+      jc # https://github.com/kellyjonbrazil/jc
+      loop # https://github.com/Miserlou/Loop
+      pastel # https://github.com/sharkdp/pastel
+      vifm
+    ]
+    ++ tmux-pkgs
     ++ (
       if has_hashi
       then with pkgs; [terraform-ls terraform vagrant]

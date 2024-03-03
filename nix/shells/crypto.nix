@@ -4,10 +4,12 @@
     buf # https://github.com/bufbuild/buf
     protobuf
   ];
+  ethereum-etl = import ../derivations/ethereum-etl.nix {inherit pkgs;};
 in {
   cosmos = pkgs.mkShell {
     packages = with pkgs; [clang protobuf-pkgs];
   };
+
   solana = pkgs.mkShell {
     LIBCLANG_PATH = "${pkgs.libclang.lib}/lib";
     shellHook = rust-config.shellHook;
@@ -20,5 +22,10 @@ in {
         then []
         else [udev]
       );
+  };
+
+  ethereum-etl = pkgs.mkShell {
+    packages = ethereum-etl.packages;
+    shellHook = ethereum-etl.shellHook;
   };
 }

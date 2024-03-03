@@ -3,10 +3,6 @@
 set -e
 
 provision_setup_docker() {
-  cat >>~/.vimrc <<"EOF"
-call add(g:coc_global_extensions, 'coc-yaml')
-EOF
-
   cat >>~/.shell_sources <<"EOF"
 source_if_exists ~/.docker-completion.sh
 EOF
@@ -34,6 +30,15 @@ alias DockerPruneAll='docker system prune --volumes --all'
 alias DockerSystemSpace='docker system df --verbose'
 
 DockerHistory() { docker history --no-trunc $1 | less -S; }
+
+DockerHadolint() {
+  nix-shell -p hadolint --run "hadolint ${1:-./Dockerfile}"
+}
+
+DockerLazy() {
+  # https://github.com/jesseduffield/lazydocker
+  nix-shell -p lazydocker --run lazydocker
+}
 
 DockerTags() {
    NAME=$1
@@ -89,17 +94,6 @@ EOF
   echo 'export PATH=$PATH:/usr/local/lib/docker/bin' >>~/.shellrc
 
   mkdir -p ~/.docker/cli-plugins
-
-  if [ "$IS_LINUX" == "1" ] && [ "$IS_NIXOS" != "1" ]; then
-    install_system_package_os 'docker-compose'
-    if [ -z "$(docker info | grep buildx || true)" ]; then
-      if [ "$IS_DEBIAN" == "1" ]; then
-        install_system_package_os 'docker-buildx-plugin'
-      else
-        install_system_package_os 'docker-buildx'
-      fi
-    fi
-  fi
 
   cat >>~/.shellrc <<"EOF"
 export DOCKER_BUILDKIT=1

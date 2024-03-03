@@ -15,6 +15,11 @@
   python-extra-shell = import ./python.nix {inherit pkgs;};
 
   lib = pkgs.lib;
+  is_linux =
+    (pkgs.system == "x86_64-linux")
+    || (pkgs.system == "aarch64-linux")
+    || pkgs.system == "armv7l-linux";
+
   base_config = "";
 
   go-pkgs = import ../common/go.nix {
@@ -28,9 +33,11 @@ in
     aws = pkgs.mkShell {
       packages = with pkgs; [awscli2];
     };
+
     backup = pkgs.mkShell {
       packages = with pkgs; [awscli2];
     };
+
     compression = pkgs.mkShell {
       packages = with pkgs; [
         bzip2
@@ -45,9 +52,11 @@ in
         zstd # https://github.com/facebook/zstd
       ];
     };
+
     go = pkgs.mkShell {
       packages = go-pkgs.pkgs-shell;
     };
+
     kube = pkgs.mkShell {
       packages = with pkgs; [
         helm
@@ -57,6 +66,7 @@ in
         minikube
       ];
     };
+
     nix = pkgs.mkShell {
       packages = with pkgs; [
         colmena # https://github.com/zhaofengli/colmena
@@ -64,20 +74,106 @@ in
         unstable_pkgs.nix-init # https://github.com/nix-community/nix-init
       ];
     };
-    load-testing = pkgs.mkShell {
-      packages = with pkgs; [vegeta];
+
+    performance = pkgs.mkShell {
+      packages = with pkgs; [
+        vegeta
+        hyperfine # https://github.com/sharkdp/hyperfine
+      ];
     };
+
+    network = pkgs.mkShell {
+      packages = with pkgs; [
+        hurl # https://github.com/Orange-OpenSource/hurl
+        mitmproxy # https://github.com/mitmproxy/mitmproxy
+      ];
+    };
+
+    database = pkgs.mkShell {
+      packages = with pkgs; [
+        iredis # https://github.com/laixintao/iredis
+        pgcli # https://github.com/dbcli/pgcli
+        usql # https://github.com/xo/usql
+      ];
+    };
+
     php = pkgs.mkShell {
       packages = php-pkgs.pkgs-list-full;
     };
+
+    nodenv = pkgs.mkShell {
+      packages = [pkgs.nodenv];
+      shellHook = ''
+        mkdir -p $HOME/nix-dirs/nodenv/plugins
+        # This is used in the provision to init nodenv
+        export NODENV_ROOT="$HOME/nix-dirs/nodenv"
+        eval "$(nodenv init -)"
+        if [ ! -d $HOME/nix-dirs/nodenv/plugins/node-build ]; then
+          git clone https://github.com/nodenv/node-build.git "$(nodenv root)"/plugins/node-build
+        fi
+      '';
+    };
+
     rust = pkgs.mkShell {
       packages = rust-config.pkgs-list;
       shellHook = rust-config.shellHook;
     };
+
+    lua = pkgs.mkShell {
+      packages = with pkgs; [
+        lua
+        luajit
+
+        # For local installs, use `--tree`: https://leafo.net/guides/customizing-the-luarocks-tree.html
+        # It requires to set up the paths to load
+        luarocks
+      ];
+    };
+
+    ruby = pkgs.mkShell {
+      packages = with pkgs; [
+        ruby
+      ];
+    };
+
     video = pkgs.mkShell {
       packages = with pkgs; [
         ffmpeg
       ];
+    };
+
+    kotlin = pkgs.mkShell {
+      packages = with pkgs; [
+        gradle
+        kotlin
+      ];
+      JAVA_11_HOME = "${pkgs.jdk11}/lib/openjdk";
+      shellHook = ''
+        if [ ! -d $HOME/nix-dirs/.kotlin-language-server ]; then
+          mkdir -p $HOME/nix-dirs/
+          git clone https://github.com/fwcd/kotlin-language-server.git ~/nix-dirs/.kotlin-language-server
+          mkdir -p ~/.kotlin-language-server/.gradle/buildOutputCleanup
+          (cd ~/nix-dirs/.kotlin-language-server && ./gradlew :server:installDist -PjavaVersion=19)
+        fi
+      '';
+    };
+
+    clang = pkgs.mkShell {
+      buildInputs = with pkgs; [
+        ncurses.dev
+      ];
+      packages = with pkgs;
+        [
+          astyle
+          check
+          ctags
+          gdb
+        ]
+        ++ (
+          if is_linux
+          then [pkgs.valgrind]
+          else []
+        );
     };
   }
   // crypto-shells

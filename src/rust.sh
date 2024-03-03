@@ -18,6 +18,7 @@ install_cargo_crate() {
 provision_setup_rust() {
   cat >>~/.shell_aliases <<"EOF"
 _RustBuildProvisionPackages() {
+  rustup toolchain install stable
   while IFS= read -r -d '' FILE_PATH; do
     FILE_NAME=$(basename "$FILE_PATH")
     if [ ! -f "/usr/local/bin/environment_scripts/$FILE_NAME" ] || [ "$1" == "-f" ]; then
@@ -33,8 +34,24 @@ _RustBuildProvisionPackages() {
   rm -rf ~/.scripts/cargo_target/release/build
   rm -rf ~/.scripts/cargo_target/debug
 }
+_RustUpdateProvisionPackages() {
+  rustup toolchain install stable
+  while IFS= read -r -d '' FILE_PATH; do
+    FILE_NAME=$(basename "$FILE_PATH")
+    (cd "$FILE_PATH" && \
+      cargo update && \
+      cargo build --release)
+    printf "Updated: $FILE_NAME\n\n"
+  done < <(find ~/development/environment/src/scripts/misc -maxdepth 1 -mindepth 1 -type d -print0)
+
+  echo "Rebuilding all packages..."
+  _RustBuildProvisionPackages -f
+  echo "Updated all packages, you should commit the changes"
+}
 RustBuildProvisionPackages() { (nix develop ~/development/environment#rust \
   -c bash -c ". ~/.shellrc ; _RustBuildProvisionPackages $@"); }
+RustUpdateProvisionPackages() { (nix develop ~/development/environment#rust \
+  -c bash -c ". ~/.shellrc ; _RustUpdateProvisionPackages $@"); }
 EOF
 
   mkdir -p ~/.cargo

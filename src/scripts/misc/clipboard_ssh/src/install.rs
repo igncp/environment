@@ -37,7 +37,7 @@ ExecStart=/usr/local/bin/environment_scripts/clipboard_ssh host
 Restart=always
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target
 "###
         .trim(),
     )

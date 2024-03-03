@@ -27,17 +27,13 @@ nixShells () {
     sed 's| =.*||; s|^[ ]*||' | sort | fzf --preview ' bash /tmp/nix_shell_preview.sh {}')"
   SHELL_NAME="$(echo -e "${SHELL_NAME}" | tr -d '[:space:]')"
   if [ -z "$SHELL_NAME" ]; then return ; fi
-  text_to_add="nix develop ~/development/environment#$SHELL_NAME -c zsh && exit"
+  # 使用 --impure 能夠讀取環境變量
+  text_to_add="nix develop --impure ~/development/environment#$SHELL_NAME -c zsh && exit"
   LBUFFER=${text_to_add}
   zle accept-line # enter
 }
 bookmarksFull () {
   text_to_add="$(__FZFBookmarkedCommands)"
-  LBUFFER=${text_to_add}
-  zle accept-line # enter
-}
-openFiles () {
-  text_to_add="$(cat $HISTFILE | cut -d';' -f2- | ag '^n ' | sort | uniq | fzf)"
   LBUFFER=${text_to_add}
   zle accept-line # enter
 }
@@ -62,6 +58,11 @@ openFzf () {
   LBUFFER="n $FILE"
   zle accept-line # enter
 }
+openTmuxPane () {
+  # https://www.reddit.com/r/vim/comments/12eg832/comment/jfcg6p3
+  LBUFFER=" tmux capture-pane -Jp -S- | nvim -"
+  zle accept-line # enter
+}
 
 zle -N nixShells
 zle -N bookmarksFull
@@ -70,10 +71,11 @@ zle -N openFiles
 zle -N openFzf
 zle -N scriptsFull
 zle -N scriptsPrint
+zle -N openTmuxPane
 
 bindkey "\C-q\C-q" nixShells
 bindkey "\C-q\C-w" bookmarksFull
-bindkey "\C-q\C-a" openFiles
+bindkey "\C-q\C-a" openTmuxPane
 bindkey "\C-q\C-s" scriptsFull
 bindkey "\C-q\C-l" openFzf
 bindkey "\C-q\C-m" openEnvironment
@@ -144,3 +146,7 @@ alias ZshBrowseAllAliases='zsh -ixc : 1>&1 | l'
 
 # Create random socket
 export NVIM_LISTEN_ADDRESS=/tmp/nvimsocket-$(mktemp -u XXXXX)
+
+if [ -n "$NODENV_ROOT" ]; then
+  eval "$(nodenv init -)"
+fi

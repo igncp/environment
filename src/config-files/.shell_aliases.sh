@@ -127,7 +127,6 @@ SSHExampleConfigure() {
 alias lang='b ~/development/environment/src/scripts/misc/lang.sh'
 
 alias AliasesReload='source ~/.shell_aliases'
-alias CleanNCurses='stty sane;clear;'
 alias EditProvision="(cd ~/development/environment && $EDITOR src/main.sh && cargo run --release)"
 alias FDisk='sudo fdisk /dev/sda'
 alias FilterLeaf=$'sort -r | awk \'a!~"^"$0{a=$0;print}\' | sort'
@@ -136,7 +135,6 @@ alias FormatProto='clang-format -i'
 alias GeoInfo='curl -s ipinfo.io | jq .'
 alias HierarchyManual='man hier'
 alias IPPublic='curl ifconfig.co'
-alias KillAllTmux='(killall /usr/bin/tmux || true ; killall tmux || true ; killall $(which tmux) || true) > /dev/null 2>&1'
 alias LastColumn="awk '{print "'$NF'"}'"
 alias PathShow='echo $PATH | tr ":" "\n" | sort | uniq | less'
 alias Provision="(cd ~/development/environment && bash src/main.sh)"
@@ -158,9 +156,20 @@ alias Ports='sudo netstat -tulanp'
 alias NetstatConnections='netstat -nputw'
 alias AnsiColorsRemove="sed 's/\x1b\[[0-9;]*m//g'"
 
+KillAllTmux() {
+  (
+    killall /usr/bin/tmux || true
+    killall tmux || true
+    killall $(which tmux) || true
+  ) >/dev/null 2>&1
+  ps aux | grep tmux | grep -v grep | awk '{print $2}' | xargs -I{} kill {}
+}
+
 NmapLocal() {
+  # https://github.com/nmap/nmap
   THIRD_NUM=${1:-1}
-  sudo --preserve-env=PATH env nmap -sn "192.168.$THIRD_NUM.0/24" >/tmp/nmap-result
+  sudo nix-shell -p nmap --run "nmap -sn '192.168.$THIRD_NUM.0/24'" >/tmp/nmap-result
+  sudo chown $USER /tmp/nmap-result
   sed -i "s|Nmap|\nNmap|" /tmp/nmap-result
   less /tmp/nmap-result
 }
@@ -216,15 +225,64 @@ CargoDevGenerate() {
   echo "Binary '$BIN_NAME' built and moved to current directory"
 }
 
-alias NixClearSpace=' SwitchHomeManager ; nix-collect-garbage -d && SwitchHomeManager'
-alias NixFileEval='nix-instantiate --eval'
 alias NixFlakeUpdateInput='nix flake lock --update-input'
-alias NixInstallPackage='nix-env -iA'
 alias NixListChannels='nix-channel —-list'
 alias NixListGenerations="nix-env --list-generations"
 alias NixListPackages='nix-env --query "*"'
 alias NixRemovePackage='nix-env -e'
-alias NixUpdate='nix-env -u && nix-channel --update && nix-env -u'
+
+alias Nix_FileEval='nix-instantiate --eval'
+alias Nix_EnvInstallPackage='nix-env -iA'
+
+NixUpdateChannel() {
+  UNSTABLE_REV="$(cat ~/development/environment/flake.lock | jq -r '.nodes.unstable.locked.rev')"
+  nix-channel --remove nixpkgs || true
+  nix-channel --add https://github.com/NixOS/nixpkgs/archive/$UNSTABLE_REV.tar.gz nixpkgs
+}
+
+NixShell() {
+  nix-shell -p $@ --command zsh
+}
+
+ClearSpace() {
+  if [ -n "$(ps aux | ag 'tmux[ ]new-session')" ]; then
+    echo "您應該先停止 tmux，這樣就不會開啟 nix shell"
+    return
+  fi
+
+  if [ -n "$(ps aux | grep 'nvim' | grep -v 'grep')" ]; then
+    echo "你應該先停止nvim"
+    return
+  fi
+
+  read "?您應該使用 NixGCRoots 檢查 GC 根。 按 ctrl-c 停止。 "
+
+  SwitchHomeManager
+
+  rm -rf ~/nix-dirs
+  rm -rf ~/.scripts/cargo_target
+  rm -rf ~/.npm
+  rm -rf ~/.cargo
+  rm -rf ~/.rustup
+  rm -rf ~/.cache/yarn
+  rm -rf ~/.config/coc
+  rm -rf ~/.local/share/nvim
+  rm -rf ~/.local/state/nvim
+
+  nix-collect-garbage -d
+
+  if [ -z "$(cd ~/development/environment && git --no-pager diff HEAD -- src/project_templates/web_apps)" ]; then
+    (cd ~/development/environment && sudo rm -rf src/project_templates/web_apps && git checkout -- src/project_templates/web_apps)
+  fi
+
+  docker system prune -af || true
+  nvim --headless "+Lazy! sync" +qa
+  SwitchHomeManager
+
+  Provision
+
+  echo '開發環境清理'
+}
 
 NixGCRoots() {
   if [ -n "$1" ] && [ -n "$(echo $1 | grep .)" ]; then
@@ -243,6 +301,7 @@ NixListReferrers() {
   fi
   nix-store --query --referrers $ITEM
 }
+
 NixListClosure() {
   # This is useful when copying from dua result
   ITEM="$1"
@@ -251,6 +310,7 @@ NixListClosure() {
   fi
   nix-store --query --referrers-closure $ITEM
 }
+
 NixPathInfo() {
   # This is useful when copying from dua result
   ITEM="$1"
@@ -260,29 +320,28 @@ NixPathInfo() {
   nix path-info -Sh $ITEM
 }
 
-alias NixDevelop='NIX_SHELL_LEVEL=1 nix develop -c zsh'
-alias NixDevelopPath='NIX_SHELL_LEVEL=1 nix develop path:$(pwd) -c zsh'
-alias NixDevelopBase='NIX_SHELL_LEVEL=1 nix develop'
-alias NixDevelopBasePath='NIX_SHELL_LEVEL=1 nix develop path:$(pwd)'
-
 NixEnvironmentUpgrade() {
   if [ -n "$(ps aux | ag 'tmux[ ]new-session')" ]; then
-    echo "You should stop tmux first so there are not nix shells opened"
+    echo "您應該先停止 tmux，這樣就不會開啟 nix shell"
     return
   fi
+  cd ~/development/environment/src/project_templates/web_apps/tooling
+  npm upgrade --save --force
   cd ~/development/environment
+  RustUpdateProvisionPackages
   nix flake lock --update-input nixpkgs
   nix flake lock --update-input unstable
   nix flake lock --update-input home-manager
   nix flake lock --update-input flake-utils
-  NixClearSpace
-  echo "You can clear now the garbage roots with: NixGCRoots"
+  NixUpdateChannel
+
+  echo "環境升級了，現在可以清理GC、清理空間了"
 }
 
 alias HomeManagerInitFlake='nix run home-manager/release-23.05 -- init'
 alias HomeManagerDeleteGenerations='home-manager expire-generations "-1 second"'
 
-NixSyncInput() {
+NixInputSync() {
   if [ -z "$1" ]; then
     echo "Missing input"
     return
@@ -292,19 +351,22 @@ NixSyncInput() {
     echo "Input not found"
     return
   fi
-  if [ ! -f flake.lock ]; then
+  DIR=${2:-.}
+  if [ ! -f "$DIR"/flake.lock ]; then
+    ls -lah "$DIR"
     echo "flake.lock not found"
     return
   fi
-  if [ -z "$(cat flake.lock | grep $1)" ]; then
+  if [ -z "$(cat $DIR/flake.lock | grep $1)" ]; then
     echo "Input not found in flake.lock"
     return
   fi
-  if [ -n "$(pwd | grep 'development.environment')" ]; then
+  if [ -n "$(find $DIR -maxdepth 0 | grep 'development.environment')" ]; then
     echo "You can't use this command in the environment repo"
     return
   fi
-  cat flake.lock | jq '.nodes."'"$1"'"'" = $ENV_INPUT"'' | sponge flake.lock
+  cat $DIR/flake.lock | jq '.nodes."'"$1"'"'" = $ENV_INPUT"'' | sponge $DIR/flake.lock
+  echo "Input '$1' updated in '$DIR/flake.lock'"
 }
 
 # The space is important to be able to also run other aliases (not only Nix
@@ -338,10 +400,28 @@ NixFormat() {
   alejandra ./**/*.nix
 }
 
+alias Nu='nix-shell -p nushell --command nu'
+
 if type vegeta >/dev/null 2>&1; then
   VegetaAttack() {
     # Example usage: VegetaAttack -rate=100 -duration=10s -targets=targets.txt
     vegeta attack $@ | tee /tmp/vegeta-results.bin | vegeta report
   }
   alias VegetaDocs='echo https://www.scaleway.com/en/docs/tutorials/load-testing-vegeta/'
+fi
+
+DockerEnvironment() {
+  bash ~/development/environment/src/docker_environment.sh
+}
+
+if type ruby >/dev/null 2>&1; then
+  mkdir -p "$HOME/nix-dirs/ruby-gems"
+  export GEM_HOME="$HOME/nix-dirs/ruby-gems"
+  export GEM_PATH="$GEM_HOME"
+  export PATH="$GEM_HOME/bin:$PATH"
+fi
+
+if type nodenv >/dev/null 2>&1; then
+  export NODENV_ROOT="$HOME/nix-dirs/nodenv"
+  eval "$(nodenv init -)"
 fi

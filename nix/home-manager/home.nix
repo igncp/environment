@@ -19,6 +19,7 @@
   go-pkgs = import ../common/go.nix {inherit base_config pkgs lib unstable;};
   ruby-pkgs = import ../common/php.nix {inherit base_config pkgs;};
   php-pkgs = import ../common/ruby.nix {inherit base_config pkgs;};
+  tmux = import ../common/tmux.nix {inherit pkgs;};
 in {
   home.username = user;
   home.homeDirectory = home_dir;
@@ -30,6 +31,8 @@ in {
     ++ go-pkgs.pkgs-list
     ++ php-pkgs.pkgs-list
     ++ ruby-pkgs.pkgs-list;
+
+  programs.tmux = tmux.homeManager;
 
   programs.home-manager.enable = true;
 }

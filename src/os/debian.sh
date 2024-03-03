@@ -25,15 +25,6 @@ DebianUninstallUI() {
 }
 EOF
 
-  install_system_package python3
-  install_system_package python3-pip pip3
-
-  if ! type pip3 >/dev/null 2>&1; then
-    if [ -f /usr/bin/pip3 ]; then
-      sudo cp /usr/bin/pip3 /usr/bin/pip
-    fi
-  fi
-
   # This avoids displaying the restart-services popup on every install
   if [ -f /etc/needrestart/needrestart.conf ]; then
     sudo sed "s|#\$nrconf{restart}.*|\$nrconf{restart} = 'a';|" \

@@ -3,15 +3,6 @@
 set -e
 
 provision_setup_general_git() {
-  if [ ! -f /usr/local/bin/git-extras ] && [ "$IS_NIXOS" != "1" ]; then
-    rm -rf ~/.git-extras
-    git clone https://github.com/tj/git-extras.git ~/.git-extras
-    cd ~/.git-extras
-    git checkout $(git describe --tags $(git rev-list --tags --max-count=1))
-    sudo --preserve-env=PATH env make install
-    cd ~ && rm -rf ~/.git-extras
-  fi
-
   cat >>~/.shell_aliases <<"EOF"
 GitAdd() { git add -A $@; git status -u; }
 GitCloneRepo() {

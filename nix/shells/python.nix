@@ -1,29 +1,36 @@
 # https://www.reddit.com/r/NixOS/comments/q71v0e/what_is_the_correct_way_to_setup_pip_with_nix_to/
 {pkgs}: let
-  venvDir = "./.python-env";
   pythonPackages = pkgs.python311Packages;
 
   devPackages = [
     pkgs.poetry
     pkgs.rye
+    pkgs.ruff
     pythonPackages.pip
     pythonPackages.python
   ];
 in {
-  python-base = pkgs.mkShell {
+  python = pkgs.mkShell {
     packages = devPackages;
-  };
-  python-env = pkgs.mkShell {
-    inherit venvDir;
-    packages =
-      devPackages
-      // pythonPackages.venvShellHook;
 
-    # **Important**: This shell creates a `.python-env` directory
-    postShellHook = ''
+    shellHook = ''
+      PROJECT_DIR="$HOME/nix-dirs/python-envs/python-base";
+
+      mkdir -p $PROJECT_DIR
+
+      if [ ! -d "$PROJECT_DIR/bin" ]; then
+        python -m venv "$PROJECT_DIR"
+      fi
+
+      source "$PROJECT_DIR/bin/activate"
+
+      # For matplotlib
+      echo 'LD_LIBRARY_PATH="${pkgs.stdenv.cc.cc.lib}/lib" python "$@"' > "$PROJECT_DIR/bin/python_cc"
+      chmod +x "$PROJECT_DIR/bin/python_cc"
+
       # This is to expose the venv in PYTHONPATH so that pylint can see venv packages
-      PYTHONPATH="\$PWD/${venvDir}/${pythonPackages.python.sitePackages}/:\$PYTHONPATH"
-      PATH="\$PWD/${venvDir}/bin:$PATH"
+      export PYTHONPATH="$PROJECT_DIR/${pythonPackages.python.sitePackages}/:\$PYTHONPATH"
+      export PATH="$PROJECT_DIR/bin:$PATH"
     '';
   };
 }

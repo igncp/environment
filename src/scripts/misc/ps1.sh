@@ -158,14 +158,10 @@ provision_get_ps1() {
 }
 
 provision_get_ps1_right() {
-  get_next_task() {
-    ID=$(task next limit:1 2>&1 | grep -v 'No matches.' | tail -n +4 | head -n 1 | sed "s/^ //" | cut -d " " -f1 | grep .)
-    if [ -z "$ID" ]; then
-      printf "-"
-    else
-      task _get "$ID".description
-    fi
-  }
-
-  echo "[$(get_next_task)]"
+  ID=$(task next limit:1 2>&1 | grep -v 'No matches.' | tail -n +4 | head -n 1 | sed "s/^ //" | cut -d " " -f1 | grep .)
+  if [ -z "$ID" ]; then
+    printf ""
+  else
+    printf "[$(task _get "$ID".description)]"
+  fi
 }
