@@ -28,6 +28,12 @@ local nvim_plugins = {
     end,
   },
   {
+    "leoluz/nvim-dap-go",
+    enabled = function()
+      return vim.fn.executable('go') == 1
+    end,
+  },
+  {
     "vim-ruby/vim-ruby",
     enabled = function()
       return vim.fn.executable('ruby') == 1
@@ -353,7 +359,7 @@ require("colorizer").setup {
     css = true,                                     -- Enable all CSS features: rgb_fn, hsl_fn, names, RGB, RRGGBB
     css_fn = true,                                  -- Enable all CSS *functions*: rgb_fn, hsl_fn
     mode = "virtualtext",                           -- Set the display mode.
-    tailwind = false,                               -- Enable tailwind colors
+    tailwind = true,                                -- Enable tailwind colors
     sass = { enable = true, parsers = { "css" }, }, -- Enable sass colors
     virtualtext = "◀",
     always_update = true
@@ -361,3 +367,11 @@ require("colorizer").setup {
   -- all the sub-options of filetypes apply to buftypes
   buftypes = {},
 }
+
+vim.cmd([[
+function! ClearWhitespaceInFile()
+  let l:save = winsaveview()
+  keeppatterns %s/\s\+$//e
+  call winrestview(l:save)
+endfunction
+]])

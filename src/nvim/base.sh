@@ -32,8 +32,11 @@ provision_setup_nvim_base() {
   install_nvim_package lewis6991/gitsigns.nvim         # https://github.com/lewis6991/gitsigns.nvim
   install_nvim_package liuchengxu/vista.vim            # https://github.com/liuchengxu/vista.vim
   install_nvim_package mbbill/undotree                 # https://github.com/mbbill/undotree
+  install_nvim_package mfussenegger/nvim-dap           # https://github.com/mfussenegger/nvim-dap
   install_nvim_package ntpeters/vim-better-whitespace  # https://github.com/ntpeters/vim-better-whitespace
+  install_nvim_package nvim-treesitter/nvim-treesitter # https://github.com/nvim-treesitter/nvim-treesitter
   install_nvim_package plasticboy/vim-markdown         # https://github.com/plasticboy/vim-markdown
+  install_nvim_package rcarriga/nvim-dap-ui            # https://github.com/rcarriga/nvim-dap-ui
   install_nvim_package rhysd/clever-f.vim              # https://github.com/rhysd/clever-f.vim
   install_nvim_package ryanoasis/vim-devicons          # if not supported, add in custom: rm -rf ~/.local/share/nvim/lazy/vim-devicons/*
   install_nvim_package scrooloose/nerdcommenter        # https://github.com/scrooloose/nerdcommenter
@@ -44,7 +47,6 @@ provision_setup_nvim_base() {
   install_nvim_package tpope/vim-repeat                # https://github.com/tpope/vim-repeat
   install_nvim_package tpope/vim-surround              # https://github.com/tpope/vim-surround
   install_nvim_package vim-scripts/AnsiEsc.vim         # https://github.com/vim-scripts/AnsiEsc.vim
-  install_nvim_package nvim-treesitter/nvim-treesitter # https://github.com/nvim-treesitter/nvim-treesitter
 
   # Themes
   install_nvim_package morhetz/gruvbox # https://github.com/morhetz/gruvbox

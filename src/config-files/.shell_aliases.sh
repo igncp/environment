@@ -168,7 +168,7 @@ KillAllTmux() {
 NmapLocal() {
   # https://github.com/nmap/nmap
   THIRD_NUM=${1:-1}
-  sudo nix-shell -p nmap --run "nmap -sn '192.168.$THIRD_NUM.0/24'" >/tmp/nmap-result
+  nix-shell -p nmap --run "sudo --preserve-env=PATH env  nmap -sn '192.168.$THIRD_NUM.0/24'" >/tmp/nmap-result
   sudo chown $USER /tmp/nmap-result
   sed -i "s|Nmap|\nNmap|" /tmp/nmap-result
   less /tmp/nmap-result
@@ -236,12 +236,19 @@ alias Nix_EnvInstallPackage='nix-env -iA'
 
 NixUpdateChannel() {
   UNSTABLE_REV="$(cat ~/development/environment/flake.lock | jq -r '.nodes.unstable.locked.rev')"
+  echo "UNSTABLE_REV: $UNSTABLE_REV"
   nix-channel --remove nixpkgs || true
-  nix-channel --add https://github.com/NixOS/nixpkgs/archive/$UNSTABLE_REV.tar.gz nixpkgs
+  nix-channel --add "https://github.com/NixOS/nixpkgs/archive/$UNSTABLE_REV.tar.gz" nixpkgs
+  nix-channel --update
+  nix-channel --list
 }
 
 NixShell() {
   nix-shell -p $@ --command zsh
+}
+
+NixClearSpaceOnly() {
+  nix-collect-garbage -d
 }
 
 ClearSpace() {
@@ -257,6 +264,8 @@ ClearSpace() {
 
   read "?您應該使用 NixGCRoots 檢查 GC 根。 按 ctrl-c 停止。 "
 
+  sudo echo ''
+
   SwitchHomeManager
 
   rm -rf ~/nix-dirs
@@ -265,11 +274,12 @@ ClearSpace() {
   rm -rf ~/.cargo
   rm -rf ~/.rustup
   rm -rf ~/.cache/yarn
-  rm -rf ~/.config/coc
+  rm -rf ~/.cache/composer
+  sudo rm -rf ~/.config/coc
   rm -rf ~/.local/share/nvim
   rm -rf ~/.local/state/nvim
 
-  nix-collect-garbage -d
+  NixClearSpaceOnly
 
   if [ -z "$(cd ~/development/environment && git --no-pager diff HEAD -- src/project_templates/web_apps)" ]; then
     (cd ~/development/environment && sudo rm -rf src/project_templates/web_apps && git checkout -- src/project_templates/web_apps)
@@ -367,6 +377,27 @@ NixInputSync() {
   fi
   cat $DIR/flake.lock | jq '.nodes."'"$1"'"'" = $ENV_INPUT"'' | sponge $DIR/flake.lock
   echo "Input '$1' updated in '$DIR/flake.lock'"
+}
+
+NixInputSyncAll() {
+  DIR="${1:-./}"
+
+  # 僅當變數值以“/”結尾時，此腳本才有效
+  if [[ "$DIR" != */ ]]; then
+    DIR="$DIR/"
+  fi
+
+  if [ ! -f "$DIR"/flake.lock ]; then
+    ls -lah "$DIR"
+    echo "flake.lock not found"
+    return
+  fi
+
+  INPUTS=$(nix flake metadata --json "$DIR" | jq -r '.locks.nodes | keys[]' | grep -vE '(systems|root)')
+
+  echo "$INPUTS" | while read -r INPUT; do
+    NixInputSync "$INPUT" "$DIR"
+  done
 }
 
 # The space is important to be able to also run other aliases (not only Nix

@@ -1,26 +1,21 @@
-# Environment
+# 環境
 
-This repo contains my personal environment configurations and some dev notes.
+這個程式碼庫包含我的個人環境配置和一些開發筆記。
 
-It is composed of scripts that provision the environment by installing
-programs, generating config files, etc. Running the provision should be
-idempotent where possible, so running it multiple times should leave the system
-in the same state as the first time.
+它由透過安裝程式、生成設定檔等來配置環境的腳本組成。運行該配置必須盡可能是冪等的，因此多次運行它應該會使系統處於與第一次相同的狀態。
 
-By design (to decrease compilation times) the provision script has no crates as
-dependencies. The utility scripts that don't change often, which are compiled
-separately, can have dependencies, like crates, npm modules, etc.
+這些部分是：
 
-The sections are:
+- Bash 配置腳本位於 [src](./src)
+- Nix 配置在 [nix](./nix):
+    - 對於 NixOS 和[Home Manager](https://github.com/nix-community/home-manager) (用於其他 Unix 作業系統)
+    - 對於這兩種情況，主要入口點是 [flake.nix](./flake.nix) 文件
+    - 包含多個 nix shell
+- Dot和設定檔位於 [src/config-files](./src/config-files)
+- 一些 Rust 和 bash CLI 應用程式 [src/scripts](src/scripts)
+- 多個專案的範本檔案 (ts, docker, 等等): [src/project_templates](./src/project_templates)
+- 另外還有一些 [個人筆記](./notes)
 
-- Bash provision scripts in [src](./src)
-- Nix configuration in [nix](./nix) for NixOS and [Home Manager](https://github.com/nix-community/home-manager) (used in other Unix operating systems)
-    - For both cases the main entry point is the [flake.nix](./flake.nix) file
-- Lua files for the neovim config in [src/lua](./src/lua/)
-- Dot and config files in [src/config-files](./src/config-files)
-- Some rust and bash CLI applications in [src/scripts](src/scripts)
-- Additionally there are some [personal notes](./notes)
-
-## License
+## 許可證
 
 MIT

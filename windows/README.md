@@ -1,9 +1,14 @@
 # Windows Provision
 
-- PowerToys: https://learn.microsoft.com/en-us/windows/powertoys/#current-powertoy-utilities
-- Git: https://git-scm.com/downloads
-- VS Code Insiders: https://code.visualstudio.com/insiders/
-- VS Code: https://code.visualstudio.com/download
+## 初始設定
+
+1. 安裝: Terminal, Git shell (新增個人資料 to Terminal, 不要使用內建的 ssh 伺服器)
+2. 複製此 environment git 儲存庫
+3. 運行這個 shell 命令: `bash src/windows.sh`
+4. 安裝 Rust: https://www.rust-lang.org/tools/install
+5. 設定 ssh 剪貼簿命令
+6. 編輯檔案.ssh/config
+7: 使用此腳本配置中文 IME: [./installation.sh](./installation.sh)
 
 ## Sleep shortcut file
 
@@ -26,13 +31,15 @@ terminal, with admin privileges, run: `powercfg -hibernate off`
 - Edit the `hosts` file: Run alias `HostsEdit`
 - Change the Word Delimeter option characters ` ()[]{}"'` (it includes an space at the beginning)
     - This is under "Interactions" in settings
+- 若要停用鈴聲：
+    - 前往設定、個人資料、進階並更改鈴聲行為
 
-## Useful keyboard shortcuts
+## 有用的鍵盤快捷鍵
 
 - https://support.microsoft.com/en-us/windows/keyboard-shortcuts-in-windows-dcc61a57-8ff0-cffe-9796-cb9706c75eec
 
 - Alt + space: Open the window menu (useful for maximized terminal)
-- Control + Shift + s: Take screenshot with the snipping tool
+- LWin + Shift + s: Take screenshot with the snipping tool
 - LWin + d: Display desktop
 - LWin + Ctrl + n: (n is the position of the app in the bottom bar) switch windows of the same application
 - LWin + e: Open files on the home dir
@@ -77,13 +84,15 @@ Shortcuts:
 
 ## Misc
 
-- Take a screenshot: Snipping tool
+- 截圖: Snipping tool (LWin + Shift + S)
 - Clipboard setup:
     - Create a shortcut file, and in the shortcut file properties
-        - In the target add: `"C:\Program Files\Git\bin\sh.exe" --login -c "/c/Users/Ignacio/development/environment/project/target/release/clipboard_ssh host"`
+        - In the target add: `"C:\Program Files\Git\bin\sh.exe" --login -c "/c/Users/Ignacio/development/environment/project/clipboard_ssh host"`
         - Update the icon (can find many in `shell32.dll`)
         - Change to be opened minimized
-    - Move it to the taskbar
+    - 按 Windows 鍵 + R 並輸入“shell:startup”
+        - 將快捷方式檔案複製到該目錄下
+    - 將快捷方式檔案也複製到工作列
 
 ## References
 
@@ -91,3 +100,10 @@ Shortcuts:
 - https://www.robvanderwoude.com/batchcommands.php
 - http://www.trytoprogram.com/batch-file-commands/
 - https://www.autohotkey.com/docs/AutoHotkey.htm
+
+## 有用的連結
+
+- PowerToys: https://learn.microsoft.com/en-us/windows/powertoys/#current-powertoy-utilities
+- Git: https://git-scm.com/downloads
+- VS Code Insiders: https://code.visualstudio.com/insiders/
+- VS Code: https://code.visualstudio.com/download

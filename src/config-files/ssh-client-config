@@ -22,6 +22,9 @@ Host foo
   # Helps to not freeze connection when idle
   ServerAliveInterval 240
 
+  # 隱藏連接埠錯誤訊息上的通道
+  LogLevel ERROR
+
   # Equivalent to: `ssh user@remote-server.com -R 5556:localhost:5556`
   # This and `LocalForward` are useful when running `ssh -fN host`
   RemoteForward 5556 localhost:5556

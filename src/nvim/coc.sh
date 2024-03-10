@@ -131,6 +131,10 @@ EOF
     echo "call add(g:coc_global_extensions, 'coc-stylelint')" >>~/.vimrc
   fi
 
+  if [ -f "$PROVISION_CONFIG"/tailwind ]; then
+    echo "call add(g:coc_global_extensions, '@yaegassy/coc-tailwindcss3')" >>~/.vimrc
+  fi
+
   # To try:
   # - https://github.com/tjdevries/coc-zsh
   # - https://github.com/iamcco/coc-diagnostic

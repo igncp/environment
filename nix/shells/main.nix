@@ -55,6 +55,8 @@ in
 
     go = pkgs.mkShell {
       packages = go-pkgs.pkgs-shell;
+      # 對於 `dlv`: https://github.com/go-delve/delve/issues/3085#issuecomment-1419664637
+      hardeningDisable = ["all"];
     };
 
     kube = pkgs.mkShell {

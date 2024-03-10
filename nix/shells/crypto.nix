@@ -28,4 +28,25 @@ in {
     packages = ethereum-etl.packages;
     shellHook = ethereum-etl.shellHook;
   };
+
+  # https://github.com/protofire/eth-cli/blob/master/docs/COMMANDS.md
+  ethereum-cli = pkgs.mkShell {
+    packages = [pkgs.nodejs_20];
+    shellHook = ''
+      if ! type -P eth &>/dev/null; then
+        npm i -g eth-cli
+      fi
+    '';
+  };
+
+  gaiad = pkgs.mkShell {
+    packages = with pkgs; [clang protobuf-pkgs go];
+    shellHook = ''
+      if [ ! -f ~/.go-workspace/bin/gaiad ]; then
+        mkdir -p ~/nix-dirs
+        git clone https://github.com/cosmos/gaia.git --depth 1 ~/nix-dirs/gaia
+        (cd ~/nix-dirs/gaia && make install)
+      fi
+    '';
+  };
 }

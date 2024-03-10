@@ -16,12 +16,18 @@ if type go >/dev/null 2>&1; then
   if ! type gorun >/dev/null 2>&1; then
     go install github.com/erning/gorun@latest
   fi
+
+  if ! type dlv >/dev/null 2>&1; then
+    go install github.com/go-delve/delve/cmd/dlv@latest
+  fi
 fi
 EOF
 
   cat >>~/.shell_aliases <<"EOF"
 if type go >/dev/null 2>&1; then
   alias gmt='go mod tidy'
+
+  alias DlvAllowLinux='echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope'
 fi
 EOF
 
@@ -34,6 +40,21 @@ if executable('go')
 
   autocmd filetype go vnoremap <leader>kk "iyOfmt.Println("a", a);<c-c>6hidebug: <c-r>=expand('%:t')<cr>: <c-c>lv"ipf"lllv"ip
 endif
+EOF
+
+  cat >>~/.vim/lua/extra_beginning.lua <<"EOF"
+if vim.fn.executable('go') == 1 then
+  require('dap-go').setup {
+    dap_configurations = {
+      {
+        type = "go",
+        name = "Attach remote",
+        mode = "remote",
+        request = "attach",
+      },
+    },
+  }
+end
 EOF
 
 }

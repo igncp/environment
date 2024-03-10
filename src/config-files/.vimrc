@@ -361,3 +361,22 @@ nnoremap <silent> e :call fzf#run({
 \   'sink':    function('<sid>JumpToTab'),
 \   'down':    tabpagenr('$') + 2
 \ })<CR>
+
+" 寄存器1是保留刪除的，沒有 "small yank" 寄存器
+" 可以中斷 :h "redo-register"。仍然錯過任何手動寄存器 0 更改
+augroup YankShift | au!
+  let s:regzero = [getreg(0), getregtype(0)]
+  autocmd TextYankPost * call <SID>yankshift(v:event)
+augroup end
+
+function! s:yankshift(event)
+  if a:event.operator ==# 'y' && (empty(a:event.regname) || a:event.regname == '"')
+    for l:regno in range(8, 2, -1)
+      call setreg(l:regno + 1, getreg(l:regno), getregtype(l:regno))
+    endfor
+    call setreg(2, s:regzero[0], s:regzero[1])
+    let s:regzero = [a:event.regcontents, a:event.regtype]
+  elseif a:event.regname == '0'
+    let s:regzero = [a:event.regcontents, a:event.regtype]
+  endif
+endfunction

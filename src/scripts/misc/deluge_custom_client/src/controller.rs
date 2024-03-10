@@ -41,8 +41,8 @@ impl Controller {
                         "∞".to_string()
                     }
                 } else {
-                    let eta = chrono::Duration::seconds(torrent.eta as i64);
-                    let eta = chrono_humanize::HumanTime::from(eta);
+                    let eta = chrono::Duration::try_seconds(torrent.eta as i64);
+                    let eta = chrono_humanize::HumanTime::from(eta.unwrap());
                     eta.to_string()
                 };
                 let id_str = if is_id {

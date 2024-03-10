@@ -1,0 +1,48 @@
+name: 執行程式碼檢查並部署
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 簽出儲存庫
+        uses: actions/checkout@v2
+
+      - name: 建構程式碼
+        run: |
+          npm install
+          npm run build
+          mkdir -p public
+          cp -r dist demo public
+          touch public/.nojekyll
+
+      - name: 設定 github 頁面
+        if: github.ref == 'refs/heads/main'
+        uses: actions/configure-pages@v4
+
+      - name: 上傳github頁面
+        if: github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "./public"
+
+  deploy:
+    needs: build
+
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: 部署 github 頁面
+        id: deployment
+        uses: actions/deploy-pages@v4

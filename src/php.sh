@@ -41,7 +41,7 @@ EOF
 
   cat >>~/.shell_aliases <<"EOF"
 if type php >/dev/null 2>&1; then
-  alias LaravelServe='php artisan serve'
+  alias LaravelServe='php artisan serve --host=0.0.0.0'
 fi
 EOF
 }

@@ -13,7 +13,7 @@ provision_main() {
   provision_setup_with_bash
   touch ~/.check-files/first-run
 
-  echo "The provision finished successfully"
+  echo "環境配置成功完成"
 }
 
 provision_main
