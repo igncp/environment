@@ -23,6 +23,11 @@ while and learnt they would be remove from here.
 - Run command clearing the screen: `echo /tmp/foo.sql | PAGER='' PGPASSWORD=postgres entr -c psql -h 0.0.0.0 -U postgres -d postgres -f /_`
 - For waiting until the first change on the file use: `-p`
 
+## `kafka`
+
+- 列出主題: `kafka-topics --bootstrap-server http://localhost:9092 --list`
+- 描述一個主題: `kafka-topics --bootstrap-server http://localhost:9092 --describe --topic TOPIC_NAME`
+
 ## `psql`
 
 - To output in a CSV format can use the `--csv` flag

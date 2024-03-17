@@ -28,6 +28,7 @@ provision_setup_env() {
   fi
 
   mkdir -p ~/.check-files
+  mkdir -p ~/.completions
   sudo mkdir -p /usr/local/bin/environment_scripts
   sudo chown $USER /usr/local/bin/environment_scripts
 

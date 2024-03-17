@@ -12,14 +12,16 @@ if type go >/dev/null 2>&1; then
   if [ ! -d ~/.go-workspace/pkg/mod/golang.org/x/tools/gopls* ]; then
     (cd ~ && go install golang.org/x/tools/gopls@latest)
   fi
+fi
 
-  if ! type gorun >/dev/null 2>&1; then
-    go install github.com/erning/gorun@latest
-  fi
+if type buf >/dev/null 2>&1 && [ ! -f ~/.completions/buf.zsh ]; then
+  buf completion zsh >~/.completions/buf.zsh
+fi
+EOF
 
-  if ! type dlv >/dev/null 2>&1; then
-    go install github.com/go-delve/delve/cmd/dlv@latest
-  fi
+  cat >>~/.zshrc <<"EOF"
+if [ -f ~/.completions/buf.zsh ]; then
+  source ~/.completions/buf.zsh
 fi
 EOF
 
@@ -28,6 +30,10 @@ if type go >/dev/null 2>&1; then
   alias gmt='go mod tidy'
 
   alias DlvAllowLinux='echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope'
+
+  alias GoInstallGorun='go install github.com/erning/gorun@latest'
+  alias GoInstallDelve='go install github.com/go-delve/delve/cmd/dlv@latest'
+  alias GoInstallProtocGenGo='go install google.golang.org/protobuf/cmd/protoc-gen-go@latest'
 fi
 EOF
 

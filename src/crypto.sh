@@ -7,31 +7,33 @@ provision_setup_crypto() {
   if [ -f "$PROVISION_CONFIG"/go-cosmos ]; then
     cat >>~/.shell_aliases <<'EOF'
 alias Ignite='docker run --rm -v $(pwd):/app -w /app ignitehq/cli'
+
+# https://github.com/CosmWasm/wasmd?tab=readme-ov-file#dockerized
+# 僅適用於 amd64
+WasmdSetup() {
+  TEST_ACCOUNT=${1:-cosmos1pkptre7fdkl6gfrzlesjjvhxhlc3r4gmmk8rs6}
+  docker volume rm -f wasmd_data
+  docker run --rm -it \
+    -e PASSWORD=foobar \
+    -v wasmd_data:/root \
+    cosmwasm/wasmd:latest /opt/setup_wasmd.sh $TEST_ACCOUNT
+}
+WasmdRun() {
+  docker run --rm -it -p 26657:26657 -p 26656:26656 -p 1317:1317 \
+    -v wasmd_data:/root \
+    cosmwasm/wasmd:latest /opt/run_wasmd.sh
+}
 EOF
   fi
 
-  if [ -f "$PROVISION_CONFIG"/solana ]; then
-    if ! type "solana" >/dev/null 2>&1; then
-      cd ~ && rm -rf solana
-      git clone https://github.com/solana-labs/solana.git --depth 1
-      cd ~/development/environment
-      nix develop .#solana -c bash \
-        -c 'cd ~/solana && ./cargo build -p solana-cli -p solana-keygen --release'
-      sudo cp ~/.scripts/cargo_target/release/solana* /usr/local/bin/environment_scripts/
-      sudo chmod +x /usr/local/bin/environment_scripts/solana*
-      sudo chown $USER /usr/local/bin/environment_scripts/solana*
-      sudo rm -rf ~/solana
-    fi
-
-    if [ ! -f ~/.config/solana/cli/config.yml ]; then
-      solana config set --url https://api.devnet.solana.com
-    fi
-
-    cat >>~/.shell_aliases <<EOF
-alias SolanaBalance="solana balance"
+  # 產生新密鑰對的範例:
+  # `solana-keygen new --outfile ~/my-solana-wallet/my-keypair.json`
+  cat >>~/.shell_aliases <<EOF
+if type solana > /dev/null 2>&1; then
+  alias SolanaBalance="solana balance"
+  alias SolanaListStakeAccounts='solana stakes --withdraw-authority'
+  alias SolanaNewKeyPair='echo "Run: solana-keygen new --outfile ~/my-solana-wallet/my-keypair.json"'
+  alias SolanaTestValidator='solana-test-validator'
+fi
 EOF
-
-    # Example of new keypair
-    # solana-keygen new --outfile ~/my-solana-wallet/my-keypair.json
-  fi
 }

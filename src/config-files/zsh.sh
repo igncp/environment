@@ -150,3 +150,8 @@ export NVIM_LISTEN_ADDRESS=/tmp/nvimsocket-$(mktemp -u XXXXX)
 if [ -n "$NODENV_ROOT" ]; then
   eval "$(nodenv init -)"
 fi
+
+if [ -n "${commands[fzf-share]}" ]; then
+  source "$(fzf-share)/key-bindings.zsh"
+  source "$(fzf-share)/completion.zsh"
+fi

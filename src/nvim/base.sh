@@ -153,15 +153,6 @@ EOF
 
   install_nvim_package "junegunn/fzf.vim"
 
-  __add_n_completion() {
-    ALL_CMDS="n sh RsyncDelete node l o GitAdd GitRevertCode nn ll"
-    sed -i "s|nvim $ALL_CMDS |nvim |; s|nvim |nvim $ALL_CMDS |" "$1"
-    DIR_CMDS='mkdir tree'
-    sed -i "s|pushd $DIR_CMDS |pushd |; s|pushd |pushd $DIR_CMDS |" "$1"
-  }
-  __add_n_completion "$HOME"/.local/share/nvim/lazy/fzf/shell/completion.bash || true
-  __add_n_completion "$HOME"/.fzf/shell/completion.bash || true
-
   if [ ! -f ~/development/environment/project/.vim-custom.lua ]; then
     touch ~/development/environment/project/.vim-custom.lua
   fi

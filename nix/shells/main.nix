@@ -73,6 +73,8 @@ in
       packages = with pkgs; [
         colmena # https://github.com/zhaofengli/colmena
         nix-du # https://github.com/symphorien/nix-du
+        # 首先你必須運行`nix-index`(大約需要30分鐘)
+        nix-index # https://github.com/nix-community/nix-index
         unstable_pkgs.nix-init # https://github.com/nix-community/nix-init
       ];
     };
@@ -144,6 +146,13 @@ in
       ];
     };
 
+    proto = pkgs.mkShell {
+      packages = with pkgs; [
+        buf # https://github.com/bufbuild/buf
+        protobuf
+      ];
+    };
+
     kotlin = pkgs.mkShell {
       packages = with pkgs; [
         gradle
@@ -176,6 +185,13 @@ in
           then [pkgs.valgrind]
           else []
         );
+    };
+
+    ansible = pkgs.mkShell {
+      packages = with pkgs; [
+        ansible
+        ansible-lint
+      ];
     };
   }
   // crypto-shells

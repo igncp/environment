@@ -51,6 +51,7 @@ in {
       neofetch # https://github.com/dylanaraps/neofetch
       neovim-remote # https://github.com/mhinz/neovim-remote.git
       pkg-config
+      podman
       pstree
       rsync # https://github.com/WayneD/rsync
       sad # https://github.com/ms-jpq/sad

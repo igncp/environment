@@ -3,11 +3,6 @@
 set -e
 
 provision_setup_general_fzf() {
-  if [ ! -d ~/.fzf ]; then
-    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-    ~/.fzf/install --all
-  fi
-
   install_system_package "ag"
 
   cat >>~/.shellrc <<"EOF"
@@ -28,9 +23,6 @@ EOF
 
   # Ctrl+t binding breaks window when tmux + (n)vim + ctrl-z: no visible input. Disable it
   # sed -i "s|C-t|C-$|" ~/.fzf/shell/key-bindings.bash
-
-  echo 'source ~/.fzf.bash' >>~/.bashrc
-  echo 'source ~/.fzf.zsh' >>~/.zshrc
 
   cat >>~/.shellrc <<"EOF"
 __FZFBookmarkedCommands() {

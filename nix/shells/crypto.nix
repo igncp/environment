@@ -1,4 +1,7 @@
 {pkgs}: let
+  # @upgrade
+  solanaCommitSha = "e0203f2";
+
   rust-config = import ../common/rust.nix {inherit pkgs;};
   protobuf-pkgs = with pkgs; [
     buf # https://github.com/bufbuild/buf
@@ -12,9 +15,34 @@ in {
 
   solana = pkgs.mkShell {
     LIBCLANG_PATH = "${pkgs.libclang.lib}/lib";
-    shellHook = rust-config.shellHook;
+    shellHook =
+      rust-config.shellHook
+      + ''
+        set -e
+        if [ ! -f ~/nix-dirs/solana_bin/solana ]; then
+          rm -rf ~/nix-dirs/solana && mkdir -p ~/nix-dirs
+          git clone https://github.com/solana-labs/solana.git ~/nix-dirs/solana
+          (cd ~/nix-dirs/solana && git reset --hard ${solanaCommitSha} \
+            && ./cargo build --release)
+          mkdir -p ~/nix-dirs/solana_bin
+          mv ~/.scripts/cargo_target/release/solana* ~/nix-dirs/solana_bin
+          mv ~/.scripts/cargo_target/release/cargo-* ~/nix-dirs/solana_bin
+        fi
+
+        if [ ! -f ~/nix-dirs/solana_bin/spl-token ]; then
+          cargo install spl-token-cli
+          mv ~/.cargo/bin/spl-token ~/nix-dirs/solana_bin
+        fi
+
+        export PATH="$HOME/nix-dirs/solana_bin:$PATH"
+        export SBF_SDK_PATH="$HOME/nix-dirs/solana"
+
+        if [ ! -f ~/.config/solana/cli/config.yml ]; then
+          solana config set --url https://api.devnet.solana.com
+        fi
+      '';
     packages = with pkgs;
-      [pkg-config]
+      [pkg-config clang cmake]
       ++ protobuf-pkgs
       ++ rust-config.pkgs-list
       ++ (

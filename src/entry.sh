@@ -19,7 +19,7 @@ set -e
 . src/brightscript.sh
 . src/c.sh
 . src/dart.sh
-. src/docker.sh
+. src/containers.sh
 . src/dotnet.sh
 . src/go.sh
 . src/hashi.sh
@@ -51,17 +51,17 @@ provision_setup_with_bash() {
   provision_setup_android
   provision_setup_brightscript
   provision_setup_c
+  provision_setup_containers
+  provision_setup_crypto
   provision_setup_dart
-  provision_setup_docker
   provision_setup_dotnet
+  provision_setup_gaming
   provision_setup_go
   provision_setup_hashi
   provision_setup_haskell
   provision_setup_kotlin
   provision_setup_php
   provision_setup_raspberry
-  provision_setup_gaming
-  provision_setup_crypto
 
   provision_setup_custom
 }

@@ -117,13 +117,6 @@ EOF
     install_cargo_crate pastel
   fi
 
-  # Will add commands like: `cargo add`, `cargo rm` and `cargo upgrade`
-  if [ -f "$PROVISION_CONFIG"/cargo-add ]; then
-    if ! type "cargo-add" >/dev/null 2>&1; then
-      cargo install cargo-edit
-    fi
-  fi
-
   provision_append_json ~/.vim/coc-settings.json '
 "rust-analyzer.inlayHints.bindingModeHints.enable": false,
 "rust-analyzer.inlayHints.chainingHints.enable": false,

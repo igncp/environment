@@ -268,25 +268,43 @@ ClearSpace() {
 
   SwitchHomeManager
 
-  rm -rf ~/nix-dirs
-  rm -rf ~/.scripts/cargo_target
-  rm -rf ~/.npm
-  rm -rf ~/.cargo
-  rm -rf ~/.rustup
-  rm -rf ~/.cache/yarn
-  rm -rf ~/.cache/composer
+  sudo rm -rf ~/.cache/composer
+  sudo rm -rf ~/.cache/yarn
+  sudo rm -rf ~/.cargo
+  sudo rm -rf ~/.completions
   sudo rm -rf ~/.config/coc
-  rm -rf ~/.local/share/nvim
-  rm -rf ~/.local/state/nvim
+  sudo rm -rf ~/.go-workspace
+  sudo rm -rf ~/.gradle
+  sudo rm -rf ~/.local/share/nvim
+  sudo rm -rf ~/.local/state/nvim
+  sudo rm -rf ~/.npm
+  sudo rm -rf ~/.rustup
+  sudo rm -rf ~/.scripts/cargo_target
+  sudo rm -rf ~/go
+  sudo rm -rf ~/nix-dirs
 
   NixClearSpaceOnly
 
   if [ -z "$(cd ~/development/environment && git --no-pager diff HEAD -- src/project_templates/web_apps)" ]; then
-    (cd ~/development/environment && sudo rm -rf src/project_templates/web_apps && git checkout -- src/project_templates/web_apps)
+    (cd ~/development/environment &&
+      sudo rm -rf src/project_templates/web_apps &&
+      git checkout -- src/project_templates/web_apps)
   fi
 
-  docker system prune -af || true
+  if type docker >/dev/null 2>&1; then
+    docker kill $(docker ps -q)
+    docker network prune -f || true
+    docker system prune -af || true
+    docker volume prune -f || true
+  fi
+
+  if type podman >/dev/null 2>&1; then
+    podman kill $(podman ps -q)
+    podman system prune -af || true
+  fi
+
   nvim --headless "+Lazy! sync" +qa
+
   SwitchHomeManager
 
   Provision
@@ -301,6 +319,10 @@ NixGCRoots() {
   fi
 
   nix-store --gc --print-roots 2>&1 | ag -v removing | ag -v censored | awk '{ print $1; }'
+}
+
+NixListShellPkgs() {
+  echo $PATH | tr ':' '\n' | ag '/nix/store' | sed 's|^[^-]*-||' | sort | sed 's|-[.0-9]*/bin||' | uniq | l
 }
 
 NixListReferrers() {
@@ -344,6 +366,9 @@ NixEnvironmentUpgrade() {
   nix flake lock --update-input home-manager
   nix flake lock --update-input flake-utils
   NixUpdateChannel
+
+  echo "其他手動更新:"
+  grep -r '@upgrade' nix # @TODO: 透過取得最後的 git sha 自動升級它們
 
   echo "環境升級了，現在可以清理GC、清理空間了"
 }

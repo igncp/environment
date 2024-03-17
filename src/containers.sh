@@ -2,7 +2,7 @@
 
 set -e
 
-provision_setup_docker() {
+provision_setup_containers() {
   cat >>~/.shell_sources <<"EOF"
 source_if_exists ~/.docker-completion.sh
 EOF
@@ -102,5 +102,22 @@ EOF
 alias DockerBuildXInstall='docker run --privileged --rm tonistiigi/binfmt --install all'
 # Just run once, for allowing the `--push` flag on `docker buildx build`
 alias DockerBuildXDriver='docker buildx create --use --name build --node build --driver-opt network=host'
+EOF
+
+  cat >>~/.shellrc <<"EOF"
+if type podman >/dev/null 2>&1; then
+  if [ ! -f /etc/containers/policy.json ]; then
+    sudo mkdir -p /etc/containers
+    curl -o /tmp/policy.json https://raw.githubusercontent.com/containers/skopeo/main/default-policy.json
+    sudo mv /tmp/policy.json /etc/containers/policy.json
+  fi
+
+  if [ ! -f /etc/containers/registries.conf ]; then
+    cat > /tmp/registries.conf <<"EOF2"
+unqualified-search-registries = ["docker.io"]
+EOF2
+    sudo mv /tmp/registries.conf /etc/containers/registries.conf
+  fi
+fi
 EOF
 }

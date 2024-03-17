@@ -46,6 +46,8 @@ EOF
   # Kodi:
   # `sudo apt install -y kodi kodi-peripheral-joystick`
   # sudo usermod -a -G audio,video,input,dialout,plugdev,netdev,users,cdrom,tty $USER
+  # 可以建立一個systemd服務:
+  # `ExecStart=/usr/lib/aarch64-linux-gnu/kodi/kodi.bin`
 
   # https://retropie.org.uk/docs/Nintendo-Switch-Controllers/
 

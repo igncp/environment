@@ -36,13 +36,12 @@ provision_setup_zsh() {
 
   echo "SHELL=$(which zsh)" >>~/.zshrc
 
-  if [ ! -f ~/.bun/_bun ] && type "bun" >/dev/null 2>&1; then
-    mkdir -p ~/.bun
-    bun completions >~/.bun/_bun
+  if [ ! -f ~/.completions/bun ] && type "bun" >/dev/null 2>&1; then
+    bun completions >~/.completions/bun
   fi
 
   cat >>~/.zshrc <<"EOF"
-[ -f "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
+[ -f "$HOME/.completions/bun" ] && source "$HOME/.completions/bun"
 EOF
 
   cat >>~/.shellrc <<"EOF"
