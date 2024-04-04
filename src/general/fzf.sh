@@ -21,9 +21,6 @@ cp .git/COMMIT_EDITMSG /tmp/COMMIT_EDITMSG
 git commit -m "$(head .git/COMMIT_EDITMSG  -n 1)"
 EOF
 
-  # Ctrl+t binding breaks window when tmux + (n)vim + ctrl-z: no visible input. Disable it
-  # sed -i "s|C-t|C-$|" ~/.fzf/shell/key-bindings.bash
-
   cat >>~/.shellrc <<"EOF"
 __FZFBookmarkedCommands() {
   cat ~/.bookmarked-commands |

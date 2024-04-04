@@ -132,7 +132,6 @@ let g:Kx_map = ':let g:CurrentFileType=&ft<cr>:tabnew<c-r>=system("mktemp")<cr>
 execute 'nnoremap <leader>kx :' . g:Kx_map
 execute 'vmap <leader>kx y' . g:Kx_map . 'Vp:w<cr>zR'
 nnoremap <c-w>v :vsplit<cr><c-w><right>
-nnoremap <leader>u :set list!<cr>
 cnoremap <c-A> <Home>
 cnoremap <c-E> <End>
 cnoremap <c-K> <c-U>

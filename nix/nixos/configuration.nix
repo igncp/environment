@@ -8,11 +8,12 @@
   has_custom = builtins.pathExists ./custom.nix;
   hm_config_name = ".config/nixos-home-manager";
   has_hm = builtins.pathExists (../../project + ("/" + hm_config_name));
+  tmux = import ../common/tmux.nix {inherit pkgs;};
 in {
   imports =
     [
-      ./hardware-configuration.nix
       ./default_pkgs.nix
+      /etc/nixos/configuration.nix
     ]
     ++ (lib.optional has_custom ./custom.nix)
     ++ (lib.optional has_android ./android.nix)
@@ -20,8 +21,6 @@ in {
     ++ (lib.optional has_gui ./gui.nix);
 
   config = {
-    boot.loader.systemd-boot.enable = true;
-    boot.loader.efi.canTouchEfiVariables = true;
     hardware.bluetooth.enable = true;
     services.blueman.enable = true;
     hardware.bluetooth.settings = {
@@ -29,6 +28,10 @@ in {
         Enable = "Source,Sink,Media,Socket";
       };
     };
+
+    networking.networkmanager.enable = true;
+
+    nixpkgs.config.allowUnfree = true;
 
     virtualisation.docker.enable = true;
     environment.variables = {
@@ -41,7 +44,6 @@ in {
     i18n.defaultLocale = "en_US.UTF-8";
 
     # Updates: /etc/nix/nix.conf
-    # https://github.com/NixOS/nixpkgs/blob/nixos-23.05/nixos/modules/services/misc/nix-daemon.nix
     nix.extraOptions = ''
       experimental-features = nix-command flakes
     '';
@@ -52,8 +54,6 @@ in {
     services.openssh.settings.PermitRootLogin = "no";
     services.openssh.settings.PasswordAuthentication = false;
 
-    system.stateVersion = "23.05";
-
     time.timeZone = "Asia/Hong_Kong";
 
     users.defaultUserShell = pkgs.zsh;
@@ -62,6 +62,16 @@ in {
       home = "/home/igncp";
       extraGroups = ["wheel" "docker" "audio" "video" "networkmanager"];
       shell = pkgs.zsh;
+    };
+
+    system.stateVersion = "23.11";
+
+    programs.tmux = {
+      clock24 = true;
+      enable = true;
+      extraConfig = tmux.extraConfig;
+      plugins = tmux.plugins;
+      terminal = "tmux-256color";
     };
   };
 }

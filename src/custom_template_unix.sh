@@ -47,8 +47,6 @@ EOF
     echo '[~/.check-files/git-info]: configure git user and email info'
   fi
 
-  git config --global core.editor nvim
-
   clone_dev_github_repo environment
 
   jq -S "." ~/.vim/coc-settings.json | sponge ~/.vim/coc-settings.json

@@ -52,8 +52,10 @@ provision_setup_env() {
           sudo apt install -y "$PACKAGE"
         elif [ "$IS_ARCH" = "1" ]; then
           sudo pacman -S --noconfirm "$PACKAGE"
+        elif [ "IS_NIXOS" = "1" ]; then
+          echo "請求安裝此軟體包: $PACKAGE"
         else
-          echo "Unknown linux distribution: $PACKAGE"
+          echo "此軟體包遺失: $PACKAGE"
           exit 1
         fi
       elif [ "$IS_MAC" = "1" ]; then

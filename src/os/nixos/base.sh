@@ -19,10 +19,11 @@ alias NixOsClearSpace='sudo nix-collect-garbage'
 alias NixOsListSystemGenerations='sudo nix-env --list-generations --profile /nix/var/nix/profiles/system'
 alias ProvisionNixOs="(RebuildNixOs && Provision)"
 
-# Different prefix due to being a common command
+# 由於是通用命令而有不同的前綴
 RebuildNixOs() {
-    (cd ~/development/environment && \
-    sudo nixos-rebuild switch --show-trace --flake path:$(pwd))
+  # 它需要 --impure 標誌，因為它導入/etc/nixos/configuration.nix配置
+  (cd ~/development/environment && \
+    sudo nixos-rebuild switch --show-trace --flake path:$PWD --impure)
 }
 EOF
 

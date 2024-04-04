@@ -155,3 +155,11 @@ if [ -n "${commands[fzf-share]}" ]; then
   source "$(fzf-share)/key-bindings.zsh"
   source "$(fzf-share)/completion.zsh"
 fi
+
+# 與 bash 中的 control-w 行為相同
+my-backward-delete-word() {
+    local WORDCHARS=${WORDCHARS//}
+    zle backward-delete-word
+}
+zle -N my-backward-delete-word
+bindkey '^W' my-backward-delete-word

@@ -86,5 +86,8 @@ EOF
   cat >>~/.zshrc <<"EOF"
 source $HOME/.shellrc
 source $HOME/.shell_sources
+
+# 此變數由 Nix 設定以應用語法突出顯示。此行刪除突出顯示。
+export LESSOPEN=""
 EOF
 }

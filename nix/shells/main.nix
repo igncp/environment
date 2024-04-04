@@ -80,10 +80,27 @@ in
     };
 
     performance = pkgs.mkShell {
-      packages = with pkgs; [
-        vegeta
-        hyperfine # https://github.com/sharkdp/hyperfine
-      ];
+      # https://www.brendangregg.com/blog/2024-03-24/linux-crisis-tools.html
+      packages = with pkgs;
+        [
+          hyperfine # https://github.com/sharkdp/hyperfine
+          procps # https://gitlab.com/procps-ng/procps
+          vegeta
+          tcpdump # https://www.tcpdump.org/
+          ethtool # https://mirrors.edge.kernel.org/pub/software/network/ethtool/
+        ]
+        ++ (
+          if is_linux
+          then [
+            bpftrace
+            # cpuid
+            iproute2
+            sysstat
+            tiptop
+            util-linux
+          ]
+          else []
+        );
     };
 
     network = pkgs.mkShell {
@@ -119,7 +136,7 @@ in
     };
 
     rust = pkgs.mkShell {
-      packages = rust-config.pkgs-list;
+      packages = rust-config.pkgs-list ++ [pkgs.ncurses];
       shellHook = rust-config.shellHook;
     };
 

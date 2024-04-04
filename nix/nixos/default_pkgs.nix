@@ -15,6 +15,7 @@
   go-pkgs = import ../common/go.nix {inherit base_config pkgs lib unstable;};
   ruby-pkgs = import ../common/ruby.nix {inherit base_config pkgs;};
   rust-pkgs = import ../common/rust.nix {inherit pkgs;};
+  java-pkgs = import ../common/java.nix {inherit base_config lib pkgs;};
 
   has_c = builtins.pathExists (base_config + "/c");
 
@@ -35,6 +36,7 @@ in {
       lshw
       openssl
       openssl.dev
+      openvpn
       ps_mem
       statix
       vnstat
@@ -44,6 +46,7 @@ in {
     ++ go-pkgs.pkgs-list
     ++ ruby-pkgs.pkgs-list
     ++ rust-pkgs.pkgs-list
+    ++ java-pkgs.pkgs-list
     ++ (lib.optional has_c pkgs.clib)
     ++ (lib.optional has_c pkgs.ctags)
     ++ (lib.optional has_c pkgs.gcovr);

@@ -20,18 +20,18 @@
     self,
     unstable,
   }: let
-    hostname = (import ./nix/nixos/flake-config.nix).hostname;
     user = builtins.getEnv "USER";
   in
     flake-utils.lib.eachDefaultSystem (
       system: let
         pkgs = nixpkgs.legacyPackages.${system};
+        hostname = (import /etc/nixos/configuration.nix {inherit pkgs;}).networking.hostName;
         shells = import ./nix/shells/main.nix {inherit pkgs unstable;};
       in {
         devShells = shells;
         packages = {
           nixosConfigurations = {
-            ${hostname} = nixpkgs.lib.nixosSystem {
+            "${hostname}" = nixpkgs.lib.nixosSystem {
               modules = [
                 ./nix/nixos/configuration.nix
               ];

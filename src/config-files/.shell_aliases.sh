@@ -165,6 +165,10 @@ KillAllTmux() {
   ps aux | grep tmux | grep -v grep | awk '{print $2}' | xargs -I{} kill {}
 }
 
+# 這些別名保留 nix shell 環境
+TW() { tmux new-window -e "IN_NIX_SHELL=$IN_NIX_SHELL"; }
+TP() { tmux split-window -e "IN_NIX_SHELL=$IN_NIX_SHELL"; }
+
 NmapLocal() {
   # https://github.com/nmap/nmap
   THIRD_NUM=${1:-1}
@@ -173,8 +177,6 @@ NmapLocal() {
   sed -i "s|Nmap|\nNmap|" /tmp/nmap-result
   less /tmp/nmap-result
 }
-
-alias deluge_custom_client='~/.scripts/cargo_target/release/deluge_custom_client'
 
 WorktreeClone() {
   git clone --bare "$1" .bare
@@ -200,8 +202,14 @@ ConfigProvisionList() {
   AFTER_SHA=$(find ~/development/environment/project/.config -type f | sort -V | sha256sum | awk '{print $1}')
   # Stop if no changes
   if [ "$INITIAL_SHA" = "$AFTER_SHA" ]; then return; fi
-  SwitchHomeManager &&
-    Provision
+
+  if type RebuildNixOs >/dev/null 2>&1; then
+    RebuildNixOs &&
+      Provision
+  else
+    SwitchHomeManager &&
+      Provision
+  fi
 }
 
 alias ConfigProvisionListFzf='ConfigProvisionList fzf'
@@ -269,6 +277,7 @@ ClearSpace() {
   SwitchHomeManager
 
   sudo rm -rf ~/.cache/composer
+  sudo rm -rf ~/.cache/go-build
   sudo rm -rf ~/.cache/yarn
   sudo rm -rf ~/.cargo
   sudo rm -rf ~/.completions

@@ -36,7 +36,6 @@ provision_setup_nvim_base() {
   install_nvim_package ntpeters/vim-better-whitespace  # https://github.com/ntpeters/vim-better-whitespace
   install_nvim_package nvim-treesitter/nvim-treesitter # https://github.com/nvim-treesitter/nvim-treesitter
   install_nvim_package plasticboy/vim-markdown         # https://github.com/plasticboy/vim-markdown
-  install_nvim_package rcarriga/nvim-dap-ui            # https://github.com/rcarriga/nvim-dap-ui
   install_nvim_package rhysd/clever-f.vim              # https://github.com/rhysd/clever-f.vim
   install_nvim_package ryanoasis/vim-devicons          # if not supported, add in custom: rm -rf ~/.local/share/nvim/lazy/vim-devicons/*
   install_nvim_package scrooloose/nerdcommenter        # https://github.com/scrooloose/nerdcommenter
@@ -120,6 +119,9 @@ function ShowHexColorUnderCursor()
 endfunction
 
 map <leader>cf :call ShowHexColorUnderCursor()<CR>
+
+nmap <silent> <c-a> :CopilotChatToggle<CR>
+xnoremap <silent> <c-a> :<DEL><DEL><DEL><DEL><DEL>CopilotChatToggle<CR>
 EOF
 
   cat >>~/.shellrc <<"EOF"

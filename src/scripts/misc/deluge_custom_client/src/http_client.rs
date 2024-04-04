@@ -1,7 +1,9 @@
-use std::{collections::HashMap, process};
+use std::collections::HashMap;
 
 use reqwest::{Client, RequestBuilder};
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
+
+use crate::base::AppErr;
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
 #[serde(untagged)]
@@ -114,7 +116,7 @@ impl DelugeHttpClient {
         res
     }
 
-    async fn login(&mut self) {
+    async fn login(&mut self) -> Result<(), AppErr> {
         let req_body = DelugeRequest::new(self.generate_req_id(), "auth.login", vec!["deluge"]);
 
         let res = self
@@ -124,8 +126,7 @@ impl DelugeHttpClient {
             .await;
 
         if res.is_err() {
-            println!("No connection to deluge daemon. Make sure docker is running, or run: `./deluge_custom_client run`");
-            process::exit(1);
+            return Err("No connection to deluge daemon. Make sure docker is running, or run: `./deluge_custom_client run`")?;
         }
 
         let res = res.unwrap();
@@ -138,10 +139,12 @@ impl DelugeHttpClient {
             .unwrap();
 
         self.cookie = Some(session_cookie_str.to_string());
+
+        Ok(())
     }
 
-    async fn connect(&mut self) {
-        self.login().await;
+    async fn connect(&mut self) -> Result<(), AppErr> {
+        self.login().await?;
 
         let req_body = DelugeRequest::new(
             self.generate_req_id(),
@@ -174,12 +177,17 @@ impl DelugeHttpClient {
         self.get_common_req()
             .body(req_body.serialize())
             .send()
-            .await
-            .unwrap();
+            .await?;
+
+        Ok(())
     }
 
-    async fn common_rpc_request_raw<A: Serialize>(&mut self, cmd: &str, params: A) -> String {
-        self.connect().await;
+    async fn common_rpc_request_raw<A: Serialize>(
+        &mut self,
+        cmd: &str,
+        params: A,
+    ) -> Result<String, AppErr> {
+        self.connect().await?;
 
         let body_req = DelugeRequest::new(self.generate_req_id(), cmd, params);
 
@@ -190,20 +198,24 @@ impl DelugeHttpClient {
             .await
             .unwrap();
 
-        res.text().await.unwrap()
+        let text = res.text().await?;
+
+        Ok(text)
     }
 
     async fn common_rpc_request<A: DeserializeOwned, B: Serialize>(
         &mut self,
         cmd: &str,
         params: B,
-    ) -> DelugeResponse<A> {
-        let response_text = self.common_rpc_request_raw(cmd, params).await;
+    ) -> Result<DelugeResponse<A>, AppErr> {
+        let response_text = self.common_rpc_request_raw(cmd, params).await?;
 
-        serde_json::from_str::<DelugeResponse<A>>(&response_text).unwrap()
+        let result = serde_json::from_str::<DelugeResponse<A>>(&response_text)?;
+
+        Ok(result)
     }
 
-    pub async fn get_torrents(&mut self) -> UpdateUI {
+    pub async fn get_torrents(&mut self) -> Result<UpdateUI, AppErr> {
         #[derive(Debug, Serialize, Clone)]
         #[serde(untagged)]
         enum TorrentsRequest<'a> {
@@ -222,12 +234,15 @@ impl DelugeHttpClient {
             TorrentsRequest::Object(HashMap::new()),
         ];
 
-        self.common_rpc_request("web.update_ui", params)
-            .await
-            .result
+        let result = self
+            .common_rpc_request("web.update_ui", params)
+            .await?
+            .result;
+
+        Ok(result)
     }
 
-    pub async fn remove_torrent(&mut self, torrent_id: String) -> bool {
+    pub async fn remove_torrent(&mut self, torrent_id: String) -> Result<bool, AppErr> {
         #[derive(Debug, Serialize, Clone)]
         #[serde(untagged)]
         enum RemoveTorrentRequest {
@@ -242,12 +257,12 @@ impl DelugeHttpClient {
 
         let response = self
             .common_rpc_request::<Option<bool>, _>("core.remove_torrent", params)
-            .await;
+            .await?;
 
-        response.error.is_none()
+        Ok(response.error.is_none())
     }
 
-    pub async fn add_torrent(&mut self, magnet_link: String) -> bool {
+    pub async fn add_torrent(&mut self, magnet_link: String) -> Result<bool, AppErr> {
         #[derive(Debug, Serialize, Clone)]
         #[serde(untagged)]
         enum AddTorrentRequest {
@@ -262,31 +277,43 @@ impl DelugeHttpClient {
 
         let response = self
             .common_rpc_request::<Option<String>, _>("core.add_torrent_magnet", params)
-            .await;
+            .await?;
 
-        response.error.is_none()
+        Ok(response.error.is_none())
     }
 
-    pub async fn get_daemon_version(&mut self) -> String {
-        self.common_rpc_request("daemon.get_version", Vec::<String>::new())
-            .await
-            .result
+    pub async fn get_daemon_version(&mut self) -> Result<String, AppErr> {
+        let result = self
+            .common_rpc_request("daemon.get_version", Vec::<String>::new())
+            .await?
+            .result;
+
+        Ok(result)
     }
 
-    pub async fn get_daemon_method_list(&mut self) -> Vec<String> {
-        self.common_rpc_request("daemon.get_method_list", Vec::<String>::new())
-            .await
-            .result
+    pub async fn get_daemon_method_list(&mut self) -> Result<Vec<String>, AppErr> {
+        let result = self
+            .common_rpc_request("daemon.get_method_list", Vec::<String>::new())
+            .await?
+            .result;
+
+        Ok(result)
     }
 
-    pub async fn get_config(&mut self) -> String {
-        self.common_rpc_request_raw("core.get_config", Vec::<String>::new())
-            .await
+    pub async fn get_config(&mut self) -> Result<String, AppErr> {
+        let result = self
+            .common_rpc_request_raw("core.get_config", Vec::<String>::new())
+            .await?;
+
+        Ok(result)
     }
 
-    pub async fn get_external_ip(&mut self) -> String {
-        self.common_rpc_request("core.get_external_ip", Vec::<String>::new())
-            .await
-            .result
+    pub async fn get_external_ip(&mut self) -> Result<String, AppErr> {
+        let result = self
+            .common_rpc_request("core.get_external_ip", Vec::<String>::new())
+            .await?
+            .result;
+
+        Ok(result)
     }
 }

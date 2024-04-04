@@ -24,7 +24,6 @@ in {
     ++ (lib.optional has_i3 ./gui-i3.nix)
     ++ (lib.optional has_virtualbox ./gui-virtualbox.nix);
 
-  hardware.pulseaudio.enable = false;
   services.flatpak.enable = true;
 
   environment.systemPackages = with pkgs;
@@ -44,6 +43,7 @@ in {
       slack
       steam
       terminator
+      tigervnc
       unstable_pkgs.google-chrome
       variety
       xclip
@@ -52,17 +52,7 @@ in {
     ]
     ++ (lib.optional has_copyq copyq);
 
-  xdg = {
-    portal = {
-      enable = true;
-      extraPortals = with pkgs; [
-        xdg-desktop-portal-wlr
-        xdg-desktop-portal-gtk
-      ];
-    };
-  };
-
-  fonts.fonts = with pkgs; [
+  fonts.packages = with pkgs; [
     noto-fonts
     noto-fonts-cjk
     noto-fonts-emoji
@@ -70,14 +60,15 @@ in {
     (nerdfonts.override {fonts = ["Monofur"];})
   ];
 
-  # Enable the X11 windowing system.
+  # 啟用 X11 視窗系統。
   services.xserver.enable = true;
 
-  # Enable the KDE Plasma Desktop Environment.
-  services.xserver.displayManager.sddm.enable = true;
-  services.xserver.displayManager.defaultSession = "cinnamon";
-  services.xserver.desktopManager.plasma5.enable = true;
+  # 啟用 Cinnamon 桌面環境
+  services.xserver.displayManager.lightdm.enable = true;
   services.xserver.desktopManager.cinnamon.enable = true;
+  services.xserver.displayManager.defaultSession = "cinnamon";
+
+  services.logind.lidSwitch = "ignore";
 
   services.xserver = {
     libinput.enable = true;
@@ -94,12 +85,19 @@ in {
 
   # Enable sound with pipewire.
   sound.enable = true;
+  hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
+    # If you want to use JACK applications, uncomment this
+    #jack.enable = true;
+
+    # use the example session manager (no others are packaged yet so this is enabled by default,
+    # no need to redefine it in your config for now)
+    #media-session.enable = true;
   };
 
   # Allow unfree packages

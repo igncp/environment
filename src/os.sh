@@ -5,7 +5,7 @@ set -e
 . src/os/arch.sh
 . src/os/debian.sh
 . src/os/mac.sh
-. src/os/nixos.sh
+. src/os/nixos/base.sh
 
 provision_setup_os() {
   if [ "$IS_MAC" == "1" ]; then

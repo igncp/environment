@@ -27,6 +27,7 @@ local nvim_plugins = {
       return vim.fn.executable('go') == 1
     end,
   },
+  { "rcarriga/nvim-dap-ui", dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" } },
   {
     "leoluz/nvim-dap-go",
     enabled = function()
@@ -45,7 +46,17 @@ local nvim_plugins = {
       return vim.fn.executable('kotlinc') == 1
     end,
   },
-  "smoka7/hop.nvim"
+  "smoka7/hop.nvim",
+  {
+    "CopilotC-Nvim/CopilotChat.nvim",
+    branch = "canary",
+    dependencies = {
+      { "nvim-lua/plenary.nvim" },
+    },
+    opts = {
+      debug = true,
+    },
+  },
 }
 
 require("lazy").setup(nvim_plugins)
