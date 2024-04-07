@@ -15,8 +15,13 @@ alias SystemListInstalled='apt list --installed'
 alias SystemUpgrade='sudo apt-get update && sudo apt-get upgrade -y'
 
 alias AptLog='tail -f /var/log/apt/term.log'
+EOF
+
+  if [ "$IS_UBUNTU" == "1" ]; then
+    cat >>~/.shell_aliases <<"EOF"
 alias UbuntuVersion='lsb_release -a'
 alias UbuntuFindPackageByFile="dpkg-query -S" # e.g. UbuntuFindPackageByFile '/usr/bin/ag'
+alias UbuntuInstallDrivers='sudo ubuntu-drivers install'
 
 DebianUninstallUI() {
   sudo apt purge --yes task-desktop hyphen-en-us libglu1-mesa libreoffice-* libu2f-udev mythes-en-us x11-apps x11-session-utils xinit xorg xserver-* desktop-base task-german task-german-desktop totem gedit gedit-common gir1.2-* gnome-* gstreamer* sound-icons speech-dispatcher totem-common xserver-* xfonts-* xwayland gir1.2* gnome-* 
@@ -24,6 +29,7 @@ DebianUninstallUI() {
   sudo apt autoremove --purge --yes
 }
 EOF
+  fi
 
   # This avoids displaying the restart-services popup on every install
   if [ -f /etc/needrestart/needrestart.conf ]; then

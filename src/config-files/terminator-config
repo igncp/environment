@@ -8,10 +8,9 @@
 [profiles]
   [[default]]
     cursor_blink = False
-    cursor_fg_color = "#ffbcfc"
-    cursor_bg_color = "#ffbcfc"
-    cursor_color_default = False
-    font = Monofur Nerd Font 18
+    cursor_color = "#ffbcfc"
+    cursor_color_fg = False
+    font = Monofur Nerd Font Mono 18
     show_titlebar = False
     scrollbar_position = hidden
     word_chars = "-,./?%&#_~+@:"

@@ -3,6 +3,20 @@
 set -e
 
 provision_setup_android() {
+  cat >>~/.shell_aliases <<"EOF"
+if type gradle >/dev/null 2>&1; then
+  alias GradleInit='gradle init'
+fi
+
+if [ -f gradlew ]; then
+  alias GradleProjects='./gradlew projects'
+  alias GradleTasks='./gradlew tasks'
+  alias GradleTasksAll='./gradlew tasks --all'
+  alias GradleHelpTask='./gradlew -q help --task' # example: GradleHelpTask 'assemble'
+  alias GradleDependencies='./gradlew -q buildEnvironment'
+fi
+EOF
+
   if [ ! -f $PROVISION_CONFIG/android ]; then
     return
   fi
@@ -23,12 +37,6 @@ alias AndroidStudioExit='studio.sh & exit'
 alias AndroidAVDManagerListAVD='avdmanager list avd'
 alias AndroidSdkListInstalled='sdkmanager --list_installed' # pass --verbose to see more
 alias EmulatorLaunch='emulator -avd'
-
-alias GradleProjects='./gradlew projects'
-alias GradleTasks='./gradlew tasks'
-alias GradleTasksAll='./gradlew tasks --all'
-alias GradleHelpTask='./gradlew -q help --task' # example: GradleHelpTask 'assemble'
-alias GradleDependencies='./gradlew -q buildEnvironment'
 EOF
 
   if [ -d $HOME/Android/Sdk ]; then

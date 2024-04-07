@@ -2,6 +2,7 @@
 
 set -e
 
+. src/js/react_native.sh
 . src/js/ts.sh
 . src/js/vue.sh
 . src/js/yarn_workspaces.sh
@@ -158,4 +159,5 @@ EOF
   provision_setup_js_ts
   provision_setup_js_vue
   provision_setup_js_yarn_workspaces
+  provision_setup_react_native
 }

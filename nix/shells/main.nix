@@ -174,6 +174,7 @@ in
       packages = with pkgs; [
         gradle
         kotlin
+        ktlint
       ];
       JAVA_11_HOME = "${pkgs.jdk11}/lib/openjdk";
       shellHook = ''

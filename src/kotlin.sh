@@ -5,6 +5,7 @@ set -e
 provision_setup_kotlin() {
   cat >>~/.shell_aliases <<"EOF"
 if type kotlinc &>/dev/null; then
+  alias KotlinJar='kotlinc -include-runtime -d result.jar' # e.g. KotlinJar foo.kt
   alias KotlinScript='kotlinc -script' # e.g. KotlinScript foo.kts
 fi
 EOF

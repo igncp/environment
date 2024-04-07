@@ -23,7 +23,7 @@ if [ -z "$TMUX" ]; then
   elif [ -n "$(pgrep tmux)" ]; then
     tmux attach
   elif [ -f "$HOME"/development/environment/src/scripts/bootstrap/Bootstrap_common.sh ]; then
-    sh "$HOME"/development/environment/src/scripts/bootstrap/Bootstrap_common.sh
+    bash "$HOME"/development/environment/src/scripts/bootstrap/Bootstrap_common.sh
   elif [ ! -f $HOME/development/environment/project/.config/no-auto-tmux ]; then
     tmux
   fi
