@@ -57,9 +57,12 @@ echo "" >> /etc/motd
 EOF
   sudo chown root:root ~/.scripts/motd_update.sh
 
-  if [ -z "$(cat /etc/apt/sources.list | grep -E 'non-free([^-]|$)' || true)" ]; then
-    sudo apt install -y software-properties-common
-    sudo apt-add-repository -y --component non-free
-    sudo apt update
+  if [ ! -f ~/.check-files/debian-non-free ]; then
+    if [ -z "$(cat /etc/apt/sources.list | grep -E 'non-free([^-]|$)' || true)" ]; then
+      sudo apt install -y software-properties-common
+      sudo apt-add-repository -y --component non-free
+      sudo apt update
+      touch ~/.check-files/debian-non-free
+    fi
   fi
 }

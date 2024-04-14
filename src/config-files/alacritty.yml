@@ -54,7 +54,7 @@
 #
 # Values for `startup_mode` (macOS only):
 #   - SimpleFullscreen
-#startup_mode: Windowed
+startup_mode: Fullscreen
 # Window title
 #title: Alacritty
 # Allow terminal applications to change Alacritty's window title.
@@ -75,10 +75,8 @@
 #multiplier: 3
 # Font configuration
 font:
-  size: 12
-  weight: 700
+  size: 18
   normal:
-    family: Source Code Pro
     style: Regular
 # Normal (roman) font face
 #normal:

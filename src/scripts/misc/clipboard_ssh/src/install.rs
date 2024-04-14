@@ -1,6 +1,23 @@
 use std::{env, process};
 
 fn install_linux() {
+    let xclip_code = process::Command::new("bash")
+        .arg("-c")
+        .arg("type -a xclip")
+        .stdout(process::Stdio::piped())
+        .spawn()
+        .unwrap()
+        .wait()
+        .unwrap()
+        .code()
+        .unwrap();
+
+    if xclip_code != 0 {
+        println!("Missing package: xclip");
+
+        return;
+    }
+
     let exists_code = process::Command::new("systemctl")
         .arg("is-active")
         .arg("service-clipboard-ssh")
@@ -13,7 +30,7 @@ fn install_linux() {
         .unwrap();
 
     if exists_code == 0 {
-        println!("Service already installed");
+        println!("Service already installed: service-clipboard-ssh");
 
         return;
     }
@@ -57,10 +74,10 @@ WantedBy=default.target
         .unwrap();
 
     if start_code != 0 {
-        panic!("Failed to install service");
+        panic!("Failed to install service: service-clipboard-ssh");
     }
 
-    println!("Service installed");
+    println!("Service installed: service-clipboard-ssh");
 }
 
 fn install_macos() {

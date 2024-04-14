@@ -47,6 +47,15 @@ local nvim_plugins = {
       debug = true,
     },
   },
+  -- https://github.com/chrisgrieser/nvim-various-textobjs
+  {
+    "chrisgrieser/nvim-various-textobjs",
+    lazy = false,
+    opts = { useDefaultKeymaps = true },
+  },
+  "nvim-treesitter/nvim-treesitter",
+  -- https://github.com/nvim-treesitter/nvim-treesitter-textobjects
+  "nvim-treesitter/nvim-treesitter-textobjects",
 }
 
 require("lazy").setup(nvim_plugins)

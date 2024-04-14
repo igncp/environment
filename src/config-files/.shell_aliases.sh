@@ -90,6 +90,14 @@ if type ffmpeg >/dev/null 2>&1; then
     # 第一個參數是影片的檔案路徑
     ffmpeg -i $1 -map 0:s:${2:-0} ${3:-$1}.srt
   }
+
+  FfmpegAudioMp3() {
+    if [ -z "$1" ]; then
+      echo "缺少視訊路徑" && exit 1
+    fi
+
+    ffmpeg -i $1 -q:a 0 -map a $1.mp3
+  }
 fi
 
 # Cross-platform (including remote VM) function which accepts text from a pipe
@@ -476,7 +484,12 @@ if type vegeta >/dev/null 2>&1; then
 fi
 
 DockerEnvironment() {
-  bash ~/development/environment/src/docker_environment.sh
+  bash ~/development/environment/src/docker_environment/run.sh
+}
+
+DockerEnvironmentAlacritty() {
+  START_SCRIPT='alacritty -v --config-file /home/igncp/.config/alacritty/alacritty.yml -e bash -c ". /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh && zsh"' \
+    bash src/docker_environment/run.sh
 }
 
 if type ruby >/dev/null 2>&1; then

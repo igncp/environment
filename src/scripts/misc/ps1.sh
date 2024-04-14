@@ -60,6 +60,8 @@ provision_get_ps1() {
       else
         SSH_NOTICE=" [$(echo "$FILE_VALUE" | tr -d '\n')]"
       fi
+    elif [ -f ~/.check_files/init_docker ]; then
+      SSH_NOTICE=" [DOCKER_ENV]"
     fi
 
     if [ "$IS_BASH" -eq 1 ]; then

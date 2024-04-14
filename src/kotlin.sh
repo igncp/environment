@@ -2,6 +2,8 @@
 
 set -e
 
+# 多平台配置: https://www.jetbrains.com/help/kotlin-multiplatform-dev/compose-multiplatform-create-first-app.html#next-step
+
 provision_setup_kotlin() {
   cat >>~/.shell_aliases <<"EOF"
 if type kotlinc &>/dev/null; then

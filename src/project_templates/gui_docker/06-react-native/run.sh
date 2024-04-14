@@ -7,6 +7,7 @@ mkdir -p .gradle
 mkdir -p AndroidStudioProjects
 mkdir -p app
 mkdir -p .android
+mkdir -p studio_config
 touch .bash_history
 
 docker run \
@@ -20,6 +21,7 @@ docker run \
   -v $PWD/.gradle:/home/igncp/.gradle \
   -v $PWD/.android:/home/igncp/.android \
   -v $PWD/.bash_history:/home/igncp/.bash_history \
+  -v $PWD/studio_config:/home/igncp/.config/Google \
   -v $PWD/app:/app \
   -w /app \
   -e DISPLAY=$DISPLAY \

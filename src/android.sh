@@ -17,15 +17,6 @@ if [ -f gradlew ]; then
 fi
 EOF
 
-  if [ ! -f $PROVISION_CONFIG/android ]; then
-    return
-  fi
-
-  if ! type adb >/dev/null 2>&1; then
-    echo 'Download the platforms tools'
-    echo 'Run: sdkmanager "platform-tools"'
-  fi
-
   cat >>~/.shell_aliases <<"EOF"
 alias AdbOpenDeeplink='adb shell am start -d' # for query strings, encode with `encodeURIComponent`
 alias AdbLogcat='adb shell logcat'
@@ -43,12 +34,23 @@ EOF
     cat >>~/.shellrc <<"EOF"
 export ANDROID_HOME=$HOME/Android/Sdk
 export ANDROID_SDK_ROOT=$HOME/Android/Sdk
+export ANDROID_EMULATOR_USE_SYSTEM_LIBS=1
 export PATH="$ANDROID_HOME/platform-tools:$PATH"
 export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
 export PATH="$ANDROID_HOME/emulator:$PATH"
 export PATH="$ANDROID_HOME/tools:$PATH"
 export PATH="$ANDROID_HOME/tools/bin:$PATH"
 EOF
+  fi
+
+  if [ -d $HOME/android-studio ]; then
+    cat >>~/.shellrc <<"EOF"
+export PATH=$PATH:/home/igncp/android-studio/bin
+EOF
+  fi
+
+  if [ ! -f $PROVISION_CONFIG/android ]; then
+    return
   fi
 
   if [ "$IS_LINUX" == "1" ] && [ "$PROVISION_CONFIG"/gui ] && [ -d /usr/share/applications ]; then

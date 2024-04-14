@@ -11,7 +11,7 @@ RUN apt install -y \
   libc6:i386 libncurses5:i386 libstdc++6:i386 lib32z1 libbz2-1.0:i386 \
   libxrender1 libxtst6 libxi6 libfreetype6 libxft2 xz-utils vim \
   qemu qemu-kvm bridge-utils libnotify4 libglu1 libvirt-daemon-system \
-  libqt5widgets5 openjdk-17-jdk xvfb \
+  libqt5widgets5 openjdk-17-jdk xvfb fonts-monofur \
   && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN groupadd -g 1000 -r $USER

@@ -3,6 +3,10 @@
 set -e
 
 provision_gui_virtualbox() {
+  if [ ! -f "$PROVISION_CONFIG"/virtualbox ]; then
+    return
+  fi
+
   # https://www.linuxtechi.com/how-to-install-virtualbox-on-debian/
   if [ "$IS_DEBIAN" == "1" ] && [ -n "$(grep bookworm /etc/os-release || true)" ]; then
     if type -p virtualbox &>/dev/null; then
