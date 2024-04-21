@@ -10,16 +10,15 @@ clone_dev_github_repo() {
   fi
 }
 
-provision_setup_custom() {
+provision_setup_end() {
   sed -i 's|syntax off||' ~/.vimrc
 
   cat >>~/.shellrc <<"EOF"
 if [ -z "$TMUX" ]; then
-  echo 'check if running in VM and remove condition if yes, either way remove this message'
   if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
-    echo 'ssh, not running tmux'
+    echo 'ssh，未運行 tmux'
   elif [ "$(tmux list-clients 2> /dev/null | wc -l | tr '\n' '_')" != "0_" ]; then
-    echo 'there is already a tmux client, not attaching to session'
+    echo '已經有一個 tmux 用戶端，未附加到會話'
   elif [ -n "$(pgrep tmux)" ]; then
     tmux attach
   elif [ -f "$HOME"/development/environment/src/scripts/bootstrap/Bootstrap_common.sh ]; then
@@ -30,17 +29,21 @@ if [ -z "$TMUX" ]; then
 fi
 EOF
 
-  # git config --global user.name 'Foo Bar'
-  # git config --global user.email foo@bar.com
-  # git config --global gpg.format ssh
-  # git config --global commit.gpgsign true
-  # git config --global user.signingkey '...' # Public SSH key
-  # git config --global core.editor nvim
-  ## If using 1Password directly Linux, this is needed
-  # git config --global gpg.ssh.program /opt/1Password/op-ssh-sign
+  git config --global user.name 'Ignacio'
+  git config --global user.email icarbajop@gmail.com
+
+  if [ -f "$PROVISION_CONFIG"/git-ssh ]; then
+    git config --global gpg.format ssh
+    git config --global commit.gpgsign true
+    git config --global user.signingkey "$(cat $PROVISION_CONFIG/git-ssh)" # Public SSH key
+    ## 如果Linux直接使用1Password，則需要這個
+    # git config --global gpg.ssh.program /opt/1Password/op-ssh-sign
+  fi
+
+  git config --global core.editor nvim
   # mkdir -p "$HOME"/.config/git/git
   # git config --global gpg.ssh.allowedSignersFile "$HOME/.config/git/allowed_signers"
-  # # This file is used for `git log --show-signature`, have to add the public key instead of `...`
+  # # 該檔案用於“git log --show-signature”，必須添加公鑰而不是“...”
   # echo "icarbajop@gmail.com ..." > "$HOME"/.config/git/allowed_signers
 
   if [ ! -f "$HOME"/.check-files/git-info ]; then
@@ -48,6 +51,11 @@ EOF
   fi
 
   clone_dev_github_repo environment
+
+  if [ ! -f ~/development/environment/src/scripts/bootstrap/Bootstrap_common.sh ]; then
+    cp ~/development/environment/src/scripts/bootstrap/_Bootstrap_template.sh \
+      ~/development/environment/src/scripts/bootstrap/Bootstrap_common.sh
+  fi
 
   jq -S "." ~/.vim/coc-settings.json | sponge ~/.vim/coc-settings.json
 
@@ -60,4 +68,9 @@ custom_dir () {
 }
 bindkey "\C-q\C-i" custom_dir
 EOF
+
+  if [ -f src/custom.sh ]; then
+    . src/custom.sh
+    provision_setup_custom
+  fi
 }

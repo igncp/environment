@@ -11,6 +11,7 @@
   has_nvidia = builtins.readFile (base_config + "/nvidia") == "yes\n";
   has_rime = builtins.pathExists (base_config + "/rime");
   has_virtualbox = builtins.pathExists (base_config + "/gui-virtualbox");
+  has_vnc = builtins.pathExists (base_config + "/vnc");
 
   unstable_pkgs = import unstable {
     system = pkgs.system;
@@ -37,19 +38,21 @@ in {
       flameshot
       keepass
       libsForQt5.qt5ct
-      realvnc-vnc-viewer
       rofi
       rpi-imager
       slack
       steam
       terminator
-      tigervnc
       unstable_pkgs.google-chrome
       variety
       xclip
       xdotool
       zoom-us
     ]
+    ++ (lib.optional has_vnc [
+      realvnc-vnc-viewer
+      tigervnc
+    ])
     ++ (lib.optional has_copyq copyq);
 
   fonts.packages = with pkgs; [

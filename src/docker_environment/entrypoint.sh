@@ -6,7 +6,7 @@ if [ -z $1 ]; then
   if [ ! -f /root/.check_files/init_docker ]; then
     apt-get update &&
       apt-get install -y \
-        sudo curl xz-utils procps less openssh alacritty
+        sudo curl xz-utils procps less openssh-server alacritty
 
     rm /etc/localtime &&
       ln -s /usr/share/zoneinfo/Asia/Hong_Kong /etc/localtime
@@ -15,16 +15,19 @@ if [ -z $1 ]; then
       echo "igncp ALL=(ALL) NOPASSWD: ALL" >>/etc/sudoers
 
     mkdir -p /home/igncp
-    chown -R igncp:igncp /home/igncp
+    chown igncp:igncp /home/igncp
 
     sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen &&
-      locale-gen
+      locale-gen || true
 
     mkdir -p /root/.check_files &&
       touch /root/.check_files/init_docker
   fi
 
-  sudo -E -u igncp bash /home/igncp/development/environment/src/docker_environment/entrypoint.sh igncp
+  echo "以 igncp 使用者身分執行入口點。"
+  sudo -E -u igncp HOME=/home/igncp bash /home/igncp/development/environment/src/docker_environment/entrypoint.sh igncp
+
+  exit 0
 fi
 
 cd /home/igncp/development/environment
@@ -47,7 +50,7 @@ if [ ! -f ~/.check_files/init_docker ]; then
 
   mkdir -p ~/.fonts
   (cd ~/.fonts && wget https://raw.githubusercontent.com/ryanoasis/nerd-fonts/master/patched-fonts/Monofur/Regular/MonofurNerdFontMono-Regular.ttf)
-  fc-cache -f -v
+  fc-cache -f -v || true
   # UI 應用程式的漢字
   sudo apt install -y fonts-noto
 else

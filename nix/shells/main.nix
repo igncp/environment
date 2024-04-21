@@ -61,10 +61,11 @@ in
 
     kube = pkgs.mkShell {
       packages = with pkgs; [
-        helm
+        argocd
         k3s
         kompose # https://kubernetes.io/docs/tasks/configure-pod-container/translate-compose-kubernetes/
         kubectl
+        kubernetes-helm
         minikube
       ];
     };

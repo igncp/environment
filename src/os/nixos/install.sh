@@ -10,4 +10,4 @@ set -e
 # - 克隆環境儲存庫
 # - 將基本 `configuration.nix` 檔案複製到 `/etc/nixos/configuration.nix`
 #   - 例如 `~/development/environment/nix/nixos/templates/sample-base-config.nix`
-# - 運行：`sudo nixos-rebuild switch --flake . --impure` 在環境倉庫中
+# - 運行：`sudo nixos-rebuild switch --show-trace --flake path:$PWD --impure` 在環境倉庫中

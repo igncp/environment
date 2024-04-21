@@ -30,7 +30,7 @@ set -e
 . src/gaming.sh
 . src/crypto.sh
 
-. src/custom.sh
+. src/end.sh
 
 provision_setup_with_bash() {
   provision_setup_env
@@ -63,5 +63,5 @@ provision_setup_with_bash() {
   provision_setup_php
   provision_setup_raspberry
 
-  provision_setup_custom
+  provision_setup_end
 }

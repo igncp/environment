@@ -163,3 +163,13 @@ my-backward-delete-word() {
 }
 zle -N my-backward-delete-word
 bindkey '^W' my-backward-delete-word
+
+
+if type kubectl >/dev/null 2>&1; then
+  source <(kubectl completion zsh)
+  alias k=kubectl
+fi
+
+if type helm >/dev/null 2>&1; then
+  source <(helm completion zsh)
+fi

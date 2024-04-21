@@ -246,6 +246,7 @@ alias NixListChannels='nix-channel —-list'
 alias NixListGenerations="nix-env --list-generations"
 alias NixListPackages='nix-env --query "*"'
 alias NixRemovePackage='nix-env -e'
+alias NixReplPkgs="nix repl --expr 'import <nixpkgs>{}'"
 
 alias Nix_FileEval='nix-instantiate --eval'
 alias Nix_EnvInstallPackage='nix-env -iA'

@@ -11,12 +11,13 @@ EOF
 
 (cd ~/development/environment/ && bash ./src/main.sh)
 
+# \
+# new-window \; \
+# send-keys "echo foo" C-m \; \
+
 tmux \
-  new-session -s SESSION_NAME \; \
-  send-keys 'cd ~/PATH/TO/FILE; clear' C-m \; \
-  \
-  new-window \; \
-  send-keys "echo foo" C-m \; \
+  new-session -s environment \; \
+  send-keys 'cd ~/development/environment; clear' C-m \; \
   \
   kill-session -t 0 \; \
   select-window -t 0 \;
