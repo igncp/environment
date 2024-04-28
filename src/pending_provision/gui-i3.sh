@@ -14,8 +14,6 @@ if [ "$ENVIRONMENT_THEME" == "dark" ]; then
   sed -i 's|statusline #.*|statusline #ffffff|' ~/.config/i3/config
 fi
 
-echo "exec $HOME/.scripts/wallpaper_update.sh" >>~/.config/i3/config
-
 # I3 needs terminal emulator (e.g. terminator from gui-common) and may require custom fonts (e.g. arch-gui)
 
 if type dunst >/dev/null 2>&1; then

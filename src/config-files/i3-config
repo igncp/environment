@@ -8,42 +8,32 @@ set $mod Mod1
 
 workspace_layout tabbed
 
-# This font is widely installed, provides lots of unicode glyphs, right-to-left
-# text rendering and scalability on retina/hidpi displays (thanks to pango).
-# The size is used for the I3 tabs
+# 這種字體被廣泛安裝，提供了大量的 unicode 字形、從右到左的文字渲染以及在
+# retina/hidpi 顯示器上的可擴展性（感謝 pango）。 此尺寸用於 I3 選項卡
 font pango:DejaVu Sans Mono 10
 
-# Use Mouse+$mod to drag floating windows to their wanted position
-# You can also use $mod+ Right Click to resize a floating window
+# 使用滑鼠+$mod將浮動視窗拖曳到想要的位置您也可以使用$mod+右鍵單擊來調整浮動視窗的大小
 floating_modifier $mod
 
-# start a terminal
 bindsym $mod+Return exec terminator
 
-# kill focused window
 bindsym $mod+Shift+semicolon kill
 
-# split in horizontal orientation
 bindsym $mod+h split h
 
-# split in vertical orientation
 bindsym $mod+v split v
 
-# enter fullscreen mode for the focused container
 bindsym Mod1+Mod4+f fullscreen toggle
 
-# change container layout (stacked, tabbed, toggle split)
 bindsym Mod1+Mod4+s layout stacking
 bindsym Mod1+Mod4+w layout tabbed
 bindsym Mod1+Mod4+e layout toggle split
 
-# toggle tiling / floating
 bindsym $mod+Shift+space floating toggle
 
-# change focus between tiling / floating windows
+# 在平鋪/浮動視窗之間更改焦點
 bindsym $mod+space focus mode_toggle
 
-# focus the child container
 bindsym $mod+p focus child
 
 set $ws0 "0"
@@ -66,7 +56,7 @@ set $wss "s"
 set $wsf "f"
 set $wsg "g"
 
-# switch to workspace
+# 切換到工作區
 bindsym $mod+grave workspace $ws0
 bindsym $mod+1 workspace $ws1
 bindsym $mod+2 workspace $ws2
@@ -87,7 +77,7 @@ bindsym $mod+s workspace $wss
 bindsym $mod+f workspace $wsf
 bindsym $mod+g workspace $wsg
 
-# move focused container to workspace
+# 將焦點容器移到工作區
 bindsym $mod+Shift+grave move container to workspace $ws0
 bindsym $mod+Shift+1 move container to workspace $ws1
 bindsym $mod+Shift+2 move container to workspace $ws2
@@ -108,17 +98,18 @@ bindsym $mod+Shift+s move container to workspace $wss
 bindsym $mod+Shift+f move container to workspace $wsf
 bindsym $mod+Shift+g move container to workspace $wsg
 
-# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+# 就地重新啟動 i3（保留您的佈局/會話，可用於升級 i3）
 bindsym Mod1+Mod4+r restart
-# exit i3 (logs you out of your X session)
+
+# exit i3（退出 X 會話）
 bindsym Mod1+Mod4+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
-# resize window (you can also use the mouse for that)
+# 調整視窗大小（您也可以使用滑鼠）
 mode "resize" {
-  # Pressing left will shrink the window’s width.
-  # Pressing right will grow the window’s width.
-  # Pressing up will shrink the window’s height.
-  # Pressing down will grow the window’s height.
+  # 按下左鍵將縮小視窗的寬度。
+  # 按下向右將增加視窗的寬度。
+  # 向上按會縮小視窗的高度。
+  # 按下將增加視窗的高度。
   bindsym Left resize shrink width 10 px or 10 ppt
   bindsym Down resize grow height 10 px or 10 ppt
   bindsym Up resize shrink height 10 px or 10 ppt
@@ -128,7 +119,7 @@ mode "resize" {
   bindsym $mod+Shift+Up move up
   bindsym $mod+Shift+Right move right
 
-  # back to normal: Enter or Escape
+  # 恢復正常：進入或退出
   bindsym Return mode "default"
   bindsym Escape mode "default"
 }
@@ -147,7 +138,7 @@ bindsym $mod+Shift+Right exec focus parent; focus right
 
 new_window 1pixel
 
-#colors:                border  backgr. text    ind.
+# 顏色                  邊界    背景    文字    指標
 client.focused          #000000 #000000 #ffffff #000000
 client.focused_inactive #000000 #222222 #ffffff #222222
 client.unfocused        #888888 #666666 #ffffff #222222
@@ -162,7 +153,7 @@ bindsym --release $mod+Shift+n exec "dunstctl set-paused true; notify-send 'Time
 bindsym --release $mod+Shift+h exec "i3-msg move workspace to output left &>> /tmp/i3-log"
 bindsym --release $mod+Shift+l exec "i3-msg move workspace to output right &>> /tmp/i3-log"
 
-# Run xprop to get the class or title
+# 運行 xprop 以取得班級或頭銜
 assign [class="Google Chrome"] $ws2
 assign [class="Slack"] $ws4
 assign [title="Zoom"] $ws5
@@ -178,18 +169,14 @@ bindsym --release Mod1+Shift+b exec "/home/igncp/development/environment/src/scr
 
 bindsym Mod1+d exec "rofi -show combi -font 'hack 20' -combi-modi drun,window,ssh"
 bindsym Mod1+c exec "rofi -show window -font 'hack 20' -theme-str 'window { background-color:#cfc;}'"
-# Sudo rofi
+
 bindsym Mod1+Shift+d exec "rofi -show combi -font 'hack 20' -combi-modi drun,window,ssh \
   -run-command 'lxqt-sudo {cmd}' -theme-str 'window { background-color:#fcc;}'"
-
-# i3-gaps
-gaps inner 5
-gaps outer -8
 
 bindsym $mod+Tab workspace back_and_forth
 
 bar {
-  binding_mode_indicator no # otherwise it shows as urgent when changing mode
+  binding_mode_indicator no # 否則改變模式時顯示緊急
   font pango:Monospace 10
   mode hide
   status_command i3blocks
@@ -211,8 +198,10 @@ bar {
 
 bindsym Mod4+Shift+c exec --no-startup-id "i3-msg bar mode toggle"
 
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% #increase sound volume
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5% #decrease sound volume
-bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% # 增加音量
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5% # 降低音量
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # 靜音
 
 exec_always --no-startup-id sh /home/igncp/.scripts/gui_daemons.sh
+
+exec /home/igncp/.scripts/wallpaper_update.sh

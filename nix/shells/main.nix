@@ -1,5 +1,4 @@
-# Shell aliases should  be defined in the aliases files, checking if binary is
-# available
+# Shell 別名應在別名檔案中定義，檢查二進位檔案是否可用
 {
   pkgs,
   unstable,
@@ -61,8 +60,8 @@ in
 
     kube = pkgs.mkShell {
       packages = with pkgs; [
+        # k3s # 評論是因為與 kubectl 衝突
         argocd
-        k3s
         kompose # https://kubernetes.io/docs/tasks/configure-pod-container/translate-compose-kubernetes/
         kubectl
         kubernetes-helm
@@ -94,7 +93,6 @@ in
           if is_linux
           then [
             bpftrace
-            # cpuid
             iproute2
             sysstat
             tiptop
@@ -146,8 +144,8 @@ in
         lua
         luajit
 
-        # For local installs, use `--tree`: https://leafo.net/guides/customizing-the-luarocks-tree.html
-        # It requires to set up the paths to load
+        # 對於本地安裝，請使用 `--tree`: https://leafo.net/guides/customizing-the-luarocks-tree.html
+        # 需要設定載入路徑
         luarocks
       ];
     };

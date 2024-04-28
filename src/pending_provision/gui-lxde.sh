@@ -1,8 +1,8 @@
 # @TODO
 # gui-lxde START
 
-echo 'pcmanfm -w "$1"' >~/.set-background.sh
-chmod +x ~/.set-background.sh
+echo 'pcmanfm -w "$1"' >~/.scripts/set_background.sh
+chmod +x ~/.scripts/set_background.sh
 sed -i "1i(sleep 5s && $HOME/.scripts/wallpaper_update.sh 2>&1 > /dev/null) &" ~/.xinitrc
 
 # http://xahlee.info/linux/linux_lxde_add_key_shortcuts.html

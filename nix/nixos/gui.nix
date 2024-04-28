@@ -7,7 +7,7 @@
   base_config = ../../project/.config;
 
   has_copyq = builtins.pathExists (base_config + "/copyq");
-  has_i3 = builtins.pathExists (base_config + "/gui-i3");
+  has_cinnammon = builtins.pathExists (base_config + "/gui-cinnammon");
   has_nvidia = builtins.readFile (base_config + "/nvidia") == "yes\n";
   has_rime = builtins.pathExists (base_config + "/rime");
   has_virtualbox = builtins.pathExists (base_config + "/gui-virtualbox");
@@ -22,7 +22,7 @@ in {
     []
     ++ (lib.optional has_nvidia ./gui-nvidia.nix)
     ++ (lib.optional has_rime ./gui-rime.nix)
-    ++ (lib.optional has_i3 ./gui-i3.nix)
+    ++ (lib.optional has_cinnammon ./gui-cinnammon.nix)
     ++ (lib.optional has_virtualbox ./gui-virtualbox.nix);
 
   services.flatpak.enable = true;
@@ -38,7 +38,7 @@ in {
       flameshot
       keepass
       libsForQt5.qt5ct
-      rofi
+      pavucontrol
       rpi-imager
       slack
       steam
@@ -48,6 +48,13 @@ in {
       xclip
       xdotool
       zoom-us
+
+      # I3
+
+      lxappearance
+      lxqt.lxqt-sudo
+      picom
+      rofi
     ]
     ++ (lib.optional has_vnc [
       realvnc-vnc-viewer
@@ -66,27 +73,46 @@ in {
   # 啟用 X11 視窗系統。
   services.xserver.enable = true;
 
-  # 啟用 Cinnamon 桌面環境
+  services.xserver.windowManager.i3 = {
+    enable = true;
+    extraPackages = with pkgs; [
+      i3status
+      i3lock
+      i3blocks
+    ];
+  };
+
+  xdg.portal.enable = true;
+  xdg.portal.extraPortals = [
+    pkgs.xdg-desktop-portal-gtk
+  ];
+  xdg.portal.config.common.default = "*";
+
   services.xserver.displayManager.lightdm.enable = true;
-  services.xserver.desktopManager.cinnamon.enable = true;
-  services.xserver.displayManager.defaultSession = "cinnamon";
+  services.xserver.displayManager.defaultSession = "none+i3";
 
   services.logind.lidSwitch = "ignore";
+  services.logind.extraConfig = ''
+    HandlePowerKey=suspend
+    IdleAction=suspend
+    IdleActionSec=20m
+  '';
+
+  # 螢幕鎖
+  programs.xss-lock.enable = true;
 
   services.xserver = {
     libinput.enable = true;
   };
 
-  # Configure keymap in X11
   services.xserver = {
     layout = "us";
     xkbVariant = "";
   };
 
-  # Enable CUPS to print documents.
   services.printing.enable = true;
 
-  # Enable sound with pipewire.
+  # 聲音的
   sound.enable = true;
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
@@ -95,22 +121,16 @@ in {
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-    # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
-
-    # use the example session manager (no others are packaged yet so this is enabled by default,
-    # no need to redefine it in your config for now)
-    #media-session.enable = true;
   };
 
-  # Allow unfree packages
+  # 允許非免費包
   nixpkgs.config.allowUnfree = true;
 
   programs._1password.enable = true;
   programs._1password-gui = {
     enable = true;
-    # Certain features, including CLI integration and system authentication support,
-    # require enabling PolKit integration on some desktop environments (e.g. Plasma).
+    # 某些功能，包括 CLI 整合和系統身份驗證支持，需要在某些桌面環境（例如
+    # Plasma）上啟用 PolKit 整合。
     polkitPolicyOwners = ["igncp"];
   };
 }

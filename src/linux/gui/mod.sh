@@ -72,27 +72,6 @@
 #     // - Power off the device after pairing with the 1st OS, copy it in the 2nd,
 #     //   reboot (without reboot, it didn't work), and only then power on device
 
-#     let set_background_path = context.system.get_home_path(".scripts/set-background.sh");
-#     context.files.append(
-#         &set_background_path,
-#         r###"
-# feh --bg-fill "$1"
-# cat ~/.fehbg | grep --color=never -o '\/home\/.*jpg' | sed 's|^|Image: |'
-# "###,
-#     );
-#     let variety_dir = context.system.get_home_path(".config/variety/Downloaded");
-#     let wallpaper_update_path = context.system.get_home_path(".scripts/wallpaper_update.sh");
-#     context.files.append(
-#         &wallpaper_update_path,
-#         &format!(
-#             r###"
-# if [ -d {variety_dir} ]; then
-#   find {variety_dir} -type f -name *.jpg | shuf -n 1 | xargs -I {{}} sh ~/.set-background.sh {{}}
-# fi
-# "###
-#         ),
-#     );
-
 #     [set_background_path, wallpaper_update_path]
 #         .iter()
 #         .for_each(|file_path| {

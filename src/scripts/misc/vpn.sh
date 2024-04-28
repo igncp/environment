@@ -7,7 +7,7 @@ cd ~/vpn
 sudo chown -R "$USER" ~/vpn
 
 if [ ! -f ./pass.txt ]; then
-  echo "Please create a file named pass.txt with your VPN credentials"
+  echo "請使用您的 VPN 憑證建立名為 pass.txt 的文件"
   exit 1
 fi
 
@@ -17,8 +17,14 @@ USED_PROFILE=${USED_PROFILE:-$(find . -name '*.ovpn' | sort -V | head -n 1)}
 sed -i 's|^auth-user-pass.*$|auth-user-pass pass.txt|' \
   "$USED_PROFILE"
 
+EXTRA_ARGS=()
+
+if [ ! -f /etc/os-release ] || [ -z "$(grep -i 'nixos' /etc/os-release)" ]; then
+  EXTRA_ARGS+=("--up" "$UPDATE_SCRIPT")
+  EXTRA_ARGS+=("--down" "$UPDATE_SCRIPT")
+fi
+
 sudo --preserve-env=PATH env openvpn \
   --config "$USED_PROFILE" \
   --script-security 2 \
-  --up "$UPDATE_SCRIPT" \
-  --down "$UPDATE_SCRIPT"
+  "${EXTRA_ARGS[@]}"

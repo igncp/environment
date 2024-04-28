@@ -30,8 +30,6 @@ sudo sysctl --system
 containerd config default | sudo tee /etc/containerd/config.toml >/dev/null 2>&1
 sudo sed -i 's/SystemdCgroup \= false/SystemdCgroup \= true/g' /etc/containerd/config.toml
 
-sudo kubeadm config images pull
-
 # 安裝 helm
 curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
 chmod 700 get_helm.sh
@@ -46,8 +44,23 @@ EOF
 
 ### 主節點
 
-- `kubeadm init --pod-network-cidr=10.244.0.0/16`: flannel 需要 `--pod-network-cidr`
-- 安裝 flannel: https://github.com/flannel-io/flannel?tab=readme-ov-file#deploying-flannel-manually
+- `sudo kubeadm init --pod-network-cidr=10.244.0.0/16`: flannel 需要 `--pod-network-cidr`
+```
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+# 安裝 flannel:
+# https://github.com/flannel-io/flannel?tab=readme-ov-file#deploying-flannel-manually
+
+# 安裝“Nginx Ingress Controller”
+# https://kubernetes.github.io/ingress-nginx/deploy/
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.10.1/deploy/static/provider/cloud/deploy.yaml
+```
+
+## `kustomize`
+
+- `k kustomize . | kubectl apply -f -`
 
 ## ArgoCD
 
@@ -57,6 +70,18 @@ kubectl create namespace argocd
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 # 公開 UI（更改“IP”）
 kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer", "externalIPs": ["IP"]}}'
+# 也可以指向它的Ingress
+- kubectl -n argocd create ingress argocd --class=nginx --rule argocd.local/*=argocd-server:443
+```yaml
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+...
+port:
+  name: https
+```
 # 取得第一個密碼（也可以使用 argo cli 完成）
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
 ```
@@ -91,6 +116,16 @@ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.pas
     - `kubectl expose deployment DEPLOYMENT --type=LoadBalancer --port=PORT`
     - 例子: `kubectl expose deployment hello-node --type=LoadBalancer --port=8080`
 
+- 設定Nginx Ingress Controller:
+```bash
+kubectl create deployment demo --image=httpd --port=80
+kubectl create ingress demo --class=nginx --rule www.demo.io/=demo:80
+# 必須編輯此服務並設定: `externalTrafficPolicy: Cluster`
+kubectl -n ingress-nginx edit svc ingress-nginx-controller # 新增外部IP
+
+curl --resolve www.demo.io:8080:192.168.128.133 http://www.demo.io:8080
+```
+
 - 打掃乾淨:
     - `kubectl delete service hello-node`
     - `kubectl delete deployment hello-node`
@@ -109,6 +144,23 @@ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.pas
 - 設定預設storageclass
     - `kubectl patch storageclass STORAGE_CLASS_NAME -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'`
 
+- 使用編輯器編輯資源
+    - `kubectl edit svc foo`
+
+- 從部署重新啟動 Pod: `k rollout restart deployment wordpress-mysql`
+
+- 等待部署完成: `kubectl rollout status deploy/bgd -n bgd`
+
+- 刪除Namespace中的所有資源: `kubectl delete namespace foo`
+
+- 安裝指標伺服器: https://gist.github.com/NileshGule/8f772cf04ea6ae9c76d3f3e9186165c2
+
+- 連接到私有 docker 註冊表: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+
+- 為新“node”加入建立令牌: `kubeadm token create --print-join-command`
+
+- 無需等待即可刪除 Pod（不建議）: `k delete pod FOO --grace-period=0 --force`
+
 ## `minikube`
 
 - 清單:
@@ -122,3 +174,9 @@ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.pas
 
 - 從不同範圍的連接埠開始:
     - `minikube start --extra-config=apiserver.service-node-port-range=80-30000`
+
+## API參考
+
+- Pods: https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/
+- Service: https://kubernetes.io/docs/reference/kubernetes-api/service-resources/service-v1/
+- Ingress: https://kubernetes.io/docs/reference/kubernetes-api/service-resources/ingress-v1/
