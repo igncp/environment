@@ -6,7 +6,7 @@
 in {
   home.username = "igncp";
   home.homeDirectory = home_dir;
-  home.stateVersion = "23.05";
+  home.stateVersion = "23.11";
   home.packages = [];
   programs.home-manager.enable = true;
 }

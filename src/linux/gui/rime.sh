@@ -39,26 +39,6 @@
 #         .system
 #         .get_home_path(".config/ibus/rime/default.yaml");
 
-#     if !Path::new(
-#         &context
-#             .system
-#             .get_home_path(".config/ibus/rime/default.yaml"),
-#     )
-#     .exists()
-#     {
-#         System::run_bash_command(&format!(
-#             r###"
-# mkdir -p ~/misc ~/.config/ibus/rime
-# rm -rf ~/misc/plum
-# git clone https://github.com/rime/plum.git ~/misc/plum
-# cd ~/misc/plum
-# ./rime-install rime-cantonese
-# ./rime-install gkovacs/rime-japanese
-# cp ~/development/environment/src/config-files/rime-config.yaml {config_path}
-# "###,
-#         ));
-#     }
-
 #     // On RIME, press F4 to switch
 #     // On IBusSettings, add English and Chinese - RIME
 #     if !Path::new(
@@ -85,16 +65,6 @@
 # "###,
 #         ),
 #     );
-
-#     if Path::new(&config_path).exists() {
-#         std::fs::copy(
-#             &context
-#                 .system
-#                 .get_home_path("development/environment/src/config-files/rime-config.yaml"),
-#             &config_path,
-#         )
-#         .unwrap();
-#     }
 
 #     //   echo 'GTK_THEME=Menta /usr/bin/ibus-daemon -rxd' >> ~/.scripts/gui_daemons.sh
 # }

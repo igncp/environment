@@ -41,7 +41,7 @@ in {
       QT_QPA_PLATFORMTHEME = lib.mkForce "qt5ct";
     };
 
-    i18n.defaultLocale = "en_US.UTF-8";
+    i18n.defaultLocale = "zh_TW.UTF-8";
 
     # Updates: /etc/nix/nix.conf
     nix.extraOptions = ''

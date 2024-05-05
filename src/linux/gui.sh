@@ -3,6 +3,13 @@
 set -e
 
 provision_setup_linux_gui() {
+  cat >>~/.shell_aliases <<EOF
+if type xclip >/dev/null 2>&1; then
+  alias XClipCopy='xclip -selection clipboard' # usage: echo foo | XClipCopy
+  alias XClipPaste='xclip -selection clipboard -o'
+fi
+EOF
+
   if [ ! -f "$PROVISION_CONFIG"/gui ]; then
     return
   fi
@@ -17,11 +24,6 @@ provision_setup_linux_gui() {
         touch ~/.check-files/gui-xorg
       fi
     fi
-
-    cat >>~/.shell_aliases <<EOF
-alias XClipCopy='xclip -selection clipboard' # usage: echo foo | XClipCopy
-alias XClipPaste='xclip -selection clipboard -o'
-EOF
 
     if ! type crond >/dev/null 2>&1; then
       if [ "$IS_ARCH" == "1" ]; then
@@ -86,4 +88,16 @@ if [ -d ~/.config/variety/Downloaded ]; then
 fi
 EOF
   chmod +x ~/.scripts/wallpaper_update.sh
+
+  if [ ! -f ~/.config/ibus/rime/default.yaml ]; then
+    mkdir -p ~/misc ~/.config/ibus/rime
+    rm -rf ~/misc/plum
+    git clone https://github.com/rime/plum.git ~/misc/plum
+    cd ~/misc/plum
+    ./rime-install rime-cantonese
+    ./rime-install gkovacs/rime-japanese
+  fi
+
+  cp ~/development/environment/src/config-files/rime-config.yaml \
+    ~/.config/ibus/rime/default.yaml
 }

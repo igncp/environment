@@ -29,6 +29,7 @@ sudo sysctl --system
 # 設定 containerd
 containerd config default | sudo tee /etc/containerd/config.toml >/dev/null 2>&1
 sudo sed -i 's/SystemdCgroup \= false/SystemdCgroup \= true/g' /etc/containerd/config.toml
+sudo systemctl restart containerd
 
 # 安裝 helm
 curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
@@ -40,12 +41,16 @@ source <(kubectl completion bash)
 alias k=kubectl
 complete -F __start_kubectl k
 EOF
+
+# 這可能需要幾分鐘的時間
+sudo kubeadm config images pull
 ```
 
 ### 主節點
 
 - `sudo kubeadm init --pod-network-cidr=10.244.0.0/16`: flannel 需要 `--pod-network-cidr`
-```
+
+```bash
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
@@ -56,6 +61,9 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 # 安裝“Nginx Ingress Controller”
 # https://kubernetes.github.io/ingress-nginx/deploy/
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.10.1/deploy/static/provider/cloud/deploy.yaml
+
+# 單節點集群
+# https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/#control-plane-node-isolation
 ```
 
 ## `kustomize`
@@ -72,7 +80,8 @@ kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/st
 kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer", "externalIPs": ["IP"]}}'
 # 也可以指向它的Ingress
 - kubectl -n argocd create ingress argocd --class=nginx --rule argocd.local/*=argocd-server:443
-```yaml
+
+###
 metadata:
   annotations:
     kubernetes.io/ingress.class: nginx
@@ -81,7 +90,8 @@ metadata:
 ...
 port:
   name: https
-```
+###
+
 # 取得第一個密碼（也可以使用 argo cli 完成）
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
 ```
@@ -122,6 +132,11 @@ kubectl create deployment demo --image=httpd --port=80
 kubectl create ingress demo --class=nginx --rule www.demo.io/=demo:80
 # 必須編輯此服務並設定: `externalTrafficPolicy: Cluster`
 kubectl -n ingress-nginx edit svc ingress-nginx-controller # 新增外部IP
+# externalIPs:
+# - 1.1.1.1
+# 創作ingress時記得設定ingress class
+# 請遵循中的安裝指南: https://kubernetes.github.io/ingress-nginx/deploy/baremetal/
+# 使用 baremetal 安裝時，: `hostNetwork: true`
 
 curl --resolve www.demo.io:8080:192.168.128.133 http://www.demo.io:8080
 ```
@@ -160,6 +175,9 @@ curl --resolve www.demo.io:8080:192.168.128.133 http://www.demo.io:8080
 - 為新“node”加入建立令牌: `kubeadm token create --print-join-command`
 
 - 無需等待即可刪除 Pod（不建議）: `k delete pod FOO --grace-period=0 --force`
+
+- 新增 Web UI 儀表板: https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/
+    - kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443
 
 ## `minikube`
 

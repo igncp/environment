@@ -2,6 +2,7 @@ alias ag="ag --hidden  --color-match 7"
 alias agg='ag --hidden --ignore node_modules --ignore .git'
 alias b='bash'
 alias cp="cp -r"
+alias scp="scp -r"
 alias di='SudoNix dua interactive'
 alias dp="docker ps -a"
 alias f='fd --type f .'
@@ -391,7 +392,7 @@ NixEnvironmentUpgrade() {
   echo "環境升級了，現在可以清理GC、清理空間了"
 }
 
-alias HomeManagerInitFlake='nix run home-manager/release-23.05 -- init'
+alias HomeManagerInitFlake='nix run home-manager/release-23.11 -- init'
 alias HomeManagerDeleteGenerations='home-manager expire-generations "-1 second"'
 
 NixInputSync() {
@@ -503,4 +504,13 @@ fi
 if type nodenv >/dev/null 2>&1; then
   export NODENV_ROOT="$HOME/nix-dirs/nodenv"
   eval "$(nodenv init -)"
+fi
+
+if type kubectl >/dev/null 2>&1; then
+  source <(kubectl completion zsh)
+  alias k=kubectl
+fi
+
+if type helm >/dev/null 2>&1; then
+  source <(helm completion zsh)
 fi

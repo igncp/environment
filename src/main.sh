@@ -10,6 +10,7 @@ fi
 . src/entry.sh
 
 provision_main() {
+  sudo echo '在開始時詢問 sudo' >/dev/null
   provision_setup_with_bash
   touch ~/.check-files/first-run
 

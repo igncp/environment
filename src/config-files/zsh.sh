@@ -47,10 +47,8 @@ scriptsFull () {
   LBUFFER=${text_to_add}
   zle accept-line # enter
 }
-scriptsPrint () {
-  text_to_add="$(__FZFScriptsRaw)"
-  LBUFFER=${text_to_add}
-  zle accept-line # enter
+sourceConfig () {
+  . ~/.shell_aliases
 }
 openFzf () {
   FILE=$(fd . --type f | fzf)
@@ -70,7 +68,7 @@ zle -N openEnvironment
 zle -N openFiles
 zle -N openFzf
 zle -N scriptsFull
-zle -N scriptsPrint
+zle -N sourceConfig
 zle -N openTmuxPane
 
 bindkey "\C-q\C-q" nixShells
@@ -79,7 +77,7 @@ bindkey "\C-q\C-a" openTmuxPane
 bindkey "\C-q\C-s" scriptsFull
 bindkey "\C-q\C-l" openFzf
 bindkey "\C-q\C-m" openEnvironment
-bindkey "\C-p" scriptsPrint
+bindkey "\C-p" sourceConfig
 bindkey "\C-k" edit-command-line
 
 export WORDCHARS='*?_-.[]~=&;!#$%^(){}<>/|'
@@ -163,13 +161,3 @@ my-backward-delete-word() {
 }
 zle -N my-backward-delete-word
 bindkey '^W' my-backward-delete-word
-
-
-if type kubectl >/dev/null 2>&1; then
-  source <(kubectl completion zsh)
-  alias k=kubectl
-fi
-
-if type helm >/dev/null 2>&1; then
-  source <(helm completion zsh)
-fi

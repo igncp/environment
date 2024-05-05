@@ -24,7 +24,7 @@
 in {
   home.username = user;
   home.homeDirectory = home_dir;
-  home.stateVersion = "23.05";
+  home.stateVersion = "23.11";
   home.packages =
     []
     ++ cli-pkgs.pkgs-list

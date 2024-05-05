@@ -9,7 +9,6 @@
   has_copyq = builtins.pathExists (base_config + "/copyq");
   has_cinnammon = builtins.pathExists (base_config + "/gui-cinnammon");
   has_nvidia = builtins.readFile (base_config + "/nvidia") == "yes\n";
-  has_rime = builtins.pathExists (base_config + "/rime");
   has_virtualbox = builtins.pathExists (base_config + "/gui-virtualbox");
   has_vnc = builtins.pathExists (base_config + "/vnc");
 
@@ -19,9 +18,8 @@
   };
 in {
   imports =
-    []
+    [./gui-rime.nix]
     ++ (lib.optional has_nvidia ./gui-nvidia.nix)
-    ++ (lib.optional has_rime ./gui-rime.nix)
     ++ (lib.optional has_cinnammon ./gui-cinnammon.nix)
     ++ (lib.optional has_virtualbox ./gui-virtualbox.nix);
 
@@ -30,6 +28,7 @@ in {
   environment.systemPackages = with pkgs;
     [
       acpi
+      anki-bin
       arandr
       blueberry
       dropbox
