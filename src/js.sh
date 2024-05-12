@@ -2,6 +2,7 @@
 
 set -e
 
+. src/js/nodenv.sh
 . src/js/react_native.sh
 . src/js/ts.sh
 . src/js/vue.sh
@@ -156,6 +157,7 @@ EOF
     yarn
   fi
 
+  provision_setup_nodenv
   provision_setup_js_ts
   provision_setup_js_vue
   provision_setup_js_yarn_workspaces

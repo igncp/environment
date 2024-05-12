@@ -82,7 +82,7 @@ provision_setup_env() {
 set -x
 rsync -rh --delete /etc/hosts "$BACKUP_PATH/hosts"
 rsync -rh --delete ~/development/environment/ "$BACKUP_PATH/environment/"
-# Examples, uncomment via cusom.sh to apply:
+# 這些是範例，請取消註解 "~/development/environment/src/custom.sh" 檔案中的這些行以套用 :
 # rsync -rh --delete ~/Downloads/ "$BACKUP_PATH/Downloads/"
 # rsync -rh --delete ~/Document/ "$BACKUP_PATH/Documents/"
 # rsync -rh --delete ~/.ssh/ "$BACKUP_PATH/ssh/"

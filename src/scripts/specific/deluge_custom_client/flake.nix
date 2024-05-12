@@ -1,5 +1,4 @@
 {
-  # Keep these in sync with the environment repo by using `NixInputSync`
   inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
   inputs.unstable.url = "github:nixos/nixpkgs/nixos-unstable";
   inputs.flake-utils.url = "github:numtide/flake-utils";

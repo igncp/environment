@@ -35,10 +35,11 @@ in {
 
     virtualisation.docker.enable = true;
     environment.variables = {
-      CURL_CA_BUNDLE = "/etc/pki/tls/certs/ca-bundle.crt"; # Added for curl
+      CURL_CA_BUNDLE = "/etc/pki/tls/certs/ca-bundle.crt"; # 為 curl 添加
       OPENSSL_DEV = pkgs.openssl.dev;
-      PKG_CONFIG_PATH = "${pkgs.openssl.dev}/lib/pkgconfig"; # Added for Rust
+      PKG_CONFIG_PATH = "${pkgs.openssl.dev}/lib/pkgconfig"; # 為 rust 添加
       QT_QPA_PLATFORMTHEME = lib.mkForce "qt5ct";
+      LD_LIBRARY_PATH_VAL = "${pkgs.stdenv.cc.cc.lib}/lib"; # 用於修復nodenv二進位文件
     };
 
     i18n.defaultLocale = "zh_TW.UTF-8";

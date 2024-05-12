@@ -122,16 +122,8 @@ in
     };
 
     nodenv = pkgs.mkShell {
+      # 設定位於 .shellrc 中
       packages = [pkgs.nodenv];
-      shellHook = ''
-        mkdir -p $HOME/nix-dirs/nodenv/plugins
-        # This is used in the provision to init nodenv
-        export NODENV_ROOT="$HOME/nix-dirs/nodenv"
-        eval "$(nodenv init -)"
-        if [ ! -d $HOME/nix-dirs/nodenv/plugins/node-build ]; then
-          git clone https://github.com/nodenv/node-build.git "$(nodenv root)"/plugins/node-build
-        fi
-      '';
     };
 
     rust = pkgs.mkShell {
@@ -154,6 +146,16 @@ in
       packages = with pkgs; [
         ruby
       ];
+    };
+
+    ruby-rbenv-install = pkgs.mkShell {
+      packages = with pkgs; [
+        libyaml
+        zlib
+      ];
+
+      # 需要稍後能夠運行“gem install bundler”
+      optflags = "-Wno-error=implicit-function-declaration";
     };
 
     video = pkgs.mkShell {
@@ -208,6 +210,13 @@ in
       packages = with pkgs; [
         ansible
         ansible-lint
+      ];
+    };
+
+    haskell = pkgs.mkShell {
+      packages = [
+        (pkgs.haskellPackages.ghcWithPackages (pkgs: [pkgs.turtle]))
+        pkgs.haskell-language-server
       ];
     };
   }

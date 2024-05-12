@@ -33,13 +33,6 @@ EOF
 
   # Enable VNC: https://www.pitunnel.com/doc/access-vnc-remote-desktop-raspberry-pi-over-internet
 
-  if [ "$IS_DEBIAN" == "1" ]; then
-    if [ ! -f ~/.check-files/raspi-tools ]; then
-      sudo apt install -y linux-tools-raspi
-      touch ~/.check-files/raspi-tools
-    fi
-  fi
-
   # Install desktop environment:
   # `sudo apt install xserver-xorg raspberrypi-ui-mods`
 
@@ -49,7 +42,7 @@ EOF
   # 可以建立一個systemd服務:
   # `ExecStart=/usr/lib/aarch64-linux-gnu/kodi/kodi.bin`
 
-  # https://retropie.org.uk/docs/Nintendo-Switch-Controllers/
+  # Retropie: Check in the `gaming.sh`
 
   # To over-clock: https://www.zdnet.com/article/upgrading-your-pc-this-monster-graphics-card-is-200-off/
   # In `/boot/config.txt` (only `arm_freq` is present in the config, but commented out)

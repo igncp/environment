@@ -74,7 +74,8 @@ USBClone() {
   fi
   dd if=$I of=$O bs=1G count=10 status=progress
 } # Example: I=/dev/sdb O=/dev/sdc USBClone
-Vidir() { vidir -v -; }
+
+Vidir() { vidir -v -; } # To remove files, remove the lines
 VidirFind() { find $@ | vidir -v -; }
 VisudoUser() { sudo env EDITOR=vim visudo -f /etc/sudoers.d/$1; }
 alias ClipboardSSHSend="clipboard_ssh send"
@@ -280,7 +281,7 @@ ClearSpace() {
     return
   fi
 
-  read "?您應該使用 NixGCRoots 檢查 GC 根。 按 ctrl-c 停止。 "
+  read "?你呼叫這個函數了嗎 'NixGCRootsDelete'?。 按 ctrl-c 停止。 "
 
   sudo echo ''
 
@@ -339,6 +340,7 @@ NixGCRoots() {
 
   nix-store --gc --print-roots 2>&1 | ag -v removing | ag -v censored | awk '{ print $1; }'
 }
+alias NixGCRootsDelete="bash ~/development/environment/src/scripts/toolbox/nix_garbage_collector_roots.sh -"
 
 NixListShellPkgs() {
   echo $PATH | tr ':' '\n' | ag '/nix/store' | sed 's|^[^-]*-||' | sort | sed 's|-[.0-9]*/bin||' | uniq | l
@@ -385,6 +387,7 @@ NixEnvironmentUpgrade() {
   nix flake lock --update-input home-manager
   nix flake lock --update-input flake-utils
   NixUpdateChannel
+  bash ~/development/environment/src/scripts/toolbox/nix_sync_input.sh ALL
 
   echo "其他手動更新:"
   grep -r '@upgrade' nix # @TODO: 透過取得最後的 git sha 自動升級它們
@@ -394,55 +397,6 @@ NixEnvironmentUpgrade() {
 
 alias HomeManagerInitFlake='nix run home-manager/release-23.11 -- init'
 alias HomeManagerDeleteGenerations='home-manager expire-generations "-1 second"'
-
-NixInputSync() {
-  if [ -z "$1" ]; then
-    echo "Missing input"
-    return
-  fi
-  ENV_INPUT=$(nix flake metadata --json ~/development/environment | jq -r '.locks.nodes."'"$1"'"')
-  if [ -z "$ENV_INPUT" ]; then
-    echo "Input not found"
-    return
-  fi
-  DIR=${2:-.}
-  if [ ! -f "$DIR"/flake.lock ]; then
-    ls -lah "$DIR"
-    echo "flake.lock not found"
-    return
-  fi
-  if [ -z "$(cat $DIR/flake.lock | grep $1)" ]; then
-    echo "Input not found in flake.lock"
-    return
-  fi
-  if [ -n "$(find $DIR -maxdepth 0 | grep 'development.environment')" ]; then
-    echo "You can't use this command in the environment repo"
-    return
-  fi
-  cat $DIR/flake.lock | jq '.nodes."'"$1"'"'" = $ENV_INPUT"'' | sponge $DIR/flake.lock
-  echo "Input '$1' updated in '$DIR/flake.lock'"
-}
-
-NixInputSyncAll() {
-  DIR="${1:-./}"
-
-  # 僅當變數值以“/”結尾時，此腳本才有效
-  if [[ "$DIR" != */ ]]; then
-    DIR="$DIR/"
-  fi
-
-  if [ ! -f "$DIR"/flake.lock ]; then
-    ls -lah "$DIR"
-    echo "flake.lock not found"
-    return
-  fi
-
-  INPUTS=$(nix flake metadata --json "$DIR" | jq -r '.locks.nodes | keys[]' | grep -vE '(systems|root)')
-
-  echo "$INPUTS" | while read -r INPUT; do
-    NixInputSync "$INPUT" "$DIR"
-  done
-}
 
 # The space is important to be able to also run other aliases (not only Nix
 # binaries):
@@ -490,15 +444,17 @@ DockerEnvironment() {
 }
 
 DockerEnvironmentAlacritty() {
-  START_SCRIPT='alacritty -v --config-file /home/igncp/.config/alacritty/alacritty.yml -e bash -c ". /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh && zsh"' \
+  START_SCRIPT='alacritty -v --config-file '$HOME'/.config/alacritty/alacritty.yml -e bash -c ". /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh && zsh"' \
     bash src/docker_environment/run.sh
 }
 
 if type ruby >/dev/null 2>&1; then
-  mkdir -p "$HOME/nix-dirs/ruby-gems"
-  export GEM_HOME="$HOME/nix-dirs/ruby-gems"
-  export GEM_PATH="$GEM_HOME"
-  export PATH="$GEM_HOME/bin:$PATH"
+  if [ ! -f ~/development/environment/project/.config/ruby_system ]; then
+    mkdir -p "$HOME/nix-dirs/ruby-gems"
+    export GEM_HOME="$HOME/nix-dirs/ruby-gems"
+    export GEM_PATH="$GEM_HOME"
+    export PATH="$GEM_HOME/bin:$PATH"
+  fi
 fi
 
 if type nodenv >/dev/null 2>&1; then

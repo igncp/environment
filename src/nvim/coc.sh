@@ -109,6 +109,12 @@ EOF
       "command": "$HOME/nix-dirs/.kotlin-language-server/server/build/install/server/bin/kotlin-language-server",
       "filetypes": ["kotlin"]
     },
+    "haskell": {
+      "command": "haskell-language-server-wrapper",
+      "args": ["--lsp"],
+      "rootPatterns": ["*.cabal", "stack.yaml", "cabal.project", "package.yaml", "hie.yaml"],
+      "filetypes": ["haskell", "lhaskell"]
+    },
     "terraform": {
       "command": "terraform-ls",
       "args": ["serve"],

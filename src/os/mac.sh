@@ -15,6 +15,7 @@ provision_setup_os_mac() {
   cat >>~/.shellrc <<"EOF"
 umask 027
 export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
+export PATH="/opt/homebrew/bin:$PATH"
 EOF
 
   echo 'set backspace=indent,eol,start' >>~/.vimrc

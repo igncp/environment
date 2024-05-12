@@ -11,16 +11,16 @@ provision_setup_nix() {
 
     if [ "$IS_MAC" ]; then
       sh <(curl -L https://nixos.org/nix/install)
-      sudo mkdir -p /nix/var/nix/profiles/per-user/igncp
-      sudo chown igncp /nix/var/nix/profiles/per-user/igncp
+      sudo mkdir -p /nix/var/nix/profiles/per-user/$USER
+      sudo chown $USER /nix/var/nix/profiles/per-user/$USER
     else
       if ! type curl >/dev/null 2>&1; then
         if [ "$IS_DEBIAN" == "1" ]; then
           # The user may not be in the `sudo` group yet, can add with
           # `/usr/sbin/usermod -a -G sudo $USER`
           su -c 'apt-get update && apt-get install -y curl'
-          su -c 'mkdir -p /nix/var/nix/profiles/per-user/igncp'
-          su -c 'chown igncp /nix/var/nix/profiles/per-user/igncp'
+          su -c "mkdir -p /nix/var/nix/profiles/per-user/$USER"
+          su -c "chown $USER /nix/var/nix/profiles/per-user/$USER"
         fi
       fi
 
@@ -46,14 +46,14 @@ EOF
   else
     if ! type home-manager >/dev/null 2>&1; then
       # The user should be in the sudoers file for this to work
-      sudo mkdir -p /nix/var/nix/profiles/per-user/igncp
+      sudo mkdir -p /nix/var/nix/profiles/per-user/$USER
       sudo mkdir -p /nix/var/nix/db/
       sudo mkdir -p /nix/var/nix/temproots/
 
-      sudo chown -R igncp /nix/var/nix/profiles/per-user
-      sudo chown -R igncp /nix/var/nix/gcroots/per-user || true
-      sudo chown -R igncp /nix/var/nix/db/
-      sudo chown -R igncp /nix/var/nix/temproots/
+      sudo chown -R $USER /nix/var/nix/profiles/per-user
+      sudo chown -R $USER /nix/var/nix/gcroots/per-user || true
+      sudo chown -R $USER /nix/var/nix/db/
+      sudo chown -R $USER /nix/var/nix/temproots/
 
       # Running in docker
       if [ -z "$(ps aux | grep nix-daemon | grep -v grep || true)" ]; then
@@ -81,6 +81,10 @@ fi
 
 if [ -f $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh ]; then
   . $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh
+fi
+
+if [ -f /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]; then
+  . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 fi
 EOF
   fi

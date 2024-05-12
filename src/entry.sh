@@ -13,6 +13,7 @@ set -e
 . src/js.sh
 . src/rust.sh
 . src/cli_tools.sh
+. src/ruby.sh
 . src/linux.sh
 
 . src/android.sh
@@ -47,6 +48,7 @@ provision_setup_with_bash() {
   provision_setup_rust
   provision_setup_cli_tools
   provision_setup_linux
+  provision_setup_ruby
 
   provision_setup_android
   provision_setup_brightscript

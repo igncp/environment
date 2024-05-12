@@ -8,6 +8,7 @@
   has_cli_openvpn = builtins.pathExists (base_config + "/cli-openvpn");
   has_hashi = builtins.pathExists (base_config + "/hashi");
   has_pg = builtins.pathExists (base_config + "/postgres");
+  has_aws = builtins.pathExists (base_config + "/cli-aws");
   has_shellcheck = builtins.pathExists (base_config + "/shellcheck");
   has_stripe = builtins.pathExists (base_config + "/stripe");
   has_tailscale = builtins.pathExists (base_config + "/tailscale");
@@ -50,6 +51,7 @@ in {
       moreutils
       neofetch # https://github.com/dylanaraps/neofetch
       neovim-remote # https://github.com/mhinz/neovim-remote.git
+      patchelf
       pkg-config
       podman
       pstree
@@ -79,7 +81,7 @@ in {
       jc # https://github.com/kellyjonbrazil/jc
       loop # https://github.com/Miserlou/Loop
       pastel # https://github.com/sharkdp/pastel
-      vifm
+      vifm # https://vifm.info/
     ]
     ++ tmux-pkgs
     ++ (
@@ -103,6 +105,7 @@ in {
       else []
     )
     ++ (lib.optional has_shellcheck pkgs.shellcheck)
+    ++ (lib.optional has_aws pkgs.awscli2)
     ++ (lib.optional has_cli_hasura pkgs.hasura-cli)
     ++ (lib.optional has_cli_openvpn pkgs.openvpn) # https://github.com/OpenVPN/openvpn
     ++ (lib.optional has_pg pkgs.postgresql)

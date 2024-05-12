@@ -27,6 +27,15 @@ local nvim_plugins = {
       return vim.fn.executable('go') == 1
     end,
   },
+  -- https://github.com/mrcjkb/haskell-tools.nvim
+  {
+    'mrcjkb/haskell-tools.nvim',
+    version = '^3',
+    lazy = false,
+    enabled = function()
+      return vim.fn.executable('runhaskell') == 1
+    end,
+  },
   { "rcarriga/nvim-dap-ui", dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" } },
   {
     "leoluz/nvim-dap-go",
@@ -56,6 +65,7 @@ local nvim_plugins = {
   "nvim-treesitter/nvim-treesitter",
   -- https://github.com/nvim-treesitter/nvim-treesitter-textobjects
   "nvim-treesitter/nvim-treesitter-textobjects",
+  "jbyuki/venn.nvim",
 }
 
 require("lazy").setup(nvim_plugins)
@@ -385,3 +395,30 @@ function! ClearWhitespaceInFile()
   call winrestview(l:save)
 endfunction
 ]])
+
+-- https://github.com/jbyuki/venn.nvim
+function _G.Toggle_venn()
+  local venn_enabled = vim.inspect(vim.b.venn_enabled)
+  if venn_enabled == "nil" then
+    ---@diagnostic disable-next-line inject-field
+    vim.b.venn_enabled = true
+    vim.cmd [[setlocal ve=all]]
+    vim.api.nvim_buf_set_keymap(0, "n", "J", "<C-v>j:VBox<CR>", { noremap = true })
+    vim.api.nvim_buf_set_keymap(0, "n", "K", "<C-v>k:VBox<CR>", { noremap = true })
+    vim.api.nvim_buf_set_keymap(0, "n", "L", "<C-v>l:VBox<CR>", { noremap = true })
+    vim.api.nvim_buf_set_keymap(0, "n", "H", "<C-v>h:VBox<CR>", { noremap = true })
+    vim.api.nvim_buf_set_keymap(0, "v", "f", ":VBox<CR>", { noremap = true })
+  else
+    vim.cmd [[setlocal ve=]]
+    vim.api.nvim_buf_del_keymap(0, "n", "J")
+    vim.api.nvim_buf_del_keymap(0, "n", "K")
+    vim.api.nvim_buf_del_keymap(0, "n", "L")
+    vim.api.nvim_buf_del_keymap(0, "n", "H")
+    vim.api.nvim_buf_del_keymap(0, "v", "f")
+    ---@diagnostic disable-next-line inject-field
+    vim.b.venn_enabled = nil
+  end
+end
+
+-- 使用 <leader>v 切換 venn 的鍵盤映射
+vim.api.nvim_set_keymap('n', '<leader>v', ":lua Toggle_venn()<CR>", { noremap = true })

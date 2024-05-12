@@ -337,9 +337,6 @@ map <c-d> :call CloseTab()<CR>
 
 nnoremap <leader>jk :put =strftime(\"%Y-%m-%d %H:%M:%S\")<cr>
 
-" Select from the first non-blank non-indented line until the next one
-nnoremap <leader>v /^[^ ][^ ]*<cr>v?<cr>
-
 " Open an existing tab using FZF
 " http://ericnode.info/post/fzf_jump_to_tab_in_vim/
 function TabName(n)

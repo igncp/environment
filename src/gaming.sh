@@ -12,6 +12,8 @@ provision_setup_gaming() {
     return
   fi
 
+  # https://retropie.org.uk/docs/Nintendo-Switch-Controllers/
+
   # Favor having a dual-boot over a VM
   if [ ! -d ~/RetroPie-Setup ]; then
     sudo apt update && sudo apt upgrade

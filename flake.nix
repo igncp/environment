@@ -3,9 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
-    flake-utils = {
-      url = "github:numtide/flake-utils";
-    };
+    flake-utils.url = "github:numtide/flake-utils";
     unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     home-manager = {
       url = "github:nix-community/home-manager/release-23.11";
@@ -26,9 +24,9 @@
       system: let
         pkgs = nixpkgs.legacyPackages.${system};
         hostname = (import /etc/nixos/configuration.nix {inherit pkgs;}).networking.hostName;
-        shells = import ./nix/shells/main.nix {inherit pkgs unstable;};
+        devShells = import ./nix/shells/main.nix {inherit pkgs unstable;};
       in {
-        devShells = shells;
+        inherit devShells;
         packages = {
           nixosConfigurations = {
             "${hostname}" = nixpkgs.lib.nixosSystem {

@@ -30,6 +30,17 @@ alias AndroidSdkListInstalled='sdkmanager --list_installed' # pass --verbose to 
 alias EmulatorLaunch='emulator -avd'
 EOF
 
+  if [ -d ~/Library/Android/sdk ]; then
+    cat >>~/.shellrc <<"EOF"
+export ANDROID_HOME=$HOME/Library/Android/sdk
+export PATH="$ANDROID_HOME/platform-tools:$PATH"
+export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$PATH"
+export PATH="$ANDROID_HOME/emulator:$PATH"
+export PATH="$ANDROID_HOME/tools:$PATH"
+export PATH="$ANDROID_HOME/tools/bin:$PATH"
+EOF
+  fi
+
   if [ -d $HOME/Android/Sdk ]; then
     cat >>~/.shellrc <<"EOF"
 export ANDROID_HOME=$HOME/Android/Sdk

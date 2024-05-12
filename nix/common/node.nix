@@ -5,7 +5,11 @@
   unstable_pkgs,
 }: let
   node_file = base_config + "/node";
+  nodenv_file = base_config + "/nodenv";
+
   has_node = builtins.pathExists node_file;
+  has_nodenv = builtins.pathExists nodenv_file;
+
   has_yarn_berry = builtins.pathExists (base_config + "/yarn-berry");
 
   node_file_content = builtins.readFile node_file;
@@ -22,7 +26,9 @@ in {
   pkgs-list =
     [unstable_pkgs.bun]
     ++ (
-      if has_node
+      if has_nodenv
+      then [pkgs.nodenv]
+      else if has_node
       then [node_pkg]
       else [unstable_pkgs.nodejs_20]
     )

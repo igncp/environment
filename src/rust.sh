@@ -35,6 +35,7 @@ _RustBuildProvisionPackages() {
   rm -rf ~/.scripts/cargo_target/debug
 }
 _RustUpdateProvisionPackages() {
+  rm -rf ~/.rustup
   rustup toolchain install stable
   while IFS= read -r -d '' FILE_PATH; do
     FILE_NAME=$(basename "$FILE_PATH")
@@ -55,7 +56,7 @@ RustUpdateProvisionPackages() { (nix develop ~/development/environment#rust \
 EOF
 
   mkdir -p ~/.cargo
-  cat >~/.cargo/config <<EOF
+  cat >~/.cargo/config.toml <<EOF
 [build]
 target-dir = "$HOME/.scripts/cargo_target"
 EOF

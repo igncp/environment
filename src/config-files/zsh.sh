@@ -1,3 +1,8 @@
+# https://nixos.wiki/wiki/Locales
+if [ -f /usr/lib/locale/locale-archive ]; then
+  export LOCALE_ARCHIVE=/usr/lib/locale/locale-archive
+fi
+
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 
@@ -89,9 +94,10 @@ backward-kill-dir () {
 zle -N backward-kill-dir
 bindkey '\C-h' backward-kill-dir
 
-SOCKET_NAME="$(echo $TMUX | cut -f1 -d',' | sed -E 's|(/private)?/tmp/tmux-[0-9]*/||')"
+SOCKET_NAME="$(echo $TMUX | cut -f1 -d',' | sed -E 's|(/private)?/tmp/tmux-[0-9]*/||' |
+  sed -E 's|/run/user/[0-9]*/tmux-[0-9]*/||')"
 if [[ "$SOCKET_NAME" == "default" ]] || [ -z "$SOCKET_NAME" ]; then
-  tmux -L default set-option status off
+  tmux -L default set-option status off 2> /dev/null
 else
   echo "tmux socket: $SOCKET_NAME"
   tmux -L "$SOCKET_NAME" set-option status on
