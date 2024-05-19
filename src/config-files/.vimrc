@@ -94,8 +94,6 @@ autocmd Filetype text setlocal wrap linebreak nolist
   xnoremap <Tab> >gv
   xnoremap <S-Tab> <gv
 
-nnoremap <silent> <leader>s :if exists("g:syntax_on") \| syntax off \| else \| syntax enable \| endif<cr>
-
 vnoremap <silent> y y`]
 nnoremap <silent> p p`]
 vnoremap <silent> p pgvy`]
@@ -200,11 +198,6 @@ nnoremap <leader>jrW :call setreg("g", "<c-r>=expand("%:p")<cr>")<cr>
 
 " highlight last inserted text
   nnoremap gV `[v`]
-
-" Know syntax type under cursor
-nnoremap <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
-  \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
-  \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
 
 " use % to cycle html tags. Needs some time to test
 runtime macros/matchit.vim
@@ -376,3 +369,5 @@ function! s:yankshift(event)
     let s:regzero = [a:event.regcontents, a:event.regtype]
   endif
 endfunction
+
+hi Comment guifg=lightcyan

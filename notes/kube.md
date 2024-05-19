@@ -177,7 +177,35 @@ curl --resolve www.demo.io:8080:192.168.128.133 http://www.demo.io:8080
 - 無需等待即可刪除 Pod（不建議）: `k delete pod FOO --grace-period=0 --force`
 
 - 新增 Web UI 儀表板: https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/
-    - kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443
+    - `kubectl -n kubernetes-dashboard port-forward svc/kubernetes-dashboard-kong-proxy 8443:443`
+
+- 新增自訂秘密:
+    - `k create secret generic some-secret --from-literal=key=foobar`
+    - `kubectl get secret some-secret -o jsonpath='{.data.key}' | base64 --decode`
+
+- 緊湊模式下包含秘密的範例環境:
+
+```yaml
+env:
+  - {'name': 'FOO_ENV_VAR', 'valueFrom': {'secretKeyRef': {'name':'aws-secret','key':'thekey'}}}
+```
+
+- 例子 readiness probe:
+    - https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
+
+```yaml
+readinessProbe:
+    httpGet:
+        path: /api/health
+        port: 3000
+    initialDelaySeconds: 20
+    periodSeconds: 10
+```
+
+## Cert Manager
+
+- https://cert-manager.io/docs/installation/
+    - `kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.14.5/cert-manager.yaml`
 
 ## `minikube`
 

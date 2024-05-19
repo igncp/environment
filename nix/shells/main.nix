@@ -219,6 +219,13 @@ in
         pkgs.haskell-language-server
       ];
     };
+
+    images = pkgs.mkShell {
+      packages = with pkgs; [
+        imagemagick
+        libwebp
+      ];
+    };
   }
   // crypto-shells
   // cli-extra-shell

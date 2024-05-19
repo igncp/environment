@@ -13,6 +13,8 @@
   has_stripe = builtins.pathExists (base_config + "/stripe");
   has_tailscale = builtins.pathExists (base_config + "/tailscale");
 
+  no_watchman = builtins.pathExists (base_config + "/no-watchman");
+
   is_linux =
     (pkgs.system == "x86_64-linux")
     || (pkgs.system == "aarch64-linux")
@@ -24,6 +26,7 @@
 in {
   pkgs-list = with pkgs;
     [
+      act # https://github.com/nektos/act
       alejandra # https://github.com/kamadorueda/alejandra
       bash
       bat # https://github.com/sharkdp/bat
@@ -55,6 +58,7 @@ in {
       pkg-config
       podman
       pstree
+      ripgrep # https://github.com/BurntSushi/ripgrep
       rsync # https://github.com/WayneD/rsync
       sad # https://github.com/ms-jpq/sad
       scc # https://github.com/boyter/scc
@@ -70,9 +74,9 @@ in {
       unstable_pkgs.nil # https://github.com/oxalica/nil
       unstable_pkgs.nix
       unstable_pkgs.yt-dlp # https://github.com/yt-dlp/yt-dlp
-      watchman # https://github.com/facebook/watchman
       wget
       yq # https://github.com/mikefarah/yq
+      zoxide # https://github.com/ajeetdsouza/zoxide.git
       zsh
     ]
     # 正在測試的新增內容
@@ -88,6 +92,14 @@ in {
       if has_hashi
       then with pkgs; [terraform-ls terraform vagrant]
       else []
+    )
+    ++ (
+      if no_watchman
+      then []
+      else
+        with pkgs; [
+          watchman # https://github.com/facebook/watchman
+        ]
     )
     ++ (
       if is_linux

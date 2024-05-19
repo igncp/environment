@@ -20,6 +20,7 @@ GimmeAWS() {
   if [ -z "$(docker images | grep gimme-aws-creds)" ]; then
     (cd ~ && git clone https://github.com/Nike-Inc/gimme-aws-creds.git && cd gimme-aws-creds \
       && docker build -t gimme-aws-creds .)
+    rm -rf ~/gimme-aws-creds
   fi
 
   touch ~/.okta_aws_login_config

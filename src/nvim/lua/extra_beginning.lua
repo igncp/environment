@@ -235,6 +235,12 @@ if M.file_exists(theme_path) then
   vim.cmd("colorscheme " .. content)
 end
 
+vim.cmd([[
+hi TabLine guifg=LightBlue
+hi TabLineSel guifg=Orange
+hi Comment guifg=lightcyan
+]])
+
 local custom_path = os.getenv("HOME") ..
     '/development/environment/project/.vim-custom.lua'
 
@@ -315,7 +321,7 @@ vim.api.nvim_set_keymap("n", "<leader>mf", "", {
     SaveRegisterIntoClipboard()
     print(file_path)
   end,
-  desc = "Copy file relative path to clipboard",
+  desc = "將檔案絕對路徑複製到剪貼簿",
   silent = true,
 })
 
@@ -326,7 +332,7 @@ vim.api.nvim_set_keymap("n", "<leader>mF", "", {
     SaveRegisterIntoClipboard()
     print(file_path)
   end,
-  desc = "Copy file absolute path to clipboard",
+  desc = "將檔案相對路徑複製到剪貼簿",
   silent = true,
 })
 
@@ -422,3 +428,25 @@ end
 
 -- 使用 <leader>v 切換 venn 的鍵盤映射
 vim.api.nvim_set_keymap('n', '<leader>v', ":lua Toggle_venn()<CR>", { noremap = true })
+
+vim.api.nvim_set_keymap("n", "<F10>", "", {
+  callback = function()
+    local output = ""
+
+    -- hi
+    local synid = vim.fn.synID(vim.fn.line("."), vim.fn.col("."), 1)
+    output = output .. "hi<" .. vim.fn.synIDattr(synid, "name") .. ">"
+
+    -- trans
+    synid = vim.fn.synID(vim.fn.line("."), vim.fn.col("."), 0)
+    output = output .. " trans<" .. vim.fn.synIDattr(synid, "name") .. ">"
+
+    -- lo
+    synid = vim.fn.synIDtrans(vim.fn.synID(vim.fn.line("."), vim.fn.col("."), 1))
+    output = output .. " lo<" .. vim.fn.synIDattr(synid, "name") .. ">"
+
+    print(output)
+  end,
+  desc = "了解遊標下的語法類型",
+  silent = true,
+})

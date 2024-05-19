@@ -11,20 +11,12 @@ ConfigNixOsProvisionList() {
         ~/.scripts/cargo_target/release/provision_choose_config "$1"
         return
     fi
-    ~/.scripts/cargo_target/release/provision_choose_config && RebuildNixOs && Provision
+    ~/.scripts/cargo_target/release/provision_choose_config && RebuildNix && Provision
 }
 
 alias NixDevelopPath='nix develop path:$(pwd)' # Also possible to just run a command: `NixDevelopPath -c cargo build`
 alias NixOsClearSpace='sudo nix-collect-garbage'
 alias NixOsListSystemGenerations='sudo nix-env --list-generations --profile /nix/var/nix/profiles/system'
-alias ProvisionNixOs="(RebuildNixOs && Provision)"
-
-# 由於是通用命令而有不同的前綴
-RebuildNixOs() {
-  # 它需要 --impure 標誌，因為它導入/etc/nixos/configuration.nix配置
-  (cd ~/development/environment && \
-    sudo nixos-rebuild switch --show-trace --flake path:$PWD --impure)
-}
 EOF
 
   cat >>~/.zshrc <<"EOF"

@@ -16,7 +16,7 @@ provision_setup_nix() {
     else
       if ! type curl >/dev/null 2>&1; then
         if [ "$IS_DEBIAN" == "1" ]; then
-          # The user may not be in the `sudo` group yet, can add with
+          # 使用者可能還不在`sudo`群組中，可以添加
           # `/usr/sbin/usermod -a -G sudo $USER`
           su -c 'apt-get update && apt-get install -y curl'
           su -c "mkdir -p /nix/var/nix/profiles/per-user/$USER"
@@ -39,8 +39,8 @@ EOF
 
   if [ "$IS_NIXOS" == "1" ]; then
     if ! type tmux >/dev/null 2>&1; then
-      echo "You need to install packages"
-      echo 'Run RebuildNixOS before continuing'
+      echo "您需要安裝軟體包"
+      echo "在繼續之前運行 RebuildNix"
       exit 1
     fi
   else
@@ -64,7 +64,7 @@ EOF
 
       . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
       sleep 10
-      nix-shell -p git home-manager --run "bash -c '. src/config-files/.shell_aliases.sh && SwitchHomeManager'"
+      nix-shell -p git home-manager --run "bash -c '. src/config-files/.shell_aliases.sh && RebuildNix'"
     fi
   fi
 

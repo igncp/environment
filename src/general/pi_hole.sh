@@ -7,9 +7,6 @@ provision_setup_general_pi_hole() {
     return
   fi
 
-  # https://docs.pi-hole.net/guides/dns/unbound/
-  install_system_package "unbound"
-
   mkdir -p ~/.pi-hole
 
   cat >~/.pi-hole/docker-compose.yml <<"EOF"
@@ -26,7 +23,7 @@ services:
       - "80:80/tcp"
       - "443:443/tcp"
     environment:
-      TZ: 'Europe/Madrid'
+      TZ: 'Asia/Hong_Kong'
     volumes:
        - './etc-pihole/:/etc/pihole/'
        - './etc-dnsmasq.d/:/etc/dnsmasq.d/'
@@ -57,7 +54,6 @@ alias PiHoleUnboundUpdate='(sudo vim /etc/unbound/unbound.conf)'
 PiHoleInit() {
   cd ~/.pi-hole
   if [ -z $(docker compose ps | ag running | ag pihole) ]; then echo 'You have to run docker'; return; fi
-  docker compose exec -it pihole pihole logging off
   sudo sh -c "echo 'PRIVACYLEVEL=3' >> ./etc-pihole/pihole-FTL.conf"
   sudo sh -c "echo 'DBINTERVAL=60.0' >> ./etc-pihole/pihole-FTL.conf"
   sudo unbound-control-setup
@@ -68,9 +64,16 @@ PiHoleInit() {
 }
 EOF
 
-  # Clients:
+  # Web UI: 'http://IP_OF_PI_HOLE/admin'
+  # 設定密碼: `docker compose exec pihole pihole -a -p`
+
+  # 客戶:
   #   Chrome:
   #     Flush DNS cache: `chrome://net-internals/#dns`
+  #   NixOS:
+  #     networking.useDHCP = false;
+  #     networking.resolvconf.enable = false;
+  #     networking.nameservers = [ "192.168.X.X" ]; # Update the IP
   #   Arch Linux:
   #     Update `netctl` profile config to include the IP address
   #       DNS=('192.168.1.X')

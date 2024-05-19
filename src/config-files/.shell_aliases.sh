@@ -213,13 +213,7 @@ ConfigProvisionList() {
   # Stop if no changes
   if [ "$INITIAL_SHA" = "$AFTER_SHA" ]; then return; fi
 
-  if type RebuildNixOs >/dev/null 2>&1; then
-    RebuildNixOs &&
-      Provision
-  else
-    SwitchHomeManager &&
-      Provision
-  fi
+  RebuildNix && Provision
 }
 
 alias ConfigProvisionListFzf='ConfigProvisionList fzf'
@@ -285,7 +279,7 @@ ClearSpace() {
 
   sudo echo ''
 
-  SwitchHomeManager
+  RebuildNix
 
   sudo rm -rf ~/.cache/composer
   sudo rm -rf ~/.cache/go-build
@@ -325,9 +319,7 @@ ClearSpace() {
 
   nvim --headless "+Lazy! sync" +qa
 
-  SwitchHomeManager
-
-  Provision
+  RebuildNix && Provision
 
   echo '開發環境清理'
 }
@@ -403,9 +395,20 @@ alias HomeManagerDeleteGenerations='home-manager expire-generations "-1 second"'
 # https://linuxhandbook.com/run-alias-as-sudo/
 alias SudoNix='sudo --preserve-env=PATH env '
 
-SwitchHomeManager() {
-  # Impure is needed for now to read the config
-  home-manager switch --impure --flake ~/development/environment/
+alias ProvisionNix="(RebuildNix && Provision)"
+
+# 由於是通用命令而有不同的前綴
+RebuildNix() {
+  if [ -f /etc/os-release ] && [ -n "$(cat /etc/os-release | grep nixos || true)" ]; then
+    # 它需要 --impure 標誌，因為它導入/etc/nixos/configuration.nix配置
+    (cd ~/development/environment &&
+      sudo nixos-rebuild switch --show-trace --flake path:$PWD --impure)
+  fi
+
+  if type home-manager >/dev/null 2>&1; then
+    # 現在需要 --impure 來讀取配置
+    home-manager switch --impure --flake ~/development/environment/
+  fi
 }
 
 # # To patch a binary interpreter path, for example for 'foo:
@@ -470,3 +473,9 @@ fi
 if type helm >/dev/null 2>&1; then
   source <(helm completion zsh)
 fi
+
+if type magick >/dev/null 2>&1; then
+  ImageConvertWebpPng() { magick "$1" "${1%.*}.png"; }
+fi
+
+alias UpdateBootstrapCommon='n ~/development/environment/src/scripts/bootstrap/Bootstrap_common.sh'
