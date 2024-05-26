@@ -8,6 +8,12 @@ provision_setup_nvim_coc() {
   # - To open multiple references at once: enter in visual mode inside the quickfix window and select multiple
   # - Press `t` to open each case in new tab, press `enter` to open each file (unless already opened) in new tab
 
+  if [ -f "$PROVISION_CONFIG"/nvim-lspconfig ]; then
+    echo 'let g:coc_global_extensions=[]' >>~/.vimrc
+    echo '{}' >~/.vim/coc-settings.json
+    return
+  fi
+
   install_nvim_package neoclide/coc.nvim
 
   cat >>~/.vimrc <<"EOF"
@@ -104,6 +110,10 @@ EOF
     "nix": {
       "command": "nil",
       "filetypes": ["nix"]
+    },
+    "ruby_lsp": {
+      "command": "ruby-lsp",
+      "filetypes": ["ruby"]
     },
     "kotlin": {
       "command": "$HOME/nix-dirs/.kotlin-language-server/server/build/install/server/bin/kotlin-language-server",

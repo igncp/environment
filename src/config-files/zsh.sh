@@ -170,4 +170,5 @@ bindkey '^W' my-backward-delete-word
 
 if type zoxide &> /dev/null; then
   eval "$(zoxide init zsh)"
+  alias cd=z
 fi

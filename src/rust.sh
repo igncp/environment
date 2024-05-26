@@ -21,6 +21,9 @@ _RustBuildProvisionPackages() {
   rustup toolchain install stable
   while IFS= read -r -d '' FILE_PATH; do
     FILE_NAME=$(basename "$FILE_PATH")
+    if [ ! -f "$FILE_PATH"/Cargo.toml ]; then
+      continue
+    fi
     if [ ! -f "/usr/local/bin/environment_scripts/$FILE_NAME" ] || [ "$1" == "-f" ]; then
       (cd "$FILE_PATH" &&
         cargo build --release --jobs 1 && \
@@ -39,6 +42,9 @@ _RustUpdateProvisionPackages() {
   rustup toolchain install stable
   while IFS= read -r -d '' FILE_PATH; do
     FILE_NAME=$(basename "$FILE_PATH")
+    if [ ! -f "$FILE_PATH"/Cargo.toml ]; then
+      continue
+    fi
     (cd "$FILE_PATH" && \
       cargo update && \
       cargo build --release)
@@ -118,7 +124,8 @@ EOF
     install_cargo_crate pastel
   fi
 
-  provision_append_json ~/.vim/coc-settings.json '
+  if [ ! -f "$PROVISION_CONFIG"/nvim-lspconfig ]; then
+    provision_append_json ~/.vim/coc-settings.json '
 "rust-analyzer.inlayHints.bindingModeHints.enable": false,
 "rust-analyzer.inlayHints.chainingHints.enable": false,
 "rust-analyzer.inlayHints.closingBraceHints.enable": false,
@@ -127,4 +134,5 @@ EOF
 "rust-analyzer.inlayHints.parameterHints.enable": false,
 "rust-analyzer.inlayHints.reborrowHints.enable": "never",
 "rust-analyzer.inlayHints.typeHints.enable": false'
+  fi
 }

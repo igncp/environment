@@ -1,4 +1,4 @@
-alias ag="ag --hidden  --color-match 7"
+alias ag="rg -S --hidden --colors='path:fg:0xaa,0xaa,0xff'"
 alias agg='ag --hidden --ignore node_modules --ignore .git'
 alias b='bash'
 alias cp="cp -r"

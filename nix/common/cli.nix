@@ -19,9 +19,14 @@
     (pkgs.system == "x86_64-linux")
     || (pkgs.system == "aarch64-linux")
     || pkgs.system == "armv7l-linux";
+  is_mac = pkgs.system == "x86_64-darwin" || pkgs.system == "aarch64-darwin";
 
   tmux-pkgs = with pkgs; [
     tmux # https://github.com/tmux/tmux
+  ];
+
+  lsp-pkgs = with pkgs; [
+    lua-language-server
   ];
 in {
   pkgs-list = with pkgs;
@@ -77,8 +82,8 @@ in {
       wget
       yq # https://github.com/mikefarah/yq
       zoxide # https://github.com/ajeetdsouza/zoxide.git
-      zsh
     ]
+    ++ lsp-pkgs
     # 正在測試的新增內容
     ++ [
       bitwise # https://github.com/mellowcandle/bitwise
@@ -88,6 +93,11 @@ in {
       vifm # https://vifm.info/
     ]
     ++ tmux-pkgs
+    ++ (
+      if is_mac
+      then []
+      else [pkgs.zsh] # 在 macOS 上使用內建 zsh
+    )
     ++ (
       if has_hashi
       then with pkgs; [terraform-ls terraform vagrant]
@@ -116,8 +126,12 @@ in {
           ++ (lib.optional has_cli_openvpn pkgs.update-resolv-conf)
       else []
     )
+    ++ (
+      if has_aws
+      then with pkgs; [awscli2 eksctl]
+      else []
+    )
     ++ (lib.optional has_shellcheck pkgs.shellcheck)
-    ++ (lib.optional has_aws pkgs.awscli2)
     ++ (lib.optional has_cli_hasura pkgs.hasura-cli)
     ++ (lib.optional has_cli_openvpn pkgs.openvpn) # https://github.com/OpenVPN/openvpn
     ++ (lib.optional has_pg pkgs.postgresql)

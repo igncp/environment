@@ -68,26 +68,35 @@ EOF
     fi
   fi
 
+  if [ "$IS_NIXOS" != "1" ]; then
+    cat >/tmp/load_nix.sh <<"EOF"
+if [ -z "$PROVISION_NIX_LOADED" ]; then
+  PROVISION_NIX_LOADED=1
+
+  if [ -f "~/.nix-profile/etc/profile.d/nix.sh" ]; then
+    . ~/.nix-profile/etc/profile.d/nix.sh
+  fi
+
+  if [ -f $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh ]; then
+    . $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh
+  fi
+
+  if [ -f /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]; then
+    . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+  fi
+fi
+EOF
+  fi
+
+  # 盡快加載 nix （即使多次）
+  cat /tmp/load_nix.sh >>~/.zshrc
+  cat /tmp/load_nix.sh >>~/.shellrc
+  cat /tmp/load_nix.sh >>~/.bashrc
+
   cat >>~/.zshrc <<"EOF"
 eval "$(direnv hook zsh)"
 export DIRENV_LOG_FORMAT=""
 EOF
-
-  if [ "$IS_NIXOS" != "1" ]; then
-    cat >>~/.shellrc <<"EOF"
-if [ -f "~/.nix-profile/etc/profile.d/nix.sh" ]; then
-  . ~/.nix-profile/etc/profile.d/nix.sh
-fi
-
-if [ -f $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh ]; then
-  . $HOME/.nix-profile/etc/profile.d/hm-session-vars.sh
-fi
-
-if [ -f /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]; then
-  . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
-fi
-EOF
-  fi
 
   # To use `nix` inside of a cron script, can add this inside the crontab
   # `PATH=/home/igncp/.nix-profile/bin`

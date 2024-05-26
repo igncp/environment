@@ -7,11 +7,22 @@ provision_setup_general_pi_hole() {
     return
   fi
 
+  if [ ! -f ~/.check-files/pihole_check ]; then
+    if type systemctl >/dev/null 2>&1; then
+      if [ -n "$(sudo systemctl list-units | ag systemd-resolved || true)" ]; then
+        echo "你必須運行命令: sudo systemctl disable --now systemd-resolved"
+        echo "然後，將其添加到文件中 '/etc/systemd/resolved.conf.d/pi-hole.conf' 並重新啟動服務"
+        echo '
+[Resolve]
+DNSStubListener=no'
+      fi
+    fi
+    touch ~/.check-files/pihole_check
+  fi
+
   mkdir -p ~/.pi-hole
 
   cat >~/.pi-hole/docker-compose.yml <<"EOF"
-version: "3"
-
 services:
   pihole:
     container_name: pihole

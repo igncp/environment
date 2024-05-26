@@ -13,7 +13,7 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
--- This variable is populated with the packages
+-- 此變數由包填充
 local nvim_plugins = {
   {
     "yaegassy/coc-phpstan",
@@ -43,7 +43,7 @@ local nvim_plugins = {
       return vim.fn.executable('go') == 1
     end,
   },
-  "vim-ruby/vim-ruby",
+  -- "vim-ruby/vim-ruby",
   "udalov/kotlin-vim",
   "smoka7/hop.nvim",
   {
@@ -66,6 +66,12 @@ local nvim_plugins = {
   -- https://github.com/nvim-treesitter/nvim-treesitter-textobjects
   "nvim-treesitter/nvim-treesitter-textobjects",
   "jbyuki/venn.nvim",
+  "neovim/nvim-lspconfig",
+  "nvimdev/lspsaga.nvim",
+  {
+    'nvim-telescope/telescope.nvim',
+    dependencies = { 'nvim-lua/plenary.nvim' }
+  }
 }
 
 require("lazy").setup(nvim_plugins)
@@ -106,15 +112,6 @@ vim.api.nvim_set_keymap("n", "<leader>jt", ":Tags!<cr>", { noremap = true })
 vim.api.nvim_set_keymap("n", "<leader>jw", ":Windows!<cr>", { noremap = true })
 vim.api.nvim_set_keymap("n", "<leader>jf", ":Filetypes!<cr>", { noremap = true })
 vim.api.nvim_set_keymap("n", "<leader>je", ":AnsiEsc!<cr>", { noremap = true })
-
--- Snippets display
-vim.api.nvim_set_keymap("n", "<leader>ms",
-  ":CocCommand snippets.openSnippetFiles<cr>",
-  { noremap = true })
-
--- Vista
-vim.g.vista_default_executive = 'coc'
-vim.g.vista_sidebar_width = 100
 
 -- limelight
 vim.g.limelight_conceal_ctermfg = 'LightGray'
@@ -252,18 +249,6 @@ vim.api.nvim_set_keymap("n", "<c-f>", ":call SpecialMaps()<cr>",
   { noremap = true })
 vim.api.nvim_set_keymap("i", "<c-f>", "<c-c>:call SpecialMaps()<cr>",
   { noremap = true })
-
-vim.api.nvim_set_keymap("i", "<c-l>",
-  "<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])<CR>",
-  {})
-vim.api.nvim_set_keymap("s", "<c-l>",
-  "<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])<CR>",
-  {})
-
-vim.api.nvim_set_keymap("n", "<leader>da", "<Plug>(coc-codeaction-cursor)",
-  { silent = true, nowait = true })
-vim.api.nvim_set_keymap("v", "<leader>da", "<Plug>(coc-codeaction-selected)",
-  { silent = true, nowait = true })
 
 -- This is due to the screen not cleaned when dismissing a suggestion
 if M.has_config("copilot") then
@@ -450,3 +435,96 @@ vim.api.nvim_set_keymap("n", "<F10>", "", {
   desc = "了解遊標下的語法類型",
   silent = true,
 })
+
+if M.has_config("nvim-lspconfig") then
+  require('telescope').setup {
+    defaults = {
+      previewer = true,
+      file_previewer = require 'telescope.previewers'.vim_buffer_cat.new,
+      grep_previewer = require 'telescope.previewers'.vim_buffer_vimgrep.new,
+      qflist_previewer = require 'telescope.previewers'.vim_buffer_qflist.new,
+    }
+  }
+
+  -- https://nvimdev.github.io/lspsaga/
+  require('lspsaga').setup {
+    codeaction = {
+      show_server_name = true,
+    },
+    lightbulb = {
+      enable = false,
+    },
+  }
+
+  local servers = { { 'rust_analyzer' }, { 'tsserver' }, { 'ruby_lsp' },
+    { 'bashls' },
+    { 'lua_ls', {
+      settings = {
+        Lua = {
+          diagnostics = {
+            globals = { 'vim' }
+          }
+        }
+      }
+    } } }
+
+  for _, lsp in pairs(servers) do
+    local lsp_name = lsp[1]
+    local lsp_config = lsp[2] or {}
+    require('lspconfig')[lsp_name].setup(lsp_config)
+  end
+
+  vim.diagnostic.config { virtual_text = false }
+
+  vim.api.nvim_set_keymap("n", "gd", ":lua vim.lsp.buf.definition()<cr>",
+    { noremap = true, silent = true })
+
+  vim.api.nvim_set_keymap("n", "gr", ":lua require'telescope.builtin'.lsp_references" ..
+    "{include_declaration = true}<cr>",
+    { noremap = true, silent = true })
+
+  vim.api.nvim_set_keymap("n", "gy", ":lua require'telescope.builtin'.lsp_type_definitions{}<cr>",
+    { noremap = true, silent = true })
+
+  vim.api.nvim_set_keymap("n", "gY", ":lua require'telescope.builtin'.lsp_implementations{}<cr>",
+    { noremap = true, silent = true })
+
+  vim.api.nvim_set_keymap("n", "g]", "", {
+    callback = function() vim.diagnostic.goto_next() end,
+  })
+
+  vim.api.nvim_set_keymap("n", "g[", "", {
+    callback = function() vim.diagnostic.goto_prev() end,
+  })
+
+  vim.api.nvim_set_keymap("n", "<leader>da", ":Lspsaga code_action<CR>",
+    { silent = true, nowait = true })
+
+  vim.api.nvim_create_autocmd("BufWritePre", {
+    callback = function()
+      vim.lsp.buf.format { async = false }
+    end
+  })
+else
+  vim.api.nvim_set_keymap("i", "<c-l>",
+    "<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])<CR>",
+    {})
+  vim.api.nvim_set_keymap("s", "<c-l>",
+    "<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])<CR>",
+    {})
+
+  vim.api.nvim_set_keymap("n", "<leader>da", "<Plug>(coc-codeaction-cursor)",
+    { silent = true, nowait = true })
+  vim.api.nvim_set_keymap("v", "<leader>da", "<Plug>(coc-codeaction-selected)",
+    { silent = true, nowait = true })
+
+  -- 片段顯示
+  vim.api.nvim_set_keymap("n", "<leader>ms",
+    ":CocCommand snippets.openSnippetFiles<cr>",
+    { noremap = true })
+
+  -- Vista
+  vim.g.vista_default_executive = 'coc'
+  vim.g.vista_sidebar_width = 100
+end
+

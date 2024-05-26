@@ -50,7 +50,7 @@ provision_setup_nvim_base() {
   install_nvim_package morhetz/gruvbox # https://github.com/morhetz/gruvbox
 
   install_nvim_package cocopon/iceberg.vim # https://github.com/cocopon/iceberg.vim
-  install_nvim_package dracula/vim         # https://github.com/cocopon/iceberg.vim
+  install_nvim_package dracula/vim         # https://github.com/dracula/vim
 
   cat >>~/.vimrc <<"EOF"
 if has('nvim')

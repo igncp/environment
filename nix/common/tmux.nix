@@ -1,3 +1,11 @@
+# Panes 組織方法:
+# - 找到 id `tmux list-panes -a`
+# - <leader> + o: 將 pane 移到該視窗
+# - <leader> + u: 將 pane 移出該視窗
+# - <leader> + !: 將 pane 移到新視窗
+# - <leader> + x: 關閉 pane
+# - <leader> + <space>: 循環垂直分割和水平分割
+# - <leader> + tab: 循環瀏覽視窗中的 panes
 {pkgs}: rec {
   plugins = with pkgs; [
     tmuxPlugins.copycat # https://github.com/tmux-plugins/tmux-copycat
@@ -51,6 +59,10 @@
     bind-key -T copy-mode-vi 'V' send -X select-line
     bind-key -T copy-mode-vi 'y' send -X copy-selection
     bind-key -T copy-mode-vi 'd' send -X clear-selection
+
+    # Pane movement
+    bind-key o command-prompt -p "join pane from:"  "join-pane -s '%%'"
+    bind-key u command-prompt -p "send pane to:"  "join-pane -t '%%'"
 
     bind b split-window 'sh /tmp/tmux_choose_session.sh'
   '';

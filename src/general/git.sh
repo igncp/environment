@@ -39,7 +39,7 @@ GitRemoteConvertToPublic() {
   git remote rm origin ; git remote add origin "$NEW_REMOTE" ; git remote -v
 }
 GitResetLastCommit() { LAST_COMMIT_MESSAGE=$(git log -1 --pretty=%B); \
-  git reset --soft HEAD^; git add -A .; git commit -m "$LAST_COMMIT_MESSAGE"; }
+  git reset --soft HEAD^; git add -A .; git commit -m "$LAST_COMMIT_MESSAGE" $@; }
 GitRevertCode() { git reset "$1"; rm -rf "$1" ; git checkout -- "$1"; git status; }
 GitFilesByAuthor() {
   DEFAULT_AUTHOR="$(git config user.name)"; AUTHOR="${1:-$DEFAULT_AUTHOR}"
@@ -72,6 +72,7 @@ alias gss='git commit -v -t $(git rev-parse --show-toplevel)/.git/COMMIT_EDITMSG
 
 gd() { git diff ${1:-HEAD} "${@:2}"; }
 g() { eval "git commit -m '$@'"; }
+gn() { eval "git commit --no-verify -m '$@'"; }
 
 alias GitAddAll='GitAdd $(git rev-parse --show-toplevel)'
 alias GitBranchOrder='git branch -a --sort=creatordate --format "%(creatordate:relative);%(committername);%(refname)" | sed "s|refs/remotes/origin/||" | grep -v ";HEAD$" | column -s ";" -t | tac | less'
