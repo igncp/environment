@@ -14,7 +14,7 @@
   node-pkgs = import ../common/node.nix {inherit base_config pkgs lib unstable_pkgs;};
   go-pkgs = import ../common/go.nix {inherit base_config pkgs lib unstable;};
   ruby-pkgs = import ../common/ruby.nix {inherit base_config pkgs;};
-  rust-pkgs = import ../common/rust.nix {inherit pkgs;};
+  rust-pkgs = import ../common/rust.nix {inherit pkgs base_config;};
   java-pkgs = import ../common/java.nix {inherit base_config lib pkgs;};
 
   has_c = builtins.pathExists (base_config + "/c");
@@ -45,7 +45,7 @@ in {
     ++ node-pkgs.pkgs-list
     ++ go-pkgs.pkgs-list
     ++ ruby-pkgs.pkgs-list
-    ++ rust-pkgs.pkgs-list
+    ++ rust-pkgs.pkgs-list-conditional
     ++ java-pkgs.pkgs-list
     ++ (lib.optional has_c pkgs.clib)
     ++ (lib.optional has_c pkgs.ctags)

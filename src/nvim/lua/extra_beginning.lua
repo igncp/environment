@@ -527,4 +527,3 @@ else
   vim.g.vista_default_executive = 'coc'
   vim.g.vista_sidebar_width = 100
 end
-

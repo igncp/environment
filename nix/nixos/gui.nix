@@ -44,6 +44,7 @@ in {
       terminator
       unstable_pkgs.google-chrome
       variety
+      vlc
       xclip
       xdotool
       zoom-us

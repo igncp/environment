@@ -8,7 +8,10 @@
     config.allowUnfree = true;
   };
 
-  rust-config = import ../common/rust.nix {inherit pkgs;};
+  rust-config = import ../common/rust.nix {
+    inherit pkgs;
+    base_config = "";
+  };
   crypto-shells = import ./crypto.nix {inherit pkgs;};
   cli-extra-shell = import ./cli-extra.nix {inherit pkgs;};
   python-extra-shell = import ./python.nix {inherit pkgs;};

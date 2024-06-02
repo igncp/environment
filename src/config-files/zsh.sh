@@ -152,7 +152,9 @@ alias ZshBrowseAllAliases='zsh -ixc : 1>&1 | l'
 export NVIM_LISTEN_ADDRESS=/tmp/nvimsocket-$(mktemp -u XXXXX)
 
 if [ -n "$NODENV_ROOT" ]; then
-  eval "$(nodenv init -)"
+  if type nodenv &> /dev/null; then
+    eval "$(nodenv init -)"
+  fi
 fi
 
 if [ -n "${commands[fzf-share]}" ]; then

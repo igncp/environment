@@ -86,12 +86,12 @@ if [ -z "$PROVISION_NIX_LOADED" ]; then
   fi
 fi
 EOF
-  fi
 
-  # 盡快加載 nix （即使多次）
-  cat /tmp/load_nix.sh >>~/.zshrc
-  cat /tmp/load_nix.sh >>~/.shellrc
-  cat /tmp/load_nix.sh >>~/.bashrc
+    # 盡快加載 nix （即使多次）
+    cat /tmp/load_nix.sh >>~/.zshrc
+    cat /tmp/load_nix.sh >>~/.shellrc
+    cat /tmp/load_nix.sh >>~/.bashrc
+  fi
 
   cat >>~/.zshrc <<"EOF"
 eval "$(direnv hook zsh)"

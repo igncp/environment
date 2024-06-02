@@ -1,4 +1,10 @@
-{pkgs}: {
+{
+  pkgs,
+  base_config,
+}: let
+  rust_file = base_config + "/rust";
+  has_rust = builtins.pathExists rust_file;
+in rec {
   pkgs-list = with pkgs;
     [openssl openssl.dev pkg-config libiconv rustup]
     ++ (
@@ -9,6 +15,10 @@
       ]
       else []
     );
+  pkgs-list-conditional =
+    if has_rust
+    then pkgs-list
+    else [];
   shellHook = ''
     PATH="$HOME/.rustup/bin:$PATH"
 

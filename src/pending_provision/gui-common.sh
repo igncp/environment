@@ -52,27 +52,6 @@ if [ -f ~/development/environment/project/.config/discord ]; then install_system
 
 if [ -f ~/development/environment/project/.config/gedit ]; then install_system_package gedit; fi
 
-install_system_package rofi
-mkdir -p ~/.rofi_scripts
-add_desktop_common() {
-  CMD="$1"
-  FILE_NAME="$2"
-  NAME="$3"
-  echo "$CMD" >~/.rofi_scripts/"$FILE_NAME".sh
-  chmod +x ~/.rofi_scripts/"$FILE_NAME".sh
-  printf "[Desktop Entry]\nName=$NAME\nExec=/home/igncp/.rofi_scripts/$FILE_NAME.sh\nType=Application" >/tmp/"$FILE_NAME".desktop
-  sudo mv /tmp/"$FILE_NAME".desktop /usr/share/applications/
-}
-# For example:
-# add_desktop_common \
-# '/usr/bin/xdg-open /foo/bar.odt' \
-# 'open_foo_bar' \
-# 'Open Foo Bar'
-# Other command: google-chrome-stable https://foo.com
-
-add_desktop_common \
-  '/home/igncp/.scripts/wallpaper_update.sh' 'wallpaper-update' 'Wallpaper Update'
-
 # Bluetooth headphones command and rofi script
 cat >~/.scripts/bluetooth_headphones_connect.sh <<"EOF"
 #!/usr/bin/env bash

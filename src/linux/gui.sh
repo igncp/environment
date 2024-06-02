@@ -100,4 +100,25 @@ EOF
 
   cp ~/development/environment/src/config-files/rime-config.yaml \
     ~/.config/ibus/rime/default.yaml
+
+  # 例如:
+  # add_desktop_common '/usr/bin/xdg-open /foo/bar.odt' 'open_foo_bar' 'Open Foo Bar'
+  # 其他命令: google-chrome-stable https://foo.com
+  add_desktop_common() {
+    CMD="$1"
+    FILE_NAME="$2"
+    NAME="$3"
+    echo "$CMD" >~/.scripts/"$FILE_NAME".sh
+    chmod +x ~/.scripts/"$FILE_NAME".sh
+    printf "[Desktop Entry]\nName=$NAME\nExec=$HOME/.scripts/$FILE_NAME.sh\nType=Application" >/tmp/"$FILE_NAME".desktop
+    if [ "$IS_NIXOS" = "1" ]; then
+      mkdir -p ~/.local/state/nix/profiles/profile/share/applications
+      sudo mv /tmp/"$FILE_NAME".desktop ~/.local/state/nix/profiles/profile/share/applications
+    else
+      sudo mv /tmp/"$FILE_NAME".desktop /usr/share/applications/
+    fi
+  }
+
+  add_desktop_common \
+    "$HOME/.scripts/wallpaper_update.sh" 'wallpaper-update' 'Wallpaper Update'
 }
