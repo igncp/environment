@@ -1,30 +1,24 @@
 {
-  pkgs,
   lib,
-  unstable,
+  pkgs,
   ...
 }: let
-  unstable_pkgs = import unstable {
-    system = pkgs.system;
-    config.allowUnfree = true;
-  };
-
   home_dir = builtins.getEnv "HOME";
   user = builtins.getEnv "USER";
 
   base_config = home_dir + "/development/environment/project/.config";
 
-  cli-pkgs = import ../common/cli.nix {inherit base_config unstable_pkgs pkgs lib;};
-  node-pkgs = import ../common/node.nix {inherit base_config pkgs lib unstable_pkgs;};
-  go-pkgs = import ../common/go.nix {inherit base_config pkgs lib unstable;};
+  cli-pkgs = import ../common/cli.nix {inherit base_config lib pkgs;};
+  node-pkgs = import ../common/node.nix {inherit base_config lib pkgs;};
+  go-pkgs = import ../common/go.nix {inherit base_config lib pkgs;};
   ruby-pkgs = import ../common/php.nix {inherit base_config pkgs;};
   php-pkgs = import ../common/ruby.nix {inherit base_config pkgs;};
-  java-pkgs = import ../common/java.nix {inherit base_config pkgs lib;};
+  java-pkgs = import ../common/java.nix {inherit base_config lib pkgs;};
   tmux = import ../common/tmux.nix {inherit pkgs;};
 in {
   home.username = user;
   home.homeDirectory = home_dir;
-  home.stateVersion = "23.11";
+  home.stateVersion = "24.05";
   home.packages =
     []
     ++ cli-pkgs.pkgs-list
@@ -33,6 +27,7 @@ in {
     ++ php-pkgs.pkgs-list
     ++ java-pkgs.pkgs-list
     ++ ruby-pkgs.pkgs-list;
+  home.enableNixpkgsReleaseCheck = false;
 
   programs.tmux = tmux.homeManager;
 

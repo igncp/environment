@@ -13,6 +13,12 @@ clone_dev_github_repo() {
 provision_setup_end() {
   sed -i 's|syntax off||' ~/.vimrc
 
+  if [ -f "$PROVISION_CONFIG"/job ]; then
+    echo 'BOOTSTRAP_FILE=~/development/environment/src/scripts/bootstrap/Bootstrap_job.sh' >>~/.shellrc
+  else
+    echo 'BOOTSTRAP_FILE=~/development/environment/src/scripts/bootstrap/Bootstrap_common.sh' >>~/.shellrc
+  fi
+
   cat >>~/.shellrc <<"EOF"
 if [ -z "$TMUX" ]; then
   if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
@@ -21,8 +27,8 @@ if [ -z "$TMUX" ]; then
     echo '已經有一個 tmux 用戶端，未附加到會話'
   elif [ -n "$(pgrep tmux)" ]; then
     tmux attach
-  elif [ -f "$HOME"/development/environment/src/scripts/bootstrap/Bootstrap_common.sh ]; then
-    bash "$HOME"/development/environment/src/scripts/bootstrap/Bootstrap_common.sh
+  elif [ -f "$BOOTSTRAP_FILE" ]; then
+    bash "$BOOTSTRAP_FILE"
   elif [ ! -f $HOME/development/environment/project/.config/no-auto-tmux ]; then
     tmux
   fi

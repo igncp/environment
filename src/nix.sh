@@ -55,11 +55,11 @@ EOF
       sudo chown -R $USER /nix/var/nix/db/
       sudo chown -R $USER /nix/var/nix/temproots/
 
-      # Running in docker
+      # 在 docker 中運行
       if [ -z "$(ps aux | grep nix-daemon | grep -v grep || true)" ]; then
         sudo /nix/var/nix/profiles/default/bin/nix-daemon 2>&1 >/dev/null &
       else
-        echo "Nix daemon is already running"
+        echo "Nix 守護程式已在執行"
       fi
 
       . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
@@ -98,6 +98,6 @@ eval "$(direnv hook zsh)"
 export DIRENV_LOG_FORMAT=""
 EOF
 
-  # To use `nix` inside of a cron script, can add this inside the crontab
+  # 要在 cron 腳本中使用 `nix`，可以將其新增至 crontab 中
   # `PATH=/home/igncp/.nix-profile/bin`
 }

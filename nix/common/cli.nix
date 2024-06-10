@@ -1,6 +1,5 @@
 {
   base_config,
-  unstable_pkgs,
   pkgs,
   lib,
 }: let
@@ -12,6 +11,7 @@
   has_shellcheck = builtins.pathExists (base_config + "/shellcheck");
   has_stripe = builtins.pathExists (base_config + "/stripe");
   has_tailscale = builtins.pathExists (base_config + "/tailscale");
+  has_podman = builtins.pathExists (base_config + "/podman");
 
   no_watchman = builtins.pathExists (base_config + "/no-watchman");
 
@@ -32,6 +32,7 @@ in {
   pkgs-list = with pkgs;
     [
       act # https://github.com/nektos/act
+      age # https://github.com/FiloSottile/age
       alejandra # https://github.com/kamadorueda/alejandra
       bash
       bat # https://github.com/sharkdp/bat
@@ -46,6 +47,8 @@ in {
       fd # https://github.com/sharkdp/fd
       fzf # https://github.com/junegunn/fzf
       gh # https://github.com/cli/cli
+      git
+      git-extras
       gnugrep
       gnupg
       gnused
@@ -58,10 +61,13 @@ in {
       lsof # https://github.com/lsof-org/lsof
       moreutils
       neofetch # https://github.com/dylanaraps/neofetch
+      neovim # https://github.com/neovim/neovim
       neovim-remote # https://github.com/mhinz/neovim-remote.git
+      nil # https://github.com/oxalica/nil
+      nix
       patchelf
       pkg-config
-      podman
+      procps # https://gitlab.com/procps-ng/procps
       pstree
       ripgrep # https://github.com/BurntSushi/ripgrep
       rsync # https://github.com/WayneD/rsync
@@ -72,15 +78,9 @@ in {
       silver-searcher # https://github.com/ggreer/the_silver_searcher
       taskwarrior # https://github.com/GothenburgBitFactory/taskwarrior
       tree
-      unstable_pkgs.age # https://github.com/FiloSottile/age
-      unstable_pkgs.git
-      unstable_pkgs.git-extras
-      unstable_pkgs.neovim # https://github.com/neovim/neovim
-      unstable_pkgs.nil # https://github.com/oxalica/nil
-      unstable_pkgs.nix
-      unstable_pkgs.yt-dlp # https://github.com/yt-dlp/yt-dlp
       wget
       yq # https://github.com/mikefarah/yq
+      yt-dlp # https://github.com/yt-dlp/yt-dlp
       zoxide # https://github.com/ajeetdsouza/zoxide.git
     ]
     ++ lsp-pkgs
@@ -121,7 +121,7 @@ in {
             iotop
             lshw
             strace
-            unstable_pkgs.ast-grep # https://ast-grep.github.io/
+            pkgs.ast-grep # https://ast-grep.github.io/
           ]
           ++ (lib.optional has_cli_openvpn pkgs.update-resolv-conf)
       else []
@@ -136,5 +136,6 @@ in {
     ++ (lib.optional has_cli_openvpn pkgs.openvpn) # https://github.com/OpenVPN/openvpn
     ++ (lib.optional has_pg pkgs.postgresql)
     ++ (lib.optional has_stripe pkgs.stripe-cli) # https://github.com/stripe/stripe-cli
-    ++ (lib.optional has_tailscale pkgs.tailscale);
+    ++ (lib.optional has_tailscale pkgs.tailscale)
+    ++ (lib.optional has_podman pkgs.podman);
 }

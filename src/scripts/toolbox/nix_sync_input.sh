@@ -66,5 +66,11 @@ for SELECTED_DIR in $SELECTED_DIRS; do
     cat $RESOLVED_PATH/flake.lock | jq '.nodes."'"$INPUT"'"'" = $ENV_INPUT"'' | sponge $RESOLVED_PATH/flake.lock
     echo "輸入 '$INPUT' 更新於 '$RESOLVED_PATH/flake.lock'"
   done
+
+  if [ -d "$RESOLVED_PATH"/.direnv ]; then
+    echo "刪除 $RESOLVED_PATH/.direnv"
+    rm -rf "$RESOLVED_PATH"/.direnv
+  fi
+
   echo ""
 done

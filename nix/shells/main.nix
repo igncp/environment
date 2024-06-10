@@ -1,13 +1,5 @@
 # Shell 別名應在別名檔案中定義，檢查二進位檔案是否可用
-{
-  pkgs,
-  unstable,
-}: let
-  unstable_pkgs = import unstable {
-    system = pkgs.system;
-    config.allowUnfree = true;
-  };
-
+{pkgs}: let
   rust-config = import ../common/rust.nix {
     inherit pkgs;
     base_config = "";
@@ -25,7 +17,7 @@
   base_config = "";
 
   go-pkgs = import ../common/go.nix {
-    inherit pkgs lib unstable base_config;
+    inherit pkgs lib base_config;
   };
   php-pkgs = import ../common/php.nix {
     inherit pkgs base_config;
@@ -47,7 +39,7 @@ in
         p7zip
         pigz # https://github.com/madler/pigz
         ugrep # https://github.com/Genivia/ugrep
-        unstable_pkgs.unrar
+        pkgs.unrar
         unzip
         xz # https://github.com/tukaani-project/xz
         zip
@@ -78,7 +70,7 @@ in
         nix-du # https://github.com/symphorien/nix-du
         # 首先你必須運行`nix-index`(大約需要30分鐘)
         nix-index # https://github.com/nix-community/nix-index
-        unstable_pkgs.nix-init # https://github.com/nix-community/nix-init
+        pkgs.nix-init # https://github.com/nix-community/nix-init
       ];
     };
 
@@ -87,7 +79,6 @@ in
       packages = with pkgs;
         [
           hyperfine # https://github.com/sharkdp/hyperfine
-          procps # https://gitlab.com/procps-ng/procps
           vegeta
           tcpdump # https://www.tcpdump.org/
           ethtool # https://mirrors.edge.kernel.org/pub/software/network/ethtool/

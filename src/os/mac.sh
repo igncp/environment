@@ -27,6 +27,17 @@ EOF
 }
 EOF
 
+  cat >>~/.shell_aliases <<"EOF"
+alias MacDisks='diskutil list'
+alias MacFeatures='system_profiler > /tmp/features.txt && echo "/tmp/features.txt written" && less /tmp/features.txt'
+alias BrewListPackages='brew list'
+alias MacServices=$'sudo launchctl list | awk \'{ print $3; }\' | sort | less'
+
+# 編輯此文件: `/etc/pf.conf`
+# 例如: `pass in proto tcp from any to any port 3000`
+alias MacRestartFirewallConfig='sudo pfctl -f /etc/pf.conf'
+EOF
+
   if [ ! -f "$PROVISION_CONFIG"/mac_brew ]; then
     return
   fi
@@ -46,16 +57,6 @@ EOF
 
     touch ~/.check-files/coreutils
   fi
-
-  cat >>~/.shell_aliases <<"EOF"
-alias MacDisks='diskutil list'
-alias MacFeatures='system_profiler > /tmp/features.txt && echo "/tmp/features.txt written" && less /tmp/features.txt'
-alias BrewListPackages='brew list'
-
-# Edit this file: `/etc/pf.conf`
-# For example: `pass in proto tcp from any to any port 3000`
-alias MacRestartFirewallConfig='sudo pfctl -f /etc/pf.conf'
-EOF
 
   if [ ! -f ~/.check-files/init-apps ]; then
     brew install iterm2 || true

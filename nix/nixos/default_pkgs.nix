@@ -1,18 +1,13 @@
 {
   pkgs,
-  unstable,
   lib,
   ...
 }: let
   base_config = ../../project/.config;
-  unstable_pkgs = import unstable {
-    system = pkgs.system;
-    config.allowUnfree = true;
-  };
 
-  cli-pkgs = import ../common/cli.nix {inherit base_config unstable_pkgs pkgs lib;};
-  node-pkgs = import ../common/node.nix {inherit base_config pkgs lib unstable_pkgs;};
-  go-pkgs = import ../common/go.nix {inherit base_config pkgs lib unstable;};
+  cli-pkgs = import ../common/cli.nix {inherit base_config pkgs lib;};
+  node-pkgs = import ../common/node.nix {inherit base_config lib pkgs;};
+  go-pkgs = import ../common/go.nix {inherit base_config lib pkgs;};
   ruby-pkgs = import ../common/ruby.nix {inherit base_config pkgs;};
   rust-pkgs = import ../common/rust.nix {inherit pkgs base_config;};
   java-pkgs = import ../common/java.nix {inherit base_config lib pkgs;};

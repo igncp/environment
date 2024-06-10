@@ -16,7 +16,7 @@
 in {
   pkgs-list = (
     if has_rbenv
-    then [pkgs.rbenv pkgs.libyaml pkgs.zlib]
+    then with pkgs; [rbenv pkgs.libyaml zlib]
     else if has_ruby
     then [ruby_pkg]
     else []

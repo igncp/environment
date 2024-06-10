@@ -1,4 +1,4 @@
-{lib, ...}: {
+{...}: {
   # Make sure opengl is enabled
   hardware.opengl = {
     enable = true;
@@ -7,11 +7,7 @@
   };
 
   # NVIDIA drivers are unfree.
-  nixpkgs.config.allowUnfreePredicate = pkg:
-    builtins.elem (lib.getName pkg) [
-      "nvidia-x11"
-      "nvidia-settings"
-    ];
+  nixpkgs.config.allowUnfree = true;
 
   # Tell Xorg to use the nvidia driver
   services.xserver.videoDrivers = ["nvidia"];

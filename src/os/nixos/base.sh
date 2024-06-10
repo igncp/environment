@@ -5,16 +5,6 @@ set -e
 provision_setup_os_nixos() {
   cat >>~/.shell_aliases <<"EOF"
 alias NixOsProfileHistory='nix profile history --profile /nix/var/nix/profiles/system'
-
-ConfigNixOsProvisionList() {
-    if [ -n "$1" ]; then
-        ~/.scripts/cargo_target/release/provision_choose_config "$1"
-        return
-    fi
-    ~/.scripts/cargo_target/release/provision_choose_config && RebuildNix && Provision
-}
-
-alias NixDevelopPath='nix develop path:$(pwd)' # Also possible to just run a command: `NixDevelopPath -c cargo build`
 alias NixOsClearSpace='sudo nix-collect-garbage'
 alias NixOsListSystemGenerations='sudo nix-env --list-generations --profile /nix/var/nix/profiles/system'
 EOF

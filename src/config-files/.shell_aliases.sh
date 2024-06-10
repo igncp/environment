@@ -20,6 +20,11 @@ alias tree="tree -a"
 alias up='up -o /tmp/up-result.sh'
 alias wget="wget -c"
 
+alias c='cargo --color always '
+alias W='watch --color -n 1 '
+alias W2='watch --color -n 2 '
+alias W5='watch --color -n 5 '
+
 S() { fd --type f . $1 | sad "${@:2}"; }
 
 dl() {
@@ -243,6 +248,15 @@ alias NixListGenerations="nix-env --list-generations"
 alias NixListPackages='nix-env --query "*"'
 alias NixRemovePackage='nix-env -e'
 alias NixReplPkgs="nix repl --expr 'import <nixpkgs>{}'"
+alias NixDevelopPath='nix develop path:$(pwd)' # 也可以只運行指令: `NixDevelopPath -c cargo build`
+
+NixFindPointersToFile() {
+  ITEM="$1"
+  if [ -z "$(echo $ITEM | grep -F /nix/store || true)" ]; then
+    ITEM="/nix/store$ITEM"
+  fi
+  sudo find -L /home -samefile $ITEM 2>/dev/null
+}
 
 alias Nix_FileEval='nix-instantiate --eval'
 alias Nix_EnvInstallPackage='nix-env -iA'
@@ -387,7 +401,7 @@ NixEnvironmentUpgrade() {
   echo "環境升級了，現在可以清理GC、清理空間了"
 }
 
-alias HomeManagerInitFlake='nix run home-manager/release-23.11 -- init'
+alias HomeManagerInitFlake='nix run home-manager/release-24.05 -- init'
 alias HomeManagerDeleteGenerations='home-manager expire-generations "-1 second"'
 
 # The space is important to be able to also run other aliases (not only Nix
@@ -476,6 +490,15 @@ fi
 
 if type magick >/dev/null 2>&1; then
   ImageConvertWebpPng() { magick "$1" "${1%.*}.png"; }
+fi
+
+if type pkg-config >/dev/null 2>&1; then
+  PkgConfigPath() {
+    PKG_CONFIG_PATH=$(pkg-config --variable pc_path pkg-config)
+    echo $PKG_CONFIG_PATH | tr ':' '\n'
+  }
+  alias PkgConfigList='pkg-config --list-all'
+  alias PkgConfigGTKVersion='pkg-config --modversion gtk4'
 fi
 
 alias UpdateBootstrapCommon='n ~/development/environment/src/scripts/bootstrap/Bootstrap_common.sh'

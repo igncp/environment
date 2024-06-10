@@ -14,6 +14,7 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 plugins=(
   git
   ufw
+  rust
   zsh-syntax-highlighting
   zsh-autopair
   zsh-completions

@@ -24,6 +24,8 @@ GimmeAWS() {
   fi
 
   touch ~/.okta_aws_login_config
+  mkdir -p ~/.aws
+  touch ~/.aws/credentials
 
   docker run -it --rm \
     -v ~/.aws/credentials:/root/.aws/credentials \

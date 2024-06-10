@@ -6,18 +6,16 @@
   has_gui = builtins.pathExists ../../project/.config/gui;
   has_android = builtins.pathExists ../../project/.config/android;
   has_custom = builtins.pathExists ./custom.nix;
-  hm_config_name = ".config/nixos-home-manager";
-  has_hm = builtins.pathExists (../../project + ("/" + hm_config_name));
   tmux = import ../common/tmux.nix {inherit pkgs;};
 in {
   imports =
     [
       ./default_pkgs.nix
       /etc/nixos/configuration.nix
+      ./home-manager-entry.nix
     ]
     ++ (lib.optional has_custom ./custom.nix)
     ++ (lib.optional has_android ./android.nix)
-    ++ (lib.optional has_hm ./home-manager-entry.nix)
     ++ (lib.optional has_gui ./gui.nix);
 
   config = {
@@ -65,7 +63,7 @@ in {
       shell = pkgs.zsh;
     };
 
-    system.stateVersion = "23.11";
+    system.stateVersion = "24.05";
 
     programs.tmux = {
       clock24 = true;

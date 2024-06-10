@@ -1,7 +1,6 @@
 {
   lib,
   pkgs,
-  unstable,
   ...
 }: let
   base_config = ../../project/.config;
@@ -11,11 +10,6 @@
   has_nvidia = builtins.readFile (base_config + "/nvidia") == "yes\n";
   has_virtualbox = builtins.pathExists (base_config + "/gui-virtualbox");
   has_vnc = builtins.pathExists (base_config + "/vnc");
-
-  unstable_pkgs = import unstable {
-    system = pkgs.system;
-    config.allowUnfree = true;
-  };
 in {
   imports =
     [./gui-rime.nix]
@@ -35,6 +29,9 @@ in {
       feh
       firefox
       flameshot
+      google-chrome
+      gtk4
+      cairo
       keepass
       libsForQt5.qt5ct
       pavucontrol
@@ -42,7 +39,6 @@ in {
       slack
       steam
       terminator
-      unstable_pkgs.google-chrome
       variety
       vlc
       xclip
@@ -89,7 +85,7 @@ in {
   xdg.portal.config.common.default = "*";
 
   services.xserver.displayManager.lightdm.enable = true;
-  services.xserver.displayManager.defaultSession = "none+i3";
+  services.displayManager.defaultSession = "none+i3";
 
   services.logind.lidSwitch = "ignore";
   services.logind.extraConfig = ''
@@ -101,13 +97,11 @@ in {
   # 螢幕鎖
   programs.xss-lock.enable = true;
 
-  services.xserver = {
-    libinput.enable = true;
-  };
+  services.libinput.enable = true;
 
-  services.xserver = {
+  services.xserver.xkb = {
     layout = "us";
-    xkbVariant = "";
+    variant = "";
   };
 
   services.printing.enable = true;
@@ -132,5 +126,11 @@ in {
     # 某些功能，包括 CLI 整合和系統身份驗證支持，需要在某些桌面環境（例如
     # Plasma）上啟用 PolKit 整合。
     polkitPolicyOwners = ["igncp"];
+  };
+
+  qt = {
+    enable = true;
+    platformTheme = "gnome";
+    style = "adwaita-dark";
   };
 }

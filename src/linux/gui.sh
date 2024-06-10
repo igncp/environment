@@ -33,6 +33,17 @@ EOF
     fi
   fi
 
+  if type rofi >/dev/null 2>&1; then
+    mkdir -p ~/.config/rofi
+    if [ ! -f ~/.config/rofi/config.rasi ]; then
+      rm -rf ~/rofi_theme
+      git clone https://github.com/dracula/rofi ~/rofi_theme
+      cp ~/rofi_theme/theme/config1.rasi ~/.config/rofi/config.rasi
+      rm -rf ~/rofi_theme
+      sed -i '/font: /d' ~/.config/rofi/config.rasi
+    fi
+  fi
+
   # GTK
   #   https://www.gnome-look.org/browse/ord/rating/
   #   Can run: lxappearance # including inside Rofi
