@@ -26,9 +26,12 @@ _RustBuildProvisionPackages() {
     fi
     if [ ! -f "/usr/local/bin/environment_scripts/$FILE_NAME" ] || [ "$1" == "-f" ]; then
       (cd "$FILE_PATH" &&
-        cargo build --release --jobs 1 && \
-        sudo cp $HOME/.scripts/cargo_target/release/"$FILE_NAME" /usr/local/bin/environment_scripts/ && \
-        sudo chmod +x /usr/local/bin/environment_scripts/"$FILE_NAME" && \
+        echo "" &&
+        echo "Building: $FILE_NAME" &&
+        cargo build --release --jobs 1 &&
+        echo "Copying to /usr/local/bin/environment_scripts/$FILE_NAME" &&
+        sudo cp $HOME/.scripts/cargo_target/release/"$FILE_NAME" /usr/local/bin/environment_scripts/ &&
+        sudo chmod +x /usr/local/bin/environment_scripts/"$FILE_NAME" &&
         sudo chown $USER /usr/local/bin/environment_scripts/"$FILE_NAME")
     fi
   done < <(find ~/development/environment/src/scripts/misc -maxdepth 1 -mindepth 1 -type d -print0)

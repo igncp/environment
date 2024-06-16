@@ -428,7 +428,7 @@ RebuildNix() {
 # # To patch a binary interpreter path, for example for 'foo:
 # patchelf --set-interpreter /usr/lib64/ld-linux-aarch64.so.1 ./foo
 # # To read the current interpreter:
-# readelf -a ./foo | ag interpreter
+# readelf -a ./foo | grep interpreter
 # # To print the dynamic libraries:
 # ldd -v ./foo
 # # To find libraries that need patching
@@ -501,4 +501,9 @@ if type pkg-config >/dev/null 2>&1; then
   alias PkgConfigGTKVersion='pkg-config --modversion gtk4'
 fi
 
-alias UpdateBootstrapCommon='n ~/development/environment/src/scripts/bootstrap/Bootstrap_common.sh'
+if type ps_mem >/dev/null 2>&1; then
+  alias MemoryPS='sudo --preserve-env=PATH ps_mem | less'
+fi
+
+alias UpdateBootstrap='n $BOOTSTRAP_FILE'
+alias TmuxNotesPane="tmux split-window -h zsh -c 'cd ~/development/notes && zsh'"

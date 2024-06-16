@@ -44,6 +44,7 @@ in {
       docker-buildx
       docker-compose
       dua # https://github.com/Byron/dua-cli
+      fastfetch # https://github.com/fastfetch-cli/fastfetch
       fd # https://github.com/sharkdp/fd
       fzf # https://github.com/junegunn/fzf
       gh # https://github.com/cli/cli
@@ -60,7 +61,6 @@ in {
       libiconv
       lsof # https://github.com/lsof-org/lsof
       moreutils
-      neofetch # https://github.com/dylanaraps/neofetch
       neovim # https://github.com/neovim/neovim
       neovim-remote # https://github.com/mhinz/neovim-remote.git
       nil # https://github.com/oxalica/nil
@@ -116,12 +116,13 @@ in {
       then
         with pkgs;
           [
+            ast-grep # https://ast-grep.github.io/
             dmidecode
             gnumake
             iotop
             lshw
+            ps_mem # https://github.com/pixelb/ps_mem
             strace
-            pkgs.ast-grep # https://ast-grep.github.io/
           ]
           ++ (lib.optional has_cli_openvpn pkgs.update-resolv-conf)
       else []

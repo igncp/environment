@@ -32,6 +32,7 @@ in {
       openssl
       openssl.dev
       openvpn
+      pciutils # 包括 lspci
       ps_mem
       statix
       vnstat

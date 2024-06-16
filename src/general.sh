@@ -26,7 +26,6 @@ provision_setup_general() {
   install_system_package "git"
   install_system_package "jq"
   install_system_package "lsof"
-  install_system_package "neofetch"
   install_system_package "rsync"
   install_system_package "tree"
   install_system_package "wget"

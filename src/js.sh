@@ -114,16 +114,6 @@ export PATH="$PATH:$HOME/.npm-packages/bin"
 NPMVersions() { npm view $1 versions --json; } # NPMVersions react
 EOF
 
-  cat >/tmp/clean-vim-js-syntax.sh <<"EOF"
-sed -i 's|const |async await |' ~/.local/share/nvim/lazy/vim-javascript-syntax/syntax/javascript.vim
-sed -i 's|let var |let var const |' ~/.local/share/nvim/lazy/vim-javascript-syntax/syntax/javascript.vim
-sed -i 's|export from|export|' ~/.local/share/nvim/lazy/vim-javascript-syntax/syntax/javascript.vim
-sed -i 's|import public|import from type public|' ~/.local/share/nvim/lazy/vim-javascript-syntax/syntax/javascript.vim
-echo "Changed vim javascript syntax"
-EOF
-
-  install_nvim_package jelera/vim-javascript-syntax "sh /tmp/clean-vim-js-syntax.sh"
-
   install_omzsh_plugin lukechilds/zsh-better-npm-completion
 
   if [ ! -f ~/.npm-completion ]; then

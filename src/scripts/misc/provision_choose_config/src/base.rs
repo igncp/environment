@@ -1,11 +1,10 @@
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 
 pub trait IConfig {
-    fn get_config_file_path(&self, config_item: &str) -> String;
-    fn get_enable_command(&self, config_item: &str) -> String;
-    fn get_disable_command(&self, config_item: &str) -> String;
-    fn get_existing(&self) -> HashSet<String>;
-    fn get_content(&self, config: &HashSet<String>) -> HashMap<String, String>;
-    fn get_all_possible(&self) -> Vec<String>;
+    fn get_all_possible(&self) -> &Vec<String>;
+    fn get_config_content(&self, config_item: &str) -> Option<&String>;
+    fn get_config_metadata(&self, config_item: &str) -> Option<String>;
     fn get_default_values(&self) -> HashMap<String, String>;
+    fn is_config_enabled(&self, config_item: &str) -> bool;
+    fn toggle_item(&mut self, config_item: &str, force: Option<bool>);
 }

@@ -62,7 +62,10 @@ local nvim_plugins = {
     lazy = false,
     opts = { useDefaultKeymaps = true },
   },
-  "nvim-treesitter/nvim-treesitter",
+  {
+    "nvim-treesitter/nvim-treesitter",
+    build = ":TSUpdate"
+  },
   -- https://github.com/nvim-treesitter/nvim-treesitter-textobjects
   "nvim-treesitter/nvim-treesitter-textobjects",
   "jbyuki/venn.nvim",
@@ -236,6 +239,9 @@ vim.cmd([[
 hi TabLine guifg=LightBlue
 hi TabLineSel guifg=Orange
 hi Comment guifg=lightcyan
+
+hi @keyword.import.tsx guifg=#e3d688
+hi @keyword.import.typescript guifg=#e3d688
 ]])
 
 local custom_path = os.getenv("HOME") ..
@@ -527,3 +533,10 @@ else
   vim.g.vista_default_executive = 'coc'
   vim.g.vista_sidebar_width = 100
 end
+
+require 'nvim-treesitter.configs'.setup {
+  auto_install = true,
+  highlight = {
+    enable = true,
+  },
+}
