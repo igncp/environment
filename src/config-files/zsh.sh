@@ -22,8 +22,6 @@ plugins=(
 source $ZSH/oh-my-zsh.sh
 
 # http://zsh.sourceforge.net/Doc/Release/Zsh-Line-Editor.html
-bindkey "\C-g" vi-forward-blank-word
-bindkey "\C-f" vi-backward-blank-word
 bindkey "\C-u" kill-region
 
 nixShells () {
@@ -94,6 +92,13 @@ backward-kill-dir () {
 }
 zle -N backward-kill-dir
 bindkey '\C-h' backward-kill-dir
+forward-kill-dir () {
+    local WORDCHARS=${WORDCHARS/\/}
+    zle kill-word
+    zle delete-char
+}
+zle -N forward-kill-dir
+bindkey '\C-g' forward-kill-dir
 
 SOCKET_NAME="$(echo $TMUX | cut -f1 -d',' | sed -E 's|(/private)?/tmp/tmux-[0-9]*/||' |
   sed -E 's|/run/user/[0-9]*/tmux-[0-9]*/||')"

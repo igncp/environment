@@ -17,7 +17,7 @@ GitFilesAddedDiff() {
   R_PATH="$(git rev-parse --show-toplevel)";
   git diff --name-only --diff-filter=A "$@" | sed 's|^|'"$R_PATH"'/|';
 }
-GitDiff() { git diff --color --relative $@; }
+GitDiff() { git diff --color $@; }
 GitsShow() { git show --color $@; }
 GitOpenStatusFiles() { $EDITOR -p $(git status --porcelain $1 | grep -vE "^ D" | sed s/^...//); }
 GitPrintRemoteUrl() { git config --get "remote.${1:-origin}.url"; }

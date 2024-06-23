@@ -23,6 +23,7 @@ alias AdbLogcat='adb shell logcat'
 alias AdbAPKs='adb shell pm list packages -f'
 alias AdbShutdown='adb shell reboot -p'
 alias AdbForceStop='adb shell am force-stop' # pass package name
+alias AdbDevMenu='adb shell input keyevent 82'
 
 alias AndroidStudioExit='studio.sh & exit'
 alias AndroidAVDManagerListAVD='avdmanager list avd'

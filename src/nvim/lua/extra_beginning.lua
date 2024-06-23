@@ -299,6 +299,16 @@ vim.api.nvim_create_autocmd("BufWritePost",
   })
 
 function SaveRegisterIntoClipboard()
+  local has_config_file = M.has_config("no-clipboard-ssh")
+
+  if has_config_file then
+    vim.cmd([[
+silent call setreg('+', getreg('0', 1, 1))
+]])
+
+    return
+  end
+
   vim.cmd([[
 silent call writefile(getreg('0', 1, 1), "/tmp/clipboard-ssh")
 silent !cat /tmp/clipboard-ssh | /usr/local/bin/environment_scripts/clipboard_ssh send && rm /tmp/clipboard-ssh
@@ -537,6 +547,10 @@ end
 require 'nvim-treesitter.configs'.setup {
   auto_install = true,
   highlight = {
+    disable = {
+      -- 連結顏色不正確
+      "markdown"
+    },
     enable = true,
   },
 }

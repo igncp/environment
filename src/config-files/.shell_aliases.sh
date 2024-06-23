@@ -25,7 +25,9 @@ alias W='watch --color -n 1 '
 alias W2='watch --color -n 2 '
 alias W5='watch --color -n 5 '
 
-S() { fd --type f . $1 | sad "${@:2}"; }
+# 對於區分大小寫，使用 `-f I`
+S() { fd --type f . ${3:-.} | h "$1" "$2" "${@:4}"; }
+SK() { fd --type f . ${3:-.} | h "$1" "$2" -k "${@:4}"; }
 
 dl() {
   CONTAINER="$(docker ps -a | grep $1 | awk '{ print $1; }' || true)"
@@ -289,6 +291,7 @@ ClearSpace() {
     return
   fi
 
+  echo "你應該先停止docker容器"
   read "?你呼叫這個函數了嗎 'NixGCRootsDelete'?。 按 ctrl-c 停止。 "
 
   sudo echo ''
@@ -320,7 +323,6 @@ ClearSpace() {
   fi
 
   if type docker >/dev/null 2>&1; then
-    docker kill $(docker ps -q)
     docker network prune -f || true
     docker system prune -af || true
     docker volume prune -f || true
