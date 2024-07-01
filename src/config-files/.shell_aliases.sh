@@ -152,6 +152,7 @@ alias FormatProto='clang-format -i'
 alias GeoInfo='curl -s ipinfo.io | jq .'
 alias HierarchyManual='man hier'
 alias IPPublic='curl ifconfig.co'
+alias IPLocal=$'ifconfig -a | ag "inet\\b" | ag -v " 127" | awk \'{ print $2; }\' | sort'
 alias LastColumn="awk '{print "'$NF'"}'"
 alias PathShow='echo $PATH | tr ":" "\n" | sort | uniq | less'
 alias Provision="(cd ~/development/environment && bash src/main.sh)"

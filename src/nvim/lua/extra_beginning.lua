@@ -74,7 +74,17 @@ local nvim_plugins = {
   {
     'nvim-telescope/telescope.nvim',
     dependencies = { 'nvim-lua/plenary.nvim' }
-  }
+  },
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    main = "ibl",
+    opts = {
+      scope = {
+        show_start = false,
+        show_end = false,
+      }
+    }
+  },
 }
 
 require("lazy").setup(nvim_plugins)
@@ -554,3 +564,9 @@ require 'nvim-treesitter.configs'.setup {
     enable = true,
   },
 }
+
+local hooks = require "ibl.hooks"
+
+hooks.register(hooks.type.ACTIVE, function()
+  return vim.bo.filetype == "yaml"
+end)
