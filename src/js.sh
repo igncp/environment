@@ -110,8 +110,11 @@ vnoremap <leader>jz y:!node -e "console.log(encodeURIComponent('<c-r>"'))" > /tm
 EOF
 
   cat >>~/.shellrc <<"EOF"
-export PATH="$PATH:$HOME/.npm-packages/bin"
+export PATH="$HOME/.npm-packages/bin:$PATH"
 NPMVersions() { npm view $1 versions --json; } # NPMVersions react
+EOF
+  cat >>~/.zshrc <<"EOF"
+export PATH="$HOME/.npm-packages/bin:$PATH"
 EOF
 
   install_omzsh_plugin lukechilds/zsh-better-npm-completion
@@ -134,6 +137,10 @@ EOF
   cat >>~/.shell_aliases <<"EOF"
 Serve() { PORT="$2"; live-server --port="${PORT:=9000}" $1; }
 alias PlaywrightTrace='npx playwright show-trace'
+
+if type -t bun &>/dev/null; then
+  alias BunUpgrade='bunx npm-check-updates -i'
+fi
 EOF
 
   cat >>/tmp/expected-vscode-extensions <<"EOF"

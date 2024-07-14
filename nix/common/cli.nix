@@ -81,7 +81,6 @@ in {
       wget
       yq # https://github.com/mikefarah/yq
       yt-dlp # https://github.com/yt-dlp/yt-dlp
-      zoxide # https://github.com/ajeetdsouza/zoxide.git
     ]
     ++ lsp-pkgs
     # 正在測試的新增內容
