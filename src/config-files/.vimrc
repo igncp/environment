@@ -371,3 +371,5 @@ function! s:yankshift(event)
 endfunction
 
 hi Comment guifg=lightcyan
+
+autocmd BufNewFile,BufRead Podfile,*.podspec set filetype=ruby

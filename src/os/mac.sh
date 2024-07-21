@@ -36,6 +36,8 @@ alias MacServices=$'sudo launchctl list | awk \'{ print $3; }\' | sort | less'
 # 編輯此文件: `/etc/pf.conf`
 # 例如: `pass in proto tcp from any to any port 3000`
 alias MacRestartFirewallConfig='sudo pfctl -f /etc/pf.conf'
+
+alias SimulatorErase='xcrun simctl shutdown all && xcrun simctl erase all'
 EOF
 
   if [ ! -f "$PROVISION_CONFIG"/mac_brew ]; then
