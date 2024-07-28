@@ -138,7 +138,7 @@ EOF
 Serve() { PORT="$2"; live-server --port="${PORT:=9000}" $1; }
 alias PlaywrightTrace='npx playwright show-trace'
 
-if type -t bun &>/dev/null; then
+if type -a bun &>/dev/null; then
   alias BunUpgrade='bunx npm-check-updates -i'
 fi
 EOF

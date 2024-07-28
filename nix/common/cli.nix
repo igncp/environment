@@ -44,6 +44,7 @@ in {
       docker-buildx
       docker-compose
       dua # https://github.com/Byron/dua-cli
+      entr # https://github.com/eradman/entr
       fastfetch # https://github.com/fastfetch-cli/fastfetch
       fd # https://github.com/sharkdp/fd
       fzf # https://github.com/junegunn/fzf

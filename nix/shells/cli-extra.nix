@@ -20,7 +20,6 @@ in {
         doctl # https://github.com/digitalocean/doctl
         dogdns # https://github.com/ogham/dog
         duf # https://github.com/muesli/duf
-        entr # https://github.com/eradman/entr
         exiftool # https://github.com/exiftool/exiftool
         graphviz # https://gitlab.com/graphviz/graphviz
         mkcert # https://github.com/FiloSottile/mkcert
