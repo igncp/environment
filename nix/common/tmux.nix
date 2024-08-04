@@ -24,8 +24,6 @@
     set -g status-left-length 50
     set -g window-status-current-format ""
     set -g window-status-format ""
-    set status-utf8 on
-    set utf8 on
     set -g default-terminal "screen-256color"
 
     set -g status-bg black
@@ -44,8 +42,6 @@
     # keep your finger on ctrl, or don't
     bind-key ^D detach-client
 
-    set -wg mode-style bg=dark,fg=lightblue
-    set -wg message-style bg=dark,fg=lightblue
     set -wg mode-keys vi
 
     new-session -n $HOST

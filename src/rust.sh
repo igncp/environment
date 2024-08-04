@@ -18,6 +18,7 @@ install_cargo_crate() {
 provision_setup_rust() {
   cat >>~/.shell_aliases <<"EOF"
 _RustBuildProvisionPackages() {
+  sudo echo ""
   rustup toolchain install stable
   while IFS= read -r -d '' FILE_PATH; do
     FILE_NAME=$(basename "$FILE_PATH")

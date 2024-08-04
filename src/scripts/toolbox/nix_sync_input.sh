@@ -43,6 +43,11 @@ fi
 for SELECTED_DIR in $SELECTED_DIRS; do
   eval RESOLVED_PATH="$SELECTED_DIR"
 
+  if [ ! -d "$RESOLVED_PATH" ]; then
+    echo "目錄不存在: $RESOLVED_PATH"
+    continue
+  fi
+
   if [ ! -f "$RESOLVED_PATH"/flake.lock ]; then
     ls -lah "$RESOLVED_PATH"
     echo "flake.lock not found in $RESOLVED_PATH"

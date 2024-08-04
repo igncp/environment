@@ -129,7 +129,7 @@ in {
     )
     ++ (
       if has_aws
-      then with pkgs; [awscli2 eksctl]
+      then with pkgs; [awscli2 eksctl awsebcli]
       else []
     )
     ++ (lib.optional has_shellcheck pkgs.shellcheck)
