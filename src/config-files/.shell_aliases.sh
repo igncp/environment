@@ -510,3 +510,8 @@ fi
 
 alias UpdateBootstrap='n $BOOTSTRAP_FILE'
 alias TmuxNotesPane="tmux split-window -h zsh -c 'cd ~/development/notes && zsh'"
+
+if type pyenv >/dev/null 2>&1; then
+  alias PyEnvList='pyenv install --list'
+  alias PyEnvVersions='pyenv versions'
+fi

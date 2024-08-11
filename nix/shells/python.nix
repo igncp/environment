@@ -33,4 +33,28 @@ in {
       export PATH="$PROJECT_DIR/bin:$PATH"
     '';
   };
+
+  pyenv = pkgs.mkShell {
+    packages = with pkgs; [
+      bzip2
+      gcc13
+      gdb
+      gnumake
+      libffi
+      libgcc
+      ncurses
+      openssl
+      pyenv
+      readline
+      xz
+      zlib
+    ];
+
+    shellHook = ''
+      export PYENV_ROOT="$HOME/.pyenv"
+      export PATH="$PYENV_ROOT/bin:$PATH"
+
+      eval "$(pyenv init -)"
+    '';
+  };
 }

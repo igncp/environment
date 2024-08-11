@@ -12,4 +12,9 @@ if [ -z "$SESSION" ]; then exit 0; fi
 
 tmux switch-client -t "$SESSION"
 EOF
+
+  if [ -f ~/.tmux.conf ]; then
+    # 新位置由 Nix 儲存
+    rm -rf ~/.tmux.conf
+  fi
 }
