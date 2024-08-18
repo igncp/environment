@@ -12,6 +12,7 @@
   has_stripe = builtins.pathExists (base_config + "/stripe");
   has_tailscale = builtins.pathExists (base_config + "/tailscale");
   has_podman = builtins.pathExists (base_config + "/podman");
+  has_mssql = builtins.pathExists (base_config + "/mssql");
 
   no_watchman = builtins.pathExists (base_config + "/no-watchman");
 
@@ -38,7 +39,6 @@ in {
       bat # https://github.com/sharkdp/bat
       coreutils-full
       curl
-      delta # https://github.com/dandavison/delta
       direnv # https://github.com/direnv/direnv
       docker
       docker-buildx
@@ -138,5 +138,6 @@ in {
     ++ (lib.optional has_pg pkgs.postgresql)
     ++ (lib.optional has_stripe pkgs.stripe-cli) # https://github.com/stripe/stripe-cli
     ++ (lib.optional has_tailscale pkgs.tailscale)
+    ++ (lib.optional has_mssql pkgs.sqlcmd)
     ++ (lib.optional has_podman pkgs.podman);
 }

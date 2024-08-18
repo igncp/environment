@@ -38,7 +38,6 @@ in {
     packages = with pkgs; [
       bzip2
       gcc13
-      gdb
       gnumake
       libffi
       libgcc
