@@ -373,3 +373,6 @@ endfunction
 hi Comment guifg=lightcyan
 
 autocmd BufNewFile,BufRead Podfile,*.podspec set filetype=ruby
+
+nnoremap <leader>a :CopilotChatToggle<cr>
+vnoremap <leader>a :<bs><bs><bs><bs><bs>CopilotChatToggle<cr>

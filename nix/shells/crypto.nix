@@ -2,7 +2,10 @@
   # @upgrade
   solanaCommitSha = "e0203f2";
 
-  rust-config = import ../common/rust.nix {inherit pkgs;};
+  rust-config = import ../common/rust.nix {
+    inherit pkgs;
+    base_config = "unused";
+  };
   protobuf-pkgs = with pkgs; [
     buf # https://github.com/bufbuild/buf
     protobuf

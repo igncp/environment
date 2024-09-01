@@ -70,6 +70,12 @@ alias grh="git reset --hard"
 alias gs="git show"
 alias gss='git commit -v -t $(git rev-parse --show-toplevel)/.git/COMMIT_EDITMSG'
 
+gx() {
+  BRANCH=${1:-main}
+  git merge $BRANCH;
+  git reset $(git merge-base HEAD $BRANCH);
+}
+
 gd() { git diff ${1:-HEAD} "${@:2}"; }
 g() { eval "git commit -m '$@'"; }
 gn() { eval "git commit --no-verify -m '$@'"; }

@@ -46,6 +46,15 @@ services:
     restart: unless-stopped
 EOF
 
+  mkdir -p ~/.pi-hole/etc-dnsmasq.d
+
+  if [ ! -f ~/.pi-hole/etc-dnsmasq.d/42-reverse-proxied-subdomains.conf ]; then
+    # 應該對其進行編輯，以包含運行 Pi-hole 的電腦的 IP 位址以及正確的主機名
+    cat ~/.pi-hole/etc-dnsmasq.d/42-reverse-proxied-subdomains.conf <<"EOF"
+address=/local-rp5/192.168.0.0
+EOF
+  fi
+
   cat >>~/.shell_aliases <<"EOF"
 alias PiHoleStart='(cd ~/.pi-hole/ && docker compose up -d)'
 alias PiHoleStop='(cd ~/.pi-hole/ && docker compose down)'

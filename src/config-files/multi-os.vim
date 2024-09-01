@@ -31,6 +31,6 @@ vnoremap <leader>; zf
 nnoremap <Enter> G
 nnoremap <BS> gg
 
-nnoremap <leader>a ggVG$
+nnoremap <leader>A ggVG$
 cnoremap <c-A> <Home>
 cnoremap <c-E> <End>
