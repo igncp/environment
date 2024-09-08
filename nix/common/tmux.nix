@@ -35,6 +35,7 @@
     bind '"' split-window -c "#{pane_current_path}"
     bind % split-window -h -c "#{pane_current_path}"
     bind c new-window -c "#{pane_current_path}"
+    bind \} swap-pane -D \; select-pane -L
 
     # cycle through the panes in the window
     bind -r Tab select-pane -t :.+

@@ -6,7 +6,7 @@ if [ -z $1 ]; then
   if [ ! -f /root/.check_files/init_docker ]; then
     apt-get update &&
       apt-get install -y \
-        sudo curl xz-utils procps less openssh-server alacritty
+        sudo curl xz-utils procps less openssh-server alacritty gcc
 
     rm /etc/localtime &&
       ln -s /usr/share/zoneinfo/Asia/Hong_Kong /etc/localtime
@@ -33,6 +33,13 @@ fi
 cd /home/igncp/development/environment
 
 if [ ! -f ~/.check_files/init_docker ]; then
+  sudo rm -rf /etc/bashrc.* /etc/zshrc.*
+  sudo rm -rf /etc/bash.* /etc/zsh.*
+  sudo rm -rf /etc/profile.d/nix.sh*
+
+  sudo chown -R igncp ~/development/environment/project
+  sudo chown igncp ~/development/environment
+
   mkdir -p project/.config &&
     echo 'iceberg' >project/.config/vim-theme &&
     bash src/main.sh

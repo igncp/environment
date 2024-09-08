@@ -94,7 +94,7 @@ provision_get_ps1() {
       return
     fi
 
-    TAILSCALE_STATUS=$(tailscale status --peers=false | grep -vqE '(stopped|Logged out)' && echo connected || echo '')
+    TAILSCALE_STATUS=$(tailscale status --peers=false 2>&1 | grep -vqE '(stopped|Logged out|client version)' && echo connected || echo '')
 
     if [ -z "$TAILSCALE_STATUS" ]; then
       return
@@ -160,10 +160,5 @@ provision_get_ps1() {
 }
 
 provision_get_ps1_right() {
-  ID=$(task next limit:1 2>&1 | grep -v 'No matches.' | tail -n +4 | head -n 1 | sed "s/^ //" | cut -d " " -f1 | grep .)
-  if [ -z "$ID" ]; then
-    printf ""
-  else
-    printf "[$(task _get "$ID".description)]"
-  fi
+  printf ""
 }

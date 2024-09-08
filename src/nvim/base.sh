@@ -11,6 +11,11 @@ provision_setup_nvim_base() {
     ln -s ~/.vim ~/.config/nvim
     ln -s ~/.vimrc ~/.config/nvim/init.vim
     touch ~/.check-files/neovim
+
+    if [ "$IS_DEBIAN" = "1" ]; then
+      # 如果沒有這個，打開文件時就會出錯
+      sudo apt install -y gcc
+    fi
   fi
 
   install_nvim_package LnL7/vim-nix                   # https://github.com/LnL7/vim-nix

@@ -100,7 +100,9 @@ EOF
 export DOCKER_BUILDKIT=1
 EOF
   cat >>~/.shell_aliases <<"EOF"
-alias DockerBuildXInstall='docker run --privileged --rm tonistiigi/binfmt --install all'
+DockerBuildXInstallDriver() {
+  docker buildx create --name mybuilder --use --bootstrap
+}
 # Just run once, for allowing the `--push` flag on `docker buildx build`
 alias DockerBuildXDriver='docker buildx create --use --name build --node build --driver-opt network=host'
 EOF

@@ -2,6 +2,8 @@
 
 set -e
 
+. src/os/mac/brew.sh
+
 provision_setup_os_mac() {
   # Rime - Squirrel
   #   I can't remember the location, but it may be from:
@@ -33,38 +35,39 @@ alias MacFeatures='system_profiler > /tmp/features.txt && echo "/tmp/features.tx
 alias BrewListPackages='brew list'
 alias MacServices=$'sudo launchctl list | awk \'{ print $3; }\' | sort | less'
 
+MacListServices() { launchctl  list | ag -v '^-' | awk '{ print $3; }' | ag -v ^Label$ | sort | less; }
+alias MacListAppsAppStore='mdfind kMDItemAppStoreHasReceipt=1'
+alias MacEjectAll="osascript -e 'tell application "'"Finder"'" to eject (every disk whose ejectable is true)'"
+
 # 編輯此文件: `/etc/pf.conf`
 # 例如: `pass in proto tcp from any to any port 3000`
 alias MacRestartFirewallConfig='sudo pfctl -f /etc/pf.conf'
 
 alias SimulatorErase='xcrun simctl shutdown all && xcrun simctl erase all'
+MacListServices() { launchctl  list | ag -v '^-' | awk '{ print $3; }' | ag -v ^Label$ | sort | less; }
 EOF
 
-  if [ ! -f "$PROVISION_CONFIG"/mac_brew ]; then
-    return
-  fi
+  disable_mac_hotkey() {
+    NUM=$1
+    CURRENT_VALUE="$(plutil -extract AppleSymbolicHotKeys.$NUM.enabled raw -o - ~/Library/Preferences/com.apple.symbolichotkeys.plist)"
+    if [ $CURRENT_VALUE = "true" ]; then
+      echo "更新鍵盤快速鍵: $NUM"
+      plutil -replace AppleSymbolicHotKeys.$NUM.enabled -bool NO ~/Library/Preferences/com.apple.symbolichotkeys.plist
+      defaults read com.apple.symbolichotkeys.plist >/dev/null
+      /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
+    fi
+  }
 
-  cat >>~/.shellrc <<"EOF"
-eval "$(/opt/homebrew/bin/brew shellenv)"
-export PATH="/opt/homebrew/opt/gnu-sed/libexec/gnubin:$PATH"
-EOF
-
-  if ! type "brew" >/dev/null 2>&1; then
-    bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-  fi
-
-  if [ ! -f ~/.check-files/coreutils ]; then
-    brew install coreutils
-    brew install diffutils # for diff
-
-    touch ~/.check-files/coreutils
-  fi
+  # Mission Control: Option + up
+  disable_mac_hotkey 32
+  # Mission Control: left and right
+  disable_mac_hotkey 79
+  disable_mac_hotkey 80
+  disable_mac_hotkey 81
+  disable_mac_hotkey 82
 
   if [ ! -f ~/.check-files/init-apps ]; then
-    brew install iterm2 || true
-    brew install mysqlworkbench || true
-
-    # Reduce transparency
+    # 降低透明度
     defaults write com.apple.universalaccess reduceTransparency -bool true || true
 
     # Safari debug
@@ -74,40 +77,29 @@ EOF
       defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled -bool true &&
       defaults write -g WebKitDeveloperExtras -bool true || true
 
-    # Keep the screen on after disconnecting the screen sharing client
+    # 斷開螢幕分享用戶端後保持螢幕常亮
     sudo defaults write /Library/Preferences/com.apple.RemoteManagement RestoreMachineState -bool NO
 
     # Xcode command-line tools
     xcode-select --install || true
 
-    # Disable automatic arrangement of spaces
+    # 停用空間的自動排列
     defaults write com.apple.dock mru-spaces -bool false && killall Dock
-    # Autohide dock
+    # 自動隱藏底座
     defaults write com.apple.dock autohide -bool true && killall Dock
-    # Disable icon bounce on notification
+    # 禁用通知上的圖示彈跳
     defaults write com.apple.dock no-bouncing -bool false && killall Dock
-    # Show hidden files
+    # 顯示隱藏文件
     defaults write com.apple.finder AppleShowAllFiles true
-    # Show hidden dir
+    # 顯示隱藏目錄
     chflags nohidden ~/Library
-    # Hide desktop icons
+    # 隱藏桌面圖標
     defaults write com.apple.finder CreateDesktop -bool false && killall Finder
-    # Show pathbar at the bottom
+    # 在底部顯示路徑欄
     defaults write com.apple.finder ShowPathbar -bool true
-
-    cat >>~/.shell_aliases <<"EOF"
-alias MacListAppsAppStore='mdfind kMDItemAppStoreHasReceipt=1'
-alias MacEjectAll="osascript -e 'tell application "'"Finder"'" to eject (every disk whose ejectable is true)'"
-EOF
 
     touch ~/.check-files/init-apps
   fi
 
-  if ! type pinentry-tty >/dev/null 2>&1; then
-    # Using `brew` because didn't find it in `nixpkgs`
-    brew install pinentry
-  fi
-  mkdir -p ~/.gnupg
-  echo "pinentry-program /opt/homebrew/bin/pinentry-tty" >~/.gnupg/gpg-agent.conf
-
+  provision_setup_os_mac_brew
 }

@@ -170,7 +170,7 @@ alias CrontabUser='crontab -e'
 alias CrontabRoot='sudo EDITOR=vim crontab -e'
 
 alias Headers='curl -I' # e.g. Headers google.com
-alias Ports='sudo netstat -tulanp'
+alias Ports='SudoNix netstat -tulanp'
 alias NetstatConnections='netstat -nputw'
 alias AnsiColorsRemove="sed 's/\x1b\[[0-9;]*m//g'"
 

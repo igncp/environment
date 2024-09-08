@@ -14,6 +14,8 @@
   has_podman = builtins.pathExists (base_config + "/podman");
   has_mssql = builtins.pathExists (base_config + "/mssql");
 
+  logdy = import ../derivations/logdy.nix {inherit pkgs;};
+
   no_watchman = builtins.pathExists (base_config + "/no-watchman");
 
   is_linux =
@@ -60,6 +62,7 @@ in {
       killall
       less
       libiconv
+      logdy
       lsof # https://github.com/lsof-org/lsof
       moreutils
       neovim # https://github.com/neovim/neovim
@@ -77,7 +80,7 @@ in {
       sd # https://github.com/chmln/sd
       shfmt # https://github.com/mvdan/sh
       silver-searcher # https://github.com/ggreer/the_silver_searcher
-      taskwarrior # https://github.com/GothenburgBitFactory/taskwarrior
+      taskwarrior3 # https://github.com/GothenburgBitFactory/taskwarrior
       tree
       wget
       yq # https://github.com/mikefarah/yq
@@ -123,6 +126,8 @@ in {
             lshw
             ps_mem # https://github.com/pixelb/ps_mem
             strace
+            unixtools.netstat
+            xclip
           ]
           ++ (lib.optional has_cli_openvpn pkgs.update-resolv-conf)
       else []

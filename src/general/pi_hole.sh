@@ -31,8 +31,6 @@ services:
       - "53:53/tcp"
       - "53:53/udp"
       - "67:67/udp"
-      - "80:80/tcp"
-      - "443:443/tcp"
     environment:
       TZ: 'Asia/Hong_Kong'
     volumes:
@@ -50,7 +48,7 @@ EOF
 
   if [ ! -f ~/.pi-hole/etc-dnsmasq.d/42-reverse-proxied-subdomains.conf ]; then
     # 應該對其進行編輯，以包含運行 Pi-hole 的電腦的 IP 位址以及正確的主機名
-    cat ~/.pi-hole/etc-dnsmasq.d/42-reverse-proxied-subdomains.conf <<"EOF"
+    cat >>~/.pi-hole/etc-dnsmasq.d/42-reverse-proxied-subdomains.conf <<"EOF"
 address=/local-rp5/192.168.0.0
 EOF
   fi
@@ -66,7 +64,7 @@ PiHoleAllowedRemove() { cd ~/.pi-hole/ && docker compose exec pihole pihole -w $
 alias PiHoleAllowedList='(cd ~/.pi-hole/ && docker compose exec pihole pihole -q .)'
 alias PiHoleForbidAdd='(cd ~/.pi-hole/ && docker compose exec pihole pihole -b $1)'
 alias PiHoleForbidAddRegex='(cd ~/.pi-hole/ && docker compose exec pihole pihole --regex $1)' # To include subdomains like `www`: .*\.example.com
-alias PiHolePassword='(cd ~/.pi-hole && docker compose exec pihole pihole -a -p)'
+alias PiHolePassword='(cd ~/.pi-hole && k3s kubectl exec -it pihole-0 -- pihole -a -p)'
 alias PiHoleRepl='(cd ~/.pi-hole && docker compose exec pihole /bin/bash)'
 alias PiHoleRestartDNS='(cd ~/.pi-hole && docker compose exec pihole pihole restartdns)'
 alias PiHoleUnboundUpdate='(sudo vim /etc/unbound/unbound.conf)'

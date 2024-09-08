@@ -50,7 +50,8 @@ Description=Clipboard SSH
 After=network.target
 
 [Service]
-ExecStart=/usr/local/bin/environment_scripts/clipboard_ssh host
+ExecStart=/usr/bin/bash -c \
+    'PATH=$PATH:/home/igncp/.nix-profile/bin /usr/local/bin/environment_scripts/clipboard_ssh host'
 Restart=always
 
 [Install]
