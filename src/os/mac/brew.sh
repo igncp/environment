@@ -24,6 +24,11 @@ EOF
     touch ~/.check-files/coreutils
   fi
 
+  if ! type aerospace >/dev/null 2>&1; then
+    # https://github.com/nikitabobko/homebrew-tap/tree/main/Casks
+    brew install --cask nikitabobko/tap/aerospace@0.13.4
+  fi
+
   if ! type pinentry-tty >/dev/null 2>&1; then
     # Using `brew` because didn't find it in `nixpkgs`
     brew install pinentry

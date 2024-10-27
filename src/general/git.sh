@@ -61,6 +61,7 @@ GitFilesByAuthorLatestGrep() {
 }
 
 alias gbd="git branch -D"
+alias ga='GitAdd'
 alias gc="git checkout -B"
 alias gca="git commit --amend"
 alias gl="git l"
@@ -80,8 +81,15 @@ gd() { git diff ${1:-HEAD} "${@:2}"; }
 g() { eval "git commit -m '$@'"; }
 gn() { eval "git commit --no-verify -m '$@'"; }
 
+GitBranchOrder() {
+  git branch $@ -a --sort=creatordate --format "%(creatordate:relative);%(committername);%(refname)" |
+    sed "s|refs/remotes/origin/||" |
+    grep -v ";HEAD$" |
+    column -s ";" -t |
+    tac | less;
+}
+
 alias GitAddAll='GitAdd $(git rev-parse --show-toplevel)'
-alias GitBranchOrder='git branch -a --sort=creatordate --format "%(creatordate:relative);%(committername);%(refname)" | sed "s|refs/remotes/origin/||" | grep -v ";HEAD$" | column -s ";" -t | tac | less'
 alias GitCleanAll='git clean -fxd' # 包括被忽略的檔案（例如 .env 檔案）
 alias GitConfig='"$EDITOR" .git/config'
 alias GitEditorCommit='git commit -v'

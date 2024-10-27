@@ -83,7 +83,7 @@ USBClone() {
 } # Example: I=/dev/sdb O=/dev/sdc USBClone
 
 Vidir() { vidir -v -; } # To remove files, remove the lines
-VidirFind() { find $@ | vidir -v -; }
+VidirFind() { find $@ | sort -V | vidir -v -; }
 VisudoUser() { sudo env EDITOR=vim visudo -f /etc/sudoers.d/$1; }
 alias ClipboardSSHSend="clipboard_ssh send"
 alias HostClipboardSSH="clipboard_ssh host"
@@ -485,6 +485,12 @@ fi
 if type kubectl >/dev/null 2>&1; then
   source <(kubectl completion zsh)
   alias k=kubectl
+
+  if [ -f ~/.kube-remote/config ]; then
+    kr() { KUBECONFIG=$HOME/.kube-remote/config kubectl $@; }
+    # 用 kubectl 完成
+    source <(kubectl completion zsh | sed 's/\bkubectl\b/kr/g')
+  fi
 fi
 
 if type helm >/dev/null 2>&1; then

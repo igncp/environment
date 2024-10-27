@@ -3,11 +3,18 @@
 set -e
 
 provision_setup_containers() {
-  cat >>~/.shell_sources <<"EOF"
-source_if_exists ~/.docker-completion.sh
-EOF
+  if type zsh >/dev/null 2>&1; then
+    if type docker >/dev/null 2>&1; then
+      if [ ! -f "$HOME/.oh-my-zsh/completions/_docker" ]; then
+        mkdir -p "$HOME/.oh-my-zsh/completions"
+        docker completion zsh >"$HOME/.oh-my-zsh/completions/_docker"
+      fi
+    fi
+  fi
 
   cat >>~/.shell_aliases <<"EOF"
+alias ContainersPruneAll='docker system prune -fa ; docker volume prune -f ; crictl rmi --prune'
+
 alias DockerAttachLastContainer='docker start  `docker ps -q -l`; docker attach `docker ps -q -l`'
 alias DockerCleanAll='docker stop $(docker ps -aq); docker rm $(docker ps -aq); docker system prune -fa'
 alias DockerCleanContainers='docker stop $(docker ps -aq); docker rm $(docker ps -aq)'
@@ -26,7 +33,6 @@ DComposeFullRestart(){
 
 alias DComposeConfig='docker compose config' # Prints the config after pre-processing
 alias DockerCommit='docker commit -m'
-alias DockerPruneAll='docker system prune --volumes --all'
 alias DockerSystemSpace='docker system df --verbose'
 
 DockerHistory() { docker history --no-trunc $1 | less -S; }
@@ -101,7 +107,10 @@ export DOCKER_BUILDKIT=1
 EOF
   cat >>~/.shell_aliases <<"EOF"
 DockerBuildXInstallDriver() {
+  docker buildx rm mybuilder || true
   docker buildx create --name mybuilder --use --bootstrap
+  docker run --privileged --rm tonistiigi/binfmt --install all
+  docker buildx ls
 }
 # Just run once, for allowing the `--push` flag on `docker buildx build`
 alias DockerBuildXDriver='docker buildx create --use --name build --node build --driver-opt network=host'

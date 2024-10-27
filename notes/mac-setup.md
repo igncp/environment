@@ -4,8 +4,7 @@
 
 - Set up wizard, disabling analytics and voice detection
   - Choose black theme
-- Install Homebrew command
-- If there are issues with `brew`, run `xcode-select --install`
+- Run `xcode-select --install`
 - Update the Terminal profile
   - Bigger font size
   - Disable the audible bell (also in Settings > Soung > Alert volume)
@@ -26,5 +25,3 @@
 - Installed UTM: https://mac.getutm.app/ (check vms.md)
 - Go to settings of mission control to not re-arrange workspaces
 - Disable dictation shortcut to avoid the popup on double control
-- Add a `ClipboardSSH.command` file and drag it to the dock:
-  - This should run: `/Users/igncp/.scripts/cargo_target/release/clipboard_ssh host`
