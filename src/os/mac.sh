@@ -22,6 +22,11 @@ EOF
 
   cat >>~/.shell_aliases <<"EOF"
 MacListServices() { launchctl  list | ag -v '^-' | awk '{ print $3; }' | ag -v ^Label$ | sort | less; }
+alias MacPowerManagementClearRepeat='sudo pmset repeat cancel'
+alias MacPowerManagementList='sudo pmset -g sched'
+alias MacPowerManagementListAll='sudo pmset -g everything'
+# 每個平日凌晨四點停機
+# sudo pmset repeat shutdown MTWRF 04:00:00
 EOF
 
   echo 'set backspace=indent,eol,start' >>~/.vimrc
@@ -42,24 +47,30 @@ alias MacFeatures='system_profiler > /tmp/features.txt && echo "/tmp/features.tx
 alias MacListAppsAppStore='mdfind kMDItemAppStoreHasReceipt=1'
 alias MacDefaultDomains=$'defaults domains | tr \', \' \'\n\' | ag . | sort | less'
 alias MacServices=$'sudo launchctl list | awk \'{ print $3; }\' | sort | less'
+alias MacAddUserToAdmin="sudo dscl . -append /Groups/admin GroupMembership $USER"
+alias MacListIdentities='security find-identity'
 
+MacInstallPkg() { sudo installer -store -pkg "$1" -target /; }
 MacListServices() { launchctl  list | ag -v '^-' | awk '{ print $3; }' | ag -v ^Label$ | sort | less; }
 
 # 編輯此文件: `/etc/pf.conf`
 # 例如: `pass in proto tcp from any to any port 3000`
 alias MacRestartFirewallConfig='sudo pfctl -f /etc/pf.conf'
 
+# When there is error about signature in custom scripts
+alias MacForceSignature='codesign --force --deep --sign -' # For example: `MacForceSignature /usr/local/bin/environment_scripts/clipboard_ssh`
+
 alias SimulatorErase='xcrun simctl shutdown all && xcrun simctl erase all'
 EOF
 
   disable_mac_hotkey() {
     NUM=$1
-    CURRENT_VALUE="$(plutil -extract AppleSymbolicHotKeys.$NUM.enabled raw -o - ~/Library/Preferences/com.apple.symbolichotkeys.plist)"
-    if [ $CURRENT_VALUE = "true" ]; then
+    CURRENT_VALUE="$(plutil -extract AppleSymbolicHotKeys.$NUM.enabled raw -o - ~/Library/Preferences/com.apple.symbolichotkeys.plist || true)"
+    if [ "$CURRENT_VALUE" = "true" ]; then
       echo "更新鍵盤快速鍵: $NUM"
-      plutil -replace AppleSymbolicHotKeys.$NUM.enabled -bool NO ~/Library/Preferences/com.apple.symbolichotkeys.plist
-      defaults read com.apple.symbolichotkeys.plist >/dev/null
-      /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
+      plutil -replace AppleSymbolicHotKeys.$NUM.enabled -bool NO ~/Library/Preferences/com.apple.symbolichotkeys.plist || true
+      defaults read com.apple.symbolichotkeys.plist >/dev/null || true
+      /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u || true
     fi
   }
 

@@ -1,3 +1,5 @@
+PROVISION_CONFIG="$HOME/development/environment/project/.config"
+
 alias ag="rg -S --hidden --colors='path:fg:0xaa,0xaa,0xff'"
 alias agg='ag --hidden --ignore node_modules --ignore .git'
 alias b='bash'
@@ -164,6 +166,8 @@ alias SyncProvisionCustom='(cd ~/development/environment && bash src/scripts/cop
 alias TreeDir='tree -d'
 alias Visudo='sudo env EDITOR=vim visudo'
 alias Xargs='xargs -I{} '
+alias YoutubeChooseResolution='yt-dlp -f ' # e.g. YoutubeChooseResolution 12 https://...
+alias YoutubeResolutions='yt-dlp -F '
 alias YoutubeSubtitles='yt-dlp --all-subs --skip-download'
 
 alias CrontabUser='crontab -e'
@@ -521,3 +525,45 @@ if type pyenv >/dev/null 2>&1; then
   alias PyEnvList='pyenv install --list'
   alias PyEnvVersions='pyenv versions'
 fi
+
+NoteBranch() {
+  NOTES_TICKET_PREFIX=""
+  if [ ! -f $PROVISION_CONFIG/notes_ticket_prefix ]; then
+    echo "缺少 $PROVISION_CONFIG/notes_ticket_prefix"
+    return
+  fi
+  NOTES_TICKET_PREFIX=$(cat $PROVISION_CONFIG/notes_ticket_prefix)
+  if [ -z "$NOTES_TICKET_PREFIX" ]; then
+    echo "缺少 $PROVISION_CONFIG/notes_ticket_prefix"
+    return
+  fi
+
+  BRANCH_NAME=$(git branch --show-current)
+
+  if [ -z "$(echo $BRANCH_NAME | grep "^$NOTES_TICKET_PREFIX""-[0-9]*" || true)" ]; then
+    if [ -z "$(echo $BRANCH_NAME | grep "NO-TICKET_" || true)" ]; then
+      echo "分支名稱不符合格式"
+      return
+    fi
+  fi
+
+  FILE_NAME="~/development/notes/tasks/$BRANCH_NAME.md"
+
+  if [ ! -f $FILE_NAME ]; then
+    echo '- `$BRANCH_NAME`' >$FILE_NAME
+  fi
+
+  tmux split-window -h zsh -c "cd ~/development/notes && zsh -c 'nvim $FILE_NAME'"
+}
+
+P12Info() {
+  FILE_PATH="$1"
+  FILE_PASS="$2"
+  if [ -z "$FILE_PATH" ] || [ -z "$FILE_PASS" ]; then
+    echo "缺少參數"
+    echo "用法: P12Info <file_path> <file_pass>"
+    return
+  fi
+  openssl pkcs12 -legacy -in "$FILE_PATH" -nodes -passin pass:"$FILE_PASS" |
+    openssl x509 -noout -subject
+}

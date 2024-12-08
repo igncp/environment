@@ -30,6 +30,7 @@ set -e
 . src/raspberry.sh
 . src/gaming.sh
 . src/crypto.sh
+. src/qemu.sh
 
 . src/end.sh
 
@@ -63,6 +64,7 @@ provision_setup_with_bash() {
   provision_setup_haskell
   provision_setup_kotlin
   provision_setup_php
+  provision_setup_qemu
   provision_setup_raspberry
 
   provision_setup_end

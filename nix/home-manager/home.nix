@@ -11,10 +11,9 @@
   cli-pkgs = import ../common/cli.nix {inherit base_config lib pkgs;};
   node-pkgs = import ../common/node.nix {inherit base_config lib pkgs;};
   go-pkgs = import ../common/go.nix {inherit base_config lib pkgs;};
-  ruby-pkgs = import ../common/php.nix {inherit base_config pkgs;};
-  php-pkgs = import ../common/ruby.nix {inherit base_config pkgs;};
+  php-pkgs = import ../common/php.nix {inherit base_config pkgs;};
+  ruby-pkgs = import ../common/ruby.nix {inherit base_config pkgs;};
   java-pkgs = import ../common/java.nix {inherit base_config lib pkgs;};
-  tmux = import ../common/tmux.nix {inherit pkgs;};
 in {
   home.username = user;
   home.homeDirectory = home_dir;
@@ -28,8 +27,6 @@ in {
     ++ java-pkgs.pkgs-list
     ++ ruby-pkgs.pkgs-list;
   home.enableNixpkgsReleaseCheck = false;
-
-  programs.tmux = tmux.homeManager;
 
   programs.home-manager.enable = true;
 }

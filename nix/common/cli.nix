@@ -9,10 +9,12 @@
   has_pg = builtins.pathExists (base_config + "/postgres");
   has_aws = builtins.pathExists (base_config + "/cli-aws");
   has_shellcheck = builtins.pathExists (base_config + "/shellcheck");
+  has_azure = builtins.pathExists (base_config + "/azure");
   has_stripe = builtins.pathExists (base_config + "/stripe");
   has_tailscale = builtins.pathExists (base_config + "/tailscale");
   has_podman = builtins.pathExists (base_config + "/podman");
   has_mssql = builtins.pathExists (base_config + "/mssql");
+  has_qemu = builtins.pathExists (base_config + "/qemu");
 
   logdy = import ../derivations/logdy.nix {inherit pkgs;};
 
@@ -22,7 +24,6 @@
     (pkgs.system == "x86_64-linux")
     || (pkgs.system == "aarch64-linux")
     || pkgs.system == "armv7l-linux";
-  is_mac = pkgs.system == "x86_64-darwin" || pkgs.system == "aarch64-darwin";
 
   tmux-pkgs = with pkgs; [
     tmux # https://github.com/tmux/tmux
@@ -83,6 +84,7 @@ in {
       taskwarrior3 # https://github.com/GothenburgBitFactory/taskwarrior
       tree
       wget
+      which # Arch linux 入面缺乏
       yq # https://github.com/mikefarah/yq
       yt-dlp # https://github.com/yt-dlp/yt-dlp
     ]
@@ -96,11 +98,6 @@ in {
       vifm # https://vifm.info/
     ]
     ++ tmux-pkgs
-    ++ (
-      if is_mac
-      then []
-      else [pkgs.zsh] # 在 macOS 上使用內建 zsh
-    )
     ++ (
       if has_hashi
       then with pkgs; [terraform-ls terraform vagrant]
@@ -138,11 +135,13 @@ in {
       else []
     )
     ++ (lib.optional has_shellcheck pkgs.shellcheck)
+    ++ (lib.optional has_azure pkgs.azcopy)
     ++ (lib.optional has_cli_hasura pkgs.hasura-cli)
     ++ (lib.optional has_cli_openvpn pkgs.openvpn) # https://github.com/OpenVPN/openvpn
     ++ (lib.optional has_pg pkgs.postgresql)
     ++ (lib.optional has_stripe pkgs.stripe-cli) # https://github.com/stripe/stripe-cli
     ++ (lib.optional has_tailscale pkgs.tailscale)
     ++ (lib.optional has_mssql pkgs.sqlcmd)
+    ++ (lib.optional has_qemu pkgs.guestfs-tools)
     ++ (lib.optional has_podman pkgs.podman);
 }

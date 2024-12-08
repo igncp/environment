@@ -4,6 +4,7 @@ set -e
 
 provision_setup_os_debian() {
   install_system_package_os sudo
+  install_system_package_os zsh
   install_system_package_os ufw
 
   cat >>~/.shellrc <<"EOF"
@@ -17,7 +18,20 @@ alias SystemUpgrade='sudo apt-get update && sudo apt-get upgrade -y'
 alias AptLog='tail -f /var/log/apt/term.log'
 EOF
 
-  if [ "$IS_UBUNTU" == "1" ]; then
+  if [ -d /etc/ssh ]; then
+    if [ ! -f ~/.ssh/authorized_keys ]; then
+      echo "請將您的公用 SSH 金鑰新增至 ~/.ssh/authorized_keys"
+      exit 1
+    fi
+
+    if [ ! -f "$PROVISION_CONFIG/ssh-pass" ] &&
+      [ -n "$(grep '#PasswordAuthentication' /etc/ssh/sshd_config)" ]; then
+      sudo sed -i 's|#PasswordAuthentication.*|PasswordAuthentication no|' /etc/ssh/sshd_config
+      sudo systemctl restart ssh
+    fi
+  fi
+
+  if [ "$IS_UBUNTU" = "1" ]; then
     cat >>~/.shell_aliases <<"EOF"
 alias UbuntuVersion='lsb_release -a'
 alias UbuntuFindPackageByFile="dpkg-query -S" # e.g. UbuntuFindPackageByFile '/usr/bin/ag'

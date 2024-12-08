@@ -12,22 +12,24 @@ provision_setup_nvim_base() {
     ln -s ~/.vimrc ~/.config/nvim/init.vim
     touch ~/.check-files/neovim
 
+    # 如果沒有這個，打開文件時就會出錯
     if [ "$IS_DEBIAN" = "1" ]; then
-      # 如果沒有這個，打開文件時就會出錯
       sudo apt install -y gcc
+    elif [ "$IS_ARCH = "1 ]; then
+      sudo pacman -S --noconfirm gcc
     fi
   fi
 
-  install_nvim_package LnL7/vim-nix                   # https://github.com/LnL7/vim-nix
-  install_nvim_package NvChad/nvim-colorizer.lua      # https://github.com/NvChad/nvim-colorizer.lua
-  install_nvim_package andrewRadev/splitjoin.vim      # gS, gJ
-  install_nvim_package bogado/file-line               # https://github.com/bogado/file-line
-  install_nvim_package chentoast/marks.nvim           # https://github.com/chentoast/marks.nvim
-  install_nvim_package ctrlpvim/ctrlp.vim             # https://github.com/ctrlpvim/ctrlp.vim
-  install_nvim_package elzr/vim-json                  # https://github.com/elzr/vim-json
-  install_nvim_package google/vim-searchindex         # https://github.com/google/vim-searchindex
-  install_nvim_package haya14busa/incsearch.vim       # https://github.com/haya14busa/incsearch.vim
-  install_nvim_package honza/vim-snippets             # https://github.com/honza/vim-snippets
+  install_nvim_package LnL7/vim-nix              # https://github.com/LnL7/vim-nix
+  install_nvim_package NvChad/nvim-colorizer.lua # https://github.com/NvChad/nvim-colorizer.lua
+  install_nvim_package andrewRadev/splitjoin.vim # gS, gJ
+  install_nvim_package bogado/file-line          # https://github.com/bogado/file-line
+  install_nvim_package chentoast/marks.nvim      # https://github.com/chentoast/marks.nvim
+  install_nvim_package ctrlpvim/ctrlp.vim        # https://github.com/ctrlpvim/ctrlp.vim
+  install_nvim_package elzr/vim-json             # https://github.com/elzr/vim-json
+  install_nvim_package google/vim-searchindex    # https://github.com/google/vim-searchindex
+  install_nvim_package haya14busa/incsearch.vim  # https://github.com/haya14busa/incsearch.vim
+  # install_nvim_package honza/vim-snippets             # https://github.com/honza/vim-snippets
   install_nvim_package iamcco/markdown-preview.nvim   # https://github.com/iamcco/markdown-preview.nvim
   install_nvim_package jiangmiao/auto-pairs           # https://github.com/jiangmiao/auto-pairs
   install_nvim_package jparise/vim-graphql            # https://github.com/jparise/vim-graphql

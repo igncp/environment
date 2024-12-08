@@ -19,7 +19,9 @@ GimmeAWS() {
 
   if [ -z "$(docker images | grep gimme-aws-creds)" ]; then
     (cd ~ && git clone https://github.com/Nike-Inc/gimme-aws-creds.git && cd gimme-aws-creds \
-      && docker build -t gimme-aws-creds .)
+      && docker build \
+        --progress=plain \
+        -t gimme-aws-creds .)
     rm -rf ~/gimme-aws-creds
   fi
 

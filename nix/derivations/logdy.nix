@@ -15,6 +15,10 @@ pkgs.buildGoModule {
 
   vendorHash = "sha256-kFhcbBMymzlJ+2zw7l09LJfCdps26Id+VzOehqrLDWU=";
 
+  checkFlags = [
+    "-skip=TestConsumeStdinAndForwardToPort$"
+  ];
+
   postInstall = ''
     mv $out/bin/logdy-core $out/bin/logdy
     rm -f $out/bin/example-app

@@ -79,6 +79,9 @@ LinuxSwappinessUpdate() {
   echo 'vm.dirty_ratio=3' >> /tmp/99-swappiness.conf
   sudo mv /tmp/99-swappiness.conf /etc/sysctl.d/
 }
+
+alias SOInspectSymbols='nm -gDC'
+alias SODumpSymbols='objdump -tT'
 EOF
 
   # https://www.geeksforgeeks.org/iotop-command-in-linux-with-examples

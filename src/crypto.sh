@@ -26,6 +26,12 @@ WasmdRun() {
 EOF
   fi
 
+  cat >>~/.shellrc <<'EOF'
+if [ -d "$HOME/.local/share/solana/install/active_release/bin" ]; then
+  export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
+fi
+EOF
+
   # 產生新密鑰對的範例:
   # `solana-keygen new --outfile ~/my-solana-wallet/my-keypair.json`
   cat >>~/.shell_aliases <<EOF

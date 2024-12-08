@@ -9,6 +9,11 @@ provision_setup_nix() {
   if ! type nix >/dev/null 2>&1; then
     mkdir -p ~/.local/state/home-manager/profiles
 
+    # 如果重新安裝 Nix，則需要此操作
+    sudo rm -rf /etc/bash.bashrc*
+    sudo rm -rf /etc/bashrc*
+    sudo rm -rm /etc/zshrc*
+
     if [ "$IS_MAC" ]; then
       sh <(curl -L https://nixos.org/nix/install)
       sudo mkdir -p /nix/var/nix/profiles/per-user/$USER

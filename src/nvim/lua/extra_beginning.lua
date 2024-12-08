@@ -48,7 +48,6 @@ local nvim_plugins = {
   "smoka7/hop.nvim",
   {
     "CopilotC-Nvim/CopilotChat.nvim",
-    branch = "canary",
     dependencies = {
       { "nvim-lua/plenary.nvim" },
     },
@@ -60,7 +59,7 @@ local nvim_plugins = {
   {
     "chrisgrieser/nvim-various-textobjs",
     lazy = false,
-    opts = { useDefaultKeymaps = true },
+    opts = { keymaps = {useDefaults = true} },
   },
   {
     "nvim-treesitter/nvim-treesitter",
@@ -570,3 +569,13 @@ local hooks = require "ibl.hooks"
 hooks.register(hooks.type.ACTIVE, function()
   return vim.bo.filetype == "yaml"
 end)
+
+vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
+  pattern = 'Fastfile',
+  command = 'setf ruby'
+})
+
+vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
+  pattern = 'Podfile',
+  command = 'setf ruby'
+})

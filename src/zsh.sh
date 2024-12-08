@@ -36,13 +36,12 @@ provision_setup_zsh() {
 
   echo "SHELL=$(which zsh)" >>~/.zshrc
 
-  if [ ! -f ~/.completions/bun ] && type "bun" >/dev/null 2>&1; then
-    bun completions >~/.completions/bun
-  fi
+  IS_ZSH="$(echo $SHELL | grep zsh || true)"
 
-  cat >>~/.zshrc <<"EOF"
-[ -f "$HOME/.completions/bun" ] && source "$HOME/.completions/bun"
-EOF
+  if [ ! -f ~/.oh-my-zsh/completions/_bun ] && [ -n "$IS_ZSH" ] && type "bun" >/dev/null 2>&1; then
+    mkdir -p ~/.oh-my-zsh/completions/
+    bun completions ~/.oh-my-zsh/completions/
+  fi
 
   cat >>~/.shellrc <<"EOF"
 ShellChangeToZsh() {
@@ -77,7 +76,7 @@ EOF
     fi
   fi
 
-  echo 'fpath=(~/.zsh $fpath)' >>~/.zshrc
+  echo 'fpath=(/home/igncp/.zsh $fpath)' >>~/.zshrc
 
   provision_setup_zsh_unalias
 

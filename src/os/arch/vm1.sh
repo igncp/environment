@@ -61,7 +61,7 @@ genfstab -U /mnt >>/mnt/etc/fstab
 pacman -Sy
 pacman -S archlinux-keyring --noconfirm
 pacstrap /mnt base linux linux-firmware vim perl # downloads ~300 MB (vim needs perl)
-cp -r /root/* /root/.vimrc /mnt/root/
+cp -r /root/.vimrc /mnt/root/
 
 cat >/mnt/root/init.sh <<"EOF"
 #!/usr/bin/env bash

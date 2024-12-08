@@ -13,4 +13,4 @@ User=igncp
 ExecStart=/bin/bash -c 'echo foo'
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target

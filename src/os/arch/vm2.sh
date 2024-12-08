@@ -32,6 +32,7 @@ ssh-keygen -A
 # pacman -S --noconfirm openssh rsync
 # systemctl enable dhcpcd.service
 # systemctl enable sshd.service
+# systemctl enable --now systemd-resolved.service
 
 pacman -S --noconfirm ufw
 

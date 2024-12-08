@@ -41,7 +41,7 @@ EOF
   if [ -f "$PROVISION_CONFIG"/git-ssh ]; then
     git config --global gpg.format ssh
     git config --global commit.gpgsign true
-    git config --global user.signingkey "$(cat $PROVISION_CONFIG/git-ssh)" # Public SSH key
+    git config --global user.signingkey "$(cat $PROVISION_CONFIG/git-ssh)" # 公開嘅 SSH 密鑰
     ## 如果Linux直接使用1Password，則需要這個
     # git config --global gpg.ssh.program /opt/1Password/op-ssh-sign
   fi

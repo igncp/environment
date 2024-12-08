@@ -6,7 +6,6 @@
   has_gui = builtins.pathExists ../../project/.config/gui;
   has_android = builtins.pathExists ../../project/.config/android;
   has_custom = builtins.pathExists ./custom.nix;
-  tmux = import ../common/tmux.nix {inherit pkgs;};
 in {
   imports =
     [
@@ -64,13 +63,5 @@ in {
     };
 
     system.stateVersion = "24.05";
-
-    programs.tmux = {
-      clock24 = true;
-      enable = true;
-      extraConfig = tmux.extraConfig;
-      plugins = tmux.plugins;
-      terminal = "tmux-256color";
-    };
   };
 }
