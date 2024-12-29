@@ -1,3 +1,7 @@
+# systemctl --user link $HOME/development/environment/src/project_templates/virtual_window/virtual-window.service
+# systemctl --user daemon-reload
+# systemctl --user enable --now virtual-window.service
+
 [Unit]
 Description=Virtual Window
 After=network.target

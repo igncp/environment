@@ -42,6 +42,10 @@ provision_setup_with_bash() {
 
   provision_setup_os
 
+  if [ "$IS_WINDOWS" = "1" ]; then
+    return
+  fi
+
   provision_setup_zsh
   provision_setup_general
   provision_setup_nvim

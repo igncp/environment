@@ -2,6 +2,8 @@
 
 set -e
 
+. src/os/debian/surface.sh
+
 provision_setup_os_debian() {
   install_system_package_os sudo
   install_system_package_os zsh
@@ -27,7 +29,7 @@ EOF
     if [ ! -f "$PROVISION_CONFIG/ssh-pass" ] &&
       [ -n "$(grep '#PasswordAuthentication' /etc/ssh/sshd_config)" ]; then
       sudo sed -i 's|#PasswordAuthentication.*|PasswordAuthentication no|' /etc/ssh/sshd_config
-      sudo systemctl restart ssh
+      sudo systemctl restart ssh || true
     fi
   fi
 
@@ -79,4 +81,6 @@ EOF
       touch ~/.check-files/debian-non-free
     fi
   fi
+
+  provision_setup_os_debian_surface
 }

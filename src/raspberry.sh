@@ -36,12 +36,6 @@ EOF
   # Install desktop environment:
   # `sudo apt install xserver-xorg raspberrypi-ui-mods`
 
-  # Kodi:
-  # `sudo apt install -y kodi kodi-peripheral-joystick`
-  # sudo usermod -a -G audio,video,input,dialout,plugdev,netdev,users,cdrom,tty $USER
-  # 可以建立一個systemd服務:
-  # `ExecStart=/usr/lib/aarch64-linux-gnu/kodi/kodi.bin`
-
   # Retropie: Check in the `gaming.sh`
 
   # To over-clock: https://www.zdnet.com/article/upgrading-your-pc-this-monster-graphics-card-is-200-off/

@@ -23,5 +23,5 @@ if [ -f ~/development/environment/project/.config/gui-install ]; then
   cp environment/src/config-files/rime-config.yaml ~/project/provision/
   touch ~/development/environment/project/.config/common-gui-light
   touch ~/development/environment/project/.config/headless-xorg
-  touch ~/development/environment/project/.config/x11-vnc-server
+  touch ~/development/environment/project/.config___/x11-vnc-server
 fi

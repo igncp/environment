@@ -273,6 +273,11 @@ EOF
     fi
   fi
 
+  if type ghostty >/dev/null 2>&1; then
+    mkdir -p ~/.config/ghostty
+    cp ~/development/environment/src/config-files/ghostty ~/.config/ghostty/config
+  fi
+
   provision_setup_general_diagrams
   provision_setup_general_fzf
   provision_setup_general_git

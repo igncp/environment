@@ -12,6 +12,7 @@
   node-pkgs = import ../common/node.nix {inherit base_config lib pkgs;};
   go-pkgs = import ../common/go.nix {inherit base_config lib pkgs;};
   php-pkgs = import ../common/php.nix {inherit base_config pkgs;};
+  lua-pkgs = import ../common/lua.nix {inherit base_config pkgs;};
   ruby-pkgs = import ../common/ruby.nix {inherit base_config pkgs;};
   java-pkgs = import ../common/java.nix {inherit base_config lib pkgs;};
 in {
@@ -25,6 +26,7 @@ in {
     ++ go-pkgs.pkgs-list
     ++ php-pkgs.pkgs-list
     ++ java-pkgs.pkgs-list
+    ++ lua-pkgs.pkgs-list
     ++ ruby-pkgs.pkgs-list;
   home.enableNixpkgsReleaseCheck = false;
 

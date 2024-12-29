@@ -2,7 +2,7 @@
 #     // This setup requires that the user is already logged in in the main console
 #     // Use SSH tunneling from the client and don't open the port:
 #     //   `ssh -fN -L 5900:localhost:5900 REMOTE_ADDRESS`
-#     if Config::has_config_file(&context.system, ".config/x11-vnc-server") {
+#     if Config::has_config_file(&context.system, ".config____/x11-vnc-server") {
 #         context.system.install_system_package("x11vnc", None);
 
 #         context.files.append(

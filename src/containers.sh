@@ -93,7 +93,7 @@ EOF
     return
   fi
 
-  if ! type docker >/dev/null 2>&1; then
+  if [ ! -S /var/run/docker.sock ]; then
     curl -fsSL https://get.docker.com | sh
     sudo usermod -a -G docker igncp
   fi

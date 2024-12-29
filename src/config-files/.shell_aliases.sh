@@ -22,10 +22,14 @@ alias tree="tree -a"
 alias up='up -o /tmp/up-result.sh'
 alias wget="wget -c"
 
+j() { cat $1 | jq -S "${@:2}" | less; }
+
 alias c='cargo --color always '
 alias W='watch --color -n 1 '
 alias W2='watch --color -n 2 '
 alias W5='watch --color -n 5 '
+
+alias BashClean='env -i bash --norc --noprofile'
 
 # 對於區分大小寫，使用 `-f I`
 S() { fd --type f . ${3:-.} | h "$1" "$2" "${@:4}"; }
@@ -269,12 +273,17 @@ alias Nix_FileEval='nix-instantiate --eval'
 alias Nix_EnvInstallPackage='nix-env -iA'
 
 NixUpdateChannel() {
-  UNSTABLE_REV="$(cat ~/development/environment/flake.lock | jq -r '.nodes.unstable.locked.rev')"
-  echo "UNSTABLE_REV: $UNSTABLE_REV"
-  nix-channel --remove nixpkgs || true
-  nix-channel --add "https://github.com/NixOS/nixpkgs/archive/$UNSTABLE_REV.tar.gz" nixpkgs
-  nix-channel --update
-  nix-channel --list
+  if type jq >/dev/null 2>&1; then
+    UNSTABLE_REV="$(cat ~/development/environment/flake.lock | jq -r '.nodes.unstable.locked.rev')"
+    if [ ! -f ~/.check-files/nix-channel ] || [ -z "$(cat ~/.check-files/nix-channel | grep $UNSTABLE_REV || true)" ]; then
+      echo "UNSTABLE_REV: $UNSTABLE_REV"
+      nix-channel --remove nixpkgs || true
+      nix-channel --add "https://github.com/NixOS/nixpkgs/archive/$UNSTABLE_REV.tar.gz" nixpkgs
+      nix-channel --update
+      nix-channel --list
+      echo "$UNSTABLE_REV" >~/.check-files/nix-channel
+    fi
+  fi
 }
 
 NixShell() {
@@ -399,6 +408,7 @@ NixEnvironmentUpgrade() {
   nix flake lock --update-input unstable
   nix flake lock --update-input home-manager
   nix flake lock --update-input flake-utils
+  rm -rf ~/.check-files/nix-channel
   NixUpdateChannel
   bash ~/development/environment/src/scripts/toolbox/nix_sync_input.sh ALL
 
@@ -427,6 +437,7 @@ RebuildNix() {
   fi
 
   if type home-manager >/dev/null 2>&1; then
+    NixUpdateChannel
     # 現在需要 --impure 來讀取配置
     home-manager switch --impure --flake ~/development/environment/
   fi
@@ -566,4 +577,45 @@ P12Info() {
   fi
   openssl pkcs12 -legacy -in "$FILE_PATH" -nodes -passin pass:"$FILE_PASS" |
     openssl x509 -noout -subject
+}
+
+2FAEncrypt() {
+  if [ ! -f ~/.2fa ]; then
+    echo "缺少 ~/.2fa"
+    return
+  fi
+  cp ~/.2fa ~/.2fa.bkp
+  cat ~/.2fa | age -e -a -p >~/.2fa.age && rm ~/.2fa && rm ~/.2fa.bkp || mv ~/.2fa.bkp ~/.2fa
+}
+
+2FADecrypt() {
+  if [ ! -f ~/.2fa.age ]; then
+    echo "缺少 ~/.2fa.age"
+    return
+  fi
+  cp ~/.2fa.age ~/.2fa.bkp
+  cat ~/.2fa.age | age -d >~/.2fa && rm ~/.2fa.age && rm ~/.2fa.bkp || mv ~/.2fa.bkp ~/.2fa
+}
+
+2FAAdd() {
+  if [ -z "$1" ]; then
+    echo "缺少參數"
+    echo "用法: 2FAAdd <name>"
+    return
+  fi
+  2fa -add $1
+}
+
+ShellSource() {
+  IS_MAC=$(uname -a | ag Darwin || true)
+  if [ -n "$IS_MAC" ]; then
+    . ~/.zshrc
+    return
+  fi
+
+  if [ -n "$(cat /etc/passwd | grep $USER | awk -F: '{print $7}' | grep zsh || true)" ]; then
+    . ~/.zshrc
+  elif [ -f ~/.bashrc ]; then
+    . ~/.bashrc
+  fi
 }

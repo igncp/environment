@@ -3,6 +3,10 @@
 set -e
 
 provision_setup_nix() {
+  if [ "$IS_WINDOWS" = "1" ]; then
+    return
+  fi
+
   mkdir -p ~/.config/nix
   mkdir -p ~/.pip
 
@@ -12,7 +16,7 @@ provision_setup_nix() {
     # 如果重新安裝 Nix，則需要此操作
     sudo rm -rf /etc/bash.bashrc*
     sudo rm -rf /etc/bashrc*
-    sudo rm -rm /etc/zshrc*
+    sudo rm -rf /etc/zshrc*
 
     if [ "$IS_MAC" ]; then
       sh <(curl -L https://nixos.org/nix/install)
@@ -35,6 +39,21 @@ provision_setup_nix() {
 
       echo "安裝 nix"
       sh <(curl -L https://nixos.org/nix/install) --daemon --yes
+    fi
+  fi
+
+  if [ "$IS_LINUX" = "1" ]; then
+    if type sudo >/dev/null 2>&1; then
+      ROOT_HOME=$(eval echo "~root")
+      cat >/tmp/.root_bashrc <<"EOF"
+export PATH="$PATH":/home/_USER_/.nix-profile/bin
+export EDITOR="nvim"
+alias ll='ls -lah'
+alias n='nvim'
+EOF
+      sed -i "s|_USER_|$USER|g" /tmp/.root_bashrc
+      sudo bash -c "cat /tmp/.root_bashrc >> $ROOT_HOME/.bashrc"
+      rm /tmp/.root_bashrc
     fi
   fi
 

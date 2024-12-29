@@ -1,0 +1,18 @@
+# Supported system: Raspbian
+# Disable default GUI in `raspi-config` but keep the automatic login
+# sudo apt install -y kodi kodi-peripheral-joystick
+# sudo usermod -a -G audio,video,input,dialout,plugdev,netdev,users,cdrom,tty $USER
+# systemctl --user link $HOME/development/environment/src/project_templates/systemd_services/kodi.service
+# systemctl --user daemon-reload
+# systemctl --user enable --now kodi.service
+[Unit]
+After=network.target
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+ExecStart=/usr/bin/kodi
+
+[Install]
+WantedBy=default.target

@@ -9,11 +9,9 @@
   go_file_content = builtins.readFile go_file;
   go_pkg =
     {
-      "" = pkgs.go_1_21;
-      "\n" = pkgs.go_1_21;
-      "19\n" = pkgs.go_1_19;
-      "20\n" = pkgs.go_1_20;
-      "21\n" = pkgs.go_1_21;
+      "" = pkgs.go_1_23;
+      "\n" = pkgs.go_1_23;
+      "23\n" = pkgs.go_1_23;
     }
     ."${go_file_content}";
   extra_deps = (
@@ -23,7 +21,7 @@
   );
 in {
   pkgs-shell = (
-    [pkgs.go_1_21]
+    [pkgs.go_1_23]
     ++ extra_deps
   );
   pkgs-list = (

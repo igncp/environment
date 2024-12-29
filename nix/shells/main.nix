@@ -4,6 +4,10 @@
     inherit pkgs;
     base_config = "";
   };
+  lua-config = import ../common/lua.nix {
+    inherit pkgs;
+    base_config = "";
+  };
   crypto-shells = import ./crypto.nix {inherit pkgs;};
   cli-extra-shell = import ./cli-extra.nix {inherit pkgs;};
   python-extra-shell = import ./python.nix {inherit pkgs;};
@@ -126,14 +130,7 @@ in
     };
 
     lua = pkgs.mkShell {
-      packages = with pkgs; [
-        lua
-        luajit
-
-        # 對於本地安裝，請使用 `--tree`: https://leafo.net/guides/customizing-the-luarocks-tree.html
-        # 需要設定載入路徑
-        luarocks
-      ];
+      packages = lua-config.lua_pkgs;
     };
 
     ruby = pkgs.mkShell {

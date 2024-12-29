@@ -38,6 +38,9 @@ Host foo
   # Use the local agent in the remote machine
   ForwardAgent yes
 
+  # 啟用閘道端口
+  GatewayPorts true
+
   # Use a different agent socket
   IdentityAgent "..."
 

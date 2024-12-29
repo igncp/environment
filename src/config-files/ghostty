@@ -1,0 +1,4 @@
+cursor-style = block
+shell-integration-features = false
+font-family = monofur mono
+cursor-style-blink = false

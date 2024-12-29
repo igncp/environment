@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 set -e
 
@@ -10,7 +10,14 @@ while true; do
   if [ -f /home/igncp/VirtualWindow/filter.txt ]; then
     FILTER="$(cat /home/igncp/VirtualWindow/filter.txt)"
   fi
-  FILE_CHOSEN="$(cat /home/igncp/VirtualWindow/list.txt | grep "$FILTER" | shuf -n 1)"
+
+  IS_DAY="$(date +%H | awk '{ print ($1 >= 6 && $1 < 18) ? 1 : 0; }')"
+  DAY_FILTER="\bday\b"
+  if [ "$IS_DAY" = "0" ]; then
+    DAY_FILTER="\bnight\b"
+  fi
+
+  FILE_CHOSEN="$(cat /home/igncp/VirtualWindow/list.txt | grep "$DAY_FILTER" | grep "$FILTER" | shuf -n 1)"
   FILE_NAME="$(echo "$FILE_CHOSEN" | awk '{ print $1; }')"
   FILE_PATH="/home/igncp/VirtualWindow/$FILE_NAME"
 

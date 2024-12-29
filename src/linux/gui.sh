@@ -2,6 +2,8 @@
 
 set -e
 
+. src/linux/gui/vnc.sh
+
 provision_setup_linux_gui() {
   cat >>~/.shell_aliases <<EOF
 if type xclip >/dev/null 2>&1; then
@@ -132,4 +134,6 @@ EOF
 
   add_desktop_common \
     "$HOME/.scripts/wallpaper_update.sh" 'wallpaper-update' 'Wallpaper Update'
+
+  setup_gui_vnc
 }

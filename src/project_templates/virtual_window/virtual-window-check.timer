@@ -1,0 +1,7 @@
+[Timer]
+OnBootSec=30sec
+OnUnitActiveSec=10min
+Unit=virtual-window-check.service
+
+[Install]
+WantedBy=timers.target

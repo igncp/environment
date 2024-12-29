@@ -19,10 +19,24 @@ provision_setup_env() {
 
   THEME=$(cat "$PROVISION_CONFIG"/theme | tr -d '\n')
 
+  IS_WINDOWS=$(uname -a | grep -c MINGW64 | grep 1 || true)
   IS_DEBIAN=$(uname -a | grep -c Debian | grep 1 || uname -a | grep -c Ubuntu | grep 1 || true)
   IS_UBUNTU=$(uname -a | grep -c Ubuntu | grep 1 || true)
   IS_NIXOS=$(uname -a | grep -c NixOS || true)
+  IS_SURFACE="$(uname -a | grep -c 'Linux surface' || true)"
   IS_ARCH="0"
+
+  if [ -f /etc/os-release ]; then
+    # 用於 MS Surface
+    IS_DEBIAN="$(cat /etc/os-release | grep '^NAME' | grep -c Debian | grep 1 || true)"
+  fi
+
+  if [ "$IS_LINUX" = "1" ] && [ ! -f "$PROVISION_CONFIG"/skip-root-bashrc ]; then
+    if type sudo >/dev/null 2>&1; then
+      ROOT_HOME=$(eval echo "~root")
+      sudo bash -c 'echo "" > ~/.bashrc'
+    fi
+  fi
 
   if [ -f /etc/os-release ] && [ -n "$(cat /etc/os-release | grep 'Arch Linux' || true)" ]; then
     IS_ARCH="1"
@@ -30,8 +44,11 @@ provision_setup_env() {
 
   mkdir -p ~/.check-files
   mkdir -p ~/.completions
-  sudo mkdir -p /usr/local/bin/environment_scripts
-  sudo chown $USER /usr/local/bin/environment_scripts
+
+  if [ "$IS_WINDOWS" != "1" ]; then
+    sudo mkdir -p /usr/local/bin/environment_scripts
+    sudo chown $USER /usr/local/bin/environment_scripts
+  fi
 
   # This assumes now that the OS is using `nix`
   install_system_package() {
@@ -76,7 +93,6 @@ provision_setup_env() {
     echo "}" >>"$FILENAME"
   }
 
-  mkdir -p ~/development/environment/project
   cat >~/development/environment/project/backup.sh <<"EOF"
 # Don't run this script directly, it is used by `src/scripts/backup.sh`
 set -x

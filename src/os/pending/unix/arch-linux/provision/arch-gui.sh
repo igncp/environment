@@ -195,8 +195,8 @@ EOF
   fi
 fi
 
-if [ -f ~/development/environment/project/.config/x11-vnc-server-lightdm ]; then
-  if [ ! -f /etc/x11vnc.pass ]; then echo 'You have to setup `/etc/x11vnc.pass` to run ~/development/environment/project/.config/x11-vnc-server-lightdm'; fi
+if [ -f ~/development/environment/project/.config__/x11-vnc-server-lightdm ]; then
+  if [ ! -f /etc/x11vnc.pass ]; then echo 'You have to setup `/etc/x11vnc.pass` to run ~/development/environment/project/.config___/x11-vnc-server-lightdm'; fi
   sudo mkdir /etc/systemd/system/x11vnc.service.d/
   cat >/tmp/custom.conf <<"EOF"
 [Unit]

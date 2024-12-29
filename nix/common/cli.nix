@@ -15,6 +15,7 @@
   has_podman = builtins.pathExists (base_config + "/podman");
   has_mssql = builtins.pathExists (base_config + "/mssql");
   has_qemu = builtins.pathExists (base_config + "/qemu");
+  has_logdy = builtins.pathExists (base_config + "/logdy");
 
   logdy = import ../derivations/logdy.nix {inherit pkgs;};
 
@@ -42,6 +43,7 @@ in {
       bat # https://github.com/sharkdp/bat
       coreutils-full
       curl
+      d2 # https://github.com/terrastruct/d2
       direnv # https://github.com/direnv/direnv
       docker
       docker-buildx
@@ -54,16 +56,17 @@ in {
       gh # https://github.com/cli/cli
       git
       git-extras
+      git-lfs
       gnugrep
       gnupg
       gnused
+      go-2fa
       hostname # If using Alpine, the Busybox hostname is different
       htop # https://github.com/htop-dev/htop
       jq # https://github.com/jqlang/jq
       killall
       less
       libiconv
-      logdy
       lsof # https://github.com/lsof-org/lsof
       moreutils
       neovim # https://github.com/neovim/neovim
@@ -139,6 +142,7 @@ in {
     ++ (lib.optional has_cli_hasura pkgs.hasura-cli)
     ++ (lib.optional has_cli_openvpn pkgs.openvpn) # https://github.com/OpenVPN/openvpn
     ++ (lib.optional has_pg pkgs.postgresql)
+    ++ (lib.optional has_logdy logdy)
     ++ (lib.optional has_stripe pkgs.stripe-cli) # https://github.com/stripe/stripe-cli
     ++ (lib.optional has_tailscale pkgs.tailscale)
     ++ (lib.optional has_mssql pkgs.sqlcmd)

@@ -11,5 +11,5 @@ provision_setup_nvim_vim() {
 
   cp ~/.vimrc ~/.base-vimrc
 
-  cat ~/development/environment/src/config-files/multi-os.vim >>~/.vimrc
+  cat ~/development/environment/src/config-files/multi-os.vim | sed 's|\r||' >>~/.vimrc
 }
