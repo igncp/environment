@@ -54,7 +54,7 @@ drb() {
   docker run -it --rm "${@:2}" $1 /bin/bash
 }
 
-alias ca="~/.scripts/cargo_target/release/canto-cli"
+alias ca="~/.local/bin/canto-cli"
 
 alias Lsblk="lsblk -f | less -S"
 Diff() { diff --color=always "$@" | less -r; }
@@ -162,6 +162,7 @@ alias IPLocal=$'ifconfig -a | ag "inet\\b" | ag -v " 127" | awk \'{ print $2; }\
 alias LastColumn="awk '{print "'$NF'"}'"
 alias PathShow='echo $PATH | tr ":" "\n" | sort | uniq | less'
 alias Provision="(cd ~/development/environment && bash src/main.sh)"
+alias ProvisionUpdate="(cd ~/development/environment && IS_PROVISION_UPDATE=1 bash src/main.sh)"
 alias PsTree='pstree -s'
 alias RsyncDelete='rsync -rhv --delete' # remember to add a slash at the end of source (dest doesn't matter)
 alias ShellChangeToBash='chsh -s /bin/bash; exit'
@@ -224,7 +225,7 @@ n() {
 
 ConfigProvisionList() {
   INITIAL_SHA=$(find ~/development/environment/project/.config -type f | sort -V | sha256sum | awk '{print $1}')
-  /usr/local/bin/environment_scripts/provision_choose_config $@ || return
+  "$HOME"/.local/bin/provision_choose_config $@ || return
   AFTER_SHA=$(find ~/development/environment/project/.config -type f | sort -V | sha256sum | awk '{print $1}')
   # Stop if no changes
   if [ "$INITIAL_SHA" = "$AFTER_SHA" ]; then return; fi
@@ -259,6 +260,7 @@ alias NixListGenerations="nix-env --list-generations"
 alias NixListPackages='nix-env --query "*"'
 alias NixRemovePackage='nix-env -e'
 alias NixReplPkgs="nix repl --expr 'import <nixpkgs>{}'"
+alias NixReplFlake='nix repl --expr "builtins.getFlake \"$PWD\""'
 alias NixDevelopPath='nix develop path:$(pwd)' # 也可以只運行指令: `NixDevelopPath -c cargo build`
 
 NixFindPointersToFile() {
@@ -324,7 +326,6 @@ ClearSpace() {
   sudo rm -rf ~/.local/state/nvim
   sudo rm -rf ~/.npm
   sudo rm -rf ~/.rustup
-  sudo rm -rf ~/.scripts/cargo_target
   sudo rm -rf ~/go
   sudo rm -rf ~/nix-dirs
 
@@ -408,6 +409,7 @@ NixEnvironmentUpgrade() {
   nix flake lock --update-input unstable
   nix flake lock --update-input home-manager
   nix flake lock --update-input flake-utils
+  nix flake lock --update-input ghostty
   rm -rf ~/.check-files/nix-channel
   NixUpdateChannel
   bash ~/development/environment/src/scripts/toolbox/nix_sync_input.sh ALL
@@ -485,16 +487,11 @@ DockerEnvironmentAlacritty() {
 
 if type ruby >/dev/null 2>&1; then
   if [ ! -f ~/development/environment/project/.config/ruby_system ]; then
-    mkdir -p "$HOME/nix-dirs/ruby-gems"
-    export GEM_HOME="$HOME/nix-dirs/ruby-gems"
+    mkdir -p "$HOME/.local/gems"
+    export GEM_HOME="$HOME/.local/gems"
     export GEM_PATH="$GEM_HOME"
     export PATH="$GEM_HOME/bin:$PATH"
   fi
-fi
-
-if type nodenv >/dev/null 2>&1; then
-  export NODENV_ROOT="$HOME/nix-dirs/nodenv"
-  eval "$(nodenv init -)"
 fi
 
 if type kubectl >/dev/null 2>&1; then

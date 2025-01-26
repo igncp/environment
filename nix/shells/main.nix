@@ -1,18 +1,12 @@
 # Shell 別名應在別名檔案中定義，檢查二進位檔案是否可用
 {pkgs}: let
-  rust-config = import ../common/rust.nix {
-    inherit pkgs;
-    base_config = "";
-  };
   lua-config = import ../common/lua.nix {
     inherit pkgs;
     base_config = "";
   };
-  crypto-shells = import ./crypto.nix {inherit pkgs;};
   cli-extra-shell = import ./cli-extra.nix {inherit pkgs;};
   python-extra-shell = import ./python.nix {inherit pkgs;};
 
-  lib = pkgs.lib;
   is_linux =
     (pkgs.system == "x86_64-linux")
     || (pkgs.system == "aarch64-linux")
@@ -20,9 +14,6 @@
 
   base_config = "";
 
-  go-pkgs = import ../common/go.nix {
-    inherit pkgs lib base_config;
-  };
   php-pkgs = import ../common/php.nix {
     inherit pkgs base_config;
   };
@@ -49,12 +40,6 @@ in
         zip
         zstd # https://github.com/facebook/zstd
       ];
-    };
-
-    go = pkgs.mkShell {
-      packages = go-pkgs.pkgs-shell;
-      # 對於 `dlv`: https://github.com/go-delve/delve/issues/3085#issuecomment-1419664637
-      hardeningDisable = ["all"];
     };
 
     kube = pkgs.mkShell {
@@ -111,7 +96,6 @@ in
       packages = with pkgs; [
         iredis # https://github.com/laixintao/iredis
         pgcli # https://github.com/dbcli/pgcli
-        usql # https://github.com/xo/usql
       ];
     };
 
@@ -124,29 +108,8 @@ in
       packages = [pkgs.nodenv];
     };
 
-    rust = pkgs.mkShell {
-      packages = rust-config.pkgs-list ++ [pkgs.ncurses];
-      shellHook = rust-config.shellHook;
-    };
-
     lua = pkgs.mkShell {
       packages = lua-config.lua_pkgs;
-    };
-
-    ruby = pkgs.mkShell {
-      packages = with pkgs; [
-        ruby
-      ];
-    };
-
-    ruby-rbenv-install = pkgs.mkShell {
-      packages = with pkgs; [
-        libyaml
-        zlib
-      ];
-
-      # 需要稍後能夠運行“gem install bundler”
-      optflags = "-Wno-error=implicit-function-declaration";
     };
 
     video = pkgs.mkShell {
@@ -218,6 +181,5 @@ in
       ];
     };
   }
-  // crypto-shells
   // cli-extra-shell
   // python-extra-shell

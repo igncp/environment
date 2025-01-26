@@ -48,7 +48,11 @@ alias LsInitRAMFS='lsinitcpio /boot/initramfs-linux.img'
 
 alias LabelEXTPartition='sudo e2label' # For example: LabelEXTPartition /dev/sda2 FOO_NAME
 alias LabelFAT='sudo fatlabel' # For example: LabelFAT /dev/sda2 FOO_NAME
-LabelLuksPartition() { sudo cryptsetup config $1 --label $2; } # For example: LabelLuksPartition /dev/sda2 FOO_NAME
+
+LuksAddKeyInPartitionForSlot() { sudo cryptsetup --key-slot $2 luksAddKey $1; } # 當佢只有一個密鑰嗰陣，個插槽號碼係0
+LuksLabelPartition() { sudo cryptsetup config $1 --label $2; } # 例如: LabelLuksPartition /dev/sda2 FOO_NAME
+LuksPrintDump() { sudo cryptsetup luksDump $1; }
+LuksRemoveKeyByPassword() { sudo cryptsetup luksRemoveKey $1; } # 例如: LuksRemoveKeyByPassword /dev/sda2
 
 SystemdFindReference() { sudo grep -r "$1" /usr/lib/systemd/system/; }
 

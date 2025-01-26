@@ -13,6 +13,7 @@ set -e
 . src/general/shellcheck.sh
 . src/general/taskwarrior.sh
 . src/general/tmux.sh
+. src/general/usql.sh
 
 provision_setup_general() {
   mkdir -p $HOME/.scripts/toolbox
@@ -35,10 +36,6 @@ provision_setup_general() {
   fi
 
   cat >>~/.shellrc <<"EOF"
-if [ -f "$HOME/.cargo/env" ]; then
-  source "$HOME/.cargo/env"
-fi
-
 export EDITOR=vim
 EOF
 
@@ -289,4 +286,5 @@ EOF
   provision_setup_general_shellcheck
   provision_setup_general_taskwarrior
   provision_setup_general_tmux
+  provision_setup_general_usql
 }

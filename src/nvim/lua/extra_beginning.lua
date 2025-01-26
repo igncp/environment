@@ -59,7 +59,7 @@ local nvim_plugins = {
   {
     "chrisgrieser/nvim-various-textobjs",
     lazy = false,
-    opts = { keymaps = {useDefaults = true} },
+    opts = { keymaps = { useDefaults = true } },
   },
   {
     "nvim-treesitter/nvim-treesitter",
@@ -320,7 +320,7 @@ silent call setreg('+', getreg('0', 1, 1))
 
   vim.cmd([[
 silent call writefile(getreg('0', 1, 1), "/tmp/clipboard-ssh")
-silent !cat /tmp/clipboard-ssh | /usr/local/bin/environment_scripts/clipboard_ssh send && rm /tmp/clipboard-ssh
+silent !cat /tmp/clipboard-ssh | $HOME/.local/bin/clipboard_ssh send && rm /tmp/clipboard-ssh
 ]])
 end
 

@@ -15,7 +15,7 @@ font pango:DejaVu Sans Mono 10
 # 使用滑鼠+$mod將浮動視窗拖曳到想要的位置您也可以使用$mod+右鍵單擊來調整浮動視窗的大小
 floating_modifier $mod
 
-bindsym $mod+Return exec terminator
+bindsym $mod+Return exec $HOME/.scripts/choose_terminal.sh
 
 bindsym $mod+Shift+semicolon kill
 
@@ -144,8 +144,8 @@ client.focused_inactive #000000 #222222 #ffffff #222222
 client.unfocused        #888888 #666666 #ffffff #222222
 client.urgent           #900000 #900000 #ffffff #900000
 
-bindsym --release $mod+Shift+m exec "/home/igncp/.displays/same.sh &>> /tmp/i3-log"
-bindsym --release $mod+m exec "/home/igncp/.displays/right.sh &>> /tmp/i3-log"
+bindsym --release $mod+Shift+m exec "$HOME/.displays/same.sh &>> /tmp/i3-log"
+bindsym --release $mod+m exec "$HOME/.displays/right.sh &>> /tmp/i3-log"
 bindsym --release $mod+Shift+o exec "systemctl suspend &>> /tmp/i3-log"
 
 bindsym --release $mod+Shift+n exec "dunstctl set-paused true; notify-send 'Time' &>> /tmp/i3-log"
@@ -166,7 +166,7 @@ for_window [title="Android Virtual Device Manager"] floating enable
 for_window [title="ImageMagick"] floating enable, move position 0 0
 
 bindsym Mod4+BackSpace kill
-bindsym --release Mod1+Shift+b exec "/home/igncp/development/environment/src/scripts/misc/take_screenshot.sh &>> /tmp/i3-log"
+bindsym --release Mod1+Shift+b exec "$HOME/development/environment/src/scripts/misc/take_screenshot.sh &>> /tmp/i3-log"
 
 bindsym Mod1+d exec "rofi -show combi -font 'hack 20' -combi-modi drun,window,ssh"
 bindsym Mod1+c exec "rofi -show window -font 'hack 20' -theme-str 'window { background-color:#cfc;}'"
@@ -203,9 +203,11 @@ bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% # 
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5% # 降低音量
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # 靜音
 
-exec_always --no-startup-id sh /home/igncp/.scripts/gui_daemons.sh
+exec_always --no-startup-id sh $HOME/.scripts/gui_daemons.sh
+exec_always --no-startup-id sh $HOME/development/environment/src/scripts/misc/i3_dock.sh
+exec_always --no-startup-id bash -c "/run/current-system/sw/bin/pasystray || true"
 
-exec /home/igncp/.scripts/wallpaper_update.sh
+exec $HOME/.scripts/wallpaper_update.sh
 
 # 啟動時打開以使用 ssh 訪問
 exec /run/current-system/sw/bin/1password

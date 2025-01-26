@@ -1,7 +1,9 @@
 use std::{env, process};
 
 fn install_linux() {
-    let xclip_code = process::Command::new("bash")
+    let xclip_code = process::Command::new("env")
+        .arg("-i")
+        .arg("bash")
         .arg("-c")
         .arg("type -a xclip")
         .stdout(process::Stdio::piped())
@@ -51,7 +53,7 @@ After=network.target
 
 [Service]
 ExecStart=/usr/bin/bash -c \
-    'PATH=$PATH:/home/igncp/.nix-profile/bin /usr/local/bin/environment_scripts/clipboard_ssh host'
+    '/home/igncp/.local/bin/clipboard_ssh host'
 Restart=always
 
 [Install]
@@ -111,7 +113,7 @@ fn install_macos() {
         <string>service-clipboard-ssh</string>
         <key>ProgramArguments</key>
         <array>
-            <string>/usr/local/bin/environment_scripts/clipboard_ssh</string>
+            <string>$HOME/.local/bin/clipboard_ssh</string>
             <string>host</string>
         </array>
     <key>KeepAlive</key>

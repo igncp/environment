@@ -41,6 +41,8 @@ in {
       alejandra # https://github.com/kamadorueda/alejandra
       bash
       bat # https://github.com/sharkdp/bat
+      bc
+      ccls # https://github.com/MaskRay/ccls
       coreutils-full
       curl
       d2 # https://github.com/terrastruct/d2
@@ -62,7 +64,6 @@ in {
       gnused
       go-2fa
       hostname # If using Alpine, the Busybox hostname is different
-      htop # https://github.com/htop-dev/htop
       jq # https://github.com/jqlang/jq
       killall
       less
@@ -78,6 +79,7 @@ in {
       procps # https://gitlab.com/procps-ng/procps
       pstree
       ripgrep # https://github.com/BurntSushi/ripgrep
+      rrsync
       rsync # https://github.com/WayneD/rsync
       sad # https://github.com/ms-jpq/sad
       scc # https://github.com/boyter/scc
@@ -86,6 +88,7 @@ in {
       silver-searcher # https://github.com/ggreer/the_silver_searcher
       taskwarrior3 # https://github.com/GothenburgBitFactory/taskwarrior
       tree
+      d2
       wget
       which # Arch linux 入面缺乏
       yq # https://github.com/mikefarah/yq

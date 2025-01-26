@@ -12,7 +12,7 @@ install_node_modules() {
   local NAME="$1"
   local BIN="${2:-$NAME}"
 
-  if [ ! -f "$HOME/.npm-packages/bin/$BIN" ]; then
+  if [ ! -f "$HOME/.npm-packages/bin/$BIN" ] && type npm >/dev/null 2>&1; then
     echo "Installing node module: $NAME"
     npm i -g $NAME
   fi
@@ -22,6 +22,8 @@ provision_setup_js() {
   cat >~/.npmrc <<"EOF"
 prefix = ${HOME}/.npm-packages
 EOF
+
+  provision_setup_nodenv
 
   cat >>~/.vimrc <<"EOF"
 " quick console.log (maybe used by typescript later on)
@@ -91,19 +93,19 @@ nnoremap <leader>jsW :let g:SpecialImports_Cmd='<c-r>=g:SpecialImports_Cmd_Rel_D
 " t for test
 nnoremap <leader>kpt :let g:ctrlp_default_input='__tests__'<cr>:CtrlP<cr>:let g:ctrlp_default_input=''<cr>
 
-  function! ToggleItOnly()
-    execute "normal! ?it(\\|it.only(\<cr>\<right>\<right>"
-    let current_char = nr2char(strgetchar(getline('.')[col('.') - 1:], 0))
-    if current_char == "."
-      execute "normal! v4l\<del>"
-    else
-      execute "normal! i.only\<c-c>"
-    endif
-    execute "normal! \<c-o>"
-  endfunction
-  autocmd filetype javascript,typescript,typescriptreact :exe 'nnoremap <leader>zo :call ToggleItOnly()<cr>'
+function! ToggleItOnly()
+  execute "normal! ?it(\\|it.only(\<cr>\<right>\<right>"
+  let current_char = nr2char(strgetchar(getline('.')[col('.') - 1:], 0))
+  if current_char == "."
+    execute "normal! v4l\<del>"
+  else
+    execute "normal! i.only\<c-c>"
+  endif
+  execute "normal! \<c-o>"
+endfunction
+autocmd filetype javascript,typescript,typescriptreact :exe 'nnoremap <leader>zo :call ToggleItOnly()<cr>'
 
-  nnoremap <leader>BT :let g:Fast_grep_opts='--exclude-dir="__tests__" --exclude-dir="__integration__" -i'<left>
+nnoremap <leader>BT :let g:Fast_grep_opts='--exclude-dir="__tests__" --exclude-dir="__integration__" -i'<left>
 
 " Copy selected string encoded into clipboard
 vnoremap <leader>jz y:!node -e "console.log(encodeURIComponent('<c-r>"'))" > /tmp/vim-encode.txt<cr>:let @+ = join(readfile("/tmp/vim-encode.txt"), "\n")<cr><cr>
@@ -119,7 +121,7 @@ EOF
 
   install_omzsh_plugin lukechilds/zsh-better-npm-completion
 
-  if [ ! -f ~/.npm-completion ]; then
+  if [ ! -f ~/.npm-completion ] && type npm >/dev/null 2>&1; then
     npm completion >~/.npm-completion
   fi
   cat ~/.npm-completion >>~/.shellrc
@@ -133,6 +135,7 @@ EOF
   install_node_modules graphql-language-service-cli graphql-lsp
   install_node_modules live-server
   install_node_modules tldr
+  # install_node_modules bun
 
   cat >>~/.shell_aliases <<"EOF"
 Serve() { PORT="$2"; live-server --port="${PORT:=9000}" $1; }
@@ -154,7 +157,6 @@ EOF
     yarn
   fi
 
-  provision_setup_nodenv
   provision_setup_js_ts
   provision_setup_js_vue
   provision_setup_js_yarn_workspaces

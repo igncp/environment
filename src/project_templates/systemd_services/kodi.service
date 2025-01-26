@@ -16,3 +16,6 @@ ExecStart=/usr/bin/kodi
 
 [Install]
 WantedBy=default.target
+# Controller configuration in:
+# - ~/.kodi/userdata/addon_data/peripheral.joystick/resources/buttonmaps/xml/linux/NAME.xml
+# - Can backup this file

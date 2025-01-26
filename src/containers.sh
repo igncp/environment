@@ -95,7 +95,7 @@ EOF
 
   if [ ! -S /var/run/docker.sock ]; then
     curl -fsSL https://get.docker.com | sh
-    sudo usermod -a -G docker igncp
+    sudo usermod -a -G docker $USER
   fi
 
   echo 'export PATH=$PATH:/usr/local/lib/docker/bin' >>~/.shellrc

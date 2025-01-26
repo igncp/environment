@@ -15,15 +15,17 @@ autocmd FileType typescript,typescriptreact :exe ConsoleMappingB
   autocmd filetype typescript,typescriptreact :exe "vnoremap <silent> <leader>kB :'<,'>PrettierFragment<cr>"
 EOF
 
-  if ! type typescript-language-server &>/dev/null; then
-    npm install -g typescript-language-server
-  fi
+  if type npm >/dev/null 2>&1; then
+    if ! type typescript-language-server &>/dev/null; then
+      npm install -g typescript-language-server
+    fi
 
-  if ! type vscode-eslint-language-server &>/dev/null; then
-    npm install -g vscode-langservers-extracted
-  fi
+    if ! type vscode-eslint-language-server &>/dev/null; then
+      npm install -g vscode-langservers-extracted
+    fi
 
-  if ! type bash-language-server &>/dev/null; then
-    npm install -g bash-language-server
+    if ! type bash-language-server &>/dev/null; then
+      npm install -g bash-language-server
+    fi
   fi
 }

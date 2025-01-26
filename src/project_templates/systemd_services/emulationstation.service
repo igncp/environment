@@ -1,0 +1,14 @@
+# systemctl --user link $HOME/development/environment/src/project_templates/systemd_services/emulationstation.service
+# systemctl --user daemon-reload
+# systemctl --user enable --now emulationstation.service
+[Unit]
+After=network.target
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+ExecStart=/bin/bash -c 'DISPLAY=:0 /usr/bin/emulationstation'
+
+[Install]
+WantedBy=default.target

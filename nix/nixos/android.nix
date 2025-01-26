@@ -1,9 +1,13 @@
 # https://nixos.wiki/wiki/Android
-{pkgs, ...}: {
+{
+  pkgs,
+  user,
+  ...
+}: {
   programs.adb.enable = true;
-  users.users.igncp.extraGroups = ["adbusers"];
+  users.users."${user}".extraGroups = ["adbusers"];
   environment.variables = {
-    ANDROID_HOME = "/home/igncp/Android/Sdk";
+    ANDROID_HOME = "/home/${user}/Android/Sdk";
   };
   environment.systemPackages = with pkgs; [
     android-studio

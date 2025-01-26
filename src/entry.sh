@@ -6,15 +6,16 @@ set -e
 . src/top.sh
 . src/os.sh
 
-. src/nix.sh
-. src/zsh.sh
-. src/general.sh
-. src/nvim.sh
-. src/js.sh
-. src/rust.sh
 . src/cli_tools.sh
-. src/ruby.sh
+. src/general.sh
+. src/js.sh
 . src/linux.sh
+. src/nix.sh
+. src/nvim.sh
+. src/python.sh
+. src/ruby.sh
+. src/rust.sh
+. src/zsh.sh
 
 . src/android.sh
 . src/brightscript.sh
@@ -38,6 +39,7 @@ provision_setup_with_bash() {
   provision_setup_env
   provision_setup_top
 
+  provision_setup_python
   provision_setup_nix
 
   provision_setup_os

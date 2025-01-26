@@ -9,6 +9,18 @@ provision_setup_os_debian() {
   install_system_package_os zsh
   install_system_package_os ufw
 
+  if [ -f /etc/os-release ]; then
+    IS_BOOKWORM="$(cat /etc/os-release | grep bookworm && echo 1 || echo 0)"
+  fi
+
+  if [ "$IS_BOOKWORM" = "1" ]; then
+    # https://backports.debian.org/Instructions/
+    if [ ! -f /etc/apt/sources.list.d/backports.list ]; then
+      sudo bash -c "echo 'deb http://deb.debian.org/debian bookworm-backports main' > /etc/apt/sources.list.d/backports.list"
+      sudo apt update
+    fi
+  fi
+
   cat >>~/.shellrc <<"EOF"
 export DEBIAN_FRONTEND=noninteractive
 EOF
@@ -78,6 +90,7 @@ EOF
       sudo apt install -y software-properties-common
       sudo apt-add-repository -y --component non-free
       sudo apt update
+      sudo apt install -y python3-launchpadlib # For add-apt-repository
       touch ~/.check-files/debian-non-free
     fi
   fi

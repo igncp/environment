@@ -1,6 +1,9 @@
 {
   lib,
   pkgs,
+  system,
+  unstable_pkgs,
+  ghostty,
   ...
 }: let
   base_config = ../../project/.config;
@@ -21,20 +24,24 @@ in {
 
   environment.systemPackages = with pkgs;
     [
+      _1password
       acpi
       anki-bin
       arandr
       blueberry
-      dropbox
+      cairo
+      discord
       feh
       firefox
       flameshot
       google-chrome
       gtk4
-      cairo
       keepass
       libsForQt5.qt5ct
+      nextcloud-client
+      pasystray
       pavucontrol
+      pdfsam-basic # https://github.com/torakiki/pdfsam # 需要將語言轉做英文
       rpi-imager
       slack
       steam
@@ -51,12 +58,21 @@ in {
       lxqt.lxqt-sudo
       picom
       rofi
+
+      # Libre Office
+
+      unstable_pkgs.libreoffice-qt # 需要`unstable_pkgs`先可以用密碼保護嘅檔案
+      hunspell
     ]
     ++ (lib.optional has_vnc [
       realvnc-vnc-viewer
       tigervnc
     ])
-    ++ (lib.optional has_copyq copyq);
+    ++ (lib.optional has_copyq copyq)
+    ++ (
+      lib.optional (system == "x86_64-linux")
+      ghostty.packages.x86_64-linux.default
+    );
 
   fonts.packages = with pkgs; [
     noto-fonts
@@ -97,6 +113,8 @@ in {
   # 螢幕鎖
   programs.xss-lock.enable = true;
 
+  programs.thunar.enable = true;
+
   services.libinput.enable = true;
 
   services.xserver.xkb = {
@@ -119,14 +137,6 @@ in {
 
   # 允許非免費包
   nixpkgs.config.allowUnfree = true;
-
-  programs._1password.enable = true;
-  programs._1password-gui = {
-    enable = true;
-    # 某些功能，包括 CLI 整合和系統身份驗證支持，需要在某些桌面環境（例如
-    # Plasma）上啟用 PolKit 整合。
-    polkitPolicyOwners = ["igncp"];
-  };
 
   qt = {
     enable = true;

@@ -107,6 +107,16 @@ EOF
       "args": ["server", "-m", "stream"],
       "filetypes": ["graphql","typescript", "typescriptreact"]
     },
+    "ccls": {
+      "command": "ccls",
+      "filetypes": ["c", "cc", "cpp", "c++", "objc", "objcpp"],
+      "rootPatterns": [".ccls", "compile_commands.json", ".git/", ".hg/"],
+      "initializationOptions": {
+          "cache": {
+            "directory": "/tmp/ccls"
+          }
+        }
+    },
     "nix": {
       "command": "nil",
       "filetypes": ["nix"]

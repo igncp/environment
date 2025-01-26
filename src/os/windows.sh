@@ -59,7 +59,7 @@ EOF
 set bell-style none
 EOF
 
-  if [ -f ~/.check-files/windows ]; then
+  if [ ! -f ~/.check-files/windows ]; then
     install_windows_package "RARLab.WinRAR" "WinRAR" || true
     install_windows_package "AutoHotkey.AutoHotkey" "AutoHotkey.lnk" || true
     install_windows_package "tailscale.tailscale" "Tailscale.lnk" || true
@@ -81,7 +81,7 @@ EOF
   provision_setup_general_fzf
   provision_setup_nvim_vim
 
-  echo 'syntax on' >> ~/.vimrc
+  echo 'syntax on' >>~/.vimrc
   mkdir -p ~/AppData/Local/nvim
   cp ~/.vimrc ~/AppData/Local/nvim/init.vim
 

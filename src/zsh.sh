@@ -76,7 +76,7 @@ EOF
     fi
   fi
 
-  echo 'fpath=(/home/igncp/.zsh $fpath)' >>~/.zshrc
+  echo 'fpath=('"$HOME"'/.zsh $fpath)' >>~/.zshrc
 
   provision_setup_zsh_unalias
 

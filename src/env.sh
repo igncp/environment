@@ -45,11 +45,6 @@ provision_setup_env() {
   mkdir -p ~/.check-files
   mkdir -p ~/.completions
 
-  if [ "$IS_WINDOWS" != "1" ]; then
-    sudo mkdir -p /usr/local/bin/environment_scripts
-    sudo chown $USER /usr/local/bin/environment_scripts
-  fi
-
   # This assumes now that the OS is using `nix`
   install_system_package() {
     PACKAGE=$1

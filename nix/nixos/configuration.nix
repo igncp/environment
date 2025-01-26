@@ -1,6 +1,7 @@
 {
   pkgs,
   lib,
+  user,
   ...
 }: let
   has_gui = builtins.pathExists ../../project/.config/gui;
@@ -55,9 +56,9 @@ in {
     time.timeZone = "Asia/Hong_Kong";
 
     users.defaultUserShell = pkgs.zsh;
-    users.users.igncp = {
+    users.users."${user}" = {
       isNormalUser = true;
-      home = "/home/igncp";
+      home = "/home/${user}";
       extraGroups = ["wheel" "docker" "audio" "video" "networkmanager"];
       shell = pkgs.zsh;
     };

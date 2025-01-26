@@ -88,7 +88,7 @@ EOF
 
       . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
       sleep 10
-      nix-shell -p git home-manager --run "bash -c '. src/config-files/.shell_aliases.sh && RebuildNix'"
+      nix-shell -p git home-manager --run "bash -c '. $HOME/development/environment/src/config-files/.shell_aliases.sh && RebuildNix'"
     fi
   fi
 
@@ -121,6 +121,11 @@ EOF
 eval "$(direnv hook zsh)"
 export DIRENV_LOG_FORMAT=""
 EOF
+
+  if type git >/dev/null 2>&1 && [ ! -d ~/misc/nixpkgs ]; then
+    mkdir -p ~/misc
+    git clone https://github.com/NixOS/nixpkgs.git --depth 1 ~/misc/nixpkgs
+  fi
 
   # 要在 cron 腳本中使用 `nix`，可以將其新增至 crontab 中
   # `PATH=/home/igncp/.nix-profile/bin`

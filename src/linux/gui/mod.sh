@@ -84,7 +84,6 @@
 #         ".shell_aliases",
 #         &format!(
 #             r###"
-# alias WallpaperPrintCurrent="cat ~/.fehbg | grep --color=never -o '\/home\/.*jpg'"
 
 # alias KeyboardLayoutGB='setxkbmap -layout gb'
 # alias KeyboardLayoutUS='setxkbmap -layout us'

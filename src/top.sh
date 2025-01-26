@@ -5,6 +5,7 @@ set -e
 provision_setup_top() {
   mkdir -p ~/.check-files
   mkdir -p ~/.scripts
+  mkdir -p ~/.local/bin
   mkdir -p ~/development/environment/project/.config
 
   echo '' >~/.shellrc

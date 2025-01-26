@@ -16,6 +16,17 @@ EOF
     return
   fi
 
+  mkdir -p ~/.scripts && cat >~/.scripts/choose_terminal.sh <<'EOF'
+if [ -f ~/.local/bin/ghostty ]; then
+  ~/.local/bin/ghostty
+elif [ -s /run/current-system/sw/bin/ghostty ]; then
+  /run/current-system/sw/bin/ghostty
+else
+  /run/current-system/sw/bin/terminator
+fi
+EOF
+  chmod +x ~/.scripts/choose_terminal.sh
+
   if [ -f "$PROVISION_CONFIG"/gui-xorg ]; then
     if [ ! -f ~/.check-files/gui-xorg ]; then
       if [ ! -f "$PROVISION_CONFIG"/wayland ]; then
@@ -80,14 +91,26 @@ if type i3 >/dev/null 2>&1; then
     provision.sh
   }
 fi
+alias WallpaperPrintCurrent="cat ~/.fehbg | grep --color=never -o '\/home\/.*jpg'"
 EOF
 
   if type i3 >/dev/null 2>&1; then
     if [ -d ~/.config/i3 ]; then
-      cp ~/development/environment/src/config-files/i3-config ~/.config/i3/config
+      if [ ! -f $HOME/.local/bin/ghostty ] && [ "$IS_NIXOS" != "1" ]; then
+        echo "Not copying the i3 config because ghostty is not in the expected path"
+      else
+        cp ~/development/environment/src/config-files/i3-config ~/.config/i3/config
+      fi
     fi
 
     bash $HOME/development/environment/src/config-files/i3blocks.sh
+
+    if [ -z "$(fc-list | grep '\bnoto\b' || true)" ]; then
+      install_system_package_os fonts-noto
+    fi
+
+    install_system_package_os rofi
+    install_system_package_os i3blocks
   fi
 
   cat >~/.scripts/set_background.sh <<'EOF'
@@ -134,6 +157,15 @@ EOF
 
   add_desktop_common \
     "$HOME/.scripts/wallpaper_update.sh" 'wallpaper-update' 'Wallpaper Update'
+
+  if [ -d ~/.screenlayout ] && type xrandr >/dev/null 2>&1; then
+    DESKTOP_PROFILES=$(find ~/.screenlayout -type f -name '*.sh' | xargs -I {} basename {} .sh)
+
+    for PROFILE in $DESKTOP_PROFILES; do
+      add_desktop_common \
+        "bash ~/.screenlayout/$PROFILE.sh" "xrandr_profile_$PROFILE" "XRandr Profile $PROFILE"
+    done
+  fi
 
   setup_gui_vnc
 }

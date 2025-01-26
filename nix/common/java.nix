@@ -13,6 +13,7 @@
     {
       "" = openjdk;
       "11\n" = openjdk11;
+      "17\n" = openjdk17;
     }
     ."${java_file_content}";
 in {

@@ -1,6 +1,6 @@
 # https://nixos.wiki/wiki/VirtualBox
-{...}: {
-  users.extraGroups.vboxusers.members = ["igncp"];
+{user, ...}: {
+  users.extraGroups.vboxusers.members = [user];
   # virtualisation.virtualbox.guest.enable = true;
   # virtualisation.virtualbox.guest.x11 = true;
   virtualisation.virtualbox.host.enable = true;

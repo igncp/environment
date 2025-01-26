@@ -6,8 +6,12 @@
     flake-utils.url = "github:numtide/flake-utils";
     unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     home-manager = {
-      url = "github:nix-community/home-manager/release-24.05";
       inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:nix-community/home-manager/release-24.05";
+    };
+    ghostty = {
+      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:ghostty-org/ghostty";
     };
   };
 
@@ -17,6 +21,7 @@
     nixpkgs,
     self,
     unstable,
+    ghostty,
   }: let
     user = builtins.getEnv "USER";
   in
@@ -27,8 +32,10 @@
           system = stable_pkgs.system;
           config.allowUnfree = true;
         };
-        hostname = (import /etc/nixos/configuration.nix {inherit pkgs;}).networking.hostName;
+        config = {};
+        hostname = (import /etc/nixos/configuration.nix {inherit pkgs config;}).networking.hostName;
         devShells = import ./nix/shells/main.nix {inherit pkgs;};
+        has_user_file = builtins.pathExists "/etc/nixos/user"; # Use: `sudo bash -c 'printf USER_NAME > /etc/nixos/user'`
       in {
         inherit devShells;
         packages = {
@@ -38,8 +45,14 @@
                 ./nix/nixos/configuration.nix
               ];
               specialArgs = {
-                inherit stable_pkgs home-manager;
-                user = "igncp"; # 硬編碼這個值，因為它等於 nixos 中的 “root”
+                inherit stable_pkgs home-manager system ghostty;
+                unstable_pkgs = pkgs;
+
+                # 硬編碼這個值，因為它等於 nixos 中的 “root”
+                user =
+                  if has_user_file
+                  then (builtins.readFile "/etc/nixos/user")
+                  else "igncp";
               };
             };
           };

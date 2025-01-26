@@ -18,17 +18,24 @@ fi
 EOF
 
   cat >>~/.shell_aliases <<"EOF"
-alias AdbOpenDeeplink='adb shell am start -d' # for query strings, encode with `encodeURIComponent`
-alias AdbLogcat='adb shell logcat'
 alias AdbAPKs='adb shell pm list packages -f'
-alias AdbShutdown='adb shell reboot -p'
-alias AdbForceStop='adb shell am force-stop' # pass package name
+alias AdbClearData='adb shell pm clear' # pass package name
 alias AdbDevMenu='adb shell input keyevent 82'
+alias AdbForceStop='adb shell am force-stop' # pass package name
+alias AdbInstall='adb install -r' # pass apk path
+alias AdbListInstalled='adb shell cmd package list packages -3 -l'
+alias AdbLogcat='adb shell logcat'
+alias AdbOpenDeeplink='adb shell am start -d' # for query strings, encode with `encodeURIComponent`
+alias AdbShutdown='adb shell reboot -p'
+alias AdbStartActivity='adb shell am start -n' # pass package name and activity name, e.g. AdbStartActivity com.example.app/.MainActivity
+alias AdbUninstall='adb uninstall' # pass package name
 
 alias AndroidStudioExit='studio.sh & exit'
 alias AndroidAVDManagerListAVD='avdmanager list avd'
 alias AndroidSdkListInstalled='sdkmanager --list_installed' # pass --verbose to see more
+
 alias EmulatorLaunch='emulator -avd'
+alias EmulatorList='emulator -list-avds'
 EOF
 
   if [ -d ~/Library/Android/sdk ]; then
@@ -108,15 +115,6 @@ EOF
   fi
 
   # This is the outdated config for Arch. When using NixOS, many of these are automatic
-
-  # if [ ! -d ~/android-sdk ] && [ ! -d ~/android-studio ] && [ ! -d ~/Library/Android/sdk ]; then
-  #   echo 'Download android CLI tools (or Studio if necessary, not both)'
-  #   echo 'Android CLI: structure should be ~/android-sdk/cmdline-tools/tools/bin/sdkmanager'
-  #   echo 'Android Studio: ~/android-studio . To uncompress: tar xvzf FILE_NAME.tar.gz'
-  #   echo '  In Arch Linux, when one user: yay -S --noconfirm android-sdk ; sudo chown -R $USER:$USER /opt/android-sdk'
-  #   echo 'And setup the ANDROID_HOME to correct one'
-  #   echo 'https://developer.android.com/studio/index.html#downloads'
-  # fi
 
   # if [ ! -f "$HOME"/development/environment/project/.config/android-path ]; then
   #   echo '[~/development/environment/project/.config/android-path]: Update to the correct path inside ~/development/environment/project/.config/android-path'

@@ -16,30 +16,44 @@ install_cargo_crate() {
 }
 
 provision_setup_rust() {
+  rust_provision_cleanup() {
+    sudo rm -rf ~/.rustup ~/.cargo
+  }
+
+  if [ -f "$PROVISION_CONFIG"/no-rust ]; then
+    rust_provision_cleanup
+    return
+  elif [ "$IS_PROVISION_UPDATE" = "1" ]; then
+    rust_provision_cleanup
+  fi
+
+  if [ ! -d ~/.rustup ]; then
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+    . "$HOME/.cargo/env"
+    rustup install stable
+    cargo install cargo-watch
+  fi
+
   cat >>~/.shell_aliases <<"EOF"
-_RustBuildProvisionPackages() {
+RustBuildProvisionPackages() {
   sudo echo ""
-  rustup toolchain install stable
+  mkdir -p ~/.local/bin
   while IFS= read -r -d '' FILE_PATH; do
     FILE_NAME=$(basename "$FILE_PATH")
     if [ ! -f "$FILE_PATH"/Cargo.toml ]; then
       continue
     fi
-    if [ ! -f "/usr/local/bin/environment_scripts/$FILE_NAME" ] || [ "$1" == "-f" ]; then
+    if [ ! -f "$HOME/.local/bin/$FILE_NAME" ] || [ "$1" = "-f" ]; then
       (cd "$FILE_PATH" &&
         echo "" &&
         echo "Building: $FILE_NAME" &&
         cargo build --release --jobs 1 &&
-        echo "Copying to /usr/local/bin/environment_scripts/$FILE_NAME" &&
-        sudo cp $HOME/.scripts/cargo_target/release/"$FILE_NAME" /usr/local/bin/environment_scripts/ &&
-        sudo chmod +x /usr/local/bin/environment_scripts/"$FILE_NAME" &&
-        sudo chown $USER /usr/local/bin/environment_scripts/"$FILE_NAME")
+        echo "Copying $FILE_NAME" &&
+        cp target/release/"$FILE_NAME" "$HOME/.local/bin/" &&
+        chmod +x "$HOME/.local/bin/$FILE_NAME" &&
+        rm -rf target)
     fi
   done < <(find ~/development/environment/src/scripts/misc -maxdepth 1 -mindepth 1 -type d -print0)
-
-  rm -rf ~/.scripts/cargo_target/release/deps
-  rm -rf ~/.scripts/cargo_target/release/build
-  rm -rf ~/.scripts/cargo_target/debug
 }
 _RustUpdateProvisionPackages() {
   rm -rf ~/.rustup
@@ -56,25 +70,10 @@ _RustUpdateProvisionPackages() {
   done < <(find ~/development/environment/src/scripts/misc -maxdepth 1 -mindepth 1 -type d -print0)
 
   echo "Rebuilding all packages..."
-  _RustBuildProvisionPackages -f
+  RustBuildProvisionPackages -f
   echo "Updated all packages, you should commit the changes"
 }
-RustBuildProvisionPackages() { (nix develop ~/development/environment#rust \
-  -c bash -c ". ~/.shellrc ; _RustBuildProvisionPackages $@"); }
-RustUpdateProvisionPackages() { (nix develop ~/development/environment#rust \
-  -c bash -c ". ~/.shellrc ; _RustUpdateProvisionPackages $@"); }
 EOF
-
-  mkdir -p ~/.cargo
-  cat >~/.cargo/config.toml <<EOF
-[build]
-target-dir = "$HOME/.scripts/cargo_target"
-EOF
-
-  # This increases re-compilation times but these dirs can get very large
-  rm -rf ~/.scripts/cargo_target/release/deps
-  rm -rf ~/.scripts/cargo_target/release/build
-  rm -rf ~/.scripts/cargo_target/debug
 
   install_nvim_package cespare/vim-toml
   install_nvim_package rust-lang/rust.vim
@@ -92,10 +91,12 @@ nnoremap <leader>lj :CocCommand rust-analyzer.moveItemDown<CR>
 nnoremap <leader>lk :CocCommand rust-analyzer.moveItemUp<CR>
 EOF
 
-  cat >>~/.shellrc <<"EOF"
-export PATH="/usr/local/bin/environment_scripts:$PATH"
+  if [ "$IS_NIXOS" != "1" ]; then
+    cat >>~/.shellrc <<"EOF"
+. "$HOME/.cargo/env"
 export PASTEL_COLOR_MODE=24bit
 EOF
+  fi
 
   install_nvim_package fannheyward/coc-rust-analyzer
 

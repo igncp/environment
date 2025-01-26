@@ -50,6 +50,12 @@ alias MacServices=$'sudo launchctl list | awk \'{ print $3; }\' | sort | less'
 alias MacAddUserToAdmin="sudo dscl . -append /Groups/admin GroupMembership $USER"
 alias MacListIdentities='security find-identity'
 
+alias MacXCodePrintUsed='xcode-select --print-path'
+MacXCodeUpdateCommandLineTools() {
+  sudo rm -rf /Library/Developer/CommandLineTools
+  sudo xcode-select --install
+}
+
 MacInstallPkg() { sudo installer -store -pkg "$1" -target /; }
 MacListServices() { launchctl  list | ag -v '^-' | awk '{ print $3; }' | ag -v ^Label$ | sort | less; }
 
@@ -58,7 +64,7 @@ MacListServices() { launchctl  list | ag -v '^-' | awk '{ print $3; }' | ag -v ^
 alias MacRestartFirewallConfig='sudo pfctl -f /etc/pf.conf'
 
 # When there is error about signature in custom scripts
-alias MacForceSignature='codesign --force --deep --sign -' # For example: `MacForceSignature /usr/local/bin/environment_scripts/clipboard_ssh`
+alias MacForceSignature='codesign --force --deep --sign -' # For example: `MacForceSignature $HOME/.local/bin/clipboard_ssh`
 
 alias SimulatorErase='xcrun simctl shutdown all && xcrun simctl erase all'
 EOF
