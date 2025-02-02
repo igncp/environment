@@ -125,6 +125,8 @@ EOF
     defaults write ~/Library/Preferences/ByHost/com.apple.controlcenter.plist BatteryShowPercentage -bool true
     # 打開新檔案嗰陣唔好打開之前嘅預覽檔案（例如 PDF ）
     defaults write com.apple.Preview ApplePersistenceIgnoreState YES
+    # 自動隱藏選單列
+    defaults write NSGlobalDomain _HIHideMenuBar -bool true
 
     touch ~/.check-files/init-apps
   fi

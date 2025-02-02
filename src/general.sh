@@ -13,7 +13,6 @@ set -e
 . src/general/shellcheck.sh
 . src/general/taskwarrior.sh
 . src/general/tmux.sh
-. src/general/usql.sh
 
 provision_setup_general() {
   mkdir -p $HOME/.scripts/toolbox
@@ -173,16 +172,6 @@ EOF
   # "###,
   #         );
 
-  #         // To mute/unmute in GUI press M
-  #         context
-  #             .system
-  #             .install_system_package("alsa-utils", Some("alsamixer"));
-
-  #         if !context.system.is_nixos() {
-  #             // UFW
-  #             context.system.install_system_package("ufw", None);
-  #         }
-
   #         context.files.append(
   #             &context.system.get_home_path(".shell_aliases"),
   #             r###"
@@ -286,5 +275,4 @@ EOF
   provision_setup_general_shellcheck
   provision_setup_general_taskwarrior
   provision_setup_general_tmux
-  provision_setup_general_usql
 }

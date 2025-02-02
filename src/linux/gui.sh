@@ -2,7 +2,9 @@
 
 set -e
 
+. src/linux/gui/surface.sh
 . src/linux/gui/vnc.sh
+. src/linux/gui/i3.sh
 
 provision_setup_linux_gui() {
   cat >>~/.shell_aliases <<EOF
@@ -73,57 +75,27 @@ EOF
   # Keyboard Setup (not only Arch): https://wiki.archlinux.org/index.php/X_keyboard_extension
 
   cat >>~/.shell_aliases <<'EOF'
-if type i3 >/dev/null 2>&1; then
-  I3VMSetup() {
-    /usr/bin/VBoxClient-all;
-    # 運行 $(xrandr) 查看可用的輸出和模式:
-      # xrandr --output Virtual-1 --mode 1280x768
-  }
-  alias I3GBLayout='setxkbmap -layout gb'
-  alias I3Reload='i3-msg reload'
-  alias I3LogOut='i3-msg exit'
-  alias I3DetectAppClass="xprop | grep WM_CLASS"
-  alias I3DetectAppName="xprop | grep WM_NAME"
-  alias I3Poweroff='systemctl poweroff'
-  alias I3Start='startx'
-  I3Configure() {
-    $EDITOR -p ~/project/provision/i3-config ~/project/provision/i3blocks.sh
-    provision.sh
-  }
-fi
 alias WallpaperPrintCurrent="cat ~/.fehbg | grep --color=never -o '\/home\/.*jpg'"
 EOF
 
-  if type i3 >/dev/null 2>&1; then
-    if [ -d ~/.config/i3 ]; then
-      if [ ! -f $HOME/.local/bin/ghostty ] && [ "$IS_NIXOS" != "1" ]; then
-        echo "Not copying the i3 config because ghostty is not in the expected path"
-      else
-        cp ~/development/environment/src/config-files/i3-config ~/.config/i3/config
-      fi
+  if type hyprctl >/dev/null 2>&1; then
+    mkdir -p ~/.config/hypr
+    # https://github.com/hyprwm/Hyprland/tree/main/example
+    cp \
+      ~/development/environment/src/config-files/hyprland.conf \
+      ~/.config/hypr/hyprland.conf
+
+    if [ ! -f ~/.config/hypr/hyprpaper.conf ]; then
+      touch ~/.config/hypr/hyprpaper.conf
     fi
 
-    bash $HOME/development/environment/src/config-files/i3blocks.sh
-
-    if [ -z "$(fc-list | grep '\bnoto\b' || true)" ]; then
-      install_system_package_os fonts-noto
+    if type waybar >/dev/null 2>&1; then
+      mkdir -p ~/.config/waybar
+      cp \
+        ~/development/environment/src/config-files/waybar.jsonc \
+        ~/.config/waybar/config.jsonc
     fi
-
-    install_system_package_os rofi
-    install_system_package_os i3blocks
   fi
-
-  cat >~/.scripts/set_background.sh <<'EOF'
-feh --bg-fill "$1"
-cat ~/.fehbg | grep --color=never -o '/home/.*jpg' | sed 's|^|Image: |'
-EOF
-
-  cat >~/.scripts/wallpaper_update.sh <<'EOF'
-if [ -d ~/.config/variety/Downloaded ]; then
-  find ~/.config/variety/Downloaded -type f -name *.jpg | shuf -n 1 | xargs -I {{}} bash ~/.scripts/set_background.sh {{}}
-fi
-EOF
-  chmod +x ~/.scripts/wallpaper_update.sh
 
   if [ ! -f ~/.config/ibus/rime/default.yaml ]; then
     mkdir -p ~/misc ~/.config/ibus/rime
@@ -156,7 +128,7 @@ EOF
   }
 
   add_desktop_common \
-    "$HOME/.scripts/wallpaper_update.sh" 'wallpaper-update' 'Wallpaper Update'
+    "$HOME/development/environment/src/scripts/misc/wallpaper_update.sh" 'wallpaper-update' 'Wallpaper Update'
 
   if [ -d ~/.screenlayout ] && type xrandr >/dev/null 2>&1; then
     DESKTOP_PROFILES=$(find ~/.screenlayout -type f -name '*.sh' | xargs -I {} basename {} .sh)
@@ -168,4 +140,6 @@ EOF
   fi
 
   setup_gui_vnc
+  provision_setup_gui_surface
+  setup_gui_i3
 }

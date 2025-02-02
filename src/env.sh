@@ -23,12 +23,16 @@ provision_setup_env() {
   IS_DEBIAN=$(uname -a | grep -c Debian | grep 1 || uname -a | grep -c Ubuntu | grep 1 || true)
   IS_UBUNTU=$(uname -a | grep -c Ubuntu | grep 1 || true)
   IS_NIXOS=$(uname -a | grep -c NixOS || true)
-  IS_SURFACE="$(uname -a | grep -c 'Linux surface' || true)"
   IS_ARCH="0"
 
   if [ -f /etc/os-release ]; then
     # 用於 MS Surface
     IS_DEBIAN="$(cat /etc/os-release | grep '^NAME' | grep -c Debian | grep 1 || true)"
+  fi
+
+  IS_SURFACE="$(uname -a | grep -c 'Linux surface' || true)"
+  if [ -f "$PROVISION_CONFIG"/surface ]; then
+    IS_SURFACE="1"
   fi
 
   if [ "$IS_LINUX" = "1" ] && [ ! -f "$PROVISION_CONFIG"/skip-root-bashrc ]; then

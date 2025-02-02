@@ -3,8 +3,8 @@ if [ -f /usr/lib/locale/locale-archive ]; then
   export LOCALE_ARCHIVE=/usr/lib/locale/locale-archive
 fi
 
-export LANG=en_US.UTF-8
-export LC_ALL=en_US.UTF-8
+export LANG=zh_TW.UTF-8
+export LC_ALL=zh_TW.UTF-8
 
 # https://upload.wikimedia.org/wikipedia/commons/1/15/Xterm_256color_chart.svg
 export ZSH="$HOME/.oh-my-zsh"

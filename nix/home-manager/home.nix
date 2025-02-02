@@ -15,6 +15,8 @@
   is_linux_gui = has_gui && is_linux;
 
   cli-pkgs = import ../common/cli.nix {inherit base_config lib pkgs;};
+  ruby-pkgs = import ../common/ruby.nix {inherit base_config pkgs;};
+  go-pkgs = import ../common/go.nix {inherit base_config pkgs;};
   php-pkgs = import ../common/php.nix {inherit base_config pkgs;};
   lua-pkgs = import ../common/lua.nix {inherit base_config pkgs;};
   java-pkgs = import ../common/java.nix {inherit base_config lib pkgs;};
@@ -29,6 +31,8 @@ in
       ++ php-pkgs.pkgs-list
       ++ java-pkgs.pkgs-list
       ++ lua-pkgs.pkgs-list
+      ++ ruby-pkgs.pkgs-list
+      ++ go-pkgs.pkgs-list
       ++ (
         if is_linux_gui
         then with pkgs; [ibus rime-data ibus-engines.rime]

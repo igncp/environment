@@ -20,16 +20,20 @@ in {
 
   config = {
     hardware.bluetooth.enable = true;
-    services.blueman.enable = true;
     hardware.bluetooth.settings = {
       General = {
         Enable = "Source,Sink,Media,Socket";
       };
     };
 
+    networking.firewall.enable = true;
+    networking.firewall.allowedTCPPorts = [22];
+
     networking.networkmanager.enable = true;
 
     nixpkgs.config.allowUnfree = true;
+
+    programs.nm-applet.enable = true;
 
     virtualisation.docker.enable = true;
     environment.variables = {
@@ -49,11 +53,16 @@ in {
 
     programs.zsh.enable = true;
 
+    services.blueman.enable = true;
     services.openssh.enable = true;
-    services.openssh.settings.PermitRootLogin = "no";
     services.openssh.settings.PasswordAuthentication = false;
+    services.openssh.settings.PermitRootLogin = "no";
 
     time.timeZone = "Asia/Hong_Kong";
+
+    # 呢個假設部機有加密磁碟，如果需要就改
+    services.displayManager.autoLogin.user = "${user}";
+    services.displayManager.autoLogin.enable = true;
 
     users.defaultUserShell = pkgs.zsh;
     users.users."${user}" = {
@@ -63,6 +72,20 @@ in {
       shell = pkgs.zsh;
     };
 
-    system.stateVersion = "24.05";
+    system.stateVersion = "24.11";
+
+    services.journald.extraConfig = "SystemMaxUse=1G";
+
+    i18n.extraLocaleSettings = {
+      LC_ADDRESS = "en_HK.UTF-8";
+      LC_IDENTIFICATION = "en_HK.UTF-8";
+      LC_MEASUREMENT = "en_HK.UTF-8";
+      LC_MONETARY = "en_HK.UTF-8";
+      LC_NAME = "en_HK.UTF-8";
+      LC_NUMERIC = "en_HK.UTF-8";
+      LC_PAPER = "en_HK.UTF-8";
+      LC_TELEPHONE = "en_HK.UTF-8";
+      LC_TIME = "en_HK.UTF-8";
+    };
   };
 }

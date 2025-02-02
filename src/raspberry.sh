@@ -31,6 +31,11 @@ provision_setup_raspberry() {
 alias RaspberryTemp='vcgencmd measure_temp'
 EOF
 
+  # # 如果要睇4K電影，喺/boot/firmware/config.txt 入面，（如果係 dtoverlay ，請取代現有嘅）
+  # # https://www.raspberrypi.com/documentation/computers/config_txt.html
+  # dtoverlay=vc4-kms-v3d,cma-512
+  # hdmi_enable_4kp60=1
+
   # Enable VNC: https://www.pitunnel.com/doc/access-vnc-remote-desktop-raspberry-pi-over-internet
 
   # Install desktop environment:

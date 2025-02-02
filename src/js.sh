@@ -126,7 +126,7 @@ EOF
   fi
   cat ~/.npm-completion >>~/.shellrc
 
-  # Used by nvim coc
+  # 由 nvim coc 用
   install_node_modules yarn
 
   # https://github.com/sgentle/caniuse-cmd
@@ -135,7 +135,6 @@ EOF
   install_node_modules graphql-language-service-cli graphql-lsp
   install_node_modules live-server
   install_node_modules tldr
-  # install_node_modules bun
 
   cat >>~/.shell_aliases <<"EOF"
 Serve() { PORT="$2"; live-server --port="${PORT:=9000}" $1; }

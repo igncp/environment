@@ -7,6 +7,11 @@
   cli-extra-shell = import ./cli-extra.nix {inherit pkgs;};
   python-extra-shell = import ./python.nix {inherit pkgs;};
 
+  go-pkgs = import ../common/go.nix {
+    inherit pkgs;
+    base_config = "";
+  };
+
   is_linux =
     (pkgs.system == "x86_64-linux")
     || (pkgs.system == "aarch64-linux")
@@ -21,6 +26,10 @@ in
   {
     aws = pkgs.mkShell {
       packages = with pkgs; [awscli2];
+    };
+
+    go = pkgs.mkShell {
+      packages = go-pkgs.pkgs-shell;
     };
 
     backup = pkgs.mkShell {

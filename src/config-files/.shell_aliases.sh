@@ -96,6 +96,8 @@ alias HostClipboardSSH="clipboard_ssh host"
 
 alias Vpn='(cd ~/development/environment && bash src/scripts/misc/vpn.sh)'
 
+alias UnameKernel='uname -r'
+
 if type ffmpeg >/dev/null 2>&1; then
   FfmpegSubs() {
     if [ -z "$1" ]; then
@@ -616,3 +618,7 @@ ShellSource() {
     . ~/.bashrc
   fi
 }
+
+if type hyprctl >/dev/null 2>&1; then
+  alias HyprlandClients='hyprctl clients' # 呢個指令會列出窗口
+fi

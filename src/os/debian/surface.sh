@@ -32,22 +32,6 @@ provision_setup_os_debian_surface() {
     return
   fi
 
-  if [ -n "$(cat /etc/default/grub | grep '#GRUB_GFXMODE' || true)" ]; then
-    # 增加 grub 字體大小
-    sudo sed -i 's|.*GRUB_GFXMODE=.*|GRUB_GFXMODE=640x480|' /etc/default/grub
-    sudo update-grub
-  fi
-
-  if [ ! -f "$PROVISION_CONFIG"/vpn_check ]; then
-    echo yes >"$PROVISION_CONFIG"/vpn_check
-  fi
-
-  if [ ! -S ~/.config/systemd/user/surface-resolution.service ]; then
-    systemctl --user link $HOME/development/environment/src/linux/gui/surface-resolution.service
-    systemctl --user daemon-reload
-    systemctl --user enable surface-resolution.service
-  fi
-
   if [ ! -f ~/.check-files/nerd-fonts ]; then
     mkdir -p ~/.fonts
     (cd ~/.fonts && wget https://raw.githubusercontent.com/ryanoasis/nerd-fonts/master/patched-fonts/Monofur/Regular/MonofurNerdFontMono-Regular.ttf)
@@ -73,19 +57,6 @@ provision_setup_os_debian_surface() {
     sudo apt install -y libadwaita-1-0
     touch ~/.check-files/adwaita
   fi
-
-  cat >>~/.shell_aliases <<'EOF'
-SurfaceSetBrightness() {
-  if [ -z "$1" ]; then echo "Missing input" ; return ; fi
-  if [ "$(echo "$1 == $1 && $1 > 0.1 && $1 < 1" | bc)" = "0" ]; then echo "The input is not in range 0.1 - 1" ; return ; fi
-
-  xrandr --output eDP-1 --brightness $1
-}
-Battery() {
-  BATTERY_LINE="$(upower --enumerate | grep battery_BAT)"
-  upower -i "$BATTERY_LINE" | less
-}
-EOF
 
   # Ubuntu:
   # # 可以同 hwdb 換鍵:

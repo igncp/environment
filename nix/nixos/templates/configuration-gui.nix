@@ -6,13 +6,14 @@
     ./hardware-configuration.nix
   ];
 
-  # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "foo";
+  networking.hostName = "nixos";
 
   networking.extraHosts = ''
     192.168.1.50 foo
   '';
+
+  # environment.etc."resolv.conf".text = "nameserver 192.168.1.1\n";
 }

@@ -38,6 +38,13 @@ provision_setup_zsh() {
 
   IS_ZSH="$(echo $SHELL | grep zsh || true)"
 
+  # 例如 `printf en_US.UTF-8 > ~/development/environment/project/.config/cli_locale`
+  if [ -f "$PROVISION_CONFIG"/cli_locale ]; then
+    CLI_LOCALE=$(cat "$PROVISION_CONFIG"/cli_locale)
+    sed -i "s|export LANG=.*|export LANG=$CLI_LOCALE|" ~/.zshrc
+    sed -i "s|export LC_ALL=.*|export LC_ALL=$CLI_LOCALE|" ~/.zshrc
+  fi
+
   if [ ! -f ~/.oh-my-zsh/completions/_bun ] && [ -n "$IS_ZSH" ] && type "bun" >/dev/null 2>&1; then
     mkdir -p ~/.oh-my-zsh/completions/
     bun completions ~/.oh-my-zsh/completions/

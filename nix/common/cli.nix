@@ -64,6 +64,7 @@ in {
       gnused
       go-2fa
       hostname # If using Alpine, the Busybox hostname is different
+      htop
       jq # https://github.com/jqlang/jq
       killall
       less
@@ -74,6 +75,7 @@ in {
       neovim-remote # https://github.com/mhinz/neovim-remote.git
       nil # https://github.com/oxalica/nil
       nix
+      ollama
       patchelf
       pkg-config
       procps # https://gitlab.com/procps-ng/procps
@@ -88,7 +90,7 @@ in {
       silver-searcher # https://github.com/ggreer/the_silver_searcher
       taskwarrior3 # https://github.com/GothenburgBitFactory/taskwarrior
       tree
-      d2
+      usql
       wget
       which # Arch linux 入面缺乏
       yq # https://github.com/mikefarah/yq

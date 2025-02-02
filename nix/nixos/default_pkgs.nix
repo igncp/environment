@@ -12,6 +12,9 @@
   };
 
   java-pkgs = import ../common/java.nix {inherit base_config lib pkgs;};
+  ruby-pkgs = import ../common/ruby.nix {inherit base_config pkgs;};
+  go-pkgs = import ../common/go.nix {inherit base_config pkgs;};
+
   emojify = import ./emojify.nix {inherit pkgs;};
 
   has_c = builtins.pathExists (base_config + "/c");
@@ -47,6 +50,8 @@ in {
     ]
     ++ cli-pkgs.pkgs-list
     ++ java-pkgs.pkgs-list
+    ++ ruby-pkgs.pkgs-list
+    ++ go-pkgs.pkgs-list
     ++ (lib.optional has_go unstable_pkgs.go)
     ++ (lib.optional has_c pkgs.clib)
     ++ (lib.optional has_c pkgs.ctags)

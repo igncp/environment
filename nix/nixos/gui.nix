@@ -4,60 +4,63 @@
   system,
   unstable_pkgs,
   ghostty,
+  user,
   ...
 }: let
   base_config = ../../project/.config;
 
+  gui_content = builtins.readFile (base_config + "/gui");
+
   has_copyq = builtins.pathExists (base_config + "/copyq");
   has_cinnammon = builtins.pathExists (base_config + "/gui-cinnammon");
+  has_i3 = builtins.pathExists (base_config + "/gui-i3");
   has_nvidia = builtins.readFile (base_config + "/nvidia") == "yes\n";
-  has_virtualbox = builtins.pathExists (base_config + "/gui-virtualbox");
   has_vnc = builtins.pathExists (base_config + "/vnc");
+
+  has_opt = infix: lib.optional (lib.strings.hasInfix infix gui_content);
 in {
   imports =
-    [./gui-rime.nix]
+    [./gui-rime.nix ./gui-virtualization.nix]
+    ++ (lib.optional has_i3 ./gui_i3.nix)
     ++ (lib.optional has_nvidia ./gui-nvidia.nix)
-    ++ (lib.optional has_cinnammon ./gui-cinnammon.nix)
-    ++ (lib.optional has_virtualbox ./gui-virtualbox.nix);
+    ++ (lib.optional has_cinnammon ./gui-cinnammon.nix);
 
   services.flatpak.enable = true;
 
   environment.systemPackages = with pkgs;
     [
-      _1password
+      _1password-cli
       acpi
       anki-bin
       arandr
       blueberry
       cairo
-      discord
-      feh
-      firefox
       flameshot
       google-chrome
       gtk4
       keepass
       libsForQt5.qt5ct
       nextcloud-client
-      pasystray
       pavucontrol
       pdfsam-basic # https://github.com/torakiki/pdfsam # 需要將語言轉做英文
-      rpi-imager
-      slack
-      steam
-      terminator
+      rpi-imager # 需要暫時將用戶加入'disk'群組: `sudo usermod -aG disk $USER`
       variety
       vlc
       xclip
       xdotool
-      zoom-us
 
-      # I3
+      # Hyprland
 
-      lxappearance
+      brightnessctl
+      fcitx5
+      hyprpaper
       lxqt.lxqt-sudo
-      picom
+      networkmanagerapplet
+      playerctl
       rofi
+      waybar
+      wdisplays
+      wev
 
       # Libre Office
 
@@ -69,6 +72,14 @@ in {
       tigervnc
     ])
     ++ (lib.optional has_copyq copyq)
+    ++ ((has_opt "electrum") electrum)
+    ++ ((has_opt "discord") discord)
+    ++ ((has_opt "terminator") terminator)
+    ++ ((has_opt "zoom") zoom-us)
+    ++ ((has_opt "steam") steam)
+    ++ ((has_opt "telegram") telegram-desktop)
+    ++ ((has_opt "firefox") firefox)
+    ++ ((has_opt "slack") slack)
     ++ (
       lib.optional (system == "x86_64-linux")
       ghostty.packages.x86_64-linux.default
@@ -76,23 +87,13 @@ in {
 
   fonts.packages = with pkgs; [
     noto-fonts
-    noto-fonts-cjk
+    noto-fonts-cjk-sans
     noto-fonts-emoji
     liberation_ttf
     (nerdfonts.override {fonts = ["Monofur"];})
   ];
 
-  # 啟用 X11 視窗系統。
-  services.xserver.enable = true;
-
-  services.xserver.windowManager.i3 = {
-    enable = true;
-    extraPackages = with pkgs; [
-      i3status
-      i3lock
-      i3blocks
-    ];
-  };
+  programs.hyprland.enable = true;
 
   xdg.portal.enable = true;
   xdg.portal.extraPortals = [
@@ -100,8 +101,9 @@ in {
   ];
   xdg.portal.config.common.default = "*";
 
-  services.xserver.displayManager.lightdm.enable = true;
-  services.displayManager.defaultSession = "none+i3";
+  services.displayManager.defaultSession = "hyprland";
+  services.displayManager.sddm.enable = true;
+  services.displayManager.sddm.wayland.enable = true;
 
   services.logind.lidSwitch = "ignore";
   services.logind.extraConfig = ''
@@ -125,7 +127,6 @@ in {
   services.printing.enable = true;
 
   # 聲音的
-  sound.enable = true;
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
@@ -143,4 +144,21 @@ in {
     platformTheme = "gnome";
     style = "adwaita-dark";
   };
+
+  nixpkgs.config.allowUnfreePredicate = pkg:
+    builtins.elem (lib.getName pkg) [
+      "1password-gui"
+      "1password"
+    ];
+
+  programs._1password.enable = true;
+  programs._1password-gui = {
+    enable = true;
+    polkitPolicyOwners = ["${user}"];
+  };
+
+  systemd.targets.sleep.enable = false;
+  systemd.targets.suspend.enable = false;
+  systemd.targets.hibernate.enable = false;
+  systemd.targets.hybrid-sleep.enable = false;
 }

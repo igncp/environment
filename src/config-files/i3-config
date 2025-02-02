@@ -207,7 +207,7 @@ exec_always --no-startup-id sh $HOME/.scripts/gui_daemons.sh
 exec_always --no-startup-id sh $HOME/development/environment/src/scripts/misc/i3_dock.sh
 exec_always --no-startup-id bash -c "/run/current-system/sw/bin/pasystray || true"
 
-exec $HOME/.scripts/wallpaper_update.sh
+exec $HOME/development/environment/src/scripts/misc/wallpaper_update.sh
 
 # 啟動時打開以使用 ssh 訪問
 exec /run/current-system/sw/bin/1password

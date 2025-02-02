@@ -37,11 +37,20 @@ network:
     - `sudo netplan apply`
     - `reboot`
 
+## `nmcli`
+
+```sh
+sudo nmcli con delete SSID # 萬一之前存在過
+sudo nmcli device wifi connect SSID password PASSWORD
+```
+
 # 雙啟動
 
 - Windows + Linux: 首先安裝 Windows
 
-# NixOS tips
+# NixOS 提示
+
+- 安裝: [src/os/nixos/install.sh](../src/os/nixos/install.sh)
 
 ## `nix repl`
 
