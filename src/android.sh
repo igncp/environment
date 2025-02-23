@@ -34,6 +34,8 @@ alias AndroidStudioExit='studio.sh & exit'
 alias AndroidAVDManagerListAVD='avdmanager list avd'
 alias AndroidSdkListInstalled='sdkmanager --list_installed' # pass --verbose to see more
 
+alias AndroiDumpAPKInfo='aapt2 dump badging' # e.g. AndroiDebugAPK foo/app-debug.apk
+
 alias EmulatorLaunch='emulator -avd'
 alias EmulatorList='emulator -list-avds'
 EOF

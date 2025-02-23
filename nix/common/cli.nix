@@ -36,6 +36,7 @@
 in {
   pkgs-list = with pkgs;
     [
+      aapt # https://developer.android.com/tools/aapt2
       act # https://github.com/nektos/act
       age # https://github.com/FiloSottile/age
       alejandra # https://github.com/kamadorueda/alejandra

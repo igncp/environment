@@ -33,8 +33,6 @@ in {
 
     nixpkgs.config.allowUnfree = true;
 
-    programs.nm-applet.enable = true;
-
     virtualisation.docker.enable = true;
     environment.variables = {
       CURL_CA_BUNDLE = "/etc/pki/tls/certs/ca-bundle.crt"; # 為 curl 添加

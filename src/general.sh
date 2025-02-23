@@ -259,9 +259,14 @@ EOF
     fi
   fi
 
+  # macOS 特定版本: `wget https://release.files.ghostty.org/1.0.1/Ghostty.dmg`
   if type ghostty >/dev/null 2>&1; then
     mkdir -p ~/.config/ghostty
     cp ~/development/environment/src/config-files/ghostty ~/.config/ghostty/config
+
+    if [ -f ~/Library/Application\ Support/com.mitchellh.ghostty/config ]; then
+      cp ~/development/environment/src/config-files/ghostty ~/Library/Application\ Support/com.mitchellh.ghostty/config
+    fi
   fi
 
   provision_setup_general_diagrams

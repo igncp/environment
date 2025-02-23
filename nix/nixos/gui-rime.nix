@@ -1,9 +1,5 @@
 {pkgs, ...}: {
-  # https://zhuanlan.zhihu.com/p/463403799
-  environment.systemPackages = with pkgs; [
-    rime-data
-  ];
-
+  # https://my-rime.vercel.app/?schemaId=jyut6ping3&variantName=%E6%B8%AF
   # 用緊 fcitx5係因為 ibus 同 Hyprland 唔夾
   i18n.inputMethod = {
     enable = true;

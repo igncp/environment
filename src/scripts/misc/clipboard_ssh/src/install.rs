@@ -1,6 +1,16 @@
 use std::{env, process};
 
 fn install_linux() {
+    let is_nixos = process::Command::new("nixos-version")
+        .stdout(process::Stdio::piped())
+        .spawn()
+        .unwrap()
+        .wait()
+        .unwrap()
+        .code()
+        .unwrap()
+        == 0;
+
     let xclip_code = process::Command::new("env")
         .arg("-i")
         .arg("bash")
@@ -14,7 +24,7 @@ fn install_linux() {
         .code()
         .unwrap();
 
-    if xclip_code != 0 {
+    if !is_nixos && xclip_code != 0 {
         println!("Missing package: xclip");
 
         return;
@@ -43,22 +53,30 @@ fn install_linux() {
     std::fs::create_dir_all(&dir_path).unwrap();
 
     let file_path = format!("{}{}", dir_path.clone(), "/service-clipboard-ssh.service");
+    let bash_path = if is_nixos {
+        "/run/current-system/sw/bin/bash"
+    } else {
+        "/usr/bin/bash"
+    };
+    let home_path = env::var("HOME").unwrap();
 
     std::fs::write(
         file_path,
-        r###"
+        format!(
+            r###"
 [Unit]
 Description=Clipboard SSH
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/bash -c \
-    '/home/igncp/.local/bin/clipboard_ssh host'
+ExecStart={bash_path} -c \
+    '{home_path}/.local/bin/clipboard_ssh host'
 Restart=always
 
 [Install]
 WantedBy=default.target
 "###
+        )
         .trim(),
     )
     .unwrap();

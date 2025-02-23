@@ -2,9 +2,11 @@
 
 set -e
 
+. src/linux/gui/dunst.sh
+. src/linux/gui/i3.sh
+. src/linux/gui/lxde.sh
 . src/linux/gui/surface.sh
 . src/linux/gui/vnc.sh
-. src/linux/gui/i3.sh
 
 provision_setup_linux_gui() {
   cat >>~/.shell_aliases <<EOF
@@ -97,17 +99,39 @@ EOF
     fi
   fi
 
-  if [ ! -f ~/.config/ibus/rime/default.yaml ]; then
-    mkdir -p ~/misc ~/.config/ibus/rime
-    rm -rf ~/misc/plum
-    git clone https://github.com/rime/plum.git ~/misc/plum
-    cd ~/misc/plum
-    ./rime-install rime-cantonese
-    ./rime-install gkovacs/rime-japanese
+  if type ibus >/dev/null 2>&1; then
+    if [ ! -f ~/.config/ibus/rime/default.yaml ]; then
+      mkdir -p ~/misc ~/.config/ibus/rime
+      rm -rf ~/misc/plum
+      git clone https://github.com/rime/plum.git ~/misc/plum
+      cd ~/misc/plum
+      ./rime-install rime-cantonese
+      ./rime-install gkovacs/rime-japanese
+    fi
+
+    cp ~/development/environment/src/config-files/rime-config.yaml \
+      ~/.config/ibus/rime/default.yaml
   fi
 
-  cp ~/development/environment/src/config-files/rime-config.yaml \
-    ~/.config/ibus/rime/default.yaml
+  if type fcitx5 >/dev/null 2>&1; then
+    if [ -d ~/.local/share/fcitx5/rime/build ] &&
+      [ ! -f ~/.local/share/fcitx5/rime/build/jyut6ping3.dict.yaml ]; then
+      mkdir -p ~/misc
+      rm -rf ~/misc/plum
+      git clone https://github.com/rime/plum.git ~/misc/plum
+      cd ~/misc/plum
+      ./rime-install rime-cantonese
+      cp ~/misc/plum/package/rime/cantonese/* ~/.local/share/fcitx5/rime/build
+    fi
+
+    if [ -f ~/.local/share/fcitx5/rime/build/default.yaml ]; then
+      if [ -z "$(grep jyut6ping3 ~/.local/share/fcitx5/rime/build/default.yaml || true)" ]; then
+        cat ~/.local/share/fcitx5/rime/build/default.yaml |
+          yq '.schema_list += [{ "schema": "jyut6ping3" }]' -y |
+          sponge ~/.local/share/fcitx5/rime/build/default.yaml
+      fi
+    fi
+  fi
 
   # 例如:
   # add_desktop_common '/usr/bin/xdg-open /foo/bar.odt' 'open_foo_bar' 'Open Foo Bar'
@@ -142,4 +166,6 @@ EOF
   setup_gui_vnc
   provision_setup_gui_surface
   setup_gui_i3
+  setup_gui_lxde
+  setup_gui_dunst
 }

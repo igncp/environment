@@ -12,18 +12,17 @@
   gui_content = builtins.readFile (base_config + "/gui");
 
   has_copyq = builtins.pathExists (base_config + "/copyq");
-  has_cinnammon = builtins.pathExists (base_config + "/gui-cinnammon");
+  has_cinnamon = builtins.pathExists (base_config + "/gui-cinnamon");
   has_i3 = builtins.pathExists (base_config + "/gui-i3");
   has_nvidia = builtins.readFile (base_config + "/nvidia") == "yes\n";
-  has_vnc = builtins.pathExists (base_config + "/vnc");
 
   has_opt = infix: lib.optional (lib.strings.hasInfix infix gui_content);
 in {
   imports =
-    [./gui-rime.nix ./gui-virtualization.nix]
+    [./gui-rime.nix ./gui-virtualization.nix ./gui-gaming.nix]
     ++ (lib.optional has_i3 ./gui_i3.nix)
     ++ (lib.optional has_nvidia ./gui-nvidia.nix)
-    ++ (lib.optional has_cinnammon ./gui-cinnammon.nix);
+    ++ (lib.optional has_cinnamon ./gui-cinnamon.nix);
 
   services.flatpak.enable = true;
 
@@ -49,11 +48,15 @@ in {
       xclip
       xdotool
 
+      realvnc-vnc-viewer
+      tigervnc
+
       # Hyprland
 
       brightnessctl
-      fcitx5
+      dunst
       hyprpaper
+      libnotify # For `notify-send`
       lxqt.lxqt-sudo
       networkmanagerapplet
       playerctl
@@ -61,16 +64,13 @@ in {
       waybar
       wdisplays
       wev
+      wl-clipboard
 
       # Libre Office
 
       unstable_pkgs.libreoffice-qt # 需要`unstable_pkgs`先可以用密碼保護嘅檔案
       hunspell
     ]
-    ++ (lib.optional has_vnc [
-      realvnc-vnc-viewer
-      tigervnc
-    ])
     ++ (lib.optional has_copyq copyq)
     ++ ((has_opt "electrum") electrum)
     ++ ((has_opt "discord") discord)
@@ -150,6 +150,8 @@ in {
       "1password-gui"
       "1password"
     ];
+
+  programs.nm-applet.enable = true;
 
   programs._1password.enable = true;
   programs._1password-gui = {

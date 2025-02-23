@@ -3,7 +3,7 @@
 set -e
 
 if [ ! -f ~/.check-files/first-run ]; then
-  echo "The provision hasn't been run completely yet"
+  echo "呢個條文仲未完全執行"
   set -x
 fi
 

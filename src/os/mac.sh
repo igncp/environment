@@ -48,6 +48,7 @@ alias MacListAppsAppStore='mdfind kMDItemAppStoreHasReceipt=1'
 alias MacDefaultDomains=$'defaults domains | tr \', \' \'\n\' | ag . | sort | less'
 alias MacServices=$'sudo launchctl list | awk \'{ print $3; }\' | sort | less'
 alias MacAddUserToAdmin="sudo dscl . -append /Groups/admin GroupMembership $USER"
+alias MacListUsers='dscl . list /Users UniqueID | sort -n -k2'
 alias MacListIdentities='security find-identity'
 
 alias MacXCodePrintUsed='xcode-select --print-path'
@@ -135,6 +136,10 @@ EOF
     cp /Applications/AeroSpace.app/Contents/Resources/default-config.toml \
       ~/.aerospace.toml
   fi
+
+  # 轉移 Nix 用戶嚟解決問題
+  # curl --proto '=https' --tlsv1.2 -sSf -L \
+  #   https://github.com/NixOS/nix/raw/master/scripts/sequoia-nixbld-user-migration.sh | bash -
 
   provision_setup_os_mac_brew
 }

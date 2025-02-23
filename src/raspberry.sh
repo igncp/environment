@@ -38,9 +38,6 @@ EOF
 
   # Enable VNC: https://www.pitunnel.com/doc/access-vnc-remote-desktop-raspberry-pi-over-internet
 
-  # Install desktop environment:
-  # `sudo apt install xserver-xorg raspberrypi-ui-mods`
-
   # Retropie: Check in the `gaming.sh`
 
   # To over-clock: https://www.zdnet.com/article/upgrading-your-pc-this-monster-graphics-card-is-200-off/

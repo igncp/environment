@@ -98,30 +98,37 @@ alias Vpn='(cd ~/development/environment && bash src/scripts/misc/vpn.sh)'
 
 alias UnameKernel='uname -r'
 
-if type ffmpeg >/dev/null 2>&1; then
-  FfmpegSubs() {
-    if [ -z "$1" ]; then
-      echo "缺少影片路徑" && exit 1
-    fi
+FfmpegSubsList() {
+  test -n "$1" || { echo "缺少影片路徑" && return 1; }
+  nix-shell -p ffmpeg \
+    --run "ffprobe -i $1 -show_entries stream=index:stream_tags=language -select_streams s -of compact=p=0:nk=1 -v quiet"
+}
 
-    # 第一個參數是影片的檔案路徑
-    ffmpeg -i $1 -map 0:s:${2:-0} ${3:-$1}.srt
-  }
+FfmpegSubs() {
+  test -n "$1" || { echo "缺少影片路徑" && return 1; }
+  nix-shell -p ffmpeg --run "ffmpeg -i $1 -map 0:s:${2:-0} ${3:-$1}.srt"
+}
 
-  FfmpegAudioMp3() {
-    if [ -z "$1" ]; then
-      echo "缺少視訊路徑" && exit 1
-    fi
-
-    ffmpeg -i $1 -q:a 0 -map a $1.mp3
-  }
-fi
+FfmpegAudioMp3() {
+  test -n "$1" || { echo "缺少影片路徑" && return 1; }
+  nix-shell -p ffmpeg --run "ffmpeg -i $1 -q:a 0 -map a $1.mp3"
+}
 
 # Cross-platform (including remote VM) function which accepts text from a pipe
 ClipboardCopyPipe() {
   read INPUT
   if [ -z "$INPUT" ]; then return; fi
-  echo "$INPUT" | clipboard_ssh send
+  if [ -z "$(Ports | grep 2030 || true)" ]; then
+    if [ -n "$(uname -a | grep Darwin || true)" ]; then
+      echo "$INPUT" | pbcopy
+    elif type wl-copy >/dev/null 2>&1; then
+      echo "$INPUT" | wl-copy
+    else
+      echo "$INPUT" | xclip -selection clipboard
+    fi
+  else
+    echo "$INPUT" | clipboard_ssh send
+  fi
 }
 
 # Sample of alias using ClipboardCopyPipe and bitwarden
@@ -256,8 +263,8 @@ CargoDevGenerate() {
   echo "Binary '$BIN_NAME' built and moved to current directory"
 }
 
-alias NixFlakeUpdateInput='nix flake lock --update-input'
-alias NixListChannels='nix-channel —-list'
+alias NixFlakeUpdateInput='nix flake update' # NixFlakeUpdateInput ghostty
+alias NixListChannels='nix-channel --list'
 alias NixListGenerations="nix-env --list-generations"
 alias NixListPackages='nix-env --query "*"'
 alias NixRemovePackage='nix-env -e'
