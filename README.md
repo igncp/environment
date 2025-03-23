@@ -7,7 +7,7 @@
 這些部分是：
 
 - Bash 配置腳本位於 [src](./src)
-- Nix 配置在 [nix](./nix):
+- Nix 配置在 [nix](./src/nix):
     - 對於 NixOS 和[Home Manager](https://github.com/nix-community/home-manager) (用於其他 Unix 作業系統)
     - 對於這兩種情況，主要入口點是 [flake.nix](./flake.nix) 文件
     - 包含多個 nix shell

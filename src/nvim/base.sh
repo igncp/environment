@@ -22,7 +22,6 @@ provision_setup_nvim_base() {
 
   install_nvim_package LnL7/vim-nix                   # https://github.com/LnL7/vim-nix
   install_nvim_package NvChad/nvim-colorizer.lua      # https://github.com/NvChad/nvim-colorizer.lua
-  install_nvim_package andrewRadev/splitjoin.vim      # gS, gJ
   install_nvim_package bogado/file-line               # https://github.com/bogado/file-line
   install_nvim_package chentoast/marks.nvim           # https://github.com/chentoast/marks.nvim
   install_nvim_package ctrlpvim/ctrlp.vim             # https://github.com/ctrlpvim/ctrlp.vim

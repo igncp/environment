@@ -1,13 +1,17 @@
 AWS: docker run --rm -it --entrypoint "" -v "$HOME"/.aws/credentials.json:/root/.aws/credentials.json amazon/aws-cli /bin/bash
 Apache: docker run --rm -it --name environment_apache -p 127.0.0.1:1234:80 -v $PWD:/usr/local/apache2/htdocs httpd
+Calibre: docker run --rm --name environment_calibre -e TZ=Asia/Hong_Kong -p 127.0.0.1:1234:8080 -v $PWD:/shared lscr.io/linuxserver/calibre:latest
 Drupal Simple Init Run: docker run --rm -it -v environment_drupal_sites:/temporary/sites drupal cp -aRT /var/www/html/sites /temporary/sites
 Drupal Simple Postgres: docker run --rm -it --name environment_drupal_pg --net environment_drupal -e POSTGRES_PASSWORD=secret -v environment_drupal_pg:/var/lib/postgresql/data postgres
 Drupal Simple: docker run --rm -it --name environment_drupal --net environment_drupal -p 127.0.0.1:1234:80 -v docker run --rm -it -v environment_drupal_sites:/var/www/html/sites drupal
 Elastic Search Kibana: docker run --rm -it --name environment_kibana --net environment_es -p 127.0.0.1:1236:5601 docker.elastic.co/kibana/kibana:8.16.4
 Elastic Search: docker run --rm -it --name environment_es --net environment_es -p 127.0.0.1:1234:9200 -p 127.0.0.1:1235:9300 -v environment_es:/usr/share/elasticsearch/data -e "discovery.type=single-node" -e "xpack.security.enabled=false" elasticsearch:8.16.4
+Gimp: docker run --rm --name environment_gimp -e TZ=Asia/Hong_Kong -p 127.0.0.1:1234:8080 -v $HOME/Downloads:/Downloads -v $HOME/Desktop:/Desktop lscr.io/linuxserver/gimp:latest
 Hello World: docker run --rm -it hello-world
 MariaDB: docker run --rm -it --name environment_mariadb -p 127.0.0.1:1234:3306 -v environment_mariadb:/var/lib/mysql:Z -e MARIADB_ROOT_PASSWORD=secret mariadb:latest
 Postgres: docker run --rm -it --name environment_pg -p 127.0.0.1:1234:5432 -e POSTGRES_PASSWORD=secret -v environment_pg:/var/lib/postgresql/data postgres
 Prometheus Grafana: docker run --rm -it -p 127.0.0.1:1235:3000 --name environment_grafana --net environment_prom -v environment_grafana:/var/lib/grafana grafana/grafana-enterprise
 Prometheus: docker run --rm -it --name environment_prometheus --net environment_prom -p 127.0.0.1:1234:9090 -v environment_prometheus:/prometheus prom/prometheus
 Redis: docker run --rm -it --name environment_redis -p 127.0.0.1:1234:6379 -v environment_redis:/data redis
+Xfce Init Run: docker run --rm --name environment_webtop -v environment_webtop:/tmp_home lscr.io/linuxserver/webtop:debian-xfce cp -aRT /config/. /tmp_home
+Xfce: docker run --rm --name environment_webtop -e TZ='Asia/Hong_Kong' -p 127.0.0.1:1234:3000 -v $PWD:/shared -v environment_webtop:/config lscr.io/linuxserver/webtop:debian-xfce

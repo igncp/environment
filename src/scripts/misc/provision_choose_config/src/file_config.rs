@@ -56,7 +56,7 @@ fn get_all_items() -> Vec<String> {
     let possible_config_nix = std::process::Command::new("bash")
         .arg("-c")
         .arg(
-            r#"grep --no-file -rEo 'base_config \+ "[/a-z0-9-]*"' ~/development/environment/nix | sort | uniq"#,
+            r#"grep --no-file -rEo 'base.config \+ "[/a-z0-9-]*"' ~/development/environment/src/nix | sort | uniq"#,
         )
         .output()
         .expect("Failed to execute command")
@@ -67,6 +67,7 @@ fn get_all_items() -> Vec<String> {
         .split('\n')
         .map(|x| x.to_string())
         .map(|x| x.replace("base_config +", ""))
+        .map(|x| x.replace("base-config +", ""))
         .collect::<Vec<String>>();
 
     let mut all_possible_config = possible_config_rust

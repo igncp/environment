@@ -160,5 +160,18 @@ provision_get_ps1() {
 }
 
 provision_get_ps1_right() {
+  LAST_COMMAND_FAILED="$?"
+
+  if [ "$LAST_COMMAND_FAILED" -ne 0 ] && [ "$LAST_COMMAND_FAILED" -ne 130 ]; then
+    IS_BASH=$(echo "$BASH_VERSION" | grep -qE '^[0-9]' && echo 1 || echo 0)
+    if [ "$IS_BASH" -eq 1 ]; then
+      printf "$ANSI_COLOR_RED""$LAST_COMMAND_FAILED""$ANSI_COLOR_RESET"
+    else
+      LAST_COMMAND="$(fc -ln -1 || true)"
+      LAST_COMMAND="${LAST_COMMAND:0:20}"
+      echo "<<%F{#b0e5ff}$LAST_COMMAND%F{reset_color}: %F{#ff4c4c}$LAST_COMMAND_FAILED%F{reset_color}>>"
+    fi
+  fi
+
   printf ""
 }

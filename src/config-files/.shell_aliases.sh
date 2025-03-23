@@ -118,7 +118,7 @@ FfmpegAudioMp3() {
 ClipboardCopyPipe() {
   read INPUT
   if [ -z "$INPUT" ]; then return; fi
-  if [ -z "$(Ports | grep 2030 || true)" ]; then
+  if ! type clipboard_ssh >/dev/null 2>&1 || [ -z "$(Ports | grep 2030 || true)" ]; then
     if [ -n "$(uname -a | grep Darwin || true)" ]; then
       echo "$INPUT" | pbcopy
     elif type wl-copy >/dev/null 2>&1; then
@@ -188,7 +188,11 @@ alias CrontabUser='crontab -e'
 alias CrontabRoot='sudo EDITOR=vim crontab -e'
 
 alias Headers='curl -I' # e.g. Headers google.com
-alias Ports='SudoNix netstat -tulanp'
+if [ -n "$(uname -a | ag Darwin || true)" ]; then
+  alias Ports=$"SudoNix netstat -anvp tcp | awk 'NR<3 || /LISTEN/' | awk '{ print \$4 }'"
+else
+  alias Ports='SudoNix netstat -tulanp'
+fi
 alias NetstatConnections='netstat -nputw'
 alias AnsiColorsRemove="sed 's/\x1b\[[0-9;]*m//g'"
 

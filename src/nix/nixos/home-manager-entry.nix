@@ -4,7 +4,7 @@
   home-manager,
   ...
 }: let
-  has_gui = builtins.pathExists ../../project/.config/gui;
+  has_gui = builtins.pathExists ../../../project/.config/gui;
   gui-config =
     if has_gui
     then {

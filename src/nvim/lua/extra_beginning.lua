@@ -84,9 +84,22 @@ local nvim_plugins = {
       }
     }
   },
+  {
+    'Wansmer/treesj',
+    dependencies = { 'nvim-treesitter/nvim-treesitter' }, -- if you install parsers with `nvim-treesitter`
+    config = function()
+      require('treesj').setup({
+        use_default_keymaps = false,
+      })
+    end,
+  }
 }
 
 require("lazy").setup(nvim_plugins)
+
+vim.keymap.set('n', 'gM', require('treesj').toggle)
+vim.keymap.set('n', 'gS', require('treesj').split)
+vim.keymap.set('n', 'gJ', require('treesj').join)
 
 require('gitsigns').setup()
 

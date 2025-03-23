@@ -13,6 +13,10 @@ provision_setup_cli_tools() {
     install_node_modules vercel
   fi
 
+  if type iredis >/dev/null 2>&1; then
+    cp ~/development/environment/src/config-files/iredisrc ~/.iredisrc
+  fi
+
   # https://nixos.wiki/wiki/OpenVPN
   if [ -f "$PROVISION_CONFIG"/cli-openvpn ]; then
     mkdir -p ~/.openvpn

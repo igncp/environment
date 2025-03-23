@@ -2,11 +2,13 @@
   pkgs,
   lib,
   user,
+  base-config,
   ...
 }: let
-  has_gui = builtins.pathExists ../../project/.config/gui;
-  has_android = builtins.pathExists ../../project/.config/android;
-  has_custom = builtins.pathExists ./custom.nix;
+  has-k3s = builtins.pathExists (base-config + "/k3s");
+  has-gui = builtins.pathExists (base-config + "/gui");
+  has-android = builtins.pathExists (base-config + "/android");
+  has-custom = builtins.pathExists ./custom.nix;
 in {
   imports =
     [
@@ -14,9 +16,10 @@ in {
       /etc/nixos/configuration.nix
       ./home-manager-entry.nix
     ]
-    ++ (lib.optional has_custom ./custom.nix)
-    ++ (lib.optional has_android ./android.nix)
-    ++ (lib.optional has_gui ./gui.nix);
+    ++ (lib.optional has-custom ./custom.nix)
+    ++ (lib.optional has-k3s ./k3s.nix)
+    ++ (lib.optional has-android ./android.nix)
+    ++ (lib.optional has-gui ./gui.nix);
 
   config = {
     hardware.bluetooth.enable = true;

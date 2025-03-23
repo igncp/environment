@@ -5,6 +5,7 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
     flake-utils.url = "github:numtide/flake-utils";
     unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     home-manager = {
       inputs.nixpkgs.follows = "nixpkgs";
       url = "github:nix-community/home-manager/release-24.11";
@@ -19,44 +20,37 @@
     self,
     unstable,
     ghostty,
+    nixos-hardware,
   }: let
     user = builtins.getEnv "USER";
   in
     flake-utils.lib.eachDefaultSystem (
       system: let
-        stable_pkgs = nixpkgs.legacyPackages.${system};
+        stable-pkgs = nixpkgs.legacyPackages.${system};
         pkgs = import unstable {
-          system = stable_pkgs.system;
+          system = stable-pkgs.system;
           config.allowUnfree = true;
         };
-        config = {};
-        hostname = (import /etc/nixos/configuration.nix {inherit pkgs config;}).networking.hostName;
-        devShells = import ./nix/shells/main.nix {inherit pkgs;};
-        has_user_file = builtins.pathExists "/etc/nixos/user"; # Use: `sudo bash -c 'printf USER_NAME > /etc/nixos/user'`
+        devShells = import ./src/nix/shells/main.nix {inherit pkgs;};
+        nixos-entry = import ./src/nix/nixos/nixos-entry.nix {
+          inherit
+            ghostty
+            home-manager
+            nixos-hardware
+            nixpkgs
+            pkgs
+            stable-pkgs
+            system
+            ;
+        };
       in {
         inherit devShells;
         packages = {
-          nixosConfigurations = {
-            "${hostname}" = nixpkgs.lib.nixosSystem {
-              modules = [
-                ./nix/nixos/configuration.nix
-              ];
-              specialArgs = {
-                inherit stable_pkgs home-manager system ghostty;
-                unstable_pkgs = pkgs;
-
-                # 硬編碼這個值，因為它等於 nixos 中的 “root”
-                user =
-                  if has_user_file
-                  then (builtins.readFile "/etc/nixos/user")
-                  else "igncp";
-              };
-            };
-          };
+          nixosConfigurations = nixos-entry;
           homeConfigurations."${user}" = home-manager.lib.homeManagerConfiguration {
             inherit pkgs;
-            modules = [./nix/home-manager/home.nix];
-            extraSpecialArgs = {inherit pkgs stable_pkgs;};
+            modules = [./src/nix/home-manager/home.nix];
+            extraSpecialArgs = {inherit pkgs stable-pkgs;};
           };
         };
       }

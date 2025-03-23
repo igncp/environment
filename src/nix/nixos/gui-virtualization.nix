@@ -4,7 +4,7 @@
   lib,
   ...
 }: let
-  base_config = ../../project/.config;
+  base_config = ../../../project/.config;
 
   has_virtualbox = builtins.pathExists (base_config + "/gui-virtualbox");
   has_virtmanager = builtins.pathExists (base_config + "/gui-virtmanager");

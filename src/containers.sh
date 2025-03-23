@@ -25,6 +25,8 @@ alias DockerCleanContainers='docker stop $(docker ps -aq); docker rm $(docker ps
 alias DockerInfo='docker info | less -S'
 alias DockerRmAll='docker rm $(docker ps -aq)'
 
+alias ContainerdImages='sudo crictl images'
+
 DComposeConvertJson(){ docker compose "$@" convert --format json; } # DComposeConvertJson -f ./foo.yml
 DComposeTop(){ docker compose "$@" top | less -S; } # DComposeTop -f ./foo.yml
 DComposeLogs(){ docker compose "$@" logs -f; } # DComposeLogs -f ./foo.yml
@@ -69,12 +71,6 @@ DockerContainerPortainer() { docker run --rm -d -p $1:9000 --name portainer \
 
 # Only AMD for now
 alias DockerDive='docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock wagoodman/dive:latest'
-
-DockerRun() {
-  local SELECTION="$(cat ~/development/environment/src/containers_commands.txt | fzf | sed 's|^[^:]*: ||')"
-
-  echo "$SELECTION"
-}
 
 alias DockerKillAll='docker kill $(docker ps -q)'
 

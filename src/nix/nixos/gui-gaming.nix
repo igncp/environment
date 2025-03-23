@@ -3,7 +3,7 @@
   lib,
   ...
 }: let
-  base_config = ../../project/.config;
+  base_config = ../../../project/.config;
 
   has_minecraft = builtins.pathExists (base_config + "/minecraft");
 in {

@@ -2,27 +2,27 @@
   lib,
   pkgs,
   system,
-  unstable_pkgs,
+  unstable-pkgs,
   ghostty,
   user,
   ...
 }: let
-  base_config = ../../project/.config;
+  base-config = ../../../project/.config;
 
-  gui_content = builtins.readFile (base_config + "/gui");
+  gui-content = builtins.readFile (base-config + "/gui");
 
-  has_copyq = builtins.pathExists (base_config + "/copyq");
-  has_cinnamon = builtins.pathExists (base_config + "/gui-cinnamon");
-  has_i3 = builtins.pathExists (base_config + "/gui-i3");
-  has_nvidia = builtins.readFile (base_config + "/nvidia") == "yes\n";
+  has-copyq = builtins.pathExists (base-config + "/copyq");
+  has-cinnamon = builtins.pathExists (base-config + "/gui-cinnamon");
+  has-i3 = builtins.pathExists (base-config + "/gui-i3");
+  has-nvidia = builtins.readFile (base-config + "/nvidia") == "yes\n";
 
-  has_opt = infix: lib.optional (lib.strings.hasInfix infix gui_content);
+  has_opt = infix: lib.optional (lib.strings.hasInfix infix gui-content);
 in {
   imports =
     [./gui-rime.nix ./gui-virtualization.nix ./gui-gaming.nix]
-    ++ (lib.optional has_i3 ./gui_i3.nix)
-    ++ (lib.optional has_nvidia ./gui-nvidia.nix)
-    ++ (lib.optional has_cinnamon ./gui-cinnamon.nix);
+    ++ (lib.optional has-i3 ./gui_i3.nix)
+    ++ (lib.optional has-nvidia ./gui-nvidia.nix)
+    ++ (lib.optional has-cinnamon ./gui-cinnamon.nix);
 
   services.flatpak.enable = true;
 
@@ -68,10 +68,10 @@ in {
 
       # Libre Office
 
-      unstable_pkgs.libreoffice-qt # 需要`unstable_pkgs`先可以用密碼保護嘅檔案
+      unstable-pkgs.libreoffice-qt # 需要`unstable-pkgs`先可以用密碼保護嘅檔案
       hunspell
     ]
-    ++ (lib.optional has_copyq copyq)
+    ++ (lib.optional has-copyq copyq)
     ++ ((has_opt "electrum") electrum)
     ++ ((has_opt "discord") discord)
     ++ ((has_opt "terminator") terminator)

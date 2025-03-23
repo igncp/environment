@@ -16,6 +16,7 @@
   has_mssql = builtins.pathExists (base_config + "/mssql");
   has_qemu = builtins.pathExists (base_config + "/qemu");
   has_logdy = builtins.pathExists (base_config + "/logdy");
+  has-iredis = builtins.pathExists (base_config + "/iredis");
 
   logdy = import ../derivations/logdy.nix {inherit pkgs;};
 
@@ -153,5 +154,6 @@ in {
     ++ (lib.optional has_tailscale pkgs.tailscale)
     ++ (lib.optional has_mssql pkgs.sqlcmd)
     ++ (lib.optional has_qemu pkgs.guestfs-tools)
-    ++ (lib.optional has_podman pkgs.podman);
+    ++ (lib.optional has_podman pkgs.podman)
+    ++ (lib.optional has-iredis pkgs.iredis);
 }

@@ -1,14 +1,14 @@
 {
   pkgs,
   lib,
-  unstable_pkgs,
+  unstable-pkgs,
   ...
 }: let
-  base_config = ../../project/.config;
+  base_config = ../../../project/.config;
 
   cli-pkgs = import ../common/cli.nix {
     inherit base_config lib;
-    pkgs = unstable_pkgs;
+    pkgs = unstable-pkgs;
   };
 
   java-pkgs = import ../common/java.nix {inherit base_config lib pkgs;};
@@ -54,7 +54,7 @@ in {
     ++ ruby-pkgs.pkgs-list
     ++ go-pkgs.pkgs-list
     ++ dart-pkgs.pkgs-list
-    ++ (lib.optional has_go unstable_pkgs.go)
+    ++ (lib.optional has_go unstable-pkgs.go)
     ++ (lib.optional has_c pkgs.clib)
     ++ (lib.optional has_c pkgs.ctags)
     ++ (lib.optional has_c pkgs.gcovr);

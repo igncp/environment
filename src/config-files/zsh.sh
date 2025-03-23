@@ -25,9 +25,9 @@ source $ZSH/oh-my-zsh.sh
 bindkey "\C-u" kill-region
 
 nixShells () {
-  echo $'cat ~/development/environment/nix/shells/*.nix | grep -Pzo --color=never "$1 = (.|\\\\n)+?  }" | bat -f -l nix -p' \
+  echo $'cat ~/development/environment/src/nix/shells/*.nix | grep -Pzo --color=never "$1 = (.|\\\\n)+?  }" | bat -f -l nix -p' \
     > /tmp/nix_shell_preview.sh
-  SHELL_NAME="$(grep --no-filename -r 'mkShell.*$' ~/development/environment/nix/shells/ | \
+  SHELL_NAME="$(grep --no-filename -r 'mkShell.*$' ~/development/environment/src/nix/shells/ | \
     sed 's| =.*||; s|^[ ]*||' | sort | fzf --preview ' bash /tmp/nix_shell_preview.sh {}')"
   SHELL_NAME="$(echo -e "${SHELL_NAME}" | tr -d '[:space:]')"
   if [ -z "$SHELL_NAME" ]; then return ; fi
