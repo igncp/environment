@@ -16,6 +16,7 @@ set -e
 . src/ruby.sh
 . src/rust.sh
 . src/zsh.sh
+. src/homebrew.sh
 
 . src/android.sh
 . src/brightscript.sh
@@ -48,6 +49,7 @@ provision_setup_with_bash() {
     return
   fi
 
+  provision_setup_homebrew
   provision_setup_zsh
   provision_setup_general
   provision_setup_nvim

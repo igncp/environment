@@ -35,6 +35,8 @@ in {
       blueberry
       cairo
       flameshot
+      gedit
+      gimp
       google-chrome
       gtk4
       keepass
@@ -45,8 +47,7 @@ in {
       rpi-imager # 需要暫時將用戶加入'disk'群組: `sudo usermod -aG disk $USER`
       variety
       vlc
-      xclip
-      xdotool
+      webcamoid
 
       realvnc-vnc-viewer
       tigervnc

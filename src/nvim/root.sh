@@ -3,6 +3,9 @@
 set -e
 
 provision_setup_nvim_root() {
+  if [ -f "$PROVISION_CONFIG"/minimal ]; then
+    return
+  fi
   cat >/tmp/.root_vimrc <<"EOF"
 " This file was generated from ~/development/environment
 syntax off

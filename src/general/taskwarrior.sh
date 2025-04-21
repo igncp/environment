@@ -3,6 +3,10 @@
 set -e
 
 provision_setup_general_taskwarrior() {
+  if [ ! -f "$PROVISION_CONFIG"/taskwarrior ]; then
+    return
+  fi
+
   install_system_package taskwarrior task
 
   cat >~/.taskrc <<"EOF"

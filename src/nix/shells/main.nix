@@ -4,8 +4,10 @@
     inherit pkgs;
     base_config = "";
   };
+  lib = pkgs.lib;
   cli-extra-shell = import ./cli-extra.nix {inherit pkgs;};
   python-extra-shell = import ./python.nix {inherit pkgs;};
+  docker-extra-shell = import ./docker.nix {inherit pkgs lib;};
 
   go-pkgs = import ../common/go.nix {
     inherit pkgs;
@@ -121,6 +123,15 @@ in
       packages = lua-config.lua_pkgs;
     };
 
+    qemu = pkgs.mkShell {
+      packages = with pkgs; [
+        libarchive # 對於帶有 qemu 的 aarch64 機器的 `bsdtar`
+        multipath-tools # 對於帶有 qemu 的 aarch64 機器的 `kpartx`
+        qemu
+        quickemu
+      ];
+    };
+
     video = pkgs.mkShell {
       packages = with pkgs; [
         ffmpeg
@@ -190,5 +201,6 @@ in
       ];
     };
   }
+  // docker-extra-shell
   // cli-extra-shell
   // python-extra-shell

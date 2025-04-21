@@ -103,7 +103,6 @@ in {
     ++ [
       bitwise # https://github.com/mellowcandle/bitwise
       jc # https://github.com/kellyjonbrazil/jc
-      loop # https://github.com/Miserlou/Loop
       pastel # https://github.com/sharkdp/pastel
       vifm # https://vifm.info/
     ]

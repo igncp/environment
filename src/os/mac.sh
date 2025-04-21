@@ -2,8 +2,6 @@
 
 set -e
 
-. src/os/mac/brew.sh
-
 provision_setup_os_mac() {
   # Rime - Squirrel
   #   I can't remember the location, but it may be from:
@@ -17,7 +15,6 @@ provision_setup_os_mac() {
   cat >>~/.shellrc <<"EOF"
 umask 027
 export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
-export PATH="/opt/homebrew/bin:$PATH"
 EOF
 
   cat >>~/.shell_aliases <<"EOF"
@@ -39,8 +36,6 @@ EOF
 EOF
 
   cat >>~/.shell_aliases <<"EOF"
-alias BrewListPackages='brew list'
-
 alias MacDisks='diskutil list'
 alias MacEjectAll="osascript -e 'tell application "'"Finder"'" to eject (every disk whose ejectable is true)'"
 alias MacFeatures='system_profiler > /tmp/features.txt && echo "/tmp/features.txt written" && less /tmp/features.txt'
@@ -81,15 +76,17 @@ EOF
     fi
   }
 
-  # Mission Control: Option + up
-  disable_mac_hotkey 32
-  # Mission Control: left and right
-  disable_mac_hotkey 79
-  disable_mac_hotkey 80
-  disable_mac_hotkey 81
-  disable_mac_hotkey 82
+  if [ ! -f "$PROVISION_CONFIG"/minimal ]; then
+    # Mission Control: Option + up
+    disable_mac_hotkey 32
+    # Mission Control: left and right
+    disable_mac_hotkey 79
+    disable_mac_hotkey 80
+    disable_mac_hotkey 81
+    disable_mac_hotkey 82
+  fi
 
-  if [ ! -f ~/.check-files/init-apps ]; then
+  if [ ! -f ~/.check-files/init-apps ] && [ ! -f "$PROVISION_CONFIG"/minimal ]; then
     # 降低透明度
     defaults write com.apple.universalaccess reduceTransparency -bool true || true
 
@@ -140,6 +137,4 @@ EOF
   # 轉移 Nix 用戶嚟解決問題
   # curl --proto '=https' --tlsv1.2 -sSf -L \
   #   https://github.com/NixOS/nix/raw/master/scripts/sequoia-nixbld-user-migration.sh | bash -
-
-  provision_setup_os_mac_brew
 }

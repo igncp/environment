@@ -13,6 +13,29 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+local versions_path = os.getenv("HOME") .. '/development/environment/src/versions.json'
+local versions_file = io.open(versions_path, "rb")
+
+if not versions_file then
+  print("No environment/src/versions.json file found")
+  return nil
+end
+
+local versions_content = versions_file:read "*a"
+versions_file:close()
+
+local function get_version(name)
+  local pattern = '"%s*' .. name .. '%s*":%s*"([^"]+)"'
+  pattern = pattern:gsub("-", ".")
+  local version = versions_content:match(pattern)
+  if version then
+    return version
+  else
+    print(name)
+    return nil
+  end
+end
+
 -- 此變數由包填充
 local nvim_plugins = {
   {
@@ -36,7 +59,10 @@ local nvim_plugins = {
       return vim.fn.executable('runhaskell') == 1
     end,
   },
-  { "rcarriga/nvim-dap-ui", dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" } },
+  {
+    "rcarriga/nvim-dap-ui",
+    dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" }
+  },
   {
     "leoluz/nvim-dap-go",
     enabled = function()
@@ -48,6 +74,7 @@ local nvim_plugins = {
   "smoka7/hop.nvim",
   {
     "CopilotC-Nvim/CopilotChat.nvim",
+    commit = get_version("neovim.CopilotChat.nvim"),
     dependencies = {
       { "nvim-lua/plenary.nvim" },
     },
@@ -92,7 +119,42 @@ local nvim_plugins = {
         use_default_keymaps = false,
       })
     end,
-  }
+  },
+  { "junegunn/limelight.vim",         commit = get_version("neovim.limelight.vim") },
+  { "LnL7/vim-nix",                   commit = get_version("neovim.vim-nix") },
+  { "jiangmiao/auto-pairs",           commit = get_version("neovim.auto-pairs") },
+  { "neoclide/coc.nvim",              commit = get_version("neovim.coc.nvim") },
+  { "ctrlpvim/ctrlp.vim",             commit = get_version("neovim.ctrlp.vim") },
+  { "sindrets/diffview.nvim",         commit = get_version("neovim.diffview.nvim") },
+  { "tommcdo/vim-exchange",           commit = get_version("neovim.vim-exchange") },
+  { "tpope/vim-eunuch",               commit = get_version("neovim.vim-eunuch") },
+  { "tpope/vim-fugitive",             commit = get_version("neovim.vim-fugitive") },
+  { "tpope/vim-repeat",               commit = get_version("neovim.vim-repeat") },
+  { "tpope/vim-surround",             commit = get_version("neovim.vim-surround") },
+  { "lewis6991/gitsigns.nvim",        commit = get_version("neovim.gitsigns.nvim") },
+  { "liuchengxu/vista.vim",           commit = get_version("neovim.vista.vim") },
+  { "mbbill/undotree",                commit = get_version("neovim.undotree") },
+  { "mfussenegger/nvim-dap",          commit = get_version("neovim.nvim-dap") },
+  { "ntpeters/vim-better-whitespace", commit = get_version("neovim.vim-better-whitespace") },
+  { "plasticboy/vim-markdown",        commit = get_version("neovim.vim-markdown") },
+  { "rhysd/clever-f.vim",             commit = get_version("neovim.clever-f.vim") },
+  { "ryanoasis/vim-devicons",         commit = get_version("neovim.vim-devicons") }, -- 如果不支持，請在custom.sh中添加: rm -rf ~/.local/share/nvim/lazy/vim-devicons/*
+  { "scrooloose/nerdcommenter",       commit = get_version("neovim.nerdcommenter") },
+  { "vim-scripts/AnsiEsc.vim",        commit = get_version("neovim.AnsiEsc.vim") },
+  { "NvChad/nvim-colorizer.lua",      commit = get_version("neovim.nvim-colorizer.lua") },
+  { "bogado/file-line",               commit = get_version("neovim.file-line") },
+  { "chentoast/marks.nvim",           commit = get_version("neovim.marks.nvim") },
+  { "elzr/vim-json",                  commit = get_version("neovim.vim-json") },
+  { "google/vim-searchindex",         commit = get_version("neovim.vim-searchindex") },
+  { "haya14busa/incsearch.vim",       commit = get_version("neovim.incsearch.vim") },
+  { "honza/vim-snippets",             commit = get_version("neovim.vim-snippets") },
+  { "iamcco/markdown-preview.nvim",   commit = get_version("neovim.markdown-preview.nvim") },
+  { "jparise/vim-graphql",            commit = get_version("neovim.vim-graphql") },
+  { "junegunn/vim-peekaboo",          commit = get_version("neovim.vim-peekaboo") },
+  { "lbrayner/vim-rzip",              commit = get_version("neovim.vim-rzip") },
+  { "cocopon/iceberg.vim",            commit = get_version("neovim.iceberg.vim") },
+  { "morhetz/gruvbox",                commit = get_version("neovim.gruvbox") },
+  { "dracula/vim",                    commit = get_version("neovim.vim") },
 }
 
 require("lazy").setup(nvim_plugins)
@@ -258,8 +320,11 @@ if M.file_exists(theme_path) then
 end
 
 vim.cmd([[
-hi TabLine guifg=LightBlue
-hi TabLineSel guifg=Orange
+hi TabLine guibg=LightBlue
+hi TabLine guifg=Black
+hi TabLineSel guibg=Orange
+hi TabLineSel guifg=Black
+
 hi Comment guifg=lightcyan
 
 hi @keyword.import.tsx guifg=#e3d688
@@ -496,15 +561,7 @@ if M.has_config("nvim-lspconfig") then
 
   local servers = { { 'rust_analyzer' }, { 'tsserver' }, { 'ruby_lsp' },
     { 'bashls' },
-    { 'lua_ls', {
-      settings = {
-        Lua = {
-          diagnostics = {
-            globals = { 'vim' }
-          }
-        }
-      }
-    } } }
+  }
 
   for _, lsp in pairs(servers) do
     local lsp_name = lsp[1]

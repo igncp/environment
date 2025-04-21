@@ -139,7 +139,7 @@ cnoremap <c-K> <c-U>
   nnoremap <leader>wW :set nowrap<cr>
 
 " remove autoindentation when pasting
-  set pastetoggle=<F2>
+  " set pastetoggle=<F2>
 
 nnoremap <leader>kw :tabnew <c-R>=expand("%:p:h") . "/" <cr>
 nnoremap <leader>kW :e <c-R>=expand("%:p:h") . "/" <cr>

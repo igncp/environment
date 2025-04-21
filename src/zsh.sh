@@ -50,6 +50,10 @@ provision_setup_zsh() {
     bun completions ~/.oh-my-zsh/completions/
   fi
 
+  if ! type "nix" >/dev/null 2>&1; then
+    echo 'source <(fzf --zsh)' >>~/.zshrc
+  fi
+
   cat >>~/.shellrc <<"EOF"
 ShellChangeToZsh() {
   SHELL_PATH=$(which zsh)

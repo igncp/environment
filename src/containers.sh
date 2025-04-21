@@ -15,7 +15,7 @@ provision_setup_containers() {
   cat >>~/.shell_aliases <<"EOF"
 _CONTAINER_PRUNE_ALIAS='docker system prune -fa ; docker volume prune -fa ; docker network prune -f'
 if type crictl >/dev/null 2>&1; then
-  _CONTAINER_PRUNE_ALIAS="$_CONTAINER_PRUNE_ALIAS ; crictl rmi --prune"
+  _CONTAINER_PRUNE_ALIAS="$_CONTAINER_PRUNE_ALIAS ; sudo crictl rmi --prune"
 fi
 alias ContainerPruneAll="$_CONTAINER_PRUNE_ALIAS"
 
@@ -110,20 +110,13 @@ DockerBuildXInstallDriver() {
 alias DockerBuildXDriver='docker buildx create --use --name build --node build --driver-opt network=host'
 EOF
 
-  cat >>~/.shellrc <<"EOF"
-if type podman >/dev/null 2>&1; then
-  if [ ! -f /etc/containers/policy.json ]; then
-    sudo mkdir -p /etc/containers
-    curl -o /tmp/policy.json https://raw.githubusercontent.com/containers/skopeo/main/default-policy.json
-    sudo mv /tmp/policy.json /etc/containers/policy.json
-  fi
+  if type podman >/dev/null 2>&1; then
+    if [ ! -f "$HOME/.config/containers/policy.json" ]; then
+      mkdir -p "$HOME/.config/containers"
+      echo 'unqualified-search-registries = ["docker.io"]' >"$HOME/.config/containers/registries.conf"
 
-  if [ ! -f /etc/containers/registries.conf ]; then
-    cat > /tmp/registries.conf <<"EOF2"
-unqualified-search-registries = ["docker.io"]
-EOF2
-    sudo mv /tmp/registries.conf /etc/containers/registries.conf
+      curl -o "$HOME/.config/containers/policy.json" \
+        https://raw.githubusercontent.com/containers/skopeo/main/default-policy.json
+    fi
   fi
-fi
-EOF
 }

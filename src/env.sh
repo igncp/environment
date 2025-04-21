@@ -3,8 +3,6 @@
 set -e
 
 provision_setup_env() {
-  PROVISION_CONFIG=~/development/environment/project/.config
-
   IS_LINUX=$(uname -a | grep -c Linux || true)
   IS_MAC=""
   if [[ $OSTYPE == 'darwin'* ]]; then

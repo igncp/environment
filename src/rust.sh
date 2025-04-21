@@ -17,7 +17,7 @@ install_cargo_crate() {
 
 provision_setup_rust() {
   rust_provision_cleanup() {
-    sudo rm -rf ~/.rustup ~/.cargo
+    rm -rf ~/.rustup ~/.cargo
   }
 
   if [ -f "$PROVISION_CONFIG"/no-rust ]; then
@@ -36,7 +36,6 @@ provision_setup_rust() {
 
   cat >>~/.shell_aliases <<"EOF"
 RustBuildProvisionPackages() {
-  sudo echo ""
   mkdir -p ~/.local/bin
   while IFS= read -r -d '' FILE_PATH; do
     FILE_NAME=$(basename "$FILE_PATH")
@@ -93,7 +92,9 @@ EOF
 
   if [ "$IS_NIXOS" != "1" ]; then
     cat >>~/.shellrc <<"EOF"
-. "$HOME/.cargo/env"
+if [ -d "$HOME"/.cargo/env ]; then
+  . "$HOME/.cargo/env"
+fi
 export PASTEL_COLOR_MODE=24bit
 EOF
   fi

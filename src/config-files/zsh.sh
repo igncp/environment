@@ -141,9 +141,6 @@ bindkey '^X' _zsh_cli_fg
 
 alias HistoryDisable='unset HISTFILE'
 
-# Expand aliases on tab
-# zstyle ':completion:*' completer _expand_alias _complete _ignored
-
 if [ -f ~/.check-files/zsh-history ]; then
   HISTFILE=$(cat ~/.check-files/zsh-history)
 fi
@@ -175,3 +172,6 @@ my-backward-delete-word() {
 }
 zle -N my-backward-delete-word
 bindkey '^W' my-backward-delete-word
+
+# 按下 Tab 鍵時展開別名
+zstyle ':completion:*' completer _expand_alias _complete _ignored

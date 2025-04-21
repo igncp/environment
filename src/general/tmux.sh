@@ -3,12 +3,6 @@
 set -e
 
 provision_setup_general_tmux() {
-  cat >/tmp/tmux_choose_session.sh <<"EOF"
-SESSION=$(tmux ls | grep -o '^.*: ' | sed 's|: ||' | fzf --color dark)
-if [ -z "$SESSION" ]; then exit 0; fi
-tmux switch-client -t "$SESSION"
-EOF
-
   cat >/tmp/tmux_choose_window.sh <<"EOF"
 WINDOW=$(tmux list-windows -a | sed 's|(.*||' | sed 's|\*||' | fzf --color dark)
 if [ -z "$WINDOW" ]; then exit 0; fi
@@ -100,8 +94,8 @@ EOF
   bind-key o command-prompt -p "join pane from:" "join-pane -s '%%'"
   bind-key u command-prompt -p "send pane to:" "join-pane -t '%%'"
 
-  bind b split-window 'bash /tmp/tmux_choose_session.sh'
-  bind v split-window 'bash /tmp/tmux_choose_window.sh'
+  bind b split-window 'bash /tmp/tmux_choose_window.sh'
+  bind v split-window 'bash /tmp/tmux_jump_window.sh'
 
   run '~/.tmux/plugins/tpm/tpm'
 EOF

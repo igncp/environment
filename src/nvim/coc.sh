@@ -14,8 +14,6 @@ provision_setup_nvim_coc() {
     return
   fi
 
-  install_nvim_package neoclide/coc.nvim
-
   cat >>~/.vimrc <<"EOF"
 let g:coc_global_extensions = []
 nnoremap <silent> K :call CocAction('doHover')<CR>
@@ -45,7 +43,6 @@ call add(g:coc_global_extensions, 'coc-snippets')
 call add(g:coc_global_extensions, 'coc-sh')
 call add(g:coc_global_extensions, 'coc-git')
 call add(g:coc_global_extensions, 'coc-lists')
-call add(g:coc_global_extensions, 'coc-sumneko-lua')
 call add(g:coc_global_extensions, 'coc-yaml')
 call add(g:coc_global_extensions, 'coc-docker')
 
@@ -134,6 +131,23 @@ EOF
       "args": ["--lsp"],
       "rootPatterns": ["*.cabal", "stack.yaml", "cabal.project", "package.yaml", "hie.yaml"],
       "filetypes": ["haskell", "lhaskell"]
+    },
+    "lua": {
+      "command": "lua-language-server",
+      "args": ["-E", "lua-language-server"],
+      "filetypes": ["lua"],
+      "settings": {
+        "Lua": {
+          "workspace.library": {
+            "/usr/share/nvim/runtime/lua": true,
+            "/usr/share/nvim/runtime/lua/vim": true,
+            "/usr/share/nvim/runtime/lua/vim/lsp": true
+          },
+          "diagnostics": {
+            "globals": ["vim"]
+          }
+        }
+      }
     },
     "terraform": {
       "command": "terraform-ls",

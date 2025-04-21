@@ -46,4 +46,4 @@ docker run -it \
   -e START_SCRIPT="$START_SCRIPT" \
   --name environment \
   debian:bookworm \
-  bash /home/igncp/development/environment/src/docker_environment/entrypoint.sh
+  bash /home/igncp/development/environment/src/docker_environment/entrypoint_debian.sh

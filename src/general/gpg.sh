@@ -3,6 +3,10 @@
 set -e
 
 provision_setup_general_gpg() {
+  if [ -f "$PROVISION_CONFIG"/no-gpg ]; then
+    return
+  fi
+
   # GnuPG https://wiki.archlinux.org/title/GnuPG
   install_system_package "gnupg" "gpg"
 

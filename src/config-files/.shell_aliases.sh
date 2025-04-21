@@ -5,7 +5,6 @@ alias agg='ag --hidden --ignore node_modules --ignore .git'
 alias b='bash'
 alias cp="cp -r"
 alias scp="scp -r"
-alias di='SudoNix dua interactive'
 alias dp="docker ps -a"
 alias f='fd --type f .'
 alias h="sad"
@@ -98,6 +97,8 @@ alias Vpn='(cd ~/development/environment && bash src/scripts/misc/vpn.sh)'
 
 alias UnameKernel='uname -r'
 
+alias UtilityFor='for i in $(seq 0 5); do echo $i ; done'
+
 FfmpegSubsList() {
   test -n "$1" || { echo "缺少影片路徑" && return 1; }
   nix-shell -p ffmpeg \
@@ -144,7 +145,10 @@ SSHGenerateStrongKey() {
   ssh-keygen -t ed25519 -f "$FILE"
 }
 alias SSHListLocalForwardedPorts='ps x -ww -o pid,command | ag ssh | grep --color=never localhost'
-SSHForwardPortLocal() { ssh -fN -L "$1":localhost:"$1" ${@:2}; } # SSHForwardPort 1234 192.168.1.40
+SSHForwardPortLocal() {
+  echo "Forwarding port: $1 for ${@:2}"
+  ssh -N -L "$1":localhost:"$1" ${@:2}
+} # SSHForwardPort 1234 192.168.1.40
 alias SSHDConfig='sudo sshd -T'
 SSHListConnections() { sudo netstat -tnpa | grep 'ESTABLISHED.*sshd'; }
 
@@ -243,7 +247,11 @@ ConfigProvisionList() {
   # Stop if no changes
   if [ "$INITIAL_SHA" = "$AFTER_SHA" ]; then return; fi
 
-  RebuildNix && Provision
+  if type nix >/dev/null 2>&1; then
+    RebuildNix && Provision
+  else
+    Provision
+  fi
 }
 
 alias ConfigProvisionListFzf='ConfigProvisionList fzf'
@@ -267,219 +275,224 @@ CargoDevGenerate() {
   echo "Binary '$BIN_NAME' built and moved to current directory"
 }
 
-alias NixFlakeUpdateInput='nix flake update' # NixFlakeUpdateInput ghostty
-alias NixListChannels='nix-channel --list'
-alias NixListGenerations="nix-env --list-generations"
-alias NixListPackages='nix-env --query "*"'
-alias NixRemovePackage='nix-env -e'
-alias NixReplPkgs="nix repl --expr 'import <nixpkgs>{}'"
-alias NixReplFlake='nix repl --expr "builtins.getFlake \"$PWD\""'
-alias NixDevelopPath='nix develop path:$(pwd)' # 也可以只運行指令: `NixDevelopPath -c cargo build`
-
-NixFindPointersToFile() {
-  ITEM="$1"
-  if [ -z "$(echo $ITEM | grep -F /nix/store || true)" ]; then
-    ITEM="/nix/store$ITEM"
-  fi
-  sudo find -L /home -samefile $ITEM 2>/dev/null
-}
-
-alias Nix_FileEval='nix-instantiate --eval'
-alias Nix_EnvInstallPackage='nix-env -iA'
-
-NixUpdateChannel() {
-  if type jq >/dev/null 2>&1; then
-    UNSTABLE_REV="$(cat ~/development/environment/flake.lock | jq -r '.nodes.unstable.locked.rev')"
-    if [ ! -f ~/.check-files/nix-channel ] || [ -z "$(cat ~/.check-files/nix-channel | grep $UNSTABLE_REV || true)" ]; then
-      echo "UNSTABLE_REV: $UNSTABLE_REV"
-      nix-channel --remove nixpkgs || true
-      nix-channel --add "https://github.com/NixOS/nixpkgs/archive/$UNSTABLE_REV.tar.gz" nixpkgs
-      nix-channel --update
-      nix-channel --list
-      echo "$UNSTABLE_REV" >~/.check-files/nix-channel
-    fi
-  fi
-}
-
-NixShell() {
-  nix-shell -p $@ --command zsh
-}
-
-NixClearSpaceOnly() {
-  nix-collect-garbage -d
-}
-
-ClearSpace() {
-  if [ -n "$(ps aux | ag 'tmux[ ]new-session')" ]; then
-    echo "您應該先停止 tmux，這樣就不會開啟 nix shell"
-    return
-  fi
-
-  if [ -n "$(ps aux | grep 'nvim' | grep -v 'grep')" ]; then
-    echo "你應該先停止nvim"
-    return
-  fi
-
-  echo "你應該先停止docker容器"
-  read "?你呼叫這個函數了嗎 'NixGCRootsDelete'?。 按 ctrl-c 停止。 "
-
-  sudo echo ''
-
-  RebuildNix
-
-  sudo rm -rf ~/.cache/composer
-  sudo rm -rf ~/.cache/go-build
-  sudo rm -rf ~/.cache/yarn
-  sudo rm -rf ~/.cargo
-  sudo rm -rf ~/.completions
-  sudo rm -rf ~/.config/coc
-  sudo rm -rf ~/.go-workspace
-  sudo rm -rf ~/.gradle
-  sudo rm -rf ~/.local/share/nvim
-  sudo rm -rf ~/.local/state/nvim
-  sudo rm -rf ~/.npm
-  sudo rm -rf ~/.rustup
-  sudo rm -rf ~/go
-  sudo rm -rf ~/nix-dirs
-
-  NixClearSpaceOnly
-
-  if [ -z "$(cd ~/development/environment && git --no-pager diff HEAD -- src/project_templates/web_apps)" ]; then
-    (cd ~/development/environment &&
-      sudo rm -rf src/project_templates/web_apps &&
-      git checkout -- src/project_templates/web_apps)
-  fi
-
-  if type docker >/dev/null 2>&1; then
-    docker network prune -f || true
-    docker system prune -af || true
-    docker volume prune -f || true
-  fi
-
-  if type podman >/dev/null 2>&1; then
-    podman kill $(podman ps -q)
-    podman system prune -af || true
-  fi
-
-  nvim --headless "+Lazy! sync" +qa
-
-  RebuildNix && Provision
-
-  echo '開發環境清理'
-}
-
-NixGCRoots() {
-  if [ -n "$1" ] && [ -n "$(echo $1 | grep .)" ]; then
-    nix-store --gc --print-roots 2>&1 | ag -v removing | ag -v censored | awk '{ print $1; }' |
-      ag $1 | xargs -I{} rm -rf {}
-  fi
-
-  nix-store --gc --print-roots 2>&1 | ag -v removing | ag -v censored | awk '{ print $1; }'
-}
-alias NixGCRootsDelete="bash ~/development/environment/src/scripts/toolbox/nix_garbage_collector_roots.sh -"
-
-NixListShellPkgs() {
-  echo $PATH | tr ':' '\n' | ag '/nix/store' | sed 's|^[^-]*-||' | sort | sed 's|-[.0-9]*/bin||' | uniq | l
-}
-
-NixListReferrers() {
-  # This is useful when copying from dua result
-  ITEM="$1"
-  if [ -z "$(echo $ITEM | grep -F /nix/store || true)" ]; then
-    ITEM="/nix/store$ITEM"
-  fi
-  nix-store --query --referrers $ITEM
-}
-
-NixListClosure() {
-  # This is useful when copying from dua result
-  ITEM="$1"
-  if [ -z "$(echo $ITEM | grep -F /nix/store || true)" ]; then
-    ITEM="/nix/store$ITEM"
-  fi
-  nix-store --query --referrers-closure $ITEM
-}
-
-NixPathInfo() {
-  # This is useful when copying from dua result
-  ITEM="$1"
-  if [ -z "$(echo $ITEM | grep -F /nix/store || true)" ]; then
-    ITEM="/nix/store$ITEM"
-  fi
-  nix path-info -Sh $ITEM
-}
-
-NixEnvironmentUpgrade() {
-  if [ -n "$(ps aux | ag 'tmux[ ]new-session')" ]; then
-    echo "您應該先停止 tmux，這樣就不會開啟 nix shell"
-    return
-  fi
-  cd ~/development/environment/src/project_templates/web_apps/tooling
-  npm upgrade --save --force
-  cd ~/development/environment
-  RustUpdateProvisionPackages
-  nix flake lock --update-input nixpkgs
-  nix flake lock --update-input unstable
-  nix flake lock --update-input home-manager
-  nix flake lock --update-input flake-utils
-  nix flake lock --update-input ghostty
-  rm -rf ~/.check-files/nix-channel
-  NixUpdateChannel
-  bash ~/development/environment/src/scripts/toolbox/nix_sync_input.sh ALL
-
-  echo "其他手動更新:"
-  grep -r '@upgrade' nix # @TODO: 透過取得最後的 git sha 自動升級它們
-
-  echo "環境升級了，現在可以清理GC、清理空間了"
-}
-
 alias HomeManagerInitFlake='nix run home-manager/release-24.05 -- init'
 alias HomeManagerDeleteGenerations='home-manager expire-generations "-1 second"'
 
-# The space is important to be able to also run other aliases (not only Nix
-# binaries):
-# https://linuxhandbook.com/run-alias-as-sudo/
-alias SudoNix='sudo --preserve-env=PATH env '
+if type nix >/dev/null 2>&1; then
+  alias di='SudoNix dua interactive'
 
-alias ProvisionNix="(RebuildNix && Provision)"
+  alias NixFlakeUpdateInput='nix flake update' # NixFlakeUpdateInput ghostty
+  alias NixListChannels='nix-channel --list'
+  alias NixListGenerations="nix-env --list-generations"
+  alias NixListPackages='nix-env --query "*"'
+  alias NixRemovePackage='nix-env -e'
+  alias NixReplPkgs="nix repl --expr 'import <nixpkgs>{}'"
+  alias NixReplFlake='nix repl --expr "builtins.getFlake \"$PWD\""'
+  alias NixDevelopPath='nix develop path:$(pwd)' # 也可以只運行指令: `NixDevelopPath -c cargo build`
 
-# 由於是通用命令而有不同的前綴
-RebuildNix() {
-  if [ -f /etc/os-release ] && [ -n "$(cat /etc/os-release | grep nixos || true)" ]; then
-    # 它需要 --impure 標誌，因為它導入/etc/nixos/configuration.nix配置
-    (cd ~/development/environment &&
-      sudo nixos-rebuild switch --show-trace --flake path:$PWD --impure)
-  fi
+  NixFindPointersToFile() {
+    ITEM="$1"
+    if [ -z "$(echo $ITEM | grep -F /nix/store || true)" ]; then
+      ITEM="/nix/store$ITEM"
+    fi
+    sudo find -L /home -samefile $ITEM 2>/dev/null
+  }
 
-  if type home-manager >/dev/null 2>&1; then
+  alias Nix_FileEval='nix-instantiate --eval'
+  alias Nix_EnvInstallPackage='nix-env -iA'
+
+  NixUpdateChannel() {
+    if type jq >/dev/null 2>&1; then
+      UNSTABLE_REV="$(cat ~/development/environment/flake.lock | jq -r '.nodes.unstable.locked.rev')"
+      if [ ! -f ~/.check-files/nix-channel ] || [ -z "$(cat ~/.check-files/nix-channel | grep $UNSTABLE_REV || true)" ]; then
+        echo "UNSTABLE_REV: $UNSTABLE_REV"
+        nix-channel --remove nixpkgs || true
+        nix-channel --add "https://github.com/NixOS/nixpkgs/archive/$UNSTABLE_REV.tar.gz" nixpkgs
+        nix-channel --update
+        nix-channel --list
+        echo "$UNSTABLE_REV" >~/.check-files/nix-channel
+      fi
+    fi
+  }
+
+  NixShell() {
+    nix-shell -p $@ --command zsh
+  }
+
+  NixClearSpaceOnly() {
+    nix-collect-garbage -d
+  }
+
+  ClearSpace() {
+    if [ -n "$(ps aux | ag 'tmux[ ]new-session')" ]; then
+      echo "您應該先停止 tmux，這樣就不會開啟 nix shell"
+      return
+    fi
+
+    if [ -n "$(ps aux | grep 'nvim' | grep -v 'grep')" ]; then
+      echo "你應該先停止nvim"
+      return
+    fi
+
+    echo "你應該先停止docker容器"
+    read "?你呼叫這個函數了嗎 'NixGCRootsDelete'?。 按 ctrl-c 停止。 "
+
+    sudo echo ''
+
+    RebuildNix
+
+    sudo rm -rf ~/.cache/composer
+    sudo rm -rf ~/.cache/go-build
+    sudo rm -rf ~/.cache/yarn
+    sudo rm -rf ~/.cargo
+    sudo rm -rf ~/.completions
+    sudo rm -rf ~/.config/coc
+    sudo rm -rf ~/.go-workspace
+    sudo rm -rf ~/.gradle
+    sudo rm -rf ~/.local/share/nvim
+    sudo rm -rf ~/.local/state/nvim
+    sudo rm -rf ~/.npm
+    sudo rm -rf ~/.rustup
+    sudo rm -rf ~/go
+    sudo rm -rf ~/nix-dirs
+
+    NixClearSpaceOnly
+
+    if [ -z "$(cd ~/development/environment && git --no-pager diff HEAD -- src/project_templates/web_apps)" ]; then
+      (cd ~/development/environment &&
+        sudo rm -rf src/project_templates/web_apps &&
+        git checkout -- src/project_templates/web_apps)
+    fi
+
+    if type docker >/dev/null 2>&1; then
+      docker network prune -f || true
+      docker system prune -af || true
+      docker volume prune -f || true
+    fi
+
+    if type podman >/dev/null 2>&1; then
+      podman kill $(podman ps -q)
+      podman system prune -af || true
+    fi
+
+    nvim --headless "+Lazy! sync" +qa
+
+    RebuildNix && Provision
+
+    echo '開發環境清理'
+  }
+
+  NixGCRoots() {
+    if [ -n "$1" ] && [ -n "$(echo $1 | grep .)" ]; then
+      nix-store --gc --print-roots 2>&1 | ag -v removing | ag -v censored | awk '{ print $1; }' |
+        ag $1 | xargs -I{} rm -rf {}
+    fi
+
+    nix-store --gc --print-roots 2>&1 | ag -v removing | ag -v censored | awk '{ print $1; }'
+  }
+  alias NixGCRootsDelete="bash ~/development/environment/src/scripts/toolbox/nix_garbage_collector_roots.sh -"
+
+  NixListShellPkgs() {
+    echo $PATH | tr ':' '\n' | ag '/nix/store' | sed 's|^[^-]*-||' | sort | sed 's|-[.0-9]*/bin||' | uniq | l
+  }
+
+  NixListReferrers() {
+    # This is useful when copying from dua result
+    ITEM="$1"
+    if [ -z "$(echo $ITEM | grep -F /nix/store || true)" ]; then
+      ITEM="/nix/store$ITEM"
+    fi
+    nix-store --query --referrers $ITEM
+  }
+
+  NixListClosure() {
+    # This is useful when copying from dua result
+    ITEM="$1"
+    if [ -z "$(echo $ITEM | grep -F /nix/store || true)" ]; then
+      ITEM="/nix/store$ITEM"
+    fi
+    nix-store --query --referrers-closure $ITEM
+  }
+
+  NixPathInfo() {
+    # This is useful when copying from dua result
+    ITEM="$1"
+    if [ -z "$(echo $ITEM | grep -F /nix/store || true)" ]; then
+      ITEM="/nix/store$ITEM"
+    fi
+    nix path-info -Sh $ITEM
+  }
+
+  NixEnvironmentUpgrade() {
+    if [ -n "$(ps aux | ag 'tmux[ ]new-session')" ]; then
+      echo "您應該先停止 tmux，這樣就不會開啟 nix shell"
+      return
+    fi
+    cd ~/development/environment/src/project_templates/web_apps/tooling
+    npm upgrade --save --force
+    cd ~/development/environment
+    RustUpdateProvisionPackages
+    nix flake lock --update-input nixpkgs
+    nix flake lock --update-input unstable
+    nix flake lock --update-input home-manager
+    nix flake lock --update-input flake-utils
+    nix flake lock --update-input ghostty
+    rm -rf ~/.check-files/nix-channel
     NixUpdateChannel
-    # 現在需要 --impure 來讀取配置
-    home-manager switch --impure --flake ~/development/environment/
-  fi
-}
+    bash ~/development/environment/src/scripts/toolbox/nix_sync_input.sh ALL
 
-# # To patch a binary interpreter path, for example for 'foo:
-# patchelf --set-interpreter /usr/lib64/ld-linux-aarch64.so.1 ./foo
-# # To read the current interpreter:
-# readelf -a ./foo | grep interpreter
-# # To print the dynamic libraries:
-# ldd -v ./foo
-# # To find libraries that need patching
-# ldd ./foo | grep 'not found'
-# # To find the interpreter in NixOS
-# cat $NIX_CC/nix-support/dynamic-linker
-# # To list the required dynamic libraries
-# patchelf --print-needed ./foo
+    echo "其他手動更新:"
+    grep -r '@upgrade' nix # @TODO: 透過取得最後的 git sha 自動升級它們
 
-NixFormat() {
-  if [ -n "$1" ]; then
-    alejandra $@
-    return
-  fi
-  alejandra ./**/*.nix
-}
+    echo "環境升級了，現在可以清理GC、清理空間了"
+  }
 
-alias Nu='nix-shell -p nushell --command nu'
+  # 該空間對於運行其他別名（不僅僅是 Nix 二進位）也很重要
+  # https://linuxhandbook.com/run-alias-as-sudo/
+  alias SudoNix='sudo --preserve-env=PATH env '
+
+  alias ProvisionNix="(RebuildNix && Provision)"
+
+  # 由於是通用命令而有不同的前綴
+  RebuildNix() {
+    if [ -f /etc/os-release ] && [ -n "$(cat /etc/os-release | grep nixos || true)" ]; then
+      # 它需要 --impure 標誌，因為它導入/etc/nixos/configuration.nix配置
+      (cd ~/development/environment &&
+        sudo nixos-rebuild switch --show-trace --flake path:$PWD --impure)
+    fi
+
+    if type home-manager >/dev/null 2>&1; then
+      NixUpdateChannel
+      # 現在需要 --impure 來讀取配置
+      home-manager switch --impure --flake ~/development/environment/
+    fi
+  }
+
+  # # To patch a binary interpreter path, for example for 'foo:
+  # patchelf --set-interpreter /usr/lib64/ld-linux-aarch64.so.1 ./foo
+  # # To read the current interpreter:
+  # readelf -a ./foo | grep interpreter
+  # # To print the dynamic libraries:
+  # ldd -v ./foo
+  # # To find libraries that need patching
+  # ldd ./foo | grep 'not found'
+  # # To find the interpreter in NixOS
+  # cat $NIX_CC/nix-support/dynamic-linker
+  # # To list the required dynamic libraries
+  # patchelf --print-needed ./foo
+
+  NixFormat() {
+    if [ -n "$1" ]; then
+      alejandra $@
+      return
+    fi
+    alejandra ./**/*.nix
+  }
+
+  alias Nu='nix-shell -p nushell --command nu'
+else
+  alias di='dua interactive'
+fi
 
 if type vegeta >/dev/null 2>&1; then
   VegetaAttack() {
