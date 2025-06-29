@@ -12,13 +12,13 @@
   java_pkg = with pkgs;
     {
       "" = openjdk;
-      "11\n" = openjdk11;
-      "17\n" = openjdk17;
+      "11" = openjdk11;
+      "17" = openjdk17;
     }
     ."${java_file_content}";
 in {
   pkgs-list =
     []
     ++ (lib.optional has_kotlin pkgs.kotlin)
-    ++ (lib.optional has_java java_pkg);
+    ++ (if has_java then [java_pkg pkgs.jdt-language-server] else []);
 }

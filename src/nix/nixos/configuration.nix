@@ -3,11 +3,13 @@
   lib,
   user,
   base-config,
+  unstable,
   ...
 }: let
   has-k3s = builtins.pathExists (base-config + "/k3s");
   has-gui = builtins.pathExists (base-config + "/gui");
   has-android = builtins.pathExists (base-config + "/android");
+  has-tailscale = builtins.pathExists (base-config + "/tailscale");
   has-custom = builtins.pathExists ./custom.nix;
 in {
   imports =
@@ -19,6 +21,7 @@ in {
     ++ (lib.optional has-custom ./custom.nix)
     ++ (lib.optional has-k3s ./k3s.nix)
     ++ (lib.optional has-android ./android.nix)
+    ++ (lib.optional has-tailscale ./tailscale.nix)
     ++ (lib.optional has-gui ./gui.nix);
 
   config = {
@@ -35,6 +38,7 @@ in {
     networking.networkmanager.enable = true;
 
     nixpkgs.config.allowUnfree = true;
+    nixpkgs.config.allowUnsupportedSystem = true;
 
     virtualisation.docker.enable = true;
     environment.variables = {
@@ -73,7 +77,7 @@ in {
       shell = pkgs.zsh;
     };
 
-    system.stateVersion = "24.11";
+    system.stateVersion = "25.05";
 
     services.journald.extraConfig = "SystemMaxUse=1G";
 

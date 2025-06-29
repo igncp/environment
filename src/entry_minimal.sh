@@ -16,10 +16,12 @@ provision_setup_minimal() {
   provision_setup_zsh
   provision_setup_general
   provision_setup_nvim
+  provision_setup_java
   provision_setup_js
   provision_setup_ruby
   provision_setup_rust
   provision_setup_cli_tools
   provision_setup_android
+  provision_setup_vscode
   provision_setup_end
 }

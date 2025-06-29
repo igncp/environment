@@ -141,4 +141,10 @@ EOF
 "rust-analyzer.inlayHints.reborrowHints.enable": "never",
 "rust-analyzer.inlayHints.typeHints.enable": false'
   fi
+
+  cat >>~/.shellrc <<"EOF"
+if type rustup >/dev/null 2>&1; then
+  rustup default 2>&1 >/dev/null || rustup default stable
+fi
+EOF
 }

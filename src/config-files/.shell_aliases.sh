@@ -646,3 +646,8 @@ ShellSource() {
 if type hyprctl >/dev/null 2>&1; then
   alias HyprlandClients='hyprctl clients' # 呢個指令會列出窗口
 fi
+
+if type mogrify >/dev/null 2>&1; then
+  alias ImageResize='mogrify -resize' # e.g. ImageResize 50% image1.jpg
+  alias ImageRotate='mogrify -rotate' # e.g. ImageRotate 90 image1.jpg
+fi

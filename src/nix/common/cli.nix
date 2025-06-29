@@ -37,7 +37,7 @@
 in {
   pkgs-list = with pkgs;
     [
-      aapt # https://developer.android.com/tools/aapt2
+      # aapt # https://developer.android.com/tools/aapt2
       act # https://github.com/nektos/act
       age # https://github.com/FiloSottile/age
       alejandra # https://github.com/kamadorueda/alejandra
@@ -67,6 +67,7 @@ in {
       go-2fa
       hostname # If using Alpine, the Busybox hostname is different
       htop
+      imagemagick # `mogrify`
       jq # https://github.com/jqlang/jq
       killall
       less
@@ -77,6 +78,7 @@ in {
       neovim-remote # https://github.com/mhinz/neovim-remote.git
       nil # https://github.com/oxalica/nil
       nix
+      nushell # https://www.nushell.sh/book/
       ollama
       patchelf
       pkg-config
@@ -153,6 +155,7 @@ in {
     ++ (lib.optional has_tailscale pkgs.tailscale)
     ++ (lib.optional has_mssql pkgs.sqlcmd)
     ++ (lib.optional has_qemu pkgs.guestfs-tools)
+    ++ (lib.optional has_qemu pkgs.qemu)
     ++ (lib.optional has_podman pkgs.podman)
     ++ (lib.optional has-iredis pkgs.iredis);
 }

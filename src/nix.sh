@@ -3,7 +3,7 @@
 set -e
 
 provision_setup_nix() {
-  if [ "$IS_WINDOWS" = "1" ]; then
+  if [ "$IS_WINDOWS" = "1" ] || [ -f "$PROVISION_CONFIG"/builtin-nix ]; then
     return
   fi
 

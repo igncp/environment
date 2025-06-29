@@ -2,13 +2,17 @@
   description = "Root flake for NixOS, Nix shells and Home Manager";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
     flake-utils.url = "github:numtide/flake-utils";
     unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    nixos-generators = {
+      url = "github:nix-community/nixos-generators";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     home-manager = {
       inputs.nixpkgs.follows = "nixpkgs";
-      url = "github:nix-community/home-manager/release-24.11";
+      url = "github:nix-community/home-manager/release-25.05";
     };
     ghostty.url = "github:ghostty-org/ghostty";
   };
@@ -21,6 +25,7 @@
     unstable,
     ghostty,
     nixos-hardware,
+    nixos-generators,
   }: let
     user = builtins.getEnv "USER";
   in
@@ -41,18 +46,24 @@
             pkgs
             stable-pkgs
             system
+            unstable
             ;
+        };
+        nixos-systems = import ./src/nix/systems.nix {
+          inherit pkgs stable-pkgs nixos-generators system nixpkgs;
         };
       in {
         inherit devShells;
-        packages = {
-          nixosConfigurations = nixos-entry;
-          homeConfigurations."${user}" = home-manager.lib.homeManagerConfiguration {
-            inherit pkgs;
-            modules = [./src/nix/home-manager/home.nix];
-            extraSpecialArgs = {inherit pkgs stable-pkgs;};
-          };
-        };
+        packages =
+          {
+            nixosConfigurations = nixos-entry;
+            homeConfigurations."${user}" = home-manager.lib.homeManagerConfiguration {
+              inherit pkgs;
+              modules = [./src/nix/home-manager/home.nix];
+              extraSpecialArgs = {inherit pkgs stable-pkgs;};
+            };
+          }
+          // nixos-systems;
       }
     );
 }

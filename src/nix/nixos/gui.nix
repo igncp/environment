@@ -19,7 +19,11 @@
   has_opt = infix: lib.optional (lib.strings.hasInfix infix gui-content);
 in {
   imports =
-    [./gui-rime.nix ./gui-virtualization.nix ./gui-gaming.nix]
+    [
+      ./gui-rime.nix
+      ./gui-virtualization.nix
+      ./gui-gaming.nix
+    ]
     ++ (lib.optional has-i3 ./gui_i3.nix)
     ++ (lib.optional has-nvidia ./gui-nvidia.nix)
     ++ (lib.optional has-cinnamon ./gui-cinnamon.nix);
@@ -34,6 +38,7 @@ in {
       arandr
       blueberry
       cairo
+      feh
       flameshot
       gedit
       gimp
@@ -71,6 +76,8 @@ in {
 
       unstable-pkgs.libreoffice-qt # 需要`unstable-pkgs`先可以用密碼保護嘅檔案
       hunspell
+
+      dillo
     ]
     ++ (lib.optional has-copyq copyq)
     ++ ((has_opt "electrum") electrum)
@@ -81,17 +88,15 @@ in {
     ++ ((has_opt "telegram") telegram-desktop)
     ++ ((has_opt "firefox") firefox)
     ++ ((has_opt "slack") slack)
-    ++ (
-      lib.optional (system == "x86_64-linux")
-      ghostty.packages.x86_64-linux.default
-    );
+    ++ ((has_opt "vscode") vscode)
+    ++ (lib.optional (system == "x86_64-linux") ghostty.packages.x86_64-linux.default);
 
   fonts.packages = with pkgs; [
     noto-fonts
     noto-fonts-cjk-sans
     noto-fonts-emoji
     liberation_ttf
-    (nerdfonts.override {fonts = ["Monofur"];})
+    pkgs.nerd-fonts.monofur
   ];
 
   programs.hyprland.enable = true;
@@ -128,7 +133,7 @@ in {
   services.printing.enable = true;
 
   # 聲音的
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;

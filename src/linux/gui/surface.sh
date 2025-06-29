@@ -17,12 +17,18 @@ provision_setup_gui_surface() {
     echo yes >"$PROVISION_CONFIG"/vpn_check
   fi
 
+  add_desktop_common \
+    "$HOME/development/environment/src/scripts/misc/launch_chrome_surface.sh" 'launch_chrome_surface' 'Launch Chrome in Surface'
+
   cat >>~/.shell_aliases <<'EOF'
 SurfaceDecreaseBrightness() {
   sudo brightnessctl s 10%-
 }
 SurfaceIncreaseBrightness() {
   sudo brightnessctl s 10%+
+}
+SurfaceBrightnessLowest() {
+  sudo brightnessctl s 1
 }
 Battery() {
   BATTERY_LINE="$(upower --enumerate | grep battery_BAT)"

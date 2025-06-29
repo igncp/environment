@@ -2,6 +2,9 @@
 
 set -e
 
+# 喺頂部執行呢個，等你喺決定用唔用 sudo 嗰陣可以喺「 main.sh 」入面用佢
+export IS_WINDOWS=$(uname -a | grep -c MINGW64 | grep 1 || true)
+
 provision_setup_env() {
   IS_LINUX=$(uname -a | grep -c Linux || true)
   IS_MAC=""
@@ -17,7 +20,6 @@ provision_setup_env() {
 
   THEME=$(cat "$PROVISION_CONFIG"/theme | tr -d '\n')
 
-  IS_WINDOWS=$(uname -a | grep -c MINGW64 | grep 1 || true)
   IS_DEBIAN=$(uname -a | grep -c Debian | grep 1 || uname -a | grep -c Ubuntu | grep 1 || true)
   IS_UBUNTU=$(uname -a | grep -c Ubuntu | grep 1 || true)
   IS_NIXOS=$(uname -a | grep -c NixOS || true)

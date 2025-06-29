@@ -13,6 +13,7 @@ set -e
 . src/general/shellcheck.sh
 . src/general/taskwarrior.sh
 . src/general/tmux.sh
+. src/general/nushell.sh
 
 provision_setup_general() {
   mkdir -p $HOME/.scripts/toolbox
@@ -280,4 +281,5 @@ EOF
   provision_setup_general_shellcheck
   provision_setup_general_taskwarrior
   provision_setup_general_tmux
+  provision_setup_general_nushell
 }

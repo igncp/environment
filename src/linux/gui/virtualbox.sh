@@ -3,7 +3,7 @@
 set -e
 
 provision_gui_virtualbox() {
-  if [ ! -f "$PROVISION_CONFIG"/virtualbox ]; then
+  if [ ! -f "$PROVISION_CONFIG"/gui-virtualbox ]; then
     return
   fi
 

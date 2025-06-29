@@ -10,6 +10,7 @@ in {
   dockerEnv = pkgs.mkShell {
     TZDIR = "${pkgs.tzdata}/share/zoneinfo";
     LOCALE_ARCHIVE = "${pkgs.glibcLocales}/lib/locale/locale-archive";
+    SSL_CERT_FILE = "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
 
     packages =
       cli-pkgs.pkgs-list
@@ -17,9 +18,13 @@ in {
       ++ go-pkgs.pkgs-list
       ++ (with pkgs; [
         bun
+        cacert
         glibcLocales
+        libyaml
+        ncurses5 # 對於 `tput`
         nodejs_22
         openssh # 對於 `sshd`
+        openssl
         rustup
         shadow
         su

@@ -15,6 +15,11 @@ provision_setup_os_mac() {
   cat >>~/.shellrc <<"EOF"
 umask 027
 export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
+
+if [ -d $HOME/Library/Android/sdk/build-tools ]; then
+  LATEST_PATH=$(ls -1 $HOME/Library/Android/sdk/build-tools | sort -V | tail -n 1)
+  export PATH="$HOME/Library/Android/sdk/build-tools/$LATEST_PATH:$PATH"
+fi
 EOF
 
   cat >>~/.shell_aliases <<"EOF"

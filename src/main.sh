@@ -16,7 +16,7 @@ provision_main() {
   if [ -f "$PROVISION_CONFIG"/minimal ]; then
     provision_setup_minimal
   else
-    if type sudo >/dev/null 2>&1; then
+    if [ "$IS_WINDOWS" != "1" ] && type sudo >/dev/null 2>&1; then
       sudo echo '在開始時詢問 sudo' >/dev/null
     fi
 

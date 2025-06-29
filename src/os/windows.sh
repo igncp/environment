@@ -43,7 +43,7 @@ alias n='nvim'
 
 alias ExplorerStartup='(cd $APPDATA/Microsoft/Windows/Start\ Menu/Programs/Startup/ && explorer.exe .)'
 alias ExplorerEnvironment='(cd $USERPROFILE/development/environment && explorer.exe .)'
-alias Provision="(cd ~/development/environment && bash src/windows.sh)"
+alias Provision="(cd ~/development/environment && bash src/main.sh)"
 alias HostsEdit='sudo vim /c/Windows/System32/Drivers/etc/hosts'
 
 if [ -f ~/.fzf.key-bindings.bash ]; then
@@ -68,6 +68,7 @@ EOF
     install_windows_package "JFLarvoire.Ag" "ag.exe"
     install_windows_package "junegunn.fzf" "fzf.exe"
     install_windows_package "gerardog.gsudo" "gsudo.exe"
+    winget install neovim || true
 
     if ! type "jq" >/dev/null; then
       echo "以管理員身份執行以下命令進行安裝 jq:"
@@ -80,6 +81,11 @@ EOF
   provision_setup_general_git
   provision_setup_general_fzf
   provision_setup_nvim_vim
+
+  if [ ! -f ~/.ssh/config ]; then
+    mkdir -p ~/.ssh
+    cp ~/development/environment/src/config-files/ssh-client-config ~/.ssh/config
+  fi
 
   echo 'syntax on' >>~/.vimrc
   mkdir -p ~/AppData/Local/nvim

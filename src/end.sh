@@ -43,7 +43,9 @@ EOF
     git config --global commit.gpgsign true
     git config --global user.signingkey "$(cat $PROVISION_CONFIG/git-ssh)" # 公開嘅 SSH 密鑰
     ## 如果Linux直接使用1Password，則需要這個
-    # git config --global gpg.ssh.program /opt/1Password/op-ssh-sign
+    if type op-ssh-sign >/dev/null 2>&1; then
+      git config --global gpg.ssh.program $(which op-ssh-sign)
+    fi
   fi
 
   git config --global core.editor nvim

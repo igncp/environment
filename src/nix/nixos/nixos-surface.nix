@@ -1,10 +1,10 @@
 {
   pkgs,
-  # nixos-hardware,
+  nixos-hardware,
   ...
 }: {
   imports = [
-    # nixos-hardware.nixosModules.microsoft-surface-go
+    nixos-hardware.nixosModules.microsoft-surface-go
   ];
 
   environment.systemPackages = with pkgs; [

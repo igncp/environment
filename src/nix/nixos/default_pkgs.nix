@@ -40,28 +40,37 @@ in {
       cacert
       dbus
       dnsutils
-      docker
       emojify
       file
       gcc
       gnupg
-      htop
       lshw
       openssl
       openssl.dev
-      openvpn
       pciutils # 包括 lspci
       ps_mem
       python3
       tree-sitter
       vnstat
+    ]
+    ++ (with unstable-pkgs; [
+      docker
+      htop
+      openvpn
+
+      # Windows
+
+      ms-sys
+      ntfs3g
+      parted
+      woeusb-ng
 
       # Coding
 
       bun
       nodejs_22
       rustup
-    ]
+    ])
     ++ cli-pkgs.pkgs-list
     ++ java-pkgs.pkgs-list
     ++ ruby-pkgs.pkgs-list

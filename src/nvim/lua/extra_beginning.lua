@@ -104,6 +104,7 @@ local nvim_plugins = {
   {
     "lukas-reineke/indent-blankline.nvim",
     main = "ibl",
+    commit = get_version("neovim.indent-blankline.nvim"),
     opts = {
       scope = {
         show_start = false,
@@ -119,6 +120,19 @@ local nvim_plugins = {
         use_default_keymaps = false,
       })
     end,
+  },
+  {
+    'nvim-flutter/flutter-tools.nvim',
+    lazy = false,
+    commit = get_version('neovim.flutter-tools.nvim'),
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'stevearc/dressing.nvim', -- 可選，對於 vim.ui.select
+    },
+    enabled = function()
+      return vim.fn.executable('dart') == 1
+    end,
+    config = true,
   },
   { "junegunn/limelight.vim",         commit = get_version("neovim.limelight.vim") },
   { "LnL7/vim-nix",                   commit = get_version("neovim.vim-nix") },

@@ -11,8 +11,8 @@
 #     喺 USB3入面大約需要5分鐘
 #     sudo umount /mnt
 #   NixOS:
-#     nix-shell -p ventoy
-#     sudo ventoy-web
+#     # SudoNix woeusb --device ~/Downloads/Win11_24H2_English_x64.iso /dev/sda
+#     # 應該要好耐
 #     ....
 
 # IME

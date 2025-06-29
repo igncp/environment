@@ -4,11 +4,10 @@
 
 1. 安裝: Terminal, Git shell (新增個人資料 to Terminal, 不要使用內建的 ssh 伺服器)
 2. 複製此 environment git 儲存庫
-3. 運行這個 shell 命令: `bash src/windows.sh`
+3. 運行這個 shell 命令: `bash src/main.sh`
 4. 安裝 Rust: https://www.rust-lang.org/tools/install
 5. 設定 ssh 剪貼簿命令
-6. 編輯檔案.ssh/config
-7: 使用此腳本配置中文 IME: [./installation.sh](./installation.sh)
+6: 使用此腳本配置中文 IME: [./installation.sh](./installation.sh)
 
 ## Sleep shortcut file
 
@@ -33,6 +32,7 @@ terminal, with admin privileges, run: `powercfg -hibernate off`
     - This is under "Interactions" in settings
 - 若要停用鈴聲：
     - 前往設定、個人資料、進階並更改鈴聲行為
+- 第一次執行此命令來保存歷史記錄: `echo "export PROMPT_COMMAND='history -a'" >> ~/.bashrc`
 
 ## 有用的鍵盤快捷鍵
 

@@ -85,7 +85,13 @@ EOF
     # https://github.com/hyprwm/Hyprland/tree/main/example
     cp \
       ~/development/environment/src/config-files/hyprland.conf \
-      ~/.config/hypr/hyprland.conf
+      /tmp/hyprland.conf
+
+    if [ "$IS_SURFACE" == "1" ]; then
+      sed -i 's|monitor=,preferred,auto,auto|monitor=,preferred,auto,1.6|' /tmp/hyprland.conf
+    fi
+
+    mv /tmp/hyprland.conf ~/.config/hypr/hyprland.conf
 
     if [ ! -f ~/.config/hypr/hyprpaper.conf ]; then
       touch ~/.config/hypr/hyprpaper.conf

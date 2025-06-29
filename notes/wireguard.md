@@ -1,0 +1,2 @@
+- https://www.wireguard.com/quickstart/
+- https://mjswensen.com/blog/how-to-set-up-a-wireguard-vpn-for-personal-use/
