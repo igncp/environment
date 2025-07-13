@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 # 安裝
 # - 進入 BIOS ：關機，按住調高音量按鈕，按住電源按鈕

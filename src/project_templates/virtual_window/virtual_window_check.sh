@@ -2,7 +2,7 @@
 
 # 呢個指令碼係由virtual-window-check.service 執行
 
-set -e
+set -euo pipefail
 
 SCRIPTPATH="$(
   cd -- "$(dirname "$0")" >/dev/null 2>&1

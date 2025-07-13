@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 provision_setup_nvim_textobj() {
   install_nvim_package wellle/targets.vim

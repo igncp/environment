@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 # cp \
 #    ~/development/environment/src/project_templates/gaming_backup/.retropie_bkp_env.sh \

@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 install_nvim_package() {
   REPONAME=$1
-  CMD=$2
+  CMD="${2:-}"
 
   EXTRA_CMD=""
   if [ -n "$CMD" ]; then

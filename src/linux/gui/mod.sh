@@ -132,7 +132,6 @@
 
 #     setup_lxde(context);
 #     setup_i3(context);
-#     setup_vscode(context);
 #     setup_rime(context);
 #     setup_copyq(context);
 #     setup_cinnamon(context);

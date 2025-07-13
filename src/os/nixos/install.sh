@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 # 腳步：
 # - 使用 dd 設定即時 USB

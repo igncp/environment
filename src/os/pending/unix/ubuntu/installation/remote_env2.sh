@@ -1,7 +1,7 @@
 # @TODO
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 if [ -z "$(whoami | grep igncp || true)" ]; then
   echo 'You should run this command as the user'

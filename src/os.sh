@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 . src/os/arch.sh
 . src/os/debian.sh

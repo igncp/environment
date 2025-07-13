@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 set -o pipefail
 
 QUERY_ID="$1"

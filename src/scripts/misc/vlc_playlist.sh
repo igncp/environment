@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 # This script is intended to play a series of videos remotely, for example from
 # a SSH session. It allows more flexibility than a common playlist, like

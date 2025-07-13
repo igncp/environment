@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 if [ -z "$1" ]; then
   echo 'b ~/development/environment/src/scripts/toolbox/nix_garbage_collector_roots.sh -'

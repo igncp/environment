@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -euo pipefail
 
 # Setup SD Card:
 # - Raspberry Pi 4: https://archlinuxarm.org/platforms/armv8/broadcom/raspberry-pi-4
@@ -73,7 +73,7 @@ systemctl restart sshd
 cat >/home/alarm/mount_igncp.sh <<"EOF"
 #!/bin/bash
 
-set -e
+set -euo pipefail
 
 sudo cryptsetup open /dev/mmcblk0p3 crypthome
 sudo mount /dev/mapper/crypthome /home/igncp

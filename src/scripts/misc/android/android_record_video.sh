@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 DEVICE=$(adb devices | grep 'device$' | awk '{ print $1; }')
 
@@ -9,7 +9,7 @@ if [ -z "$DEVICE" ]; then
   exit 1
 fi
 
-if [ -n "$1" ]; then
+if [ -n "${1:-}" ]; then
   echo "錄影完畢"
   adb -s "$DEVICE" pull /sdcard/video.mp4 /tmp/
 

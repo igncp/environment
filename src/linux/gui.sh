@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 . src/linux/gui/dunst.sh
 . src/linux/gui/i3.sh
@@ -33,7 +33,7 @@ EOF
 
   if [ -f "$PROVISION_CONFIG"/gui-xorg ]; then
     if [ ! -f ~/.check-files/gui-xorg ]; then
-      if [ ! -f "$PROVISION_CONFIG"/wayland ]; then
+      if [ ! -f "$PROVISION_CONFIG"/gui-wayland ]; then
         echo "Installing Xorg"
         install_system_package_os "xorg"
         install_system_package_os "xorg-xinit" startx

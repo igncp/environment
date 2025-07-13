@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 cat >docker_env.sh <<"EOF"
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 if [ -f /root/finished ]; then
   /bin/bash

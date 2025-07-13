@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 clone_dev_github_repo() {
   local DIR_PATH="$HOME/development/$1"

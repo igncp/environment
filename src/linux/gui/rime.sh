@@ -3,10 +3,6 @@
 # use crate::base::{config::Config, system::System, Context};
 
 # pub fn setup_rime(context: &mut Context) {
-#     if !Config::has_config_file(&context.system, ".config/rime") {
-#         return;
-#     }
-
 #     if context.system.is_mac() {
 #         println!("Mac provision for Rime is missing");
 

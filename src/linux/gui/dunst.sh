@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 setup_gui_dunst() {
   if ! type dunst >/dev/null 2>&1; then

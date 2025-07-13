@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 main() {
   local FILE_PATH=$(find . -type f | fzf)

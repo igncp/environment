@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 if [ -z $1 ]; then
   if [ ! -f /root/.check_files/init_docker ]; then

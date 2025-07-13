@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 provision_setup_homebrew() {
   if [ ! -f "$PROVISION_CONFIG"/homebrew ]; then

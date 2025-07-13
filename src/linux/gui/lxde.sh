@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 setup_gui_lxde() {
   if [ ! -f "$PROVISION_CONFIG"/gui-lxde ]; then
@@ -39,7 +39,7 @@ setup_gui_lxde() {
 #     }
 
 #     // picom: can be disabled due performance
-#     if !Config::has_config_file(&context.system, ".config/without-picom") {
+#     if !Config::has_config_file(&context.system, ) {
 #         context.system.install_system_package("picom", None);
 #         System::run_bash_command(
 #             r###"

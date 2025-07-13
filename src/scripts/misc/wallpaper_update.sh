@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 if [ -d ~/.config/variety/Downloaded ]; then
   IMAGE_PATH="$(find ~/.config/variety/Downloaded -type f -name *.jpg | shuf -n 1)"

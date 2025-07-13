@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 # This diff script displays the effect of copying the repo files in custom into
 # the external locations

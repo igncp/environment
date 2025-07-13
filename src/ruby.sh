@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 provision_setup_ruby() {
   cat >>~/.shell_aliases <<'EOF'
@@ -23,4 +23,8 @@ if type ruby > /dev/null 2>&1 ; then
   fi
 fi
 EOF
+
+  if [ -f "$PROVISION_CONFIG"/ruby ]; then
+    add_vscode_extension "shopify.ruby-lsp"
+  fi
 }

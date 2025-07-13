@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 provision_setup_general_pi_hole() {
   if [ ! -f "$PROVISION_CONFIG"/pi-hole ]; then

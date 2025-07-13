@@ -1,7 +1,7 @@
 # @TODO
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 # https://github.com/AsahiLinux/docs/wiki/Feature-Support
 

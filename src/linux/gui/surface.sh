@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 provision_setup_gui_surface() {
   if [ "$IS_SURFACE" != "1" ]; then

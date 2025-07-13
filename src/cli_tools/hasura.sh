@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 provision_setup_cli_tools_hasura() {
   if [ ! -f "$PROVISION_CONFIG"/cli-hasura ]; then

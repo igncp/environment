@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 USAGE='lang [SUBCOMMAND] [OPTIONS]
 Subcommands:

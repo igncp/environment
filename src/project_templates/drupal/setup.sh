@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 composer create-project drupal/recommended-project test_site
 cd test_site

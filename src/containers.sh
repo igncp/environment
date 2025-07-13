@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 provision_setup_containers() {
   if type zsh >/dev/null 2>&1; then
@@ -79,7 +79,7 @@ if type minikube >/dev/null 2>&1; then
 fi
 EOF
 
-  if [ -f "$PROVISION_CONFIG"/docker-skip ]; then
+  if [ -f "$PROVISION_CONFIG"/no-docker ]; then
     return
   fi
 

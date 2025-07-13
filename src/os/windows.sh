@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 install_windows_package() {
   if [ ! -d "$APPDATA/Microsoft/Windows/Start Menu/Programs/$2" ] &&

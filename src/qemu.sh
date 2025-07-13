@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -euo pipefail
 
 provision_setup_qemu() {
   # `virsh` 係一個用嚟管理虛擬機器嘅命令行介面工具

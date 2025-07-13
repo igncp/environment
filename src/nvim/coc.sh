@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 provision_setup_nvim_coc() {
   # ctrl-w,ctrl-p: move to floating window

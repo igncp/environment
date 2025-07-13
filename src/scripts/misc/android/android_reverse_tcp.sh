@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 DEVICE=$(adb devices | grep 'device$' | awk '{ print $1; }')
 

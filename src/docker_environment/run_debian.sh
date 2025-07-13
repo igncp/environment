@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 SCRIPT_PATH="$(
   cd -- "$(dirname "$0")" >/dev/null 2>&1

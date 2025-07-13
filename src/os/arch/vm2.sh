@@ -9,7 +9,7 @@
 # - Use `cfdisk` (already installed) to resize the partition
 # - Install `rsync` and clone the environment repo into the machine
 
-set -e
+set -euo pipefail
 
 pacman -S git --noconfirm
 useradd igncp -m

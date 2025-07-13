@@ -17,7 +17,7 @@ EOF
 
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 provision_setup_nvim_special_mappings() {
   echo '' >~/.special-vim-maps-from-provision.txt

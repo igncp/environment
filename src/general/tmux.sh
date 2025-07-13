@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 provision_setup_general_tmux() {
   cat >/tmp/tmux_choose_window.sh <<"EOF"
@@ -96,6 +96,7 @@ EOF
 
   bind b split-window 'bash /tmp/tmux_choose_window.sh'
   bind v split-window 'bash /tmp/tmux_jump_window.sh'
+  bind-key k split-pane -c "#{pane_current_path}" \; select-pane -t 0 \; kill-pane
 
   run '~/.tmux/plugins/tpm/tpm'
 EOF

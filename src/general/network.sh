@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 # https://wiki.archlinux.org/title/wireshark
 # https://docs.mitmproxy.org/stable/overview-installation/

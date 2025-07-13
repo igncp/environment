@@ -20,5 +20,13 @@ in {
   pkgs-list =
     []
     ++ (lib.optional has_kotlin pkgs.kotlin)
-    ++ (if has_java then [java_pkg pkgs.jdt-language-server] else []);
+    ++ (
+      if has_java
+      then [
+        java_pkg
+        pkgs.jdt-language-server
+        pkgs.gradle
+      ]
+      else []
+    );
 }

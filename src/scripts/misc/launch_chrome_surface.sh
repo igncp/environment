@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 # CPUQuota 會考慮到 CPU 嘅數量，喺 Surface 入面係4個
 

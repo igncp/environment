@@ -11,6 +11,7 @@
 
   gui-content = builtins.readFile (base-config + "/gui");
 
+  has-vscode = builtins.pathExists (base-config + "/gui-vscode");
   has-copyq = builtins.pathExists (base-config + "/copyq");
   has-cinnamon = builtins.pathExists (base-config + "/gui-cinnamon");
   has-i3 = builtins.pathExists (base-config + "/gui-i3");
@@ -88,7 +89,7 @@ in {
     ++ ((has_opt "telegram") telegram-desktop)
     ++ ((has_opt "firefox") firefox)
     ++ ((has_opt "slack") slack)
-    ++ ((has_opt "vscode") vscode)
+    ++ (lib.optional has-vscode vscode)
     ++ (lib.optional (system == "x86_64-linux") ghostty.packages.x86_64-linux.default);
 
   fonts.packages = with pkgs; [

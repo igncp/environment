@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 COLOR_GREEN="\e[32m"
 COLOR_BLUE="\e[34m"

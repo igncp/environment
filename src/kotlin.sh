@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 # 多平台配置: https://www.jetbrains.com/help/kotlin-multiplatform-dev/compose-multiplatform-create-first-app.html#next-step
 
@@ -13,10 +13,8 @@ fi
 EOF
 
   if type kotlinc &>/dev/null; then
-    cat >>/tmp/expected-vscode-extensions <<"EOF"
-fwcd.kotlin
-mathiasfrohlich.Kotlin
-esafirm.kotlin-formatter
-EOF
+    add_vscode_extension fwcd.kotlin
+    add_vscode_extension mathiasfrohlich.kotlin
+    add_vscode_extension esafirm.kotlin-formatter
   fi
 }

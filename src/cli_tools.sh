@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 . src/cli_tools/aws.sh
 . src/cli_tools/github.sh
@@ -23,7 +23,7 @@ provision_setup_cli_tools() {
 
     cat >~/.openvpn/_start_cli_template.sh <<"EOF"
 #!/usr/bin/env bash
-set -e
+set -euo pipefail
 sudo openvpn \
   --config $HOME/.openvpn/LOCATION.ovpn \
   --script-security 2 \

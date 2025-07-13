@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 provision_setup_dart() {
   if [ ! -f $PROVISION_CONFIG/dart ]; then

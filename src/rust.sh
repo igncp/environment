@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 install_cargo_crate() {
   NAME="$1"
@@ -23,7 +23,7 @@ provision_setup_rust() {
   if [ -f "$PROVISION_CONFIG"/no-rust ]; then
     rust_provision_cleanup
     return
-  elif [ "$IS_PROVISION_UPDATE" = "1" ]; then
+  elif [ "${IS_PROVISION_UPDATE:-0}" = "1" ]; then
     rust_provision_cleanup
   fi
 
@@ -132,6 +132,7 @@ EOF
 
   if [ ! -f "$PROVISION_CONFIG"/nvim-lspconfig ]; then
     provision_append_json ~/.vim/coc-settings.json '
+"rust-analyzer.cargo.features": "all",
 "rust-analyzer.inlayHints.bindingModeHints.enable": false,
 "rust-analyzer.inlayHints.chainingHints.enable": false,
 "rust-analyzer.inlayHints.closingBraceHints.enable": false,

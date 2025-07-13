@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 # 喺頂部執行呢個，等你喺決定用唔用 sudo 嗰陣可以喺「 main.sh 」入面用佢
 export IS_WINDOWS=$(uname -a | grep -c MINGW64 | grep 1 || true)

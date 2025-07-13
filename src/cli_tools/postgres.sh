@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 provision_setup_cli_tools_postgres() {
   if [ ! -f "$PROVISION_CONFIG"/postgres ]; then

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 . src/js/nodenv.sh
 . src/js/react_native.sh
@@ -145,9 +145,7 @@ if type -a bun &>/dev/null; then
 fi
 EOF
 
-  cat >>/tmp/expected-vscode-extensions <<"EOF"
-dbaeumer.vscode-eslint
-EOF
+  add_vscode_extension dbaeumer.vscode-eslint
 
   if [ -d ~/.local/share/nvim/lazy/markdown-preview.nvim/app ] &&
     [ ! -d ~/.local/share/nvim/lazy/markdown-preview.nvim/app/node_modules ]; then

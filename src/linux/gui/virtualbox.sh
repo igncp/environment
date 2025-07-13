@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 provision_gui_virtualbox() {
   if [ ! -f "$PROVISION_CONFIG"/gui-virtualbox ]; then

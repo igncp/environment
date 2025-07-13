@@ -7,7 +7,7 @@
 # `ssh user@host -t "sudo cat ~/usbkey.lek.asc" | grep -v 'password for' | sudo tee $HOME/usbkey.lek.asc > /dev/null`
 # Will have to enter the sudo password after connecting, even if there is no prompt
 
-set -e
+set -euo pipefail
 
 MOUNT_PATH=/mnt
 NAME=cryptdevice

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 provision_setup_nodenv() {
   cat >>~/.shellrc <<"EOF"
@@ -26,7 +26,7 @@ EOF
   if [ -f "$PROVISION_CONFIG"/no-node ]; then
     nodenv_cleanup_provision
     return
-  elif [ "$IS_PROVISION_UPDATE" = "1" ]; then
+  elif [ "${IS_PROVISION_UPDATE:-0}" = "1" ]; then
     nodenv_cleanup_provision
   fi
 

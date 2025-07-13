@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 cat >/tmp/bukkit.yml <<"EOF"
 # kubectl cp minecraft:bukkit.yml bukkit.yml

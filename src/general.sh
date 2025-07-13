@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 . src/general/diagrams.sh
 . src/general/fzf.sh

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 ./node_modules/.bin/eslint --ext .ts,.tsx,.js .
 

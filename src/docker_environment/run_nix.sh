@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 DOCKER_SOCKET=/var/run/docker.sock
 COMMAND=docker

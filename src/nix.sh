@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 provision_setup_nix() {
-  if [ "$IS_WINDOWS" = "1" ] || [ -f "$PROVISION_CONFIG"/builtin-nix ]; then
+  if [ "$IS_WINDOWS" = "1" ]; then
     return
   fi
 

@@ -3,7 +3,7 @@
 
 # Needs to be run as root or with sudo
 
-set -e
+set -euo pipefail
 
 sudo apt-get update
 

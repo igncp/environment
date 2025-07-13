@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 provision_setup_js_vue() {
   install_nvim_package "posva/vim-vue"

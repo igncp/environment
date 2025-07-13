@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 provision_setup_nvim_base() {
   if [ ! -f ~/.check-files/neovim ] || [ ! -f ~/.vimrc ]; then

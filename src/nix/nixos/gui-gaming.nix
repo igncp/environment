@@ -5,7 +5,7 @@
 }: let
   base_config = ../../../project/.config;
 
-  has_minecraft = builtins.pathExists (base_config + "/minecraft");
+  has_minecraft = builtins.pathExists (base_config + "/gui-minecraft");
 in {
   environment.systemPackages =
     []

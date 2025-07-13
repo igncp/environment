@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 # set -x
 
 # This file is intended to be copied, edited and run automatically
@@ -66,7 +66,7 @@ cp -r /root/.vimrc /mnt/root/
 cat >/mnt/root/init.sh <<"EOF"
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 set -x
 
 pacman -Syy

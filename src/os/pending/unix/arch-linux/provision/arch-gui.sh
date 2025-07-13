@@ -40,7 +40,7 @@ if [ -z "$ARM_ARCH" ]; then
     touch ~/project/provision/espansoCustom.yml
     mkdir -p ~/.config/espanso
     cat >/tmp/espanso_cp_config.sh <<"EOF"
-set -e
+set -euo pipefail
 cp ~/project/provision/espanso.yml ~/.config/espanso/default.yml
 cat ~/project/provision/espansoCustom.yml >> ~/.config/espanso/default.yml
 EOF

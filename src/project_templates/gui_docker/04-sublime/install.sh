@@ -2,7 +2,7 @@
 
 # 該腳本適用於儲存庫 debian docker 開發環境
 
-set -e
+set -euo pipefail
 
 sudo apt update
 sudo apt install -y wget gnupg

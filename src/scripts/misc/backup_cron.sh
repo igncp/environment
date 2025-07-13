@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 # Usage:
 # 30 */2 * * * bash /home/igncp/.scripts/backup_cron_usr.sh

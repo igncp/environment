@@ -1,7 +1,7 @@
 # @TODO
 #!/bin/bash
 
-set -e
+set -euo pipefail
 
 # v4: https://ubuntu.com/download/raspberry-pi
 # Tutorial: https://ubuntu.com/tutorials/how-to-install-ubuntu-on-your-raspberry-pi#1-overview

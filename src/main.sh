@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 if [ ! -f ~/.check-files/first-run ]; then
   echo "呢個條文仲未完全執行"

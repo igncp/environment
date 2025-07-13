@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 provision_setup_general_diagrams() {
   if [ ! -f "$PROVISION_CONFIG"/diagrams ]; then

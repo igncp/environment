@@ -12,7 +12,7 @@
 # `rsync -rhv --exclude project ./ root@192.x.x.x:/root/environment`
 # After the installation is done, you may have to disable PAM in sshd_config to login with the user
 
-set -e
+set -euo pipefail
 
 pacman -S --noconfirm base-devel
 

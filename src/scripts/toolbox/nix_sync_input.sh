@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 if [ ! -f ~/.scripts/.nix_sync_list_rc ]; then
   echo "echo 您必須建立包含所有可能的目錄的文件: "~/.scripts/.nix_sync_list_rc""

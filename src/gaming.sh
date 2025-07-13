@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 # 常見嘅設定:
 # - 加入 chromium 擴充程式，但係唔好以使用者身分登入

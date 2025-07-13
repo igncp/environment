@@ -9,7 +9,7 @@
 #   Choose to install SSH Server
 #   Takes several minutes to install
 
-set -e
+set -euo pipefail
 
 sudo apt-get update
 sudo apt-get install -y virtualbox-guest-dkms virtualbox-guest-utils

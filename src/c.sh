@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 provision_setup_c() {
   # astyle: http://astyle.sourceforge.net/astyle.html

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 provision_setup_top() {
   mkdir -p ~/.check-files
@@ -15,5 +15,4 @@ provision_setup_top() {
   echo '' >~/.inputrc
   echo '' >~/.bashrc
   echo '' >~/.zshrc
-  echo '' >/tmp/expected-vscode-extensions
 }

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 provision_setup_general_nushell() {
   if ! type nu >/dev/null 2>&1; then

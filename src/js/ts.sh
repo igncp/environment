@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 provision_setup_js_ts() {
   cat >>~/.vimrc <<'EOF'

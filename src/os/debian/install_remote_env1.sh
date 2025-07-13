@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 # set -x # Uncomment for debugging
 
@@ -45,7 +45,7 @@ echo "create_droplet.sh finished successfully"
 # `prepare_root.sh`
 
 ssh -p 22 root@REMOTE_HOSTNAME -i SSH_KEY_PATH bash <<'EOF'
-set -e
+set -euo pipefail
 
 # Remember to allow the port in the local machine too
 sudo sed -i 's|#Port .*|Port PORT|' /etc/ssh/sshd_config
@@ -95,7 +95,7 @@ ssh -t -p PORT root@REMOTE_HOSTNAME -i SSH_KEY_PATH "useradd -m igncp ; echo 'Pa
 ssh -t -p PORT root@REMOTE_HOSTNAME -i SSH_KEY_PATH "useradd -m init ; echo 'Password for init' ; passwd init"
 
 ssh -p PORT root@REMOTE_HOSTNAME -i SSH_KEY_PATH bash <<EOF
-set -e
+set -euo pipefail
 
 echo 'cryptsetup open /dev/sda1 cryptmain ; mount /dev/mapper/cryptmain /home/igncp' > /home/init/init.sh
 chmod 701 /home/init/init.sh ; chown root:root /home/init/init.sh
@@ -131,7 +131,7 @@ rsync -e 'ssh -i SSH_KEY_PATH -p PORT' \
   igncp@REMOTE_HOSTNAME:/home/igncp/environment/
 
 cat >/tmp/prepare_igncp.sh <<"EOF"
-set -e
+set -euo pipefail
 sudo sed -i 's|^PermitRootLogin yes|PermitRootLogin no|' /etc/ssh/sshd_config
 sudo sed -i 's|^PasswordAuthentication yes|PasswordAuthentication no|' /etc/ssh/sshd_config
 
@@ -198,7 +198,7 @@ echo "prepare_igncp.sh finished successfully"
 # - DROPLET_IMPORTANT
 # - DROPLET_NAME
 
-set -e
+set -euo pipefail
 
 DROPLET_ID=$(doctl compute droplet list | grep -v DROPLET_IMPORTANT | grep DROPLET_NAME | awk '{print $1}')
 doctl compute droplet delete --force $DROPLET_ID
@@ -206,6 +206,6 @@ echo "Droplet DROPLET_NAME deleted"
 
 # `doctl_logout.sh`
 
-set -e
+set -euo pipefail
 doctl auth remove --context default
 echo "doctl logout"

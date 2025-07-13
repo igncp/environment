@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 provision_setup_python() {
   if [ "$IS_WINDOWS" = "1" ]; then
@@ -12,7 +12,7 @@ provision_setup_python() {
     touch ~/.check-files/python3-venv
   fi
 
-  if [ "$IS_PROVISION_UPDATE" = "1" ]; then
+  if [ "${IS_PROVISION_UPDATE:-}" = "1" ]; then
     rm -rf ~/.local/poetry ~/.local/bin/poetry
   fi
 

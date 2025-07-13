@@ -1,7 +1,7 @@
 # @TODO
 #!/bin/bash
 
-set -e
+set -euo pipefail
 
 # Download: https://retropie.org.uk/download/
 # **Important**: Decompress the file: gzip -d FILE_NAME.img.gz

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 # If the path is absolute, return it. Otherwise, try to find the path relative
 # to the current working directory. If the path is not found, try to find it

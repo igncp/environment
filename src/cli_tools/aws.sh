@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 # https://docs.aws.amazon.com/cli/latest/reference/
 provision_setup_cli_tools_aws() {

@@ -1,6 +1,6 @@
 # https://qiita.com/shtnkgm/items/c96a58579ec406194fa8
 
-set -e
+set -euo pipefail
 
 rm -rf ~/Library/Caches/com.apple.dt.Xcode/
 xcodebuild clean

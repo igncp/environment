@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 provision_setup_os_mac() {
   # Rime - Squirrel
@@ -19,6 +19,10 @@ export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
 if [ -d $HOME/Library/Android/sdk/build-tools ]; then
   LATEST_PATH=$(ls -1 $HOME/Library/Android/sdk/build-tools | sort -V | tail -n 1)
   export PATH="$HOME/Library/Android/sdk/build-tools/$LATEST_PATH:$PATH"
+fi
+
+if [ -d "/Applications/Visual Studio Code.app/Contents/Resources/app/bin" ]; then
+  export PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:$PATH"
 fi
 EOF
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 # https://www.jetbrains.com/idea/download/
 # https://sookocheff.com/post/vim/neovim-java-ide/

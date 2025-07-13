@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 provision_setup_general_gpg() {
   if [ -f "$PROVISION_CONFIG"/no-gpg ]; then

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
 setup_gui_vnc() {
   # 用嚟做新嘅顯示器

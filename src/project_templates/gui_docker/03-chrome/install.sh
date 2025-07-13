@@ -2,7 +2,7 @@
 
 # 該腳本適用於儲存庫 debian docker 開發環境
 
-set -e
+set -euo pipefail
 
 mkdir ~/chrome_install
 cd ~/chrome_install
