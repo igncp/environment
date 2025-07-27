@@ -10,7 +10,7 @@
     cursor_blink = False
     cursor_color = "#ffbcfc"
     cursor_color_fg = False
-    font = Monofur Nerd Font Mono 14
+    font = Monofur Nerd Font Mono 16
     show_titlebar = False
     scrollbar_position = hidden
     word_chars = "-,./?%&#_~+@:"

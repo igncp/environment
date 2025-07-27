@@ -1,26 +1,26 @@
 {
-  base_config,
+  base-config,
   pkgs,
   lib,
 }: let
-  has_cli_hasura = builtins.pathExists (base_config + "/cli-hasura");
-  has_cli_openvpn = builtins.pathExists (base_config + "/cli-openvpn");
-  has_hashi = builtins.pathExists (base_config + "/hashi");
-  has_pg = builtins.pathExists (base_config + "/postgres");
-  has_aws = builtins.pathExists (base_config + "/cli-aws");
-  has_shellcheck = builtins.pathExists (base_config + "/shellcheck");
-  has_azure = builtins.pathExists (base_config + "/azure");
-  has_stripe = builtins.pathExists (base_config + "/stripe");
-  has_tailscale = builtins.pathExists (base_config + "/tailscale");
-  has_podman = builtins.pathExists (base_config + "/podman");
-  has_mssql = builtins.pathExists (base_config + "/mssql");
-  has_qemu = builtins.pathExists (base_config + "/qemu");
-  has_logdy = builtins.pathExists (base_config + "/logdy");
-  has-iredis = builtins.pathExists (base_config + "/iredis");
+  has_cli_hasura = builtins.pathExists (base-config + "/cli-hasura");
+  has_cli_openvpn = builtins.pathExists (base-config + "/cli-openvpn");
+  has_hashi = builtins.pathExists (base-config + "/hashi");
+  has_pg = builtins.pathExists (base-config + "/postgres");
+  has_aws = builtins.pathExists (base-config + "/cli-aws");
+  has_shellcheck = builtins.pathExists (base-config + "/shellcheck");
+  has_azure = builtins.pathExists (base-config + "/azure");
+  has_stripe = builtins.pathExists (base-config + "/stripe");
+  has_tailscale = builtins.pathExists (base-config + "/tailscale");
+  has_podman = builtins.pathExists (base-config + "/podman");
+  has_mssql = builtins.pathExists (base-config + "/mssql");
+  has_qemu = builtins.pathExists (base-config + "/qemu");
+  has_logdy = builtins.pathExists (base-config + "/logdy");
+  has-iredis = builtins.pathExists (base-config + "/iredis");
 
   logdy = import ../derivations/logdy.nix {inherit pkgs;};
 
-  no_watchman = builtins.pathExists (base_config + "/no-watchman");
+  no_watchman = builtins.pathExists (base-config + "/no-watchman");
 
   is_linux =
     (pkgs.system == "x86_64-linux")
@@ -65,6 +65,7 @@ in {
       gnupg
       gnused
       go-2fa
+      gum # https://github.com/charmbracelet/gum
       hostname # If using Alpine, the Busybox hostname is different
       htop
       imagemagick # `mogrify`
@@ -111,7 +112,12 @@ in {
     ++ tmux-pkgs
     ++ (
       if has_hashi
-      then with pkgs; [terraform-ls terraform vagrant]
+      then
+        with pkgs; [
+          terraform-ls
+          terraform
+          vagrant
+        ]
       else []
     )
     ++ (
@@ -142,7 +148,12 @@ in {
     )
     ++ (
       if has_aws
-      then with pkgs; [awscli2 eksctl awsebcli]
+      then
+        with pkgs; [
+          awscli2
+          eksctl
+          awsebcli
+        ]
       else []
     )
     ++ (lib.optional has_shellcheck pkgs.shellcheck)

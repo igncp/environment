@@ -3,7 +3,6 @@
   lib,
   user,
   base-config,
-  unstable,
   ...
 }: let
   has-k3s = builtins.pathExists (base-config + "/k3s");
@@ -73,7 +72,13 @@ in {
     users.users."${user}" = {
       isNormalUser = true;
       home = "/home/${user}";
-      extraGroups = ["wheel" "docker" "audio" "video" "networkmanager"];
+      extraGroups = [
+        "wheel"
+        "docker"
+        "audio"
+        "video"
+        "networkmanager"
+      ];
       shell = pkgs.zsh;
     };
 

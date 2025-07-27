@@ -15,7 +15,7 @@ mkdir -p ~/.ssh && curl https://github.com/igncp.keys >~/.ssh/authorized_keys
 mkdir -p ~/development/environment/project/.config
 touch ~/development/environment/project/.config/gui
 echo no >~/development/environment/project/.config/nvidia
-sudo cp ~/development/environment/src/nix/nixos/templates/configuration-gui.nix /etc/nixos/configuration.nix
+sudo cp ~/development/environment/src/nix/nixos/templates/configuration.nix /etc/nixos/configuration.nix
 cd ~/development/environment
 sudo nixos-rebuild switch --show-trace --flake path:"$PWD" --impure # 在環境倉庫中
 bash src/main.sh

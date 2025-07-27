@@ -133,6 +133,7 @@ EOF
   if [ ! -f "$PROVISION_CONFIG"/nvim-lspconfig ]; then
     provision_append_json ~/.vim/coc-settings.json '
 "rust-analyzer.cargo.features": "all",
+"rust-analyzer.cargo.cfgs": [],
 "rust-analyzer.inlayHints.bindingModeHints.enable": false,
 "rust-analyzer.inlayHints.chainingHints.enable": false,
 "rust-analyzer.inlayHints.closingBraceHints.enable": false,

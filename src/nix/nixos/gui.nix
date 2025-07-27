@@ -9,15 +9,20 @@
 }: let
   base-config = ../../../project/.config;
 
-  gui-content = builtins.readFile (base-config + "/gui");
-
-  has-vscode = builtins.pathExists (base-config + "/gui-vscode");
-  has-copyq = builtins.pathExists (base-config + "/copyq");
   has-cinnamon = builtins.pathExists (base-config + "/gui-cinnamon");
   has-i3 = builtins.pathExists (base-config + "/gui-i3");
   has-nvidia = builtins.readFile (base-config + "/nvidia") == "yes\n";
 
-  has_opt = infix: lib.optional (lib.strings.hasInfix infix gui-content);
+  common-gui = import ../common/gui.nix {
+    inherit
+      lib
+      pkgs
+      system
+      unstable-pkgs
+      user
+      base-config
+      ;
+  };
 in {
   imports =
     [
@@ -33,31 +38,6 @@ in {
 
   environment.systemPackages = with pkgs;
     [
-      _1password-cli
-      acpi
-      anki-bin
-      arandr
-      blueberry
-      cairo
-      feh
-      flameshot
-      gedit
-      gimp
-      google-chrome
-      gtk4
-      keepass
-      libsForQt5.qt5ct
-      nextcloud-client
-      pavucontrol
-      pdfsam-basic # https://github.com/torakiki/pdfsam # 需要將語言轉做英文
-      rpi-imager # 需要暫時將用戶加入'disk'群組: `sudo usermod -aG disk $USER`
-      variety
-      vlc
-      webcamoid
-
-      realvnc-vnc-viewer
-      tigervnc
-
       # Hyprland
 
       brightnessctl
@@ -72,33 +52,11 @@ in {
       wdisplays
       wev
       wl-clipboard
-
-      # Libre Office
-
-      unstable-pkgs.libreoffice-qt # 需要`unstable-pkgs`先可以用密碼保護嘅檔案
-      hunspell
-
-      dillo
     ]
-    ++ (lib.optional has-copyq copyq)
-    ++ ((has_opt "electrum") electrum)
-    ++ ((has_opt "discord") discord)
-    ++ ((has_opt "terminator") terminator)
-    ++ ((has_opt "zoom") zoom-us)
-    ++ ((has_opt "steam") steam)
-    ++ ((has_opt "telegram") telegram-desktop)
-    ++ ((has_opt "firefox") firefox)
-    ++ ((has_opt "slack") slack)
-    ++ (lib.optional has-vscode vscode)
+    ++ common-gui.packages
     ++ (lib.optional (system == "x86_64-linux") ghostty.packages.x86_64-linux.default);
 
-  fonts.packages = with pkgs; [
-    noto-fonts
-    noto-fonts-cjk-sans
-    noto-fonts-emoji
-    liberation_ttf
-    pkgs.nerd-fonts.monofur
-  ];
+  fonts.packages = common-gui.fonts;
 
   programs.hyprland.enable = true;
 

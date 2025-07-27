@@ -55,6 +55,7 @@ EOF
     if [ ! -f ~/.config/rofi/config.rasi ]; then
       rm -rf ~/rofi_theme
       git clone https://github.com/dracula/rofi ~/rofi_theme
+      (cd ~/rofi_theme && git reset --hard 459eee3) # @upgrade
       cp ~/rofi_theme/theme/config1.rasi ~/.config/rofi/config.rasi
       rm -rf ~/rofi_theme
       sed -i '/font: /d' ~/.config/rofi/config.rasi

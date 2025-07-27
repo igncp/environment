@@ -96,6 +96,7 @@ EOF
 
   bind b split-window 'bash /tmp/tmux_choose_window.sh'
   bind v split-window 'bash /tmp/tmux_jump_window.sh'
+  bind n switch-client -t "notes:0"
   bind-key k split-pane -c "#{pane_current_path}" \; select-pane -t 0 \; kill-pane
 
   run '~/.tmux/plugins/tpm/tpm'

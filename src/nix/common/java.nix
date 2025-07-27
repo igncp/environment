@@ -1,12 +1,12 @@
 {
   pkgs,
   lib,
-  base_config,
+  base-config,
 }: let
-  java_file = base_config + "/java";
+  java_file = base-config + "/java";
 
   has_java = builtins.pathExists java_file;
-  has_kotlin = builtins.pathExists (base_config + "/kotlin");
+  has_kotlin = builtins.pathExists (base-config + "/kotlin");
 
   java_file_content = builtins.readFile java_file;
   java_pkg = with pkgs;

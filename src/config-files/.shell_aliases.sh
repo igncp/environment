@@ -464,7 +464,7 @@ if type nix >/dev/null 2>&1; then
     if type home-manager >/dev/null 2>&1; then
       NixUpdateChannel
       # 現在需要 --impure 來讀取配置
-      home-manager switch --impure --flake ~/development/environment/
+      home-manager switch --impure --show-trace --flake ~/development/environment/
     fi
   }
 

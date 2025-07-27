@@ -116,7 +116,16 @@ EOF
     },
     "nix": {
       "command": "nil",
-      "filetypes": ["nix"]
+      "filetypes": ["nix"],
+      "settings": {
+        "nil": {
+          "nix": {
+            "flake": {
+              "autoArchive": false
+            }
+          }
+        }
+      }
     },
     "ruby_lsp": {
       "command": "ruby-lsp",

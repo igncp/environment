@@ -37,10 +37,6 @@
 #         install_with_yay(context, "skypeforlinux-stable-bin", Some("skypeforlinux"));
 #     }
 
-#     if Config::has_config_file(&context.system, ".config/gui-slack") {
-#         install_with_yay(context, "slack-desktop", Some("slack"));
-#     }
-
 #     if Config::has_config_file(&context.system, ".config/gui-postman") {
 #         install_with_yay(context, "postman-bin", Some("postman"));
 #     }

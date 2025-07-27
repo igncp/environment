@@ -12,7 +12,7 @@ ALL_DIRS=$(cat ~/.scripts/.nix_sync_list_rc)
 ALL_DIRS="$ALL_DIRS
 ~/development/environment/src/scripts/specific/deluge_custom_client"
 
-if [ -z "$1" ]; then
+if [ -z "${1:-}" ]; then
   echo "ALL" >/tmp/nix_sync_list_rc
   echo "$ALL_DIRS" >>/tmp/nix_sync_list_rc
 

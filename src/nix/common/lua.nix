@@ -1,8 +1,8 @@
 {
   pkgs,
-  base_config,
+  base-config,
 }: let
-  has_lua = builtins.pathExists (base_config + "/lua");
+  has_lua = builtins.pathExists (base-config + "/lua");
 in rec {
   lua_pkgs = with pkgs; [
     lua

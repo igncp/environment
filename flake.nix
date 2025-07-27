@@ -60,7 +60,7 @@
             homeConfigurations."${user}" = home-manager.lib.homeManagerConfiguration {
               inherit pkgs;
               modules = [./src/nix/home-manager/home.nix];
-              extraSpecialArgs = {inherit pkgs stable-pkgs;};
+              extraSpecialArgs = {inherit pkgs stable-pkgs ghostty;};
             };
           }
           // nixos-systems;

@@ -1,10 +1,10 @@
 {
   pkgs,
-  base_config,
+  base-config,
 }: let
-  ruby_file = base_config + "/ruby";
+  ruby_file = base-config + "/ruby";
   has_ruby = builtins.pathExists ruby_file;
-  has_rbenv = builtins.pathExists (base_config + "/rbenv");
+  has_rbenv = builtins.pathExists (base-config + "/rbenv");
   ruby_file_content = builtins.readFile ruby_file;
   extra_pkgs = [];
   ruby_pkg = with pkgs;

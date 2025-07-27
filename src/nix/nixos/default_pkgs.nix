@@ -4,35 +4,35 @@
   unstable-pkgs,
   ...
 }: let
-  base_config = ../../../project/.config;
+  base-config = ../../../project/.config;
 
   cli-pkgs = import ../common/cli.nix {
-    inherit base_config;
+    inherit base-config;
     lib = unstable-pkgs.lib;
     pkgs = unstable-pkgs;
   };
 
   java-pkgs = import ../common/java.nix {
-    inherit base_config;
+    inherit base-config;
     lib = unstable-pkgs.lib;
     pkgs = unstable-pkgs;
   };
   ruby-pkgs = import ../common/ruby.nix {
-    inherit base_config;
+    inherit base-config;
     pkgs = unstable-pkgs;
   };
   go-pkgs = import ../common/go.nix {
-    inherit base_config;
+    inherit base-config;
     pkgs = unstable-pkgs;
   };
   dart-pkgs = import ../common/dart.nix {
-    inherit base_config;
+    inherit base-config;
     pkgs = unstable-pkgs;
   };
 
   emojify = import ./emojify.nix {inherit pkgs;};
 
-  has_c = builtins.pathExists (base_config + "/c");
+  has_c = builtins.pathExists (base-config + "/c");
 in {
   environment.systemPackages = with pkgs;
     [

@@ -1,4 +1,4 @@
-use crate::base::IConfig;
+use crate::base::{ConfigItemId, IConfig};
 use crate::ui::{DetailPage, ListPage, StatefulList, UI};
 use crossterm::event::{self, Event, KeyCode};
 use std::{error::Error, io};
@@ -15,12 +15,16 @@ pub struct App<'a> {
     config_handler: &'a mut dyn IConfig,
     current_screen: Screen,
     filter_text: String,
-    items_state: StatefulList<String>,
+    items_state: StatefulList<ConfigItemId>,
 }
 
 impl<'a> App<'a> {
     pub fn new(config_handler: &mut impl IConfig) -> App {
-        let all_possible_config = config_handler.get_all_possible().clone();
+        let all_possible_config = config_handler
+            .get_all_possible()
+            .iter()
+            .map(|x| x.id.clone())
+            .collect::<Vec<ConfigItemId>>();
 
         App {
             config_handler,
@@ -67,7 +71,9 @@ impl<'a> App<'a> {
                 .get_config_content(line_text)
                 .unwrap_or(&empty_content);
 
-            let is_enabled = self.config_handler.is_config_enabled(line_text);
+            let is_enabled = self
+                .config_handler
+                .is_config_enabled(&line_text.to_string());
 
             let mut full_line_text = line_text.to_string();
             if is_enabled && content != &empty_content {
@@ -110,8 +116,16 @@ impl<'a> App<'a> {
             self.config_handler
                 .get_all_possible()
                 .iter()
-                .filter(|x| x.to_lowercase().contains(&self.filter_text.to_lowercase()))
-                .cloned()
+                .filter_map(|x| {
+                    if x.id
+                        .to_lowercase()
+                        .contains(&self.filter_text.to_lowercase())
+                    {
+                        Some(x.id.clone())
+                    } else {
+                        None
+                    }
+                })
                 .collect(),
         );
 

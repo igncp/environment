@@ -118,10 +118,6 @@ EOF
 
   mkdir -p ~/.vim-snippets
 
-  install_nvim_package junegunn/fzf "cd ~/.local/share/nvim/lazy/fzf && ./install --all; cd -"
-
-  install_nvim_package "junegunn/fzf.vim"
-
   if [ ! -f ~/development/environment/project/.vim-custom.lua ]; then
     touch ~/development/environment/project/.vim-custom.lua
   fi
@@ -143,10 +139,6 @@ EOF
 [mergetool "vimdiff"]
   cmd = "$EDITOR" -p $MERGED $LOCAL $BASE $REMOTE
 EOF
-
-  if [ -f "$PROVISION_CONFIG"/copilot ]; then
-    install_nvim_package github/copilot.vim
-  fi
 
   if [ "$THEME" == "dark" ]; then
     sed -i "s|vim.g.limelight_conceal_ctermfg = 'LightGray'|vim.g.limelight_conceal_ctermfg = 'DarkGray'|" \

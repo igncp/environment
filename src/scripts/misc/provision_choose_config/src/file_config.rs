@@ -1,11 +1,11 @@
-use crate::base::IConfig;
+use crate::base::{ConfigItem, ConfigItemId, ConfigItemType, IConfig};
 use std::io::Write;
 use std::{
     collections::{HashMap, HashSet},
     fs::File,
 };
 
-fn get_all_items() -> Vec<String> {
+fn get_all_items() -> Vec<ConfigItem> {
     let possible_config_rust = std::process::Command::new("bash")
         .arg("-c")
         .arg(r#"grep --no-file -rEo '".config/([_a-zA-Z0-9-])*"' ~/development/environment | sort | uniq"#)
@@ -70,29 +70,74 @@ fn get_all_items() -> Vec<String> {
         .map(|x| x.replace("base-config +", ""))
         .collect::<Vec<String>>();
 
-    let mut all_possible_config = possible_config_rust
+    let gui_contents = std::process::Command::new("bash")
+        .arg("-c")
+        .arg(
+            r#"grep --no-file -rEo 'has-gui-opt "[/a-z0-9-]*"' ~/development/environment/src/nix | sort | uniq"#,
+        )
+        .output()
+        .expect("Failed to execute command")
+        .stdout
         .iter()
-        .chain(possible_config_bash.iter())
-        .chain(possible_config_lua.iter())
-        .chain(possible_config_nix.iter())
-        .map(|x| x.replace(&['(', ')', '"', '\'', '/', ','][..], ""))
-        .map(|x| x.replace("[^", ""))
-        .map(|x| x.trim().to_string())
-        .filter(|x| !x.is_empty())
+        .map(|x| *x as char)
+        .collect::<String>()
+        .split('\n')
+        .map(|x| x.to_string())
+        .map(|x| x.replace("has-gui-opt", ""))
+        .map(|x| x.replace('"', ""))
         .collect::<Vec<String>>();
 
-    all_possible_config.sort();
-    all_possible_config.dedup();
+    let [simple_files, gui_files] = [
+        possible_config_rust
+            .iter()
+            .chain(possible_config_bash.iter())
+            .chain(possible_config_lua.iter())
+            .chain(possible_config_nix.iter())
+            .cloned()
+            .collect::<Vec<String>>(),
+        gui_contents,
+    ]
+    .map(|x| {
+        let mut list = x
+            .into_iter()
+            .map(|x| x.replace(&['(', ')', '"', '\'', '/', ','][..], ""))
+            .map(|x| x.replace("[^", ""))
+            .map(|x| x.trim().to_string())
+            .filter(|x| !x.is_empty())
+            .collect::<Vec<String>>();
 
-    all_possible_config
+        list.sort();
+        list.dedup();
+
+        list
+    });
+
+    let mut all_items = simple_files
+        .into_iter()
+        .map(|x| ConfigItem {
+            id: x,
+            item_type: ConfigItemType::SimpleFile,
+        })
+        .chain(gui_files.into_iter().map(|x| ConfigItem {
+            id: format!("gui:{}", x),
+            item_type: ConfigItemType::ValueForFile {
+                file: "gui".to_string(),
+                key: x,
+            },
+        }))
+        .collect::<Vec<ConfigItem>>();
+
+    all_items.sort_by(|a, b| a.id.cmp(&b.id));
+
+    all_items
 }
 
 #[derive(Debug)]
 pub struct FileConfig {
     config_dir: String,
-    all_items: Vec<String>,
-    config_content: HashMap<String, String>,
-    config_enabled: HashSet<String>,
+    all_items: Vec<ConfigItem>,
+    config_content: HashMap<ConfigItemId, String>,
+    config_enabled: HashSet<ConfigItemId>,
 }
 
 impl FileConfig {
@@ -114,11 +159,11 @@ impl FileConfig {
         let existing_files_content = config.get_content(&existing_config);
 
         config.all_items.iter().for_each(|x| {
-            if existing_config.contains(x) {
-                config.config_enabled.insert(x.to_string());
+            if existing_config.contains(&x.id) {
+                config.config_enabled.insert(x.id.clone());
                 config
                     .config_content
-                    .insert(x.to_string(), existing_files_content[x].clone());
+                    .insert(x.id.clone(), existing_files_content[&x.id].clone());
             }
         });
 
@@ -159,55 +204,98 @@ impl FileConfig {
             .collect::<std::collections::HashSet<String>>()
     }
 
-    pub fn get_enable_command(&self, config_item: &str) -> String {
-        let file_path = self.get_config_file_path(config_item);
+    fn get_enable_command(&self, config_item: &ConfigItem) -> String {
+        let file_path = self.get_config_file_path(&config_item.id);
 
         format!("touch {file_path}")
     }
 
-    pub fn get_disable_command(&self, config_item: &str) -> String {
-        let file_path = self.get_config_file_path(config_item);
+    fn get_disable_command(&self, config_item: &ConfigItem) -> String {
+        let file_path = self.get_config_file_path(&config_item.id);
 
         format!("rm {file_path}")
     }
 
-    fn enable_item(&mut self, config_item: &str) {
+    fn enable_item(&mut self, config_item: &ConfigItem) {
         let default_values = self.get_default_values();
-        let empty_string = "".to_string();
-        let default_value = default_values.get(config_item).unwrap_or(&empty_string);
 
-        let file_path = self.get_config_file_path(config_item);
-        std::fs::write(file_path, default_value).expect("Unable to write file");
+        let mut create_file = |created_file: &str, content: Option<&str>| {
+            let empty_string = "".to_string();
 
-        if default_value.is_empty() {
-            self.config_content.remove(config_item);
-        } else {
-            self.config_content
-                .insert(config_item.to_string(), default_value.clone());
+            let value_to_add = content
+                .unwrap_or_else(|| default_values.get(created_file).unwrap_or(&empty_string));
+            let file_path = self.get_config_file_path(created_file);
+
+            let mut total_value = value_to_add.to_string();
+
+            if std::path::Path::new(&file_path).exists() {
+                if !value_to_add.is_empty() {
+                    let mut file = File::options()
+                        .append(true)
+                        .create(true)
+                        .open(&file_path)
+                        .expect("Unable to open file");
+                    writeln!(file, "{}", value_to_add).expect("Unable to write file");
+                    file.flush().expect("Unable to flush file");
+                }
+
+                total_value = std::fs::read_to_string(&file_path).unwrap_or_default();
+            } else {
+                std::fs::write(&file_path, value_to_add).expect("Unable to write file");
+            }
+
+            if total_value.is_empty() {
+                self.config_content.remove(created_file);
+            } else {
+                self.config_content
+                    .insert(created_file.to_string(), total_value);
+            };
         };
 
-        self.config_enabled.insert(config_item.to_string());
+        match &config_item.item_type {
+            ConfigItemType::SimpleFile => {
+                create_file(&config_item.id, None);
+                self.config_enabled.insert(config_item.id.to_string());
+            }
+            ConfigItemType::ValueForFile { key, file } => {
+                create_file(file, Some(key.as_str()));
+                self.config_enabled.insert(file.to_string());
+            }
+        }
     }
 
-    fn disable_item(&mut self, config_item: &str) {
-        let file_path = self.get_config_file_path(config_item);
+    fn disable_item(&mut self, config_item: &ConfigItem) {
+        let file_path = self.get_config_file_path(&config_item.id);
         std::fs::remove_file(file_path).unwrap_or_default();
-        self.config_content.remove(config_item);
 
-        self.config_enabled.remove(config_item);
+        match &config_item.item_type {
+            ConfigItemType::SimpleFile => {
+                self.config_content.remove(&config_item.id);
+            }
+            ConfigItemType::ValueForFile { file, key } => {
+                if let Some(content) = self.config_content.get(file).cloned() {
+                    let content = content.replace(key, "");
+                    self.config_content.insert(file.clone(), content.clone());
+                    std::fs::write(self.get_config_file_path(file), content)
+                        .expect("Unable to write file");
+                }
+            }
+        }
+
+        self.config_enabled.remove(&config_item.id);
     }
 
     pub fn run_fzf_cmd(&self) {
         let file_content = self
-            .get_all_possible()
+            .all_items
             .iter()
             .map(|item| {
-                let is_enabled = self.is_config_enabled(item);
+                let is_enabled = self.is_config_enabled(&item.id);
 
                 if is_enabled {
-                    return self.get_disable_command(item);
+                    return self.get_disable_command(&item);
                 } else {
-                    return self.get_enable_command(item);
+                    return self.get_enable_command(&item);
                 }
             })
             .collect::<Vec<String>>()
@@ -227,7 +315,7 @@ impl FileConfig {
 }
 
 impl IConfig for FileConfig {
-    fn get_all_possible(&self) -> &Vec<String> {
+    fn get_all_possible(&self) -> &Vec<ConfigItem> {
         &self.all_items
     }
 
@@ -235,8 +323,26 @@ impl IConfig for FileConfig {
         self.config_content.get(config_item)
     }
 
-    fn is_config_enabled(&self, config_item: &str) -> bool {
-        self.config_enabled.contains(config_item)
+    fn is_config_enabled(&self, config_item_id: &ConfigItemId) -> bool {
+        let config_item = self
+            .all_items
+            .iter()
+            .find(|item| &item.id == config_item_id);
+
+        let Some(config_item) = config_item else {
+            return false;
+        };
+
+        match &config_item.item_type {
+            ConfigItemType::SimpleFile => self.config_enabled.contains(&config_item.id),
+            ConfigItemType::ValueForFile { file, key } => {
+                self.config_enabled.contains(file)
+                    && self
+                        .config_content
+                        .get(file)
+                        .map_or(false, |content| content.contains(key))
+            }
+        }
     }
 
     fn get_default_values(&self) -> HashMap<String, String> {
@@ -250,15 +356,26 @@ impl IConfig for FileConfig {
         hash_map
     }
 
-    fn toggle_item(&mut self, config_item: &str, force: Option<bool>) {
-        if self.is_config_enabled(config_item) {
+    fn toggle_item(&mut self, config_item_id: &ConfigItemId, force: Option<bool>) {
+        let item = self
+            .all_items
+            .iter()
+            .find(|item| &item.id == config_item_id)
+            .cloned();
+
+        let Some(config_item) = item else {
+            println!("Config item '{}' not found", config_item_id);
+            return;
+        };
+
+        if self.is_config_enabled(config_item_id) {
             if let Some(force) = force {
                 if force {
                     return;
                 }
             }
 
-            self.disable_item(config_item);
+            self.disable_item(&config_item);
         } else {
             if let Some(force) = force {
                 if !force {
@@ -266,7 +383,7 @@ impl IConfig for FileConfig {
                 }
             }
 
-            self.enable_item(config_item);
+            self.enable_item(&config_item);
         }
     }
 
