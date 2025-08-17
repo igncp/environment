@@ -3,12 +3,13 @@
 
 ---@diagnostic disable: missing-parameter
 
-
 local M = require("common")
 
 local theme_path = M.get_config_file_path('vim-theme')
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+
+--- @diagnostic disable-next-line: undefined-field
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
     "git", "clone", "--filter=blob:none",
@@ -101,8 +102,6 @@ local nvim_plugins = {
   -- https://github.com/nvim-treesitter/nvim-treesitter-textobjects
   "nvim-treesitter/nvim-treesitter-textobjects",
   "jbyuki/venn.nvim",
-  "neovim/nvim-lspconfig",
-  "nvimdev/lspsaga.nvim",
   {
     'nvim-telescope/telescope.nvim',
     dependencies = { 'nvim-lua/plenary.nvim' }
@@ -147,7 +146,17 @@ local nvim_plugins = {
       return M.has_config('copilot')
     end,
   },
+  {
+    "neoclide/coc.nvim",
+    commit = get_version("neovim.coc.nvim"),
+    enabled = function()
+      return M.has_config("nvim-lspconfig") ~= true
+    end
+  },
 
+  { "stevearc/conform.nvim",          commit = get_version("neovim.conform.nvim") },
+  { "neovim/nvim-lspconfig",          commit = get_version("neovim.nvim-lspconfig") },
+  { "nvimdev/lspsaga.nvim",           commit = get_version("neovim.lspsaga.neovim") },
   { "LnL7/vim-nix",                   commit = get_version("neovim.vim-nix") },
   { "NvChad/nvim-colorizer.lua",      commit = get_version("neovim.nvim-colorizer.lua") },
   { "bogado/file-line",               commit = get_version("neovim.file-line") },
@@ -172,7 +181,6 @@ local nvim_plugins = {
   { "mbbill/undotree",                commit = get_version("neovim.undotree") },
   { "mfussenegger/nvim-dap",          commit = get_version("neovim.nvim-dap") },
   { "morhetz/gruvbox",                commit = get_version("neovim.gruvbox") },
-  { "neoclide/coc.nvim",              commit = get_version("neovim.coc.nvim") },
   { "ntpeters/vim-better-whitespace", commit = get_version("neovim.vim-better-whitespace") },
   { "plasticboy/vim-markdown",        commit = get_version("neovim.vim-markdown") },
   { "rhysd/clever-f.vim",             commit = get_version("neovim.clever-f.vim") },
@@ -187,6 +195,16 @@ local nvim_plugins = {
   { "vim-scripts/AnsiEsc.vim",        commit = get_version("neovim.AnsiEsc.vim") },
   { "wsdjeg/vim-fetch",               commit = get_version("neovim.vim-fetch") },
 }
+
+if M.has_config("nvim-lspconfig") then
+  table.insert(nvim_plugins, {
+    { 'hrsh7th/cmp-nvim-lsp', commit = get_version("neovim.cmp-nvim-lsp") },
+    { 'hrsh7th/cmp-buffer',   commit = get_version("neovim.cmp-buffer") },
+    { 'hrsh7th/cmp-path',     commit = get_version("neovim.cmp-path") },
+    { 'hrsh7th/cmp-cmdline',  commit = get_version("neovim.cmp-cmdline") },
+    { 'hrsh7th/nvim-cmp',     commit = get_version("neovim.nvim-cmp") },
+  })
+end
 
 require("lazy").setup(nvim_plugins)
 
@@ -567,6 +585,25 @@ vim.api.nvim_set_keymap("n", "<F10>", "", {
 })
 
 if M.has_config("nvim-lspconfig") then
+  require("conform").setup({
+    formatters_by_ft = {
+      python = { "isort", "black" },
+      rust = { "rustfmt", lsp_format = "fallback" },
+      javascript = { "prettier" },
+    },
+  })
+
+  -- https://github.com/stevearc/conform.nvim?tab=readme-ov-file#options
+  require("conform").setup({
+    format_on_save = {
+      timeout_ms = 500,
+      lsp_format = "fallback",
+    },
+    default_format_opts = {
+      lsp_format = "fallback",
+    },
+  })
+
   require('telescope').setup {
     defaults = {
       previewer = true,
@@ -586,19 +623,59 @@ if M.has_config("nvim-lspconfig") then
     },
   }
 
-  local servers = { { 'rust_analyzer' }, { 'tsserver' }, { 'ruby_lsp' },
-    { 'bashls' },
+  local servers = { { 'lua_ls' }, { 'ts_ls' }, { 'bashls' },
+    { 'ruby_lsp' }, { 'sourcekit' }, { 'kotlin_language_server' }
   }
+
+  local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
   for _, lsp in pairs(servers) do
     local lsp_name = lsp[1]
-    local lsp_config = lsp[2] or {}
-    require('lspconfig')[lsp_name].setup(lsp_config)
+    vim.lsp.enable(lsp_name)
+    vim.lsp.config(lsp_name, {
+      capabilities = capabilities,
+    })
   end
+
+  -- https://github.com/neovim/nvim-lspconfig/blob/master/lsp/lua_ls.lua
+  vim.lsp.config('lua_ls', {
+    capabilities = capabilities,
+    on_init = function(client)
+      if client.workspace_folders then
+        local path = client.workspace_folders[1].name
+        if
+            path ~= vim.fn.stdpath('config')
+            --- @diagnostic disable-next-line: undefined-field
+            and (vim.uv.fs_stat(path .. '/.luarc.json') or vim.uv.fs_stat(path .. '/.luarc.jsonc'))
+        then
+          return
+        end
+      end
+
+      client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
+        runtime = {
+          version = 'LuaJIT',
+          path = {
+            'lua/?.lua',
+            'lua/?/init.lua',
+          },
+        },
+        workspace = {
+          checkThirdParty = false,
+          library = {
+            vim.env.VIMRUNTIME
+          }
+        }
+      })
+    end,
+    settings = {
+      Lua = {}
+    }
+  })
 
   vim.diagnostic.config { virtual_text = false }
 
-  vim.api.nvim_set_keymap("n", "gd", ":lua vim.lsp.buf.definition()<cr>",
+  vim.api.nvim_set_keymap("n", "gd", "<cmd>tab split | lua vim.lsp.buf.definition()<cr>",
     { noremap = true, silent = true })
 
   vim.api.nvim_set_keymap("n", "gr", ":lua require'telescope.builtin'.lsp_references" ..
@@ -612,10 +689,12 @@ if M.has_config("nvim-lspconfig") then
     { noremap = true, silent = true })
 
   vim.api.nvim_set_keymap("n", "g]", "", {
+    --- @diagnostic disable-next-line: deprecated
     callback = function() vim.diagnostic.goto_next() end,
   })
 
   vim.api.nvim_set_keymap("n", "g[", "", {
+    --- @diagnostic disable-next-line: deprecated
     callback = function() vim.diagnostic.goto_prev() end,
   })
 
@@ -626,6 +705,38 @@ if M.has_config("nvim-lspconfig") then
     callback = function()
       vim.lsp.buf.format { async = false }
     end
+  })
+
+  local cmp = require 'cmp'
+  cmp.setup({
+    snippet = {
+      expand = function(args)
+        vim.snippet.expand(args.body)
+      end,
+    },
+    window = {
+      completion = cmp.config.window.bordered(),
+      documentation = cmp.config.window.bordered(),
+    },
+    mapping = cmp.mapping.preset.insert({
+      ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+      ['<C-f>'] = cmp.mapping.scroll_docs(4),
+      ['<C-Space>'] = cmp.mapping.complete(),
+      ['<C-e>'] = cmp.mapping.abort(),
+      ['<CR>'] = cmp.mapping.confirm({ select = true }),
+    }),
+    sources = cmp.config.sources({
+      { name = 'nvim_lsp' },
+    }, {
+      { name = 'buffer' },
+    })
+  })
+
+  cmp.setup.cmdline('/', {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = {
+      { name = 'buffer' }
+    }
   })
 else
   vim.api.nvim_set_keymap("i", "<c-l>",
