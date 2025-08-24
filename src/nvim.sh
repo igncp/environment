@@ -12,7 +12,7 @@ install_nvim_package() {
   fi
 
   sed -i "/local nvim_plugins = {/a { '$REPONAME'$EXTRA_CMD }," \
-    ~/.vim/lua/extra_beginning.lua
+    ~/.vim/lua/entry.lua
 }
 
 . src/nvim/vim.sh

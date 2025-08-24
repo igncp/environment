@@ -26,7 +26,7 @@ EOF
   provision_setup_nodenv
 
   cat >>~/.vimrc <<"EOF"
-" quick console.log (maybe used by typescript later on)
+" 一個快速嘅「console.log」
   let ConsoleMappingA="vnoremap <leader>kk \"iyOconsole.log('a', a);<C-c>6hidebug: <c-r>=expand('%:t')<cr>: <c-c>lv\"ipf'lllv\"ip"
   let ConsoleMappingB="nnoremap <leader>kk Oconsole.group('%c ', 'background: yellow; color: black', 'A'); console.log(new Error()); console.groupEnd()<c-c>FAa<bs>"
   let ConsoleMappingC="vnoremap <leader>ko yO(global as any).el = <C-c>p"

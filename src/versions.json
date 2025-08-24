@@ -10,6 +10,7 @@
   "neovim.coc.nvim": "eae16602e18b4cd5701274e60f6256f42f897af2", // https://github.com/neoclide/coc.nvim/commits/master/
   "neovim.conform.nvim": "973f3cb73887d510321653044791d7937c7ec0fa", // https://github.com/stevearc/conform.nvim/commits/master/
   "neovim.copilot.vim": "12995dffe10282b29b8335650bf3e7457f4870e7", // https://github.com/github/copilot.vim/commits/release/
+  "neovim.crates.nvim": "ac9fa498a9edb96dc3056724ff69d5f40b898453", // https://github.com/saecki/crates.nvim/commits/main/
   "neovim.ctrlp.vim": "475a864e7f01dfc5c93965778417cc66e77f3dcc", // https://github.com/ctrlpvim/ctrlp.vim/commits/master/
   "neovim.diffview.nvim": "4516612fe98ff56ae0415a259ff6361a89419b0a", // https://github.com/sindrets/diffview.nvim/commits/master/
   "neovim.file-line": "559088afaf10124ea663ee0f4f73b1de48fb1632", // https://github.com/bogado/file-line/commits/master/
@@ -30,6 +31,7 @@
   "neovim.nvim-colorizer.lua": "517df88cf2afb36652830df2c655df2da416a0ae", // https://github.com/NvChad/nvim-colorizer.lua/commits/master/
   "neovim.nvim-dap": "98bf130702eaafad8567c0e3ea1171c2552d58bb", // https://github.com/mfussenegger/nvim-dap/commits/master/
   "neovim.nvim-lspconfig": "b0caeef0d835fbe19df6ad71dbc4345eaaea649c", // https://github.com/neovim/nvim-lspconfig/commits/master/
+  "neovim.telescope-hierarchy.nvim": "2ba4840d8ba9288ca85dc34b01cf946aee0b8fca", // https://github.com/jmacadie/telescope-hierarchy.nvim/commits/main/
   "neovim.undotree": "28f2f54a34baff90ea6f4a735ef1813ad875c743", // https://github.com/mbbill/undotree/commits/master/
   "neovim.vim": "d4b0823100c702af127cba8dd5595a8f599041ec", // https://github.com/dracula/vim/commits/master/
   "neovim.vim-better-whitespace": "de99b55a6fe8c96a69f9376f16b1d5d627a56e81", // https://github.com/ntpeters/vim-better-whitespace/commits/master/

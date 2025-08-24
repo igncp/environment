@@ -49,7 +49,7 @@ if executable('go')
 endif
 EOF
 
-  cat >>~/.vim/lua/extra_beginning.lua <<"EOF"
+  cat >>~/.vim/lua/entry.lua <<"EOF"
 if vim.fn.executable('go') == 1 then
   require('dap-go').setup {
     dap_configurations = {

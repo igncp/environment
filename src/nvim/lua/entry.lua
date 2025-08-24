@@ -48,13 +48,13 @@ local nvim_plugins = {
   {
     "yaegassy/coc-phpstan",
     enabled = function()
-      return vim.fn.executable('php') == 1
+      return vim.fn.executable('php') == 1 and M.has_config('nvim-lspconfig') ~= true
     end,
   },
   {
     "josa42/coc-go",
     enabled = function()
-      return vim.fn.executable('go') == 1
+      return vim.fn.executable('go') == 1 and M.has_config('nvim-lspconfig') ~= true
     end,
   },
   -- https://github.com/mrcjkb/haskell-tools.nvim
@@ -155,7 +155,10 @@ local nvim_plugins = {
   },
 
   { "stevearc/conform.nvim",          commit = get_version("neovim.conform.nvim") },
-  { "neovim/nvim-lspconfig",          commit = get_version("neovim.nvim-lspconfig") },
+  {
+    "neovim/nvim-lspconfig",
+    commit = get_version("neovim.nvim-lspconfig"),
+  },
   { "nvimdev/lspsaga.nvim",           commit = get_version("neovim.lspsaga.neovim") },
   { "LnL7/vim-nix",                   commit = get_version("neovim.vim-nix") },
   { "NvChad/nvim-colorizer.lua",      commit = get_version("neovim.nvim-colorizer.lua") },
@@ -194,6 +197,49 @@ local nvim_plugins = {
   { "tpope/vim-surround",             commit = get_version("neovim.vim-surround") },
   { "vim-scripts/AnsiEsc.vim",        commit = get_version("neovim.AnsiEsc.vim") },
   { "wsdjeg/vim-fetch",               commit = get_version("neovim.vim-fetch") },
+  {
+    'saecki/crates.nvim',
+    commit = get_version("neovim.crates.nvim"),
+    config = function()
+      require('crates').setup({
+        completion = {
+          cmp = {
+            enabled = true,
+          },
+        },
+      })
+    end,
+  },
+  {
+    "jmacadie/telescope-hierarchy.nvim",
+    commit = get_version("neovim.telescope-hierarchy.nvim"),
+    enable = function()
+      return M.has_config("nvim-lspconfig")
+    end,
+    keys = {
+      {
+        "<leader>si",
+        "<cmd>Telescope hierarchy incoming_calls<cr>",
+        desc = "LSP: [S]earch [I]ncoming Calls",
+      },
+      {
+        "<leader>so",
+        "<cmd>Telescope hierarchy outgoing_calls<cr>",
+        desc = "LSP: [S]earch [O]utgoing Calls",
+      },
+    },
+    opts = {
+      extensions = {
+        hierarchy = {
+          multi_depth = 20
+        },
+      },
+    },
+    config = function(_, opts)
+      require("telescope").setup(opts)
+      require("telescope").load_extension("hierarchy")
+    end,
+  }
 }
 
 if M.has_config("nvim-lspconfig") then
@@ -585,24 +631,25 @@ vim.api.nvim_set_keymap("n", "<F10>", "", {
 })
 
 if M.has_config("nvim-lspconfig") then
+  -- https://github.com/stevearc/conform.nvim?tab=readme-ov-file#options
   require("conform").setup({
     formatters_by_ft = {
+      javascript = { "prettier", },
+      javascriptreact = { "prettier", },
       python = { "isort", "black" },
       rust = { "rustfmt", lsp_format = "fallback" },
-      javascript = { "prettier" },
+      lua = { lsp_format = true, },
+      typescript = { "prettier", },
+      typescriptreact = { "prettier", },
+      kotlin = { "ktlint", },
+      php = { "php_cs_fixer", },
+    },
+    format_on_save = {
+      async = false,
+      timeout_ms = 2000,
     },
   })
 
-  -- https://github.com/stevearc/conform.nvim?tab=readme-ov-file#options
-  require("conform").setup({
-    format_on_save = {
-      timeout_ms = 500,
-      lsp_format = "fallback",
-    },
-    default_format_opts = {
-      lsp_format = "fallback",
-    },
-  })
 
   require('telescope').setup {
     defaults = {
@@ -618,22 +665,30 @@ if M.has_config("nvim-lspconfig") then
     codeaction = {
       show_server_name = true,
     },
+    symbol_in_winbar = {
+      show_file = false,
+      folder_level = 0,
+    },
     lightbulb = {
       enable = false,
     },
   }
 
+  -- https://github.com/neovim/nvim-lspconfig/tree/master/lsp
   local servers = { { 'lua_ls' }, { 'ts_ls' }, { 'bashls' },
-    { 'ruby_lsp' }, { 'sourcekit' }, { 'kotlin_language_server' }
+    { 'ruby_lsp' }, { 'sourcekit' }, { 'kotlin_language_server' },
+    { 'gopls' }, { 'rust_analyzer' }, { 'nil_ls', }, { 'phpactor', }
   }
 
   local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
   for _, lsp in pairs(servers) do
     local lsp_name = lsp[1]
+    local config = lsp[2] or {}
     vim.lsp.enable(lsp_name)
     vim.lsp.config(lsp_name, {
       capabilities = capabilities,
+      settings = config.settings,
     })
   end
 
@@ -701,12 +756,6 @@ if M.has_config("nvim-lspconfig") then
   vim.api.nvim_set_keymap("n", "<leader>da", ":Lspsaga code_action<CR>",
     { silent = true, nowait = true })
 
-  vim.api.nvim_create_autocmd("BufWritePre", {
-    callback = function()
-      vim.lsp.buf.format { async = false }
-    end
-  })
-
   local cmp = require 'cmp'
   cmp.setup({
     snippet = {
@@ -720,8 +769,10 @@ if M.has_config("nvim-lspconfig") then
     },
     mapping = cmp.mapping.preset.insert({
       ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+      ['<C-j>'] = cmp.mapping.select_next_item(),
+      ['<C-k>'] = cmp.mapping.select_prev_item(),
       ['<C-f>'] = cmp.mapping.scroll_docs(4),
-      ['<C-Space>'] = cmp.mapping.complete(),
+      ['<C-space>'] = cmp.mapping.confirm(),
       ['<C-e>'] = cmp.mapping.abort(),
       ['<CR>'] = cmp.mapping.confirm({ select = true }),
     }),
@@ -735,7 +786,10 @@ if M.has_config("nvim-lspconfig") then
   cmp.setup.cmdline('/', {
     mapping = cmp.mapping.preset.cmdline(),
     sources = {
-      { name = 'buffer' }
+      { name = 'path' },
+      { name = 'buffer' },
+      { name = 'nvim_lsp' },
+      { name = 'crates' }
     }
   })
 else

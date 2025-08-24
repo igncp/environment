@@ -22,7 +22,7 @@ provision_setup_nvim_base() {
 
   cat >>~/.vimrc <<"EOF"
 if has('nvim')
-  lua require("extra_beginning")
+  lua require("entry")
 endif
 
 " ctrlp

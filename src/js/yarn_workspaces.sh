@@ -26,7 +26,7 @@ custom_yarn_workspace_ui () {
 bindkey "\C-q\C-o" custom_yarn_workspace_ui
 EOF
 
-  echo 'require("yarn_workspace")' >>~/.vim/lua/extra_beginning.lua
+  echo 'require("yarn_workspace")' >>~/.vim/lua/entry.lua
 
   cat >~/.vim/lua/yarn_workspace.lua <<"EOF"
 vim.cmd([[
