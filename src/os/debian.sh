@@ -85,15 +85,5 @@ echo "" >> /etc/motd
 EOF
   sudo chown root:root ~/.scripts/motd_update.sh
 
-  if [ ! -f ~/.check-files/debian-non-free ]; then
-    if [ -z "$(cat /etc/apt/sources.list | grep -E 'non-free([^-]|$)' || true)" ]; then
-      sudo apt install -y software-properties-common
-      sudo apt-add-repository -y --component non-free
-      sudo apt update
-      sudo apt install -y python3-launchpadlib # For add-apt-repository
-      touch ~/.check-files/debian-non-free
-    fi
-  fi
-
   provision_setup_os_debian_surface
 }

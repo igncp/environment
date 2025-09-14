@@ -126,7 +126,6 @@ EOF
   fi
   cat ~/.npm-completion >>~/.shellrc
 
-  # 由 nvim coc 用
   install_node_modules yarn
 
   # https://github.com/sgentle/caniuse-cmd

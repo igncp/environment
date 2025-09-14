@@ -163,11 +163,7 @@ au BufNewFile,BufRead *.ejs set filetype=html
 " always open file in new tab
   nnoremap gf <c-w>gf
 
-nnoremap dd <Plug>(coc-definition)
-nnoremap ds <Plug>(coc-references)
-nnoremap di <Plug>(coc-implementation)
 nnoremap df <c-w>gf
-nnoremap D <Plug>(coc-definition)
 
 nnoremap <leader>kv :%s/\t/  /g<cr>
 inoremap <c-e> <esc>A

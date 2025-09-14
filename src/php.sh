@@ -13,20 +13,12 @@ if executable('php')
   nmap <leader>lf viw"iy:silent exec "!npx open-cli https://www.php.net/manual/en/function." . substitute("<c-r>i", "_", "-", "g") . ".php &"<CR>
 
   nmap <leader>lp :!php -l %<cr>
-
-  call add(g:coc_global_extensions, 'coc-phpls')
-  call add(g:coc_global_extensions, '@yaegassy/coc-phpstan')
 endif
 EOF
 
   cat >>~/.shell_sources <<"EOF"
 if type php >/dev/null 2>&1; then
   export PATH="$HOME/.config/composer/vendor/bin:$PATH"
-
-  if [ -d ~/.local/share/nvim/lazy/coc-phpstan ] && [ ! -d ~/.local/share/nvim/lazy/coc-phpstan/node_modules ]; then
-    echo "Installing coc-phpstan modules"
-    (cd ~/.local/share/nvim/lazy/coc-phpstan && yarn install --frozen-lockfile)
-  fi
 fi
 if type wp >/dev/null 2>&1; then
   if [ ! -f ~/.wp-completion ]; then

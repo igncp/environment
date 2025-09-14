@@ -4,7 +4,6 @@ set -euo pipefail
 
 provision_setup_js_vue() {
   install_nvim_package "posva/vim-vue"
-  install_nvim_package "neoclide/coc-vetur"
 
   cat >>~/.vimrc <<'EOF'
 autocmd filetype vue :set comments=://
@@ -28,8 +27,6 @@ function! NERDCommenter_after()
     let g:ft = ''
   endif
 endfunction
-
-call add(g:coc_global_extensions, 'coc-vetur')
 
 autocmd filetype vue :exe 'nnoremap <leader>jres /<script <cr>zz'
 autocmd filetype vue :exe 'nnoremap <leader>jreS /<\/script<cr>zz'

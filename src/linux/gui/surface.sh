@@ -30,9 +30,6 @@ SurfaceIncreaseBrightness() {
 SurfaceBrightnessLowest() {
   sudo brightnessctl s 1
 }
-Battery() {
-  BATTERY_LINE="$(upower --enumerate | grep battery_BAT)"
-  upower -i "$BATTERY_LINE" | less
-}
+alias Battery='echo "$(cat /sys/class/power_supply/BAT1/capacity)% $(cat /sys/class/power_supply/BAT1/status)"'
 EOF
 }

@@ -7,7 +7,7 @@
   "neovim.cmp-cmdline": "d126061b624e0af6c3a556428712dd4d4194ec6d", // https://github.com/hrsh7th/cmp-cmdline/commits/main/
   "neovim.cmp-nvim-lsp": "bd5a7d6db125d4654b50eeae9f5217f24bb22fd3", // https://github.com/hrsh7th/cmp-nvim-lsp/commits/main/
   "neovim.cmp-path": "c642487086dbd9a93160e1679a1327be111cbc25", // https://github.com/hrsh7th/cmp-path/commits/main/
-  "neovim.coc.nvim": "eae16602e18b4cd5701274e60f6256f42f897af2", // https://github.com/neoclide/coc.nvim/commits/master/
+  "neovim.cmp_luasnip": "98d9cb5c2c38532bd9bdb481067b20fea8f32e90", // https://github.com/saadparwaiz1/cmp_luasnip/commits/master/
   "neovim.conform.nvim": "973f3cb73887d510321653044791d7937c7ec0fa", // https://github.com/stevearc/conform.nvim/commits/master/
   "neovim.copilot.vim": "12995dffe10282b29b8335650bf3e7457f4870e7", // https://github.com/github/copilot.vim/commits/release/
   "neovim.crates.nvim": "ac9fa498a9edb96dc3056724ff69d5f40b898453", // https://github.com/saecki/crates.nvim/commits/main/
@@ -24,6 +24,7 @@
   "neovim.indent-blankline.nvim": "005b56001b2cb30bfa61b7986bc50657816ba4ba", // https://github.com/lukas-reineke/indent-blankline.nvim/commits/master
   "neovim.limelight.vim": "0c8cc7f503a775c505dc9c67f1f5041ab4d5f1fd", // https://github.com/junegunn/limelight.vim/commits/master/
   "neovim.lspsaga.neovim": "8efe00d6aed9db6449969f889170f1a7e43101a1", // https://github.com/nvimdev/lspsaga.nvim/commits/main/
+  "neovim.luasnip": "de10d8414235b0a8cabfeba60d07c24304e71f5c", // https://github.com/L3MON4D3/LuaSnip/commits/master/
   "neovim.markdown-preview.nvim": "a923f5fc5ba36a3b17e289dc35dc17f66d0548ee", // https://github.com/iamcco/markdown-preview.nvim/commits/master/
   "neovim.marks.nvim": "f353e8c08c50f39e99a9ed474172df7eddd89b72", // https://github.com/chentoast/marks.nvim/commits/master/
   "neovim.nerdcommenter": "66c07e4083ab02ed2540ac289cc602c70b858c13", // https://github.com/scrooloose/nerdcommenter/commits/master/

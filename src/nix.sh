@@ -67,6 +67,12 @@ EOF
       echo "在繼續之前運行 RebuildNix"
       exit 1
     fi
+    if [ -f /etc/nixos/configuration.nix ]; then
+      sudo alejandra -q /etc/nixos/configuration.nix
+    fi
+    if [ -f /etc/nixos/hardware-configuration.nix ]; then
+      sudo alejandra -q /etc/nixos/hardware-configuration.nix
+    fi
   else
     if ! type home-manager >/dev/null 2>&1; then
       # The user should be in the sudoers file for this to work

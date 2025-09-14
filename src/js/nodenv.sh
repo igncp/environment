@@ -5,17 +5,12 @@ set -euo pipefail
 provision_setup_nodenv() {
   cat >>~/.shellrc <<"EOF"
 export PATH="$HOME/.local/nodenv/bin:$PATH"
+export PATH="$HOME/.local/nodenv/shims:$PATH"
 export NODENV_ROOT="$HOME/.local/nodenv"
 EOF
   cat >>~/.bashrc <<"EOF"
 if [ -f ~/.local/nodenv/bin/nodenv ]; then
   eval "$(~/.local/nodenv/bin/nodenv init - bash)"
-fi
-EOF
-  cat >>~/.zshrc <<"EOF"
-if [ -f ~/.local/nodenv/bin/nodenv ]; then
-  eval "$(~/.local/nodenv/bin/nodenv init - zsh)"
-  source ~/.local/nodenv/completions/nodenv.zsh
 fi
 EOF
 
@@ -33,7 +28,8 @@ EOF
   mkdir -p ~/.local
   if [ ! -d ~/.local/nodenv ]; then
     git clone https://github.com/nodenv/nodenv.git ~/.local/nodenv
-    (cd ~/.local/nodenv && src/configure && make -C src)
+    # @upgrade
+    (cd ~/.local/nodenv && git reset --hard a58087e && src/configure && make -C src)
     mkdir -p $HOME/.local/nodenv/plugins
   fi
 

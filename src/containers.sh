@@ -79,7 +79,7 @@ if type minikube >/dev/null 2>&1; then
 fi
 EOF
 
-  if [ -f "$PROVISION_CONFIG"/no-docker ]; then
+  if [ ! -f "$PROVISION_CONFIG"/docker ]; then
     return
   fi
 
@@ -111,12 +111,29 @@ alias DockerBuildXDriver='docker buildx create --use --name build --node build -
 EOF
 
   if type podman >/dev/null 2>&1; then
+    mkdir -p "$HOME/.config/containers"
+    mkdir -p "$HOME/.podman"
+
     if [ ! -f "$HOME/.config/containers/policy.json" ]; then
-      mkdir -p "$HOME/.config/containers"
       echo 'unqualified-search-registries = ["docker.io"]' >"$HOME/.config/containers/registries.conf"
 
       curl -o "$HOME/.config/containers/policy.json" \
         https://raw.githubusercontent.com/containers/skopeo/main/default-policy.json
     fi
+    cat >>$HOME/.config/containers/storage.conf <<EOF
+[storage]
+driver = "overlay"
+graphroot = "$HOME/.podman/graph"
+runroot = "$HOME/.podman/run"
+
+[storage.options]
+size = ""
+EOF
+    cat >>$HOME/.config/containers/containers.conf <<EOF
+[containers]
+volume_path = "$HOME/.podman/volumes"
+[engine]
+cgroup_manager = "cgroupfs"
+EOF
   fi
 }

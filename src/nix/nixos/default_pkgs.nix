@@ -33,6 +33,7 @@
   emojify = import ./emojify.nix {inherit pkgs;};
 
   has_c = builtins.pathExists (base-config + "/c");
+  has_docker = builtins.pathExists (base-config + "/docker");
 in {
   environment.systemPackages = with pkgs;
     [
@@ -54,7 +55,6 @@ in {
       vnstat
     ]
     ++ (with unstable-pkgs; [
-      docker
       htop
       openvpn
 
@@ -76,6 +76,7 @@ in {
     ++ ruby-pkgs.pkgs-list
     ++ go-pkgs.pkgs-list
     ++ dart-pkgs.pkgs-list
+    ++ (lib.optional has_docker pkgs.docker)
     ++ (lib.optional has_c pkgs.clib)
     ++ (lib.optional has_c pkgs.ctags)
     ++ (lib.optional has_c pkgs.gcovr);

@@ -40,8 +40,6 @@ EOF
 
   cat >>~/.vimrc <<"EOF"
 if executable('go')
-  call add(g:coc_global_extensions, 'coc-go')
-
   let g:go_def_mapping_enabled = 0
   let g:go_doc_keywordprg_enabled = 0
 

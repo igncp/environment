@@ -17,6 +17,7 @@
   has_qemu = builtins.pathExists (base-config + "/qemu");
   has_logdy = builtins.pathExists (base-config + "/logdy");
   has-iredis = builtins.pathExists (base-config + "/iredis");
+  has-docker = builtins.pathExists (base-config + "/docker");
 
   logdy = import ../derivations/logdy.nix {inherit pkgs;};
 
@@ -49,9 +50,6 @@ in {
       curl
       d2 # https://github.com/terrastruct/d2
       direnv # https://github.com/direnv/direnv
-      docker
-      docker-buildx
-      docker-compose
       dua # https://github.com/Byron/dua-cli
       entr # https://github.com/eradman/entr
       fastfetch # https://github.com/fastfetch-cli/fastfetch
@@ -70,6 +68,7 @@ in {
       htop
       imagemagick # `mogrify`
       jq # https://github.com/jqlang/jq
+      jujutsu # https://github.com/jj-vcs/jj
       killall
       less
       libiconv
@@ -110,6 +109,16 @@ in {
       vifm # https://vifm.info/
     ]
     ++ tmux-pkgs
+    ++ (
+      if has-docker
+      then
+        with pkgs; [
+          docker
+          docker-buildx
+          docker-compose
+        ]
+      else []
+    )
     ++ (
       if has_hashi
       then

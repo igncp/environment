@@ -65,8 +65,6 @@ EOF
       ~/development/environment/src/scripts/bootstrap/Bootstrap_common.sh
   fi
 
-  jq -S "." ~/.vim/coc-settings.json | sponge ~/.vim/coc-settings.json
-
   cat >>~/.zshrc <<"EOF"
 zle -N custom_dir
 custom_dir () {

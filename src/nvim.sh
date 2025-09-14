@@ -19,7 +19,6 @@ install_nvim_package() {
 . src/nvim/root.sh
 . src/nvim/lua.sh
 . src/nvim/base.sh
-. src/nvim/coc.sh
 . src/nvim/special_mappings.sh
 . src/nvim/textobj.sh
 
@@ -28,7 +27,6 @@ provision_setup_nvim() {
   provision_setup_nvim_root
   provision_setup_nvim_lua
   provision_setup_nvim_base
-  provision_setup_nvim_coc
   provision_setup_nvim_special_mappings
   provision_setup_nvim_textobj
 }

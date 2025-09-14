@@ -23,7 +23,7 @@
 
   # environment.etc."resolv.conf".text = "nameserver 192.168.1.1\n";
 
-  # nix.settings.trusted-users = ["igncp"]; # When the current machine is a remote builder
+  # nix.settings.trusted-users = ["igncp"]; # 加入呢部係遠端構建器，同遠端構建器嘅用戶（由 SSH 使用）
 
   # # 當用緊遠端建立工具嗰陣，喺本機入面
   # # https://nixos.wiki/wiki/Distributed_build

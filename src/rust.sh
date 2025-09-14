@@ -82,12 +82,6 @@ let g:rustfmt_autosave = 1
 
 let RustPrintMapping="vnoremap <leader>kk yOprintln!(\"a {:?}\", a);<C-c>11hvpgvyf\"lllvp"
 autocmd filetype rust :exe RustPrintMapping
-
-call add(g:coc_global_extensions, 'coc-rust-analyzer')
-nnoremap <leader>lr :CocCommand rust-analyzer.reload<CR>
-nnoremap <leader>lx :CocCommand rust-analyzer.explainError<CR>
-nnoremap <leader>lj :CocCommand rust-analyzer.moveItemDown<CR>
-nnoremap <leader>lk :CocCommand rust-analyzer.moveItemUp<CR>
 EOF
 
   if [ "$IS_NIXOS" != "1" ]; then
@@ -98,8 +92,6 @@ fi
 export PASTEL_COLOR_MODE=24bit
 EOF
   fi
-
-  install_nvim_package fannheyward/coc-rust-analyzer
 
   if [ -f "$PROVISION_CONFIG"/rust-cross-compile ]; then
     if [ ! -f ~/.check-files/rust-cross-compile ] && type "apt-get" >/dev/null 2>&1; then
@@ -128,20 +120,6 @@ EOF
 
     # https://github.com/sharkdp/pastel
     install_cargo_crate pastel
-  fi
-
-  if [ ! -f "$PROVISION_CONFIG"/nvim-lspconfig ]; then
-    provision_append_json ~/.vim/coc-settings.json '
-"rust-analyzer.cargo.features": "all",
-"rust-analyzer.cargo.cfgs": [],
-"rust-analyzer.inlayHints.bindingModeHints.enable": false,
-"rust-analyzer.inlayHints.chainingHints.enable": false,
-"rust-analyzer.inlayHints.closingBraceHints.enable": false,
-"rust-analyzer.inlayHints.closureReturnTypeHints.enable": "never",
-"rust-analyzer.inlayHints.lifetimeElisionHints.enable": "never",
-"rust-analyzer.inlayHints.parameterHints.enable": false,
-"rust-analyzer.inlayHints.reborrowHints.enable": "never",
-"rust-analyzer.inlayHints.typeHints.enable": false'
   fi
 
   cat >>~/.shellrc <<"EOF"

@@ -45,18 +45,6 @@ end
 -- 此變數由包填充
 -- @upgrade
 local nvim_plugins = {
-  {
-    "yaegassy/coc-phpstan",
-    enabled = function()
-      return vim.fn.executable('php') == 1 and M.has_config('nvim-lspconfig') ~= true
-    end,
-  },
-  {
-    "josa42/coc-go",
-    enabled = function()
-      return vim.fn.executable('go') == 1 and M.has_config('nvim-lspconfig') ~= true
-    end,
-  },
   -- https://github.com/mrcjkb/haskell-tools.nvim
   {
     'mrcjkb/haskell-tools.nvim',
@@ -146,13 +134,6 @@ local nvim_plugins = {
       return M.has_config('copilot')
     end,
   },
-  {
-    "neoclide/coc.nvim",
-    commit = get_version("neovim.coc.nvim"),
-    enabled = function()
-      return M.has_config("nvim-lspconfig") ~= true
-    end
-  },
 
   { "stevearc/conform.nvim",          commit = get_version("neovim.conform.nvim") },
   {
@@ -160,6 +141,8 @@ local nvim_plugins = {
     commit = get_version("neovim.nvim-lspconfig"),
   },
   { "nvimdev/lspsaga.nvim",           commit = get_version("neovim.lspsaga.neovim") },
+  { "L3MON4D3/LuaSnip",               commit = get_version("neovim.luasnip"), },
+  { "saadparwaiz1/cmp_luasnip",       commit = get_version("neovim.cmp_luasnip") },
   { "LnL7/vim-nix",                   commit = get_version("neovim.vim-nix") },
   { "NvChad/nvim-colorizer.lua",      commit = get_version("neovim.nvim-colorizer.lua") },
   { "bogado/file-line",               commit = get_version("neovim.file-line") },
@@ -198,24 +181,8 @@ local nvim_plugins = {
   { "vim-scripts/AnsiEsc.vim",        commit = get_version("neovim.AnsiEsc.vim") },
   { "wsdjeg/vim-fetch",               commit = get_version("neovim.vim-fetch") },
   {
-    'saecki/crates.nvim',
-    commit = get_version("neovim.crates.nvim"),
-    config = function()
-      require('crates').setup({
-        completion = {
-          cmp = {
-            enabled = true,
-          },
-        },
-      })
-    end,
-  },
-  {
     "jmacadie/telescope-hierarchy.nvim",
     commit = get_version("neovim.telescope-hierarchy.nvim"),
-    enable = function()
-      return M.has_config("nvim-lspconfig")
-    end,
     keys = {
       {
         "<leader>si",
@@ -242,15 +209,13 @@ local nvim_plugins = {
   }
 }
 
-if M.has_config("nvim-lspconfig") then
-  table.insert(nvim_plugins, {
-    { 'hrsh7th/cmp-nvim-lsp', commit = get_version("neovim.cmp-nvim-lsp") },
-    { 'hrsh7th/cmp-buffer',   commit = get_version("neovim.cmp-buffer") },
-    { 'hrsh7th/cmp-path',     commit = get_version("neovim.cmp-path") },
-    { 'hrsh7th/cmp-cmdline',  commit = get_version("neovim.cmp-cmdline") },
-    { 'hrsh7th/nvim-cmp',     commit = get_version("neovim.nvim-cmp") },
-  })
-end
+table.insert(nvim_plugins, {
+  { 'hrsh7th/cmp-nvim-lsp', commit = get_version("neovim.cmp-nvim-lsp") },
+  { 'hrsh7th/cmp-buffer',   commit = get_version("neovim.cmp-buffer") },
+  { 'hrsh7th/cmp-path',     commit = get_version("neovim.cmp-path") },
+  { 'hrsh7th/cmp-cmdline',  commit = get_version("neovim.cmp-cmdline") },
+  { 'hrsh7th/nvim-cmp',     commit = get_version("neovim.nvim-cmp") },
+})
 
 require("lazy").setup(nvim_plugins)
 
@@ -630,190 +595,240 @@ vim.api.nvim_set_keymap("n", "<F10>", "", {
   silent = true,
 })
 
-if M.has_config("nvim-lspconfig") then
-  -- https://github.com/stevearc/conform.nvim?tab=readme-ov-file#options
-  require("conform").setup({
-    formatters_by_ft = {
-      javascript = { "prettier", },
-      javascriptreact = { "prettier", },
-      python = { "isort", "black" },
-      rust = { "rustfmt", lsp_format = "fallback" },
-      lua = { lsp_format = true, },
-      typescript = { "prettier", },
-      typescriptreact = { "prettier", },
-      kotlin = { "ktlint", },
-      php = { "php_cs_fixer", },
-    },
-    format_on_save = {
-      async = false,
-      timeout_ms = 2000,
-    },
-  })
+-- https://github.com/stevearc/conform.nvim?tab=readme-ov-file#options
+require("conform").setup({
+  formatters_by_ft = {
+    javascript = { "prettier", },
+    javascriptreact = { "prettier", },
+    python = { "isort", "black" },
+    rust = { "rustfmt", lsp_format = "fallback" },
+    lua = { lsp_format = true, },
+    typescript = { "prettier", },
+    typescriptreact = { "prettier", },
+    kotlin = { "ktlint", },
+    php = { "php_cs_fixer", },
+    json = { lsp_format = "fallback", }
+  },
+  format_on_save = {
+    async = false,
+    timeout_ms = 2000,
+  },
+})
 
 
-  require('telescope').setup {
-    defaults = {
-      previewer = true,
-      file_previewer = require 'telescope.previewers'.vim_buffer_cat.new,
-      grep_previewer = require 'telescope.previewers'.vim_buffer_vimgrep.new,
-      qflist_previewer = require 'telescope.previewers'.vim_buffer_qflist.new,
-    }
-  }
-
-  -- https://nvimdev.github.io/lspsaga/
-  require('lspsaga').setup {
-    codeaction = {
-      show_server_name = true,
-    },
-    symbol_in_winbar = {
-      show_file = false,
-      folder_level = 0,
-    },
-    lightbulb = {
-      enable = false,
+require('telescope').setup {
+  defaults = {
+    previewer = true,
+    file_previewer = require 'telescope.previewers'.vim_buffer_cat.new,
+    grep_previewer = require 'telescope.previewers'.vim_buffer_vimgrep.new,
+    qflist_previewer = require 'telescope.previewers'.vim_buffer_qflist.new,
+    mappings = {
+      i = {
+        ["<C-o>"] = function(prompt_bufnr)
+          require("telescope.actions").select_default(prompt_bufnr)
+          require("telescope.builtin").resume()
+        end,
+      },
     },
   }
+}
 
-  -- https://github.com/neovim/nvim-lspconfig/tree/master/lsp
-  local servers = { { 'lua_ls' }, { 'ts_ls' }, { 'bashls' },
-    { 'ruby_lsp' }, { 'sourcekit' }, { 'kotlin_language_server' },
-    { 'gopls' }, { 'rust_analyzer' }, { 'nil_ls', }, { 'phpactor', }
-  }
+vim.cmd([[
+autocmd BufReadPost quickfix nnoremap <buffer> <CR> <CR>
+set switchbuf+=usetab,newtab
 
-  local capabilities = require('cmp_nvim_lsp').default_capabilities()
+function! Ctabs()
+  let files = {}
+  for entry in getqflist()
+    let filename = bufname(entry.bufnr)
+    let files[filename] = 1
+  endfor
 
-  for _, lsp in pairs(servers) do
-    local lsp_name = lsp[1]
-    local config = lsp[2] or {}
-    vim.lsp.enable(lsp_name)
-    vim.lsp.config(lsp_name, {
-      capabilities = capabilities,
-      settings = config.settings,
-    })
-  end
+  for file in keys(files)
+    silent exe "tabedit ".file
+  endfor
+endfunction
+]])
 
-  -- https://github.com/neovim/nvim-lspconfig/blob/master/lsp/lua_ls.lua
-  vim.lsp.config('lua_ls', {
-    capabilities = capabilities,
-    on_init = function(client)
-      if client.workspace_folders then
-        local path = client.workspace_folders[1].name
-        if
-            path ~= vim.fn.stdpath('config')
-            --- @diagnostic disable-next-line: undefined-field
-            and (vim.uv.fs_stat(path .. '/.luarc.json') or vim.uv.fs_stat(path .. '/.luarc.jsonc'))
-        then
-          return
-        end
+vim.api.nvim_set_keymap('n', '<leader>ka', ':call Ctabs()<CR>', { noremap = true, silent = false })
+
+-- https://nvimdev.github.io/lspsaga/
+require('lspsaga').setup {
+  codeaction = {
+    show_server_name = true,
+  },
+  symbol_in_winbar = {
+    show_file = false,
+    folder_level = 0,
+  },
+  lightbulb = {
+    enable = false,
+  },
+}
+
+local function go_to_definition_or_tab_if_new()
+  vim.lsp.buf.definition({
+    on_list = function(def_list)
+      if not def_list or #def_list.items == 0 then
+        vim.notify("No definition found", vim.log.levels.INFO)
+        return
       end
 
-      client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
-        runtime = {
-          version = 'LuaJIT',
-          path = {
-            'lua/?.lua',
-            'lua/?/init.lua',
-          },
-        },
-        workspace = {
-          checkThirdParty = false,
-          library = {
-            vim.env.VIMRUNTIME
-          }
-        }
-      })
-    end,
-    settings = {
-      Lua = {}
-    }
+      local location = def_list.items[1]
+      if location then
+        for _, tabnr in ipairs(vim.api.nvim_list_tabpages()) do
+          local win = vim.api.nvim_tabpage_get_win(tabnr)
+          local bufnr = vim.api.nvim_win_get_buf(win)
+          if vim.api.nvim_buf_is_loaded(bufnr) and vim.api.nvim_buf_get_name(bufnr) == location.filename then
+            vim.api.nvim_set_current_tabpage(tabnr)
+            vim.api.nvim_win_set_cursor(win,
+              { location.user_data.targetRange.start.line + 1, location.user_data.targetRange.start.character })
+            return
+          end
+        end
+
+        vim.cmd("tab split | lua vim.lsp.buf.definition()")
+      end
+    end
   })
-
-  vim.diagnostic.config { virtual_text = false }
-
-  vim.api.nvim_set_keymap("n", "gd", "<cmd>tab split | lua vim.lsp.buf.definition()<cr>",
-    { noremap = true, silent = true })
-
-  vim.api.nvim_set_keymap("n", "gr", ":lua require'telescope.builtin'.lsp_references" ..
-    "{include_declaration = true}<cr>",
-    { noremap = true, silent = true })
-
-  vim.api.nvim_set_keymap("n", "gy", ":lua require'telescope.builtin'.lsp_type_definitions{}<cr>",
-    { noremap = true, silent = true })
-
-  vim.api.nvim_set_keymap("n", "gY", ":lua require'telescope.builtin'.lsp_implementations{}<cr>",
-    { noremap = true, silent = true })
-
-  vim.api.nvim_set_keymap("n", "g]", "", {
-    --- @diagnostic disable-next-line: deprecated
-    callback = function() vim.diagnostic.goto_next() end,
-  })
-
-  vim.api.nvim_set_keymap("n", "g[", "", {
-    --- @diagnostic disable-next-line: deprecated
-    callback = function() vim.diagnostic.goto_prev() end,
-  })
-
-  vim.api.nvim_set_keymap("n", "<leader>da", ":Lspsaga code_action<CR>",
-    { silent = true, nowait = true })
-
-  local cmp = require 'cmp'
-  cmp.setup({
-    snippet = {
-      expand = function(args)
-        vim.snippet.expand(args.body)
-      end,
-    },
-    window = {
-      completion = cmp.config.window.bordered(),
-      documentation = cmp.config.window.bordered(),
-    },
-    mapping = cmp.mapping.preset.insert({
-      ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-      ['<C-j>'] = cmp.mapping.select_next_item(),
-      ['<C-k>'] = cmp.mapping.select_prev_item(),
-      ['<C-f>'] = cmp.mapping.scroll_docs(4),
-      ['<C-space>'] = cmp.mapping.confirm(),
-      ['<C-e>'] = cmp.mapping.abort(),
-      ['<CR>'] = cmp.mapping.confirm({ select = true }),
-    }),
-    sources = cmp.config.sources({
-      { name = 'nvim_lsp' },
-    }, {
-      { name = 'buffer' },
-    })
-  })
-
-  cmp.setup.cmdline('/', {
-    mapping = cmp.mapping.preset.cmdline(),
-    sources = {
-      { name = 'path' },
-      { name = 'buffer' },
-      { name = 'nvim_lsp' },
-      { name = 'crates' }
-    }
-  })
-else
-  vim.api.nvim_set_keymap("i", "<c-l>",
-    "<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])<CR>",
-    {})
-  vim.api.nvim_set_keymap("s", "<c-l>",
-    "<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])<CR>",
-    {})
-
-  vim.api.nvim_set_keymap("n", "<leader>da", "<Plug>(coc-codeaction-cursor)",
-    { silent = true, nowait = true })
-  vim.api.nvim_set_keymap("v", "<leader>da", "<Plug>(coc-codeaction-selected)",
-    { silent = true, nowait = true })
-
-  -- 片段顯示
-  vim.api.nvim_set_keymap("n", "<leader>ms",
-    ":CocCommand snippets.openSnippetFiles<cr>",
-    { noremap = true })
-
-  -- Vista
-  vim.g.vista_default_executive = 'coc'
-  vim.g.vista_sidebar_width = 100
 end
+
+local on_attach = function()
+  vim.keymap.set('n', 'gd', go_to_definition_or_tab_if_new, { noremap = true, silent = true })
+end
+
+-- https://github.com/neovim/nvim-lspconfig/tree/master/lsp
+local servers = { { 'lua_ls' }, { 'ts_ls' }, { 'bashls' },
+  { 'ruby_lsp' }, { 'sourcekit' }, { 'kotlin_language_server' },
+  { 'gopls' }, { 'rust_analyzer' }, { 'nil_ls', }, { 'phpactor', },
+  { 'jsonls', {
+    {
+      handlers = {
+        ['textDocument/publishDiagnostics'] = function(err, result, ctx, config)
+          if vim.bo.filetype == 'jsonc' and result and result.diagnostics then
+            local filtered_diagnostics = {}
+            for _, diag in ipairs(result.diagnostics) do
+              if not (diag.message and string.find(diag.message, "Comments are not permitted in JSON", 1, true)) then
+                table.insert(filtered_diagnostics, diag)
+              end
+            end
+            result.diagnostics = filtered_diagnostics
+          end
+          vim.lsp.handlers['textDocument/publishDiagnostics'](err, result, ctx, config)
+        end,
+      },
+    }
+  } }
+}
+
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
+
+for _, lsp in pairs(servers) do
+  local lsp_name = lsp[1]
+  local config = lsp[2] or {}
+  vim.lsp.enable(lsp_name)
+  vim.lsp.config(lsp_name, {
+    capabilities = capabilities,
+    settings = config.settings,
+    on_attach = on_attach,
+  })
+end
+
+-- https://github.com/neovim/nvim-lspconfig/blob/master/lsp/lua_ls.lua
+vim.lsp.config('lua_ls', {
+  capabilities = capabilities,
+  on_init = function(client)
+    if client.workspace_folders then
+      local path = client.workspace_folders[1].name
+      if
+          path ~= vim.fn.stdpath('config')
+          --- @diagnostic disable-next-line: undefined-field
+          and (vim.uv.fs_stat(path .. '/.luarc.json') or vim.uv.fs_stat(path .. '/.luarc.jsonc'))
+      then
+        return
+      end
+    end
+
+    client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
+      runtime = {
+        version = 'LuaJIT',
+        path = {
+          'lua/?.lua',
+          'lua/?/init.lua',
+        },
+      },
+      workspace = {
+        checkThirdParty = false,
+        library = {
+          vim.env.VIMRUNTIME
+        }
+      }
+    })
+  end,
+  settings = {
+    Lua = {}
+  }
+})
+
+vim.diagnostic.config { virtual_text = false }
+
+vim.keymap.set('n', 'W', ':cclose<cr>', { desc = "Close Quickfix Window", silent = true })
+
+vim.api.nvim_set_keymap("n", "gr", ":lua vim.lsp.buf.references()<cr>",
+  { noremap = true, silent = true })
+
+vim.api.nvim_set_keymap("n", "gy", ":lua require'telescope.builtin'.lsp_type_definitions{}<cr>",
+  { noremap = true, silent = true })
+
+vim.api.nvim_set_keymap("n", "gY", ":lua require'telescope.builtin'.lsp_implementations{}<cr>",
+  { noremap = true, silent = true })
+
+vim.api.nvim_set_keymap("n", "g]", "", {
+  --- @diagnostic disable-next-line: deprecated
+  callback = function() vim.diagnostic.goto_next() end,
+})
+
+vim.api.nvim_set_keymap("n", "g[", "", {
+  --- @diagnostic disable-next-line: deprecated
+  callback = function() vim.diagnostic.goto_prev() end,
+})
+
+vim.api.nvim_set_keymap("n", "<leader>da", ":Lspsaga code_action<CR>",
+  { silent = true, nowait = true })
+
+local cmp = require 'cmp'
+cmp.setup({
+  snippet = {
+    expand = function(args)
+      require 'luasnip'.lsp_expand(args.body)
+    end,
+  },
+  window = {
+    completion = cmp.config.window.bordered(),
+    documentation = cmp.config.window.bordered(),
+  },
+  mapping = cmp.mapping.preset.insert({
+    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-j>'] = cmp.mapping.select_next_item(),
+    ['<C-k>'] = cmp.mapping.select_prev_item(),
+    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+    ['<C-space>'] = nil,
+    ['<c-l>'] = cmp.mapping.confirm({ select = true }),
+    ['<C-e>'] = cmp.mapping.abort(),
+  }),
+  sources = cmp.config.sources({
+    { name = 'nvim_lsp' },
+    { name = 'buffer' },
+    { name = 'path' },
+    { name = 'luasnip' },
+    { name = 'crates' }
+  })
+})
+
+require("luasnip.loaders.from_snipmate").load({ path = { "~/.vim-snippets" } })
+require("luasnip")
+
+vim.api.nvim_set_keymap("n", "/", "/", {})
 
 require 'nvim-treesitter.configs'.setup {
   auto_install = true,

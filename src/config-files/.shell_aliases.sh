@@ -346,7 +346,6 @@ if type nix >/dev/null 2>&1; then
     sudo rm -rf ~/.cache/yarn
     sudo rm -rf ~/.cargo
     sudo rm -rf ~/.completions
-    sudo rm -rf ~/.config/coc
     sudo rm -rf ~/.go-workspace
     sudo rm -rf ~/.gradle
     sudo rm -rf ~/.local/share/nvim
@@ -602,33 +601,6 @@ P12Info() {
     openssl x509 -noout -subject
 }
 
-2FAEncrypt() {
-  if [ ! -f ~/.2fa ]; then
-    echo "缺少 ~/.2fa"
-    return
-  fi
-  cp ~/.2fa ~/.2fa.bkp
-  cat ~/.2fa | age -e -a -p >~/.2fa.age && rm ~/.2fa && rm ~/.2fa.bkp || mv ~/.2fa.bkp ~/.2fa
-}
-
-2FADecrypt() {
-  if [ ! -f ~/.2fa.age ]; then
-    echo "缺少 ~/.2fa.age"
-    return
-  fi
-  cp ~/.2fa.age ~/.2fa.bkp
-  cat ~/.2fa.age | age -d >~/.2fa && rm ~/.2fa.age && rm ~/.2fa.bkp || mv ~/.2fa.bkp ~/.2fa
-}
-
-2FAAdd() {
-  if [ -z "$1" ]; then
-    echo "缺少參數"
-    echo "用法: 2FAAdd <name>"
-    return
-  fi
-  2fa -add $1
-}
-
 ShellSource() {
   IS_MAC=$(uname -a | ag Darwin || true)
   if [ -n "$IS_MAC" ]; then
@@ -651,3 +623,53 @@ if type mogrify >/dev/null 2>&1; then
   alias ImageResize='mogrify -resize' # e.g. ImageResize 50% image1.jpg
   alias ImageRotate='mogrify -rotate' # e.g. ImageRotate 90 image1.jpg
 fi
+
+if type aws >/dev/null 2>&1; then
+  alias AWSEC2ListInstances="aws ec2 describe-instances --query 'Reservations[*].Instances[*].{InstanceId:InstanceId, State: State.Name, PublicDnsName:PublicDnsName, Volumes:BlockDeviceMappings[*].Ebs.VolumeId}' --output table"
+  alias AWSEC2ListLaunchTemplates="aws ec2 describe-launch-templates --output table"
+  alias AWSEC2ListVolumes="aws ec2 describe-volumes --output table"
+  alias AWSEC2TerminateInstances="aws ec2 terminate-instances --instance-ids"
+  alias AWSEC2CreateWorkstation="aws ec2 run-instances --launch-template 'LaunchTemplateId=lt-09ba1f53d219fe756,Version=1'"
+
+  AWSEC2AttachVolumeToInstance() {
+    aws ec2 attach-volume --volume-id $1 --instance-id $2 --device /dev/sdf
+  }
+
+  AWSCredsEncrypt() {
+    if [ ! -d $HOME/.aws ]; then
+      echo "缺少 $HOME/.aws" && return
+    fi
+
+    (cd $HOME && tar -cf - .aws | age -a -p >$HOME/.aws.enc && rm -rf .aws) || return
+    echo "加密咗入去 $HOME/.aws.enc"
+  }
+  AWSCredsDecrypt() {
+    if [ ! -f $HOME/.aws.enc ]; then
+      echo "缺少 $HOME/.aws.enc" && return
+    fi
+
+    (cd $HOME && age -d $HOME/.aws.enc | tar -xvf - && rm -rf .aws.enc) || return
+    echo "解密咗入去 $HOME/.aws"
+  }
+fi
+
+2FAEncrypt() {
+  if [ ! -f ~/.2fa ]; then
+    echo "缺少 ~/.2fa" && return
+  fi
+  cat ~/.2fa | age -e -a -p >~/.2fa.age && rm ~/.2fa
+}
+
+2FADecrypt() {
+  if [ ! -f ~/.2fa.age ]; then
+    echo "缺少 ~/.2fa.age" && return
+  fi
+  cat ~/.2fa.age | age -d >~/.2fa && rm ~/.2fa.age
+}
+
+2FAAdd() {
+  if [ -z "$1" ]; then
+    echo "缺少參數" && echo "用法: 2FAAdd <name>" && return
+  fi
+  2fa -add $1
+}

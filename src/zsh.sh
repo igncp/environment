@@ -23,6 +23,8 @@ provision_setup_zsh() {
     mkdir -p ~/.cache/zsh
   fi
 
+  rm -rf ~/.zcompdump.*
+
   # These have to be before the main zsh block
   install_omzsh_plugin "zsh-users/zsh-completions"
   install_omzsh_plugin "hlissner/zsh-autopair"

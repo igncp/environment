@@ -37,6 +37,7 @@ provision_setup_general() {
 
   cat >>~/.shellrc <<"EOF"
 export EDITOR=vim
+umask 077
 EOF
 
   if [ ! -f ~/.git-prompt ]; then
