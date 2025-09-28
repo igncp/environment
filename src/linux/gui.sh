@@ -7,6 +7,7 @@ set -euo pipefail
 . src/linux/gui/lxde.sh
 . src/linux/gui/surface.sh
 . src/linux/gui/vnc.sh
+. src/linux/gui/hyprland.sh
 
 provision_setup_linux_gui() {
   cat >>~/.shell_aliases <<EOF
@@ -14,6 +15,8 @@ if type xclip >/dev/null 2>&1; then
   alias XClipCopy='xclip -selection clipboard' # usage: echo foo | XClipCopy
   alias XClipPaste='xclip -selection clipboard -o'
 fi
+alias FontsList='fc-list'
+alias FontsClearCache='sudo fc-cache -fv'
 EOF
 
   if [ ! -f "$PROVISION_CONFIG"/gui ]; then
@@ -81,31 +84,6 @@ EOF
 alias WallpaperPrintCurrent="cat ~/.fehbg | grep --color=never -o '\/home\/.*jpg'"
 EOF
 
-  if type hyprctl >/dev/null 2>&1; then
-    mkdir -p ~/.config/hypr
-    # https://github.com/hyprwm/Hyprland/tree/main/example
-    cp \
-      ~/development/environment/src/config-files/hyprland.conf \
-      /tmp/hyprland.conf
-
-    if [ "$IS_SURFACE" == "1" ]; then
-      sed -i 's|monitor=,preferred,auto,auto|monitor=,preferred,auto,1.6|' /tmp/hyprland.conf
-    fi
-
-    mv /tmp/hyprland.conf ~/.config/hypr/hyprland.conf
-
-    if [ ! -f ~/.config/hypr/hyprpaper.conf ]; then
-      touch ~/.config/hypr/hyprpaper.conf
-    fi
-
-    if type waybar >/dev/null 2>&1; then
-      mkdir -p ~/.config/waybar
-      cp \
-        ~/development/environment/src/config-files/waybar.jsonc \
-        ~/.config/waybar/config.jsonc
-    fi
-  fi
-
   if type ibus >/dev/null 2>&1; then
     if [ ! -f ~/.config/ibus/rime/default.yaml ]; then
       mkdir -p ~/misc ~/.config/ibus/rime
@@ -170,8 +148,21 @@ EOF
     done
   fi
 
+  if [ "${XDG_CURRENT_DESKTOP:-}" == "MATE" ]; then
+    function check_autostart() {
+      if [ -z "$(find ~/.config/autostart | grep "$1" || true)" ]; then
+        mkdir -p ~/.config/autostart
+        echo "路徑入面 $1 缺少檔案 ~/.config/autostart"
+      fi
+    }
+
+    check_autostart "flameshot.desktop"
+    check_autostart "1password.desktop"
+  fi
+
   setup_gui_vnc
   provision_setup_gui_surface
+  setup_gui_hyprland
   setup_gui_i3
   setup_gui_lxde
   setup_gui_dunst

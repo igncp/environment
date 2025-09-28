@@ -23,6 +23,8 @@
 
   # environment.etc."resolv.conf".text = "nameserver 192.168.1.1\n";
 
+  # # 你要記得改咗呢個檔案之後執行「 sudo systemctl restart nix-daemon 」
+  # # 如果直接改檔案 `/etc/nix/nix.conf`.
   # nix.settings.trusted-users = ["igncp"]; # 加入呢部係遠端構建器，同遠端構建器嘅用戶（由 SSH 使用）
 
   # # 當用緊遠端建立工具嗰陣，喺本機入面
@@ -33,10 +35,9 @@
   #     sshUser = "igncp";
   #     sshKey = "/home/foo/.ssh/nix-remote-builder"; # Change the user and key
   #     hostName = "192.168.1.X"; # Change the IP
-  #     maxJobs = 2;
+  #     speedFactor = 10;
   #     system = "x86_64-linux";
-  #     supportedFeatures = ["big-parallel"];
-  #     mandatoryFeatures = ["big-parallel"];
+  #     supportedFeatures = ["big-parallel" "kvm"];
   #   }
   # ];
   # nix.distributedBuilds = true;

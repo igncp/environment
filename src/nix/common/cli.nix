@@ -45,10 +45,13 @@ in {
       bash
       bat # https://github.com/sharkdp/bat
       bc
+      bluetuith # https://github.com/bluetuith-org/bluetuith
       ccls # https://github.com/MaskRay/ccls
+      cmus # https://github.com/cmus/cmus
       coreutils-full
       curl
       d2 # https://github.com/terrastruct/d2
+      difftastic # https://github.com/Wilfred/difftastic
       direnv # https://github.com/direnv/direnv
       dua # https://github.com/Byron/dua-cli
       entr # https://github.com/eradman/entr
@@ -69,21 +72,27 @@ in {
       imagemagick # `mogrify`
       jq # https://github.com/jqlang/jq
       jujutsu # https://github.com/jj-vcs/jj
+      keepassxc # https://github.com/keepassxreboot/keepassxc
+      khal # https://github.com/pimutils/khal
       killall
       less
       libiconv
       lsof # https://github.com/lsof-org/lsof
+      mise # https://github.com/jdx/mise.git
       moreutils
       neovim # https://github.com/neovim/neovim
       neovim-remote # https://github.com/mhinz/neovim-remote.git
+      newsboat # https://github.com/newsboat/newsboat
       nil # https://github.com/oxalica/nil
       nix
       nushell # https://www.nushell.sh/book/
       ollama
       patchelf
       pkg-config
+      poppler # `pdftotext`
       procps # https://gitlab.com/procps-ng/procps
       pstree
+      rclone # https://github.com/rclone/rclone
       ripgrep # https://github.com/BurntSushi/ripgrep
       rrsync
       rsync # https://github.com/WayneD/rsync
@@ -93,7 +102,9 @@ in {
       shfmt # https://github.com/mvdan/sh
       silver-searcher # https://github.com/ggreer/the_silver_searcher
       taskwarrior3 # https://github.com/GothenburgBitFactory/taskwarrior
+      tldr # https://github.com/tldr-pages/tldr
       tree
+      tree-sitter
       usql
       wget
       which # Arch linux 入面缺乏

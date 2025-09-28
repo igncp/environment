@@ -1,6 +1,7 @@
 {
   ghostty,
   home-manager,
+  nixgl-pkgs,
   nixos-hardware,
   nixpkgs,
   pkgs,
@@ -30,7 +31,7 @@ in {
         else []
       );
     specialArgs = {
-      inherit stable-pkgs home-manager system ghostty nixos-hardware base-config unstable;
+      inherit stable-pkgs home-manager system ghostty nixos-hardware base-config unstable nixgl-pkgs;
       unstable-pkgs = pkgs;
 
       # 硬編碼這個值，因為它等於 nixos 中的 “root”

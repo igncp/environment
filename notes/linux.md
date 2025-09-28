@@ -10,6 +10,7 @@
 - Check if networkd is running: `systemctl list-units | grep networkd`
 - Check if using `netctl`: `netctl list`
 - Check if using network manager: `nmcli`
+    - 你可以用 TUI: `nmtui`
 
 ## 靜態 IP （冇 dhcpcd ）
 
@@ -42,6 +43,7 @@ network:
 ```sh
 sudo nmcli con delete SSID # 萬一之前存在過
 sudo nmcli device wifi connect SSID password PASSWORD
+sudo nmcli dev wifi # 列出所有SSID
 ```
 
 # 雙啟動

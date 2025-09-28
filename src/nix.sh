@@ -61,6 +61,8 @@ EOF
 experimental-features = nix-command flakes
 EOF
 
+  add_vscode_extension jnoortheen.nix-ide
+
   if [ "$IS_NIXOS" == "1" ]; then
     if ! type tmux >/dev/null 2>&1; then
       echo "您需要安裝軟體包"
@@ -101,7 +103,7 @@ EOF
   if [ "$IS_NIXOS" != "1" ]; then
     cat >/tmp/load_nix.sh <<"EOF"
 if [ -z "$PROVISION_NIX_LOADED" ]; then
-  PROVISION_NIX_LOADED=1
+  export PROVISION_NIX_LOADED=1
 
   if [ -f "~/.nix-profile/etc/profile.d/nix.sh" ]; then
     . ~/.nix-profile/etc/profile.d/nix.sh
@@ -121,6 +123,11 @@ EOF
     cat /tmp/load_nix.sh >>~/.zshrc
     cat /tmp/load_nix.sh >>~/.shellrc
     cat /tmp/load_nix.sh >>~/.bashrc
+
+    touch ~/.zshenv
+    if [ -z "$(grep nix-profile ~/.zshenv || true)" ]; then
+      cat /tmp/load_nix.sh >>~/.zshenv
+    fi
   fi
 
   cat >>~/.zshrc <<"EOF"

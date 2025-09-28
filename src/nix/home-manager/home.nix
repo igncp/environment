@@ -2,6 +2,8 @@
 {
   lib,
   pkgs,
+  ghostty,
+  nixgl-pkgs,
   ...
 }: let
   home_dir = builtins.getEnv "HOME";
@@ -12,7 +14,6 @@
   is_linux =
     (pkgs.system == "x86_64-linux")
     || (pkgs.system == "aarch64-linux");
-  is_linux_gui = has_gui && is_linux;
 
   cli-pkgs = import ../common/cli.nix {inherit base-config lib pkgs;};
   ruby-pkgs = import ../common/ruby.nix {inherit base-config pkgs;};
@@ -22,7 +23,7 @@
   java-pkgs = import ../common/java.nix {inherit base-config lib pkgs;};
 
   common-gui = import ../common/gui.nix {
-    inherit lib pkgs user base-config;
+    inherit lib pkgs user base-config nixgl-pkgs ghostty;
     system = pkgs.system;
     unstable-pkgs = pkgs;
   };
@@ -35,7 +36,7 @@ in
       []
       ++ (
         if (has_gui && is_linux)
-        then common-gui.packages ++ common-gui.fonts ++ [pkgs.terminator]
+        then common-gui.packages ++ common-gui.fonts ++ (with pkgs; [terminator blueman])
         else []
       )
       ++ cli-pkgs.pkgs-list

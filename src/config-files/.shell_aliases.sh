@@ -4,11 +4,11 @@ alias ag="rg -S --hidden --colors='path:fg:0xaa,0xaa,0xff'"
 alias agg='ag --hidden --ignore node_modules --ignore .git'
 alias b='bash'
 alias cp="cp -r"
-alias scp="scp -r"
 alias dp="docker ps -a"
 alias f='fd --type f .'
 alias h="sad"
 alias htop="htop --no-color"
+alias khal='LC_ALL= LC_TIME=en_US.UTF-8 khal'
 alias l="less"
 alias ll="ls -lahv --color=always"
 alias lsblk="lsblk -f"
@@ -16,6 +16,7 @@ alias m="mkdir -p"
 alias rm="rm -rf"
 alias rsr="rsync --remove-source-files -av --progress"
 alias s='sd'
+alias scp="scp -r"
 alias ta="tmux attach"
 alias tree="tree -a"
 alias up='up -o /tmp/up-result.sh'
@@ -629,10 +630,40 @@ if type aws >/dev/null 2>&1; then
   alias AWSEC2ListLaunchTemplates="aws ec2 describe-launch-templates --output table"
   alias AWSEC2ListVolumes="aws ec2 describe-volumes --output table"
   alias AWSEC2TerminateInstances="aws ec2 terminate-instances --instance-ids"
-  alias AWSEC2CreateWorkstation="aws ec2 run-instances --launch-template 'LaunchTemplateId=lt-09ba1f53d219fe756,Version=1'"
+
+  AWSEC2CreateWorkstation() {
+    if [ -z "$1" ]; then
+      echo "缺少 AvailabilityZone"
+    fi
+    aws ec2 run-instances --launch-template 'LaunchTemplateId=lt-09ba1f53d219fe756,Version=1' --placement "AvailabilityZone=$1"
+  }
 
   AWSEC2AttachVolumeToInstance() {
     aws ec2 attach-volume --volume-id $1 --instance-id $2 --device /dev/sdf
+  }
+
+  AWSEC2Prepare() {
+    VOLUME_ID="$(aws ec2 describe-volumes --output json | jq -r '.Volumes[] | select(.State == "available") | .VolumeId')"
+    INSTANCES="$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].{InstanceId:InstanceId, State: State.Name, PublicDnsName:PublicDnsName, Volumes:BlockDeviceMappings[*].Ebs.VolumeId}' --output json)"
+    INSTANCE_ID=$(echo "$INSTANCES" | jq -r '.[][] | select(.State == "running") | .InstanceId' | head -n 1)
+    if [ -n "$VOLUME_ID" ]; then
+      VOLUMES=$(echo "$INSTANCES" | jq -r '.[][] | select(.State == "running") | .Volumes[]')
+      if [ -n "$INSTANCE_ID" ] && [ -z "$(echo $VOLUMES | grep $VOLUME_ID || true)" ]; then
+        echo "將卷 $VOLUME_ID 附加到實例 $INSTANCE_ID"
+        aws ec2 attach-volume --volume-id $VOLUME_ID --instance-id $INSTANCE_ID --device /dev/sdf
+      fi
+    fi
+    if [ -n "$INSTANCE_ID" ]; then
+      PUBLIC_DNS=$(echo "$INSTANCES" | jq -r '.[][] | select(.State == "running") | .PublicDnsName' | head -n 1)
+      if [ -n "$PUBLIC_DNS" ]; then
+        echo "連接到實例 $INSTANCE_ID ($PUBLIC_DNS)"
+        cat $HOME/.ssh/config | sed "/workstation$/{n;s/ec2.*/$PUBLIC_DNS/;}" | sponge $HOME/.ssh/config
+      fi
+    fi
+    scp $HOME/development/environment/src/os/debian/install_remote_env_aws.sh admin@workstation:
+    ssh -qt admin@workstation 'bash install_remote_env_aws.sh'
+    scp $HOME/development/environment/src/os/debian/install_remote_env_aws.sh workstation:
+    ssh -qt workstation 'bash install_remote_env_aws.sh'
   }
 
   AWSCredsEncrypt() {
@@ -648,7 +679,7 @@ if type aws >/dev/null 2>&1; then
       echo "缺少 $HOME/.aws.enc" && return
     fi
 
-    (cd $HOME && age -d $HOME/.aws.enc | tar -xvf - && rm -rf .aws.enc) || return
+    (cd $HOME && age -d $HOME/.aws.enc | tar -xvf -) || return
     echo "解密咗入去 $HOME/.aws"
   }
 fi
@@ -673,3 +704,8 @@ fi
   fi
   2fa -add $1
 }
+
+if type mise >/dev/null 2>&1; then
+  alias MiseListAvailableTools='mise plugins list-all'
+  alias MiseListAvailableVersions='mise ls-remote' # MiseListAvailableVersions ruby
+fi

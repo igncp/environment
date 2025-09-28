@@ -6,54 +6,78 @@ if [ -f "$PROVISION_CONFIG"/gui-vscode ]; then
   rm -rf /tmp/current-vscode-extensions
 fi
 
+if [ -f "$PROVISION_CONFIG"/gui-cursor ]; then
+  rm -rf /tmp/current-cursor-extensions
+fi
+
 add_vscode_extension() {
-  if [ -f "$PROVISION_CONFIG"/gui-vscode ]; then
-    if ! type code >/dev/null; then
-      echo "VSCode 未安裝，正在跳過擴充安裝: $1"
-      return
+  if [ -f "$PROVISION_CONFIG"/gui-vscode ] || [ -f "$PROVISION_CONFIG"/gui-cursor ]; then
+    if [ -f "$PROVISION_CONFIG"/gui-vscode ] && [ "${2:-}" != "cursor" ]; then
+      if ! type code >/dev/null; then
+        echo "VSCode 未安裝，正在跳過擴充安裝: $1"
+        return
+      fi
+
+      if [ ! -f /tmp/current-vscode-extensions ]; then
+        code --list-extensions | sort -V >/tmp/current-vscode-extensions
+      fi
+
+      if [ -z "$(cat /tmp/current-vscode-extensions | grep "$1" || true)" ]; then
+        code --install-extension "$1"
+      fi
     fi
 
-    if [ ! -f /tmp/current-vscode-extensions ]; then
-      code --list-extensions | sort -V >/tmp/current-vscode-extensions
-    fi
+    if [ -f "$PROVISION_CONFIG"/gui-cursor ] && [ "${2:-}" != "vscode" ]; then
+      if ! type cursor >/dev/null; then
+        echo "Cursor 未安裝，正在跳過擴充安裝: https://cursor.com/home"
+        return
+      fi
 
-    if [ -z "$(cat /tmp/current-vscode-extensions | grep "$1" || true)" ]; then
-      code --install-extension "$1"
+      if [ ! -f /tmp/current-cursor-extensions ]; then
+        cursor --list-extensions | sort -V >/tmp/current-cursor-extensions
+      fi
+
+      if [ -z "$(cat /tmp/current-cursor-extensions | grep "$1" || true)" ]; then
+        cursor --install-extension "$1"
+      fi
     fi
   fi
 }
 
 set_vscode_setting_if_missing() {
-  if [ ! -f "$PROVISION_CONFIG"/gui-vscode ]; then
+  if [ ! -f "$PROVISION_CONFIG"/gui-vscode ] && [ ! -f "$PROVISION_CONFIG"/gui-cursor ]; then
     return
   fi
 
-  local CONFIG_FILE=''
+  local CONFIG_FILES=()
   local POSSIBLE_CONFIG_FILES=(
     "$HOME/.config/Code/User/settings.json"
+    "$HOME/.config/Cursor/User/settings.json"
     "$HOME/Library/Application Support/Code/User/settings.json"
+    "$HOME/Library/Application Support/Cursor/User/settings.json"
   )
 
   for POSSIBLE_CONFIG_FILES in "${POSSIBLE_CONFIG_FILES[@]}"; do
     if [ -f "$POSSIBLE_CONFIG_FILES" ]; then
-      CONFIG_FILE="$POSSIBLE_CONFIG_FILES"
-      break
+      CONFIG_FILES+=("$POSSIBLE_CONFIG_FILES")
     fi
   done
 
-  if [ -n "$CONFIG_FILE" ]; then
-    if [ -z "$(cat "$CONFIG_FILE" | grep "$1" || true)" ]; then
-      local CONTENT=$(cat "$CONFIG_FILE")
-      if [ -z "$CONTENT" ]; then
-        echo "{}" >"$CONFIG_FILE"
+  if [ ${#CONFIG_FILES[@]} -ne 0 ]; then
+    for CONFIG_FILE in "${CONFIG_FILES[@]}"; do
+      if [ -z "$(cat "$CONFIG_FILE" | grep "$1" || true)" ]; then
+        local CONTENT=$(cat "$CONFIG_FILE")
+        if [ -z "$CONTENT" ]; then
+          echo "{}" >"$CONFIG_FILE"
+        fi
+        cat "$CONFIG_FILE" | jq '. += { "'$1'": '"$2"' }' | jq -S . | sponge "$CONFIG_FILE"
       fi
-      cat "$CONFIG_FILE" | jq '. += { "'$1'": '$2' }' | jq -S . | sponge "$CONFIG_FILE"
-    fi
+    done
   fi
 }
 
 provision_setup_vscode() {
-  if [ ! -f "$PROVISION_CONFIG"/gui-vscode ]; then
+  if [ ! -f "$PROVISION_CONFIG"/gui-vscode ] && [ ! -f "$PROVISION_CONFIG"/gui-cursor ]; then
     return
   fi
 
@@ -69,13 +93,23 @@ provision_setup_vscode() {
   set_vscode_setting_if_missing "telemetry.telemetryLevel" '"off"'
   set_vscode_setting_if_missing "workbench.enableExperiments" false
   set_vscode_setting_if_missing "workbench.statusBar.visible" true
+  set_vscode_setting_if_missing "workbench.colorTheme" '"Iceberg"'
+  set_vscode_setting_if_missing "editor.formatOnSave" true
+  set_vscode_setting_if_missing "customLocalFormatters.formatters" '[{"command": "shfmt -i 2","languages": ["shellscript"]}]'
+  set_vscode_setting_if_missing "editor.fontSize" 15
+  set_vscode_setting_if_missing "cursor.composer.textSizeScale" '1.15'
+  set_vscode_setting_if_missing "terminal.integrated.fontFamily" '"Noto Mono"'
+  set_vscode_setting_if_missing "editor.fontFamily" '"Noto Mono"'
 
   add_vscode_extension "waderyan.gitblame"
-  add_vscode_extension "ms-vscode-remote.remote-ssh"
-  add_vscode_extension "ms-vscode-remote.remote-ssh-edit"
+  add_vscode_extension "cocopon.iceberg-theme"
+  add_vscode_extension "jkillian.custom-local-formatters"
+
+  add_vscode_extension "ms-vscode-remote.remote-ssh" vscode
+  add_vscode_extension "ms-vscode-remote.remote-ssh-edit" vscode
 
   if [ -f "$PROVISION_CONFIG"/copilot ]; then
-    add_vscode_extension "github.copilot"
+    add_vscode_extension "github.copilot" vscode
   fi
 
   #    "breadcrumbs.enabled": false,

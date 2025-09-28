@@ -33,3 +33,14 @@ SurfaceBrightnessLowest() {
 alias Battery='echo "$(cat /sys/class/power_supply/BAT1/capacity)% $(cat /sys/class/power_supply/BAT1/status)"'
 EOF
 }
+
+# 令到部相機運作:
+# ## Debian (可能唔係全部都係必要嘅)
+# - Linux Surface kernel: `apt install -y linux-image-surface linux-headers-surface libwacom-surface && sudo update-grub`
+# - 從源頭建立咗個 libcamera: `git clone https://git.libcamera.org/libcamera/libcamera.git --depth 1 && cd libcamera && meson build && ninja -C build install`
+# - `sudo apt install -y cheese`
+# - `sudo apt install -y v4l-utils`
+# - `cat /etc/apt/sources.list`
+#     deb http://deb.debian.org/debian trixie main non-free-firmware
+#     deb [arch=amd64] https://pkg.surfacelinux.com/debian release main
+# - 啟用 Chrome 旗號就可以用 pulseaudio/pipewire

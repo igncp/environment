@@ -1,0 +1,10 @@
+# https://github.com/tuan3w/awesome-tech-rss
+
+color background default default
+color listnormal default default
+color listnormal_unread default default bold
+color listfocus default default underline
+color listfocus_unread default default bold underline
+color info default default
+color article default default
+browser "google-chrome-stable %u"

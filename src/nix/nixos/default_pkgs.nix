@@ -30,54 +30,18 @@
     pkgs = unstable-pkgs;
   };
 
-  emojify = import ./emojify.nix {inherit pkgs;};
-
-  has_c = builtins.pathExists (base-config + "/c");
-  has_docker = builtins.pathExists (base-config + "/docker");
+  has-c = builtins.pathExists (base-config + "/c");
+  has-docker = builtins.pathExists (base-config + "/docker");
 in {
-  environment.systemPackages = with pkgs;
-    [
-      alsa-utils
-      cacert
-      dbus
-      dnsutils
-      emojify
-      file
-      gcc
-      gnupg
-      lshw
-      openssl
-      openssl.dev
-      pciutils # 包括 lspci
-      ps_mem
-      python3
-      tree-sitter
-      vnstat
-    ]
-    ++ (with unstable-pkgs; [
-      htop
-      openvpn
-
-      # Windows
-
-      ms-sys
-      ntfs3g
-      parted
-      woeusb-ng
-
-      # Coding
-
-      bun
-      nodejs_22
-      rustup
-    ])
+  environment.systemPackages =
+    []
     ++ cli-pkgs.pkgs-list
     ++ java-pkgs.pkgs-list
     ++ ruby-pkgs.pkgs-list
     ++ go-pkgs.pkgs-list
     ++ dart-pkgs.pkgs-list
-    ++ (lib.optional has_docker pkgs.docker)
-    ++ (lib.optional has_c pkgs.clib)
-    ++ (lib.optional has_c pkgs.ctags)
-    ++ (lib.optional has_c pkgs.gcovr);
+    ++ (lib.optional has-docker pkgs.docker)
+    ++ (lib.optional has-c pkgs.clib)
+    ++ (lib.optional has-c pkgs.ctags)
+    ++ (lib.optional has-c pkgs.gcovr);
 }

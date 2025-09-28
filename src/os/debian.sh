@@ -13,6 +13,11 @@ provision_setup_os_debian() {
     IS_BOOKWORM="$(cat /etc/os-release | grep bookworm && echo 1 || echo 0)"
   fi
 
+  # 對於 `podman`
+  if ! type newuidmap >/dev/null 2>&1; then
+    install_system_package_os uidmap
+  fi
+
   if [ "$IS_BOOKWORM" = "1" ]; then
     # https://backports.debian.org/Instructions/
     if [ ! -f /etc/apt/sources.list.d/backports.list ]; then
@@ -63,6 +68,16 @@ EOF
   if [ -f /etc/needrestart/needrestart.conf ]; then
     sudo sed "s|#\$nrconf{restart}.*|\$nrconf{restart} = 'a';|" \
       -i /etc/needrestart/needrestart.conf
+  fi
+
+  if [ -z "$(sudo systemctl list-units | grep unattended-upgrades | grep running || true)" ]; then
+    sudo apt install -y unattended-upgrades
+    echo "啟用無人管理嘅升級: sudo dpkg-reconfigure unattended-upgrades"
+  fi
+
+  if [ -z "$(systemctl --user list-units | grep pulseaudio | grep running || true)" ]; then
+    sudo apt install pulseaudio-module-bluetooth
+    systemctl --user enable --now pulseaudio
   fi
 
   # This disables the * when typing a password

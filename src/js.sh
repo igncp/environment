@@ -2,7 +2,6 @@
 
 set -euo pipefail
 
-. src/js/nodenv.sh
 . src/js/react_native.sh
 . src/js/ts.sh
 . src/js/vue.sh
@@ -22,8 +21,6 @@ provision_setup_js() {
   cat >~/.npmrc <<"EOF"
 prefix = ${HOME}/.npm-packages
 EOF
-
-  provision_setup_nodenv
 
   cat >>~/.vimrc <<"EOF"
 " 一個快速嘅「console.log」

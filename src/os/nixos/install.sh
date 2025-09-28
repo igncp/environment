@@ -14,9 +14,10 @@ sudo bash -c "printf $USER > /etc/nixos/user"
 mkdir -p ~/.ssh && curl https://github.com/igncp.keys >~/.ssh/authorized_keys
 mkdir -p ~/development/environment/project/.config
 touch ~/development/environment/project/.config/gui
+touch ~/development/environment/project/.config/gui-no-1password
 echo no >~/development/environment/project/.config/nvidia
 sudo cp ~/development/environment/src/nix/nixos/templates/configuration.nix /etc/nixos/configuration.nix
 cd ~/development/environment
-sudo nixos-rebuild switch --show-trace --flake path:"$PWD" --impure # 在環境倉庫中
-bash src/main.sh
+sudo nixos-rebuild switch --show-trace --flake path:"$PWD" --impure && bash src/main.sh # 在環境倉庫中
+
 # Check nmcli notes in [notes/linux.md](notes/linux.md)

@@ -181,6 +181,12 @@ local nvim_plugins = {
   { "vim-scripts/AnsiEsc.vim",        commit = get_version("neovim.AnsiEsc.vim") },
   { "wsdjeg/vim-fetch",               commit = get_version("neovim.vim-fetch") },
   {
+    'stevearc/quicker.nvim',
+    commit = get_version("neovim.quicker.nvim"),
+    event = "FileType qf",
+    opts = {},
+  },
+  {
     "jmacadie/telescope-hierarchy.nvim",
     commit = get_version("neovim.telescope-hierarchy.nvim"),
     keys = {
@@ -633,9 +639,26 @@ require('telescope').setup {
   }
 }
 
+function CloseAllQuickfixWindowsNonFocus()
+  local win_info = vim.fn.getwininfo()
+  for i = #win_info, 1, -1 do
+    local info = win_info[i]
+    if info.quickfix == 1 or info.loclist == 1 then
+      vim.api.nvim_win_close(info.winid, true)
+    end
+  end
+end
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "qf",
+  callback = function()
+    vim.api.nvim_buf_set_keymap(0, "n", "<CR>", "<CR>:lua CloseAllQuickfixWindowsNonFocus()<CR>",
+      { noremap = true, silent = true })
+  end
+})
+
 vim.cmd([[
-autocmd BufReadPost quickfix nnoremap <buffer> <CR> <CR>
-set switchbuf+=usetab,newtab
+set switchbuf+=usetab,newtab,useopen
 
 function! Ctabs()
   let files = {}
@@ -645,12 +668,13 @@ function! Ctabs()
   endfor
 
   for file in keys(files)
-    silent exe "tabedit ".file
+    silent exe "tab drop ".file
   endfor
 endfunction
 ]])
 
-vim.api.nvim_set_keymap('n', '<leader>ka', ':call Ctabs()<CR>', { noremap = true, silent = false })
+vim.api.nvim_set_keymap('n', '<leader>ka', ':call Ctabs()<CR>:call CloseAllQuickfixWindowsNonFocus*()<CR>',
+  { noremap = true, silent = false })
 
 -- https://nvimdev.github.io/lspsaga/
 require('lspsaga').setup {
@@ -770,9 +794,43 @@ vim.lsp.config('lua_ls', {
   }
 })
 
+require("quicker").setup({
+  keys = {
+    {
+      ">",
+      function()
+        require("quicker").expand({ before = 2, after = 2, add_to_existing = true })
+      end,
+    },
+    {
+      "<",
+      function()
+        require("quicker").collapse()
+      end,
+    },
+  },
+})
+
 vim.diagnostic.config { virtual_text = false }
 
-vim.keymap.set('n', 'W', ':cclose<cr>', { desc = "Close Quickfix Window", silent = true })
+function ToggleQuickfix()
+  local quickfix_open = false
+  local wins = vim.api.nvim_tabpage_list_wins(0)
+  for _, win_id in ipairs(wins) do
+    local win_info = vim.fn.getwininfo(win_id)[1]
+    if win_info and win_info.quickfix == 1 then
+      quickfix_open = true
+      break
+    end
+  end
+  if quickfix_open then
+    vim.cmd('cclose')
+  else
+    vim.cmd('copen')
+  end
+end
+
+vim.keymap.set('n', 'W', ':lua ToggleQuickfix()<cr>', { silent = true })
 
 vim.api.nvim_set_keymap("n", "gr", ":lua vim.lsp.buf.references()<cr>",
   { noremap = true, silent = true })

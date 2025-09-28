@@ -13,7 +13,6 @@ set -euo pipefail
 . src/general/shellcheck.sh
 . src/general/taskwarrior.sh
 . src/general/tmux.sh
-. src/general/nushell.sh
 
 provision_setup_general() {
   mkdir -p $HOME/.scripts/toolbox
@@ -271,6 +270,21 @@ EOF
     fi
   fi
 
+  if type newsboat >/dev/null 2>&1; then
+    mkdir -p ~/.newsboat
+    cp src/config-files/newsboat-config $HOME/.newsboat/config
+  fi
+
+  if type cmus >/dev/null 2>&1; then
+    mkdir -p ~/.config/cmus
+    cp src/config-files/cmus-theme ~/.config/cmus/custom.theme
+  fi
+
+  if type fastfetch >/dev/null 2>&1; then
+    mkdir -p ~/.config/fastfetch
+    cp src/config-files/fastfetch.jsonc ~/.config/fastfetch/config.jsonc
+  fi
+
   provision_setup_general_diagrams
   provision_setup_general_fzf
   provision_setup_general_git
@@ -282,5 +296,4 @@ EOF
   provision_setup_general_shellcheck
   provision_setup_general_taskwarrior
   provision_setup_general_tmux
-  provision_setup_general_nushell
 }

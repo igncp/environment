@@ -114,13 +114,17 @@ in
       packages = php-pkgs.pkgs-list-full;
     };
 
-    nodenv = pkgs.mkShell {
-      # 設定位於 .shellrc 中
-      packages = [pkgs.nodenv];
-    };
-
     lua = pkgs.mkShell {
       packages = lua-config.lua_pkgs;
+    };
+
+    windows = pkgs.mkShell {
+      packages = with pkgs; [
+        ms-sys
+        ntfs3g
+        parted
+        woeusb-ng
+      ];
     };
 
     qemu = pkgs.mkShell {

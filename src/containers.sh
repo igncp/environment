@@ -79,27 +79,24 @@ if type minikube >/dev/null 2>&1; then
 fi
 EOF
 
-  if [ ! -f "$PROVISION_CONFIG"/docker ]; then
+  if [ ! -f "$PROVISION_CONFIG"/docker ] && [ ! -f "$PROVISION_CONFIG"/podman ]; then
     return
   fi
 
-  if [ "$IS_MAC" == "1" ]; then
-    return
-  fi
+  if [ "$PROVISION_CONFIG" == "docker" ] && [ "$IS_MAC" != "1" ]; then
+    if [ ! -S /var/run/docker.sock ]; then
+      curl -fsSL https://get.docker.com | sh
+      sudo usermod -a -G docker $USER
+    fi
 
-  if [ ! -S /var/run/docker.sock ]; then
-    curl -fsSL https://get.docker.com | sh
-    sudo usermod -a -G docker $USER
-  fi
+    echo 'export PATH=$PATH:/usr/local/lib/docker/bin' >>~/.shellrc
 
-  echo 'export PATH=$PATH:/usr/local/lib/docker/bin' >>~/.shellrc
+    mkdir -p ~/.docker/cli-plugins
 
-  mkdir -p ~/.docker/cli-plugins
-
-  cat >>~/.shellrc <<"EOF"
+    cat >>~/.shellrc <<"EOF"
 export DOCKER_BUILDKIT=1
 EOF
-  cat >>~/.shell_aliases <<"EOF"
+    cat >>~/.shell_aliases <<"EOF"
 DockerBuildXInstallDriver() {
   docker buildx rm mybuilder || true
   docker buildx create --name mybuilder --use --bootstrap
@@ -109,7 +106,9 @@ DockerBuildXInstallDriver() {
 # Just run once, for allowing the `--push` flag on `docker buildx build`
 alias DockerBuildXDriver='docker buildx create --use --name build --node build --driver-opt network=host'
 EOF
+  fi
 
+  # https://docs.podman.io/en/stable/Commands.html
   if type podman >/dev/null 2>&1; then
     mkdir -p "$HOME/.config/containers"
     mkdir -p "$HOME/.podman"
@@ -120,7 +119,7 @@ EOF
       curl -o "$HOME/.config/containers/policy.json" \
         https://raw.githubusercontent.com/containers/skopeo/main/default-policy.json
     fi
-    cat >>$HOME/.config/containers/storage.conf <<EOF
+    cat >$HOME/.config/containers/storage.conf <<EOF
 [storage]
 driver = "overlay"
 graphroot = "$HOME/.podman/graph"
@@ -129,7 +128,7 @@ runroot = "$HOME/.podman/run"
 [storage.options]
 size = ""
 EOF
-    cat >>$HOME/.config/containers/containers.conf <<EOF
+    cat >$HOME/.config/containers/containers.conf <<EOF
 [containers]
 volume_path = "$HOME/.podman/volumes"
 [engine]

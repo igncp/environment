@@ -175,3 +175,13 @@ bindkey '^W' my-backward-delete-word
 
 # 按下 Tab 鍵時展開別名
 zstyle ':completion:*' completer _expand_alias _complete _ignored
+
+if type mise &> /dev/null; then
+  eval "$(mise activate zsh)"
+fi
+
+if type fastfetch &> /dev/null; then
+  fastfetch -l none || true
+fi
+
+export XDG_RUNTIME_DIR="/run/user/$(id -u)"

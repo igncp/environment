@@ -15,6 +15,7 @@
       url = "github:nix-community/home-manager/release-25.05";
     };
     ghostty.url = "github:ghostty-org/ghostty";
+    nixgl.url = "github:nix-community/nixGL";
   };
 
   outputs = {
@@ -26,6 +27,7 @@
     ghostty,
     nixos-hardware,
     nixos-generators,
+    nixgl,
   }: let
     user = builtins.getEnv "USER";
   in
@@ -41,6 +43,7 @@
           inherit
             ghostty
             home-manager
+            nixgl-pkgs
             nixos-hardware
             nixpkgs
             pkgs
@@ -52,6 +55,7 @@
         nixos-systems = import ./src/nix/systems.nix {
           inherit pkgs stable-pkgs nixos-generators system nixpkgs;
         };
+        nixgl-pkgs = import nixgl {};
       in {
         inherit devShells;
         packages =
@@ -60,7 +64,7 @@
             homeConfigurations."${user}" = home-manager.lib.homeManagerConfiguration {
               inherit pkgs;
               modules = [./src/nix/home-manager/home.nix];
-              extraSpecialArgs = {inherit pkgs stable-pkgs ghostty;};
+              extraSpecialArgs = {inherit pkgs stable-pkgs nixgl-pkgs ghostty;};
             };
           }
           // nixos-systems;

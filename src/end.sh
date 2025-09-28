@@ -38,6 +38,10 @@ EOF
   git config --global user.name 'Ignacio'
   git config --global user.email icarbajop@gmail.com
 
+  jj config set --user user.name "Ignacio"
+  jj config set --user user.email "icarbajop@gmail.com"
+  jj config set --user ui.default-command log
+
   if [ -f "$PROVISION_CONFIG"/git-ssh ]; then
     git config --global gpg.format ssh
     git config --global commit.gpgsign true
@@ -48,15 +52,16 @@ EOF
     fi
   fi
 
+  if [ "$IS_LINUX" = "1" ] && [ -f ~/.config/ghostty/config ]; then
+    echo 'font-family = Monofur Nerd Font Mono' >>~/.config/ghostty/config
+    echo 'font-size = 16' >>~/.config/ghostty/config
+  fi
+
   git config --global core.editor nvim
   # mkdir -p "$HOME"/.config/git/git
   # git config --global gpg.ssh.allowedSignersFile "$HOME/.config/git/allowed_signers"
   # # 該檔案用於“git log --show-signature”，必須添加公鑰而不是“...”
   # echo "icarbajop@gmail.com ..." > "$HOME"/.config/git/allowed_signers
-
-  if [ ! -f "$HOME"/.check-files/git-info ]; then
-    echo '[~/.check-files/git-info]: configure git user and email info'
-  fi
 
   clone_dev_github_repo environment
 

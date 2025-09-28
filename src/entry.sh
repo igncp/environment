@@ -17,6 +17,7 @@ set -euo pipefail
 . src/rust.sh
 . src/zsh.sh
 . src/homebrew.sh
+. src/ai.sh
 
 . src/android.sh
 . src/brightscript.sh
@@ -59,6 +60,7 @@ provision_setup_with_bash() {
   provision_setup_rust
   provision_setup_cli_tools
   provision_setup_linux
+  provision_setup_ai
   provision_setup_ruby
 
   provision_setup_android

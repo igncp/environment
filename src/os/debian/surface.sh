@@ -39,11 +39,7 @@ provision_setup_os_debian_surface() {
     touch ~/.check-files/nerd-fonts
   fi
 
-  install_system_package_os keepass2
-  install_system_package_os nextcloud-desktop nextcloud
-  install_system_package_os vlc
   install_system_package_os lxappearance
-  install_system_package_os chromium
 
   if ! type ghostty >/dev/null; then
     echo "Ghostty 未安裝，跟住呢個去 Debian 安裝佢"
