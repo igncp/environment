@@ -45,7 +45,6 @@ in {
       bash
       bat # https://github.com/sharkdp/bat
       bc
-      bluetuith # https://github.com/bluetuith-org/bluetuith
       ccls # https://github.com/MaskRay/ccls
       cmus # https://github.com/cmus/cmus
       coreutils-full
@@ -85,7 +84,7 @@ in {
       newsboat # https://github.com/newsboat/newsboat
       nil # https://github.com/oxalica/nil
       nix
-      nushell # https://www.nushell.sh/book/
+      nodejs
       ollama
       patchelf
       pkg-config
@@ -96,6 +95,7 @@ in {
       ripgrep # https://github.com/BurntSushi/ripgrep
       rrsync
       rsync # https://github.com/WayneD/rsync
+      rustup
       sad # https://github.com/ms-jpq/sad
       scc # https://github.com/boyter/scc
       sd # https://github.com/chmln/sd
@@ -108,6 +108,7 @@ in {
       usql
       wget
       which # Arch linux 入面缺乏
+      wireshark # https://gitlab.com/wireshark/wireshark
       yq # https://github.com/mikefarah/yq
       yt-dlp # https://github.com/yt-dlp/yt-dlp
     ]
@@ -156,6 +157,7 @@ in {
             ast-grep # https://ast-grep.github.io/
             dmidecode
             gnumake
+            bluetuith # https://github.com/bluetuith-org/bluetuith
             iotop
             lshw
             ps_mem # https://github.com/pixelb/ps_mem

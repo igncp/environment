@@ -14,12 +14,6 @@
   has-minecraft = builtins.pathExists (base-config + "/gui-minecraft");
 
   has-gui-opt = infix: lib.optional (lib.strings.hasInfix infix gui-content);
-
-  gui-hyprland = with pkgs; [
-    # Hyprland
-
-    hyprland
-  ];
 in {
   packages = with pkgs;
     [
@@ -28,6 +22,7 @@ in {
       arandr
       blueberry
       cairo
+      deskflow # https://github.com/deskflow/deskflow
       feh
       flameshot
       gedit
@@ -35,14 +30,19 @@ in {
       gtk4
       libsForQt5.qt5ct
       lxappearance
+      mission-center # https://gitlab.com/mission-center-devs/mission-center
       nextcloud-client
       nixgl-pkgs.auto.nixGLDefault
       pavucontrol
-      rofi # bash -c '. $HOME/.nix-profile/etc/profile.d/nix.sh &&  $HOME/.nix-profile/bin/nixGL $HOME/.nix-profile/bin/rofi -show combi -font "hack 20" -combi-modi drun,window,ssh'
+      powertop
       rpi-imager # 需要暫時將用戶加入'disk'群組: `sudo usermod -aG disk $USER`
       variety
       vlc
       webcamoid
+
+      # 普通的: bash -c '. $HOME/.nix-profile/etc/profile.d/nix.sh &&  $HOME/.nix-profile/bin/nixGL $HOME/.nix-profile/bin/rofi -show combi -font "hack 20" -combi-modi drun,window,ssh'
+      # 具有 root 權限: bash -c '. $HOME/.nix-profile/etc/profile.d/nix.sh &&  $HOME/.nix-profile/bin/nixGL $HOME/.nix-profile/bin/rofi -show combi -font "hack 20" -combi-modi drun,window,ssh run-command "lxqt-sudo {cmd}" -theme-str "window { background-color:#fcc;}"'
+      rofi
 
       tigervnc
 
@@ -56,6 +56,8 @@ in {
       adw-gtk3
       brightnessctl
       dunst
+      hypridle # https://wiki.hypr.land/Hypr-Ecosystem/hypridle/
+      hyprlandPlugins.hyprexpo
       hyprpaper
       libnotify # For `notify-send`
       lxqt.lxqt-sudo
@@ -70,7 +72,7 @@ in {
     ++ (
       if skip-hyprland
       then []
-      else gui-hyprland
+      else [hyprland]
     )
     ++ ((has-gui-opt "copyq") copyq)
     ++ ((has-gui-opt "terminator") terminator)

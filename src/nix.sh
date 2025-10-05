@@ -104,6 +104,7 @@ EOF
     cat >/tmp/load_nix.sh <<"EOF"
 if [ -z "$PROVISION_NIX_LOADED" ]; then
   export PROVISION_NIX_LOADED=1
+  export PATH="$HOME/.nix-profile/bin:$PATH"
 
   if [ -f "~/.nix-profile/etc/profile.d/nix.sh" ]; then
     . ~/.nix-profile/etc/profile.d/nix.sh

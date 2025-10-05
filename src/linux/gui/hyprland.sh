@@ -23,6 +23,8 @@ setup_gui_hyprland() {
     touch ~/.config/hypr/hyprpaper.conf
   fi
 
+  cp ~/development/environment/src/config-files/hypridle.conf ~/.config/hypr/
+
   if type waybar >/dev/null 2>&1; then
     mkdir -p ~/.config/waybar
     cp \

@@ -180,8 +180,10 @@ if type mise &> /dev/null; then
   eval "$(mise activate zsh)"
 fi
 
-if type fastfetch &> /dev/null; then
+if type fastfetch &> /dev/null && [ -z "$TMUX" ]; then
   fastfetch -l none || true
 fi
 
-export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+if [ -d $HOME/.nix-profile/bin ]; then
+  export PATH="$HOME/.nix-profile/bin:$PATH"
+fi

@@ -10,6 +10,8 @@
   has-gui = builtins.pathExists (base-config + "/gui");
   has-android = builtins.pathExists (base-config + "/android");
   has-tailscale = builtins.pathExists (base-config + "/tailscale");
+  has-n8n = builtins.pathExists (base-config + "/n8n");
+  has-printing = builtins.pathExists (base-config + "/printing");
   has-custom = builtins.pathExists ./custom.nix;
   emojify = import ./emojify.nix {inherit pkgs;};
 in {
@@ -25,7 +27,7 @@ in {
     ++ (lib.optional has-tailscale ./tailscale.nix)
     ++ (lib.optional has-gui ./gui.nix);
 
-  config =
+  config = lib.mkMerge [
     {
       hardware.bluetooth.enable = true;
       hardware.bluetooth.settings = {
@@ -35,7 +37,15 @@ in {
       };
 
       networking.firewall.enable = true;
-      networking.firewall.allowedTCPPorts = [22];
+      networking.firewall.allowedTCPPorts =
+        [22]
+        ++ (
+          if has-gui
+          then [
+            24800 # deskflow
+          ]
+          else []
+        );
 
       networking.networkmanager.enable = true;
 
@@ -88,6 +98,18 @@ in {
 
       services.journald.extraConfig = "SystemMaxUse=1G";
 
+      security.sudo.extraRules = [
+        {
+          users = ["igncp"];
+          commands = [
+            {
+              command = "/run/current-system/sw/bin/systemctl suspend";
+              options = ["NOPASSWD"];
+            }
+          ];
+        }
+      ];
+
       environment.systemPackages = with pkgs; [
         alsa-utils
         cacert
@@ -118,11 +140,44 @@ in {
         LC_TIME = "en_HK.UTF-8";
       };
     }
-    // (
+    (
+      if has-printing
+      then {
+        environment.systemPackages = with pkgs; [
+          simple-scan
+        ];
+        # http://localhost:631/
+        # https://wiki.nixos.org/wiki/Printing
+        services.avahi = {
+          enable = true;
+          nssmdns4 = true;
+          openFirewall = true;
+        };
+        services.printing = {
+          enable = true;
+          drivers = with pkgs; [
+            cups-browsed
+            cups-filters
+            hplip
+            hplipWithPlugin
+          ];
+        };
+      }
+      else {}
+    )
+    (
       if has-docker
       then {
         virtualisation.docker.enable = true;
       }
       else {}
-    );
+    )
+    (
+      if has-n8n
+      then {
+        services.n8n.enable = true;
+      }
+      else {}
+    )
+  ];
 }

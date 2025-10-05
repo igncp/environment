@@ -14,7 +14,7 @@ provision_setup_os_mac() {
 
   cat >>~/.shellrc <<"EOF"
 umask 027
-export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
+export PATH="$PATH:/usr/local/bin:/usr/local/sbin"
 
 if [ -d $HOME/Library/Android/sdk/build-tools ]; then
   LATEST_PATH=$(ls -1 $HOME/Library/Android/sdk/build-tools | sort -V | tail -n 1)
@@ -134,6 +134,8 @@ EOF
     defaults write com.apple.Preview ApplePersistenceIgnoreState YES
     # 自動隱藏選單列
     defaults write NSGlobalDomain _HIHideMenuBar -bool true
+    # 喺頂部欄度顯示音頻圖示
+    defaults -currentHost write com.apple.controlcenter Sound -int 18
 
     touch ~/.check-files/init-apps
   fi

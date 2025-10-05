@@ -14,6 +14,7 @@
   has-i3 = builtins.pathExists (base-config + "/gui-i3");
   no-1password = builtins.pathExists (base-config + "/gui-no-1password");
   has-nvidia = builtins.readFile (base-config + "/nvidia") == "yes\n";
+  is-hyprland = !has-cinnamon;
 
   common-gui = import ../common/gui.nix {
     skip-hyprland = true;
@@ -53,9 +54,7 @@ in
     ];
     xdg.portal.config.common.default = "*";
 
-    services.displayManager.defaultSession = "hyprland";
     services.displayManager.sddm.enable = true;
-    services.displayManager.sddm.wayland.enable = true;
 
     services.logind.lidSwitch = "ignore";
     services.logind.extraConfig = ''
@@ -120,4 +119,12 @@ in
         polkitPolicyOwners = ["${user}"];
       };
     }
+  )
+  // (
+    if is-hyprland
+    then {
+      services.displayManager.defaultSession = "hyprland";
+      services.displayManager.sddm.wayland.enable = true;
+    }
+    else {}
   )

@@ -142,6 +142,8 @@ EOF
     fi
   fi
 
+  echo 'export XDG_RUNTIME_DIR="/run/user/$(id -u)"' >>~/.zshrc
+
   provision_setup_linux_apk
   provision_setup_linux_gui
   provision_setup_linux_gui_apps

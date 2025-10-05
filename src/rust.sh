@@ -16,24 +16,6 @@ install_cargo_crate() {
 }
 
 provision_setup_rust() {
-  rust_provision_cleanup() {
-    rm -rf ~/.rustup ~/.cargo
-  }
-
-  if [ -f "$PROVISION_CONFIG"/no-rust ]; then
-    rust_provision_cleanup
-    return
-  elif [ "${IS_PROVISION_UPDATE:-0}" = "1" ]; then
-    rust_provision_cleanup
-  fi
-
-  if [ ! -d ~/.rustup ]; then
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-    . "$HOME/.cargo/env"
-    rustup install stable
-    cargo install cargo-watch
-  fi
-
   cat >>~/.shell_aliases <<"EOF"
 RustBuildProvisionPackages() {
   mkdir -p ~/.local/bin

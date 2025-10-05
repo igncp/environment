@@ -1,23 +1,27 @@
-# use crate::base::{config::Config, Context};
+#!/usr/bin/env bash
 
-# pub fn setup_cinnamon(context: &mut Context) {
-#     if !Config::has_config_file(&context.system, ".config/gui-cinnamon") {
-#         return;
-#     }
+set -euo pipefail
 
-#     // Example of a xdotoool shortcut: `bash -c "sleep .2 && xdotool type 'foobar'"`
-#     context.home_append(
-#         ".shell_aliases",
-#         r###"
-# CinnamonShortcutsDump() {
-#     dconf dump /org/cinnamon/desktop/keybindings/ > /tmp/dconf-settings.conf
-#     echo "Dumped to /tmp/dconf-settings.conf"
-# }
+setup_gui_cinnamon() {
+  if [ ! -f "$PROVISION_CONFIG"/gui-cinnamon ]; then
+    return
+  fi
 
-# CinnamonShortcutsLoad() {
-#     dconf load /org/cinnamon/desktop/keybindings/ < /tmp/dconf-settings.conf
-#     echo "Loaded /tmp/dconf-settings.conf"
-# }
-# "###,
-#     );
-# }
+  cat >>~/.shell_aliases <<'EOF'
+CinnamonShortcutsDump() {
+  dconf dump /org/cinnamon/desktop/keybindings/ > /tmp/dconf-settings.conf
+  echo "將資料轉儲到 /tmp/dconf-settings.conf"
+}
+
+CinnamonShortcutsLoad() {
+  dconf load /org/cinnamon/desktop/keybindings/ < /tmp/dconf-settings.conf
+  echo "載入檔案 FOO /tmp/dconf-settings.conf"
+}
+EOF
+
+  if [ ! -f ~/.check-files/cinnamon-gsettings ] && type gsettings >/dev/null 2>&1; then
+    gsettings set org.cinnamon panels-autohide "['1:true']"
+
+    mkdir -p ~/.check-files && touch ~/.check-files/cinnamon-gsettings
+  fi
+}

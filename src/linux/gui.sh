@@ -8,6 +8,7 @@ set -euo pipefail
 . src/linux/gui/surface.sh
 . src/linux/gui/vnc.sh
 . src/linux/gui/hyprland.sh
+. src/linux/gui/cinnamon.sh
 
 provision_setup_linux_gui() {
   cat >>~/.shell_aliases <<EOF
@@ -166,4 +167,5 @@ EOF
   setup_gui_i3
   setup_gui_lxde
   setup_gui_dunst
+  setup_gui_cinnamon
 }

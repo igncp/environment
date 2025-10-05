@@ -18,7 +18,10 @@ provision_setup_gui_surface() {
   fi
 
   add_desktop_common \
-    "$HOME/development/environment/src/scripts/misc/launch_chrome_surface.sh" 'launch_chrome_surface' 'Launch Chrome in Surface'
+    "$HOME/development/environment/src/scripts/misc/surface_launch_chrome.sh" 'launch_chrome_surface' 'Launch Chrome in Surface'
+
+  add_desktop_common \
+    "$HOME/development/environment/src/scripts/misc/surface_set_touchpad.sh" 'surface_disable_touchpad' 'Disable the Touchpad in Surface'
 
   cat >>~/.shell_aliases <<'EOF'
 SurfaceDecreaseBrightness() {
