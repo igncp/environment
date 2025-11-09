@@ -17,18 +17,21 @@ else
   exit 1
 fi
 
-if type hyprctl &>/dev/null && [ "$XDG_CURRENT_DESKTOP" == "Hyprland" ]; then
+if type hyprctl &>/dev/null && [ "${XDG_CURRENT_DESKTOP:-}" == "Hyprland" ]; then
   hyprctl hyprpaper unload all >/dev/null
   hyprctl hyprpaper preload "$IMAGE_PATH" >/dev/null
   hyprctl hyprpaper wallpaper ,"$IMAGE_PATH" >/dev/null
 elif type pcmanfm &>/dev/null; then
   pcmanfm -w "$IMAGE_PATH" 2>&1 | log
+elif type pcmanfm-qt &>/dev/null; then
+  pcmanfm-qt --wallpaper-mode=center --set-wallpaper "$IMAGE_PATH" 2>&1 | log
 elif type gsettings &>/dev/null && [ "$XDG_CURRENT_DESKTOP" == "MATE" ]; then
   gsettings set org.mate.background picture-filename "$IMAGE_PATH" 2>&1 | log
 elif type feh &>/dev/null; then
-  feh --bg-fill "$IMAGE_PATH" 2>&1 | log
+  echo "Using feh" | log
+  feh --bg-fill "$IMAGE_PATH" 2>&1
 else
   exit 1
 fi
 
-echo "形象: $IMAGE_PATH"
+echo "形象: $IMAGE_PATH" | log

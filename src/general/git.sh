@@ -89,7 +89,7 @@ GitBranchOrder() {
     tac | less;
 }
 
-alias GitAddAll='GitAdd $(git rev-parse --show-toplevel)'
+alias GitAddAll='git reset -q && GitAdd "$(git rev-parse --show-toplevel)"'
 alias GitBranchesCompare='git log --left-right --graph --cherry-pick --oneline' # e.g. GitBranchesCompare main...feature
 alias GitCleanAll='git clean -fxd' # 包括被忽略的檔案（例如 .env 檔案）
 alias GitConfig='"$EDITOR" .git/config'
@@ -97,6 +97,7 @@ alias GitEditorCommit='git commit -v'
 alias GitListConflictFiles='git diff --name-only --relative --diff-filter=U'
 alias GitListFilesChangedHistory='git log --pretty=format: --name-only | sort | uniq -c | sort -rg' # can add `--author Foo`, --since, or remove files
 alias GitRebaseResetAuthorContinue='git commit --amend --reset-author --no-edit; git rebase --continue'
+alias GitRebaseCopyPreviousAuthorDate='git commit --amend --no-edit --date="$(git show -s --format=%aD HEAD^)"'
 alias GitRemotes='git remote -v'
 alias GitStashApply='git stash apply' # can also use name here
 alias GitStashList='git stash list'
@@ -120,7 +121,8 @@ EOF
   # 改進終端中 unicode 字元的顯示 (例如文件中的漢字)
   quotepath = off
 [alias]
-  l = log --pretty=format:'%Cred%h%Creset%C(yellow)%d%Creset %s %C(bold blue)%an %Cgreen%cd%Creset' --date=short
+  l = log --pretty=format:'%Cred%h%Creset%C(yellow)%d%Creset %s %C(bold blue)%an %Cgreen[%ad]%Creset' --date=short
+  reb = rebase -i --committer-date-is-author-date
 [pull]
   rebase = false
 EOF

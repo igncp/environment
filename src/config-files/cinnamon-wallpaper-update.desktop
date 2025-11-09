@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Exec=__HOME__/development/environment/src/scripts/misc/wallpaper_update.sh
+X-GNOME-Autostart-enabled=true
+NoDisplay=false
+Hidden=false
+Name[zh_TW]=wallpaper upade
+Comment[zh_TW]=無說明
+X-GNOME-Autostart-Delay=2

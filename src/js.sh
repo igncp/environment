@@ -124,6 +124,7 @@ EOF
   cat ~/.npm-completion >>~/.shellrc
 
   install_node_modules yarn
+  install_node_modules @fsouza/prettierd prettierd
 
   # https://github.com/sgentle/caniuse-cmd
   install_node_modules caniuse-cmd caniuse

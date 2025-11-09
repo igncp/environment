@@ -1,0 +1,8 @@
+{
+  "Arrow Function": {
+    "body": [
+      "() => {$1}"
+    ],
+    "prefix": "af"
+  }
+}

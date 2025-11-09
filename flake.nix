@@ -16,6 +16,7 @@
     };
     ghostty.url = "github:ghostty-org/ghostty";
     nixgl.url = "github:nix-community/nixGL";
+    vscode-server.url = "github:nix-community/nixos-vscode-server";
   };
 
   outputs = {
@@ -28,6 +29,7 @@
     nixos-hardware,
     nixos-generators,
     nixgl,
+    vscode-server,
   }: let
     user = builtins.getEnv "USER";
   in
@@ -50,6 +52,7 @@
             stable-pkgs
             system
             unstable
+            vscode-server
             ;
         };
         nixos-systems = import ./src/nix/systems.nix {

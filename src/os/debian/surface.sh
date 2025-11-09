@@ -24,8 +24,6 @@ set -euo pipefail
 # update-grub
 # systemctl disable ssh # Only start it manually
 # # 當用 LXDE 嗰陣，佢修正咗鍵盤入面嘅問題，即係打咗幾個鍵之後佢會不斷斷線
-# apt install -y lightdm lxde-core
-# dpkg-reconfigure lightdm
 
 provision_setup_os_debian_surface() {
   if [ "$IS_SURFACE" != "1" ]; then

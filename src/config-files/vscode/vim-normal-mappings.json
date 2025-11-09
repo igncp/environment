@@ -1,0 +1,109 @@
+[
+    {
+        "before": [
+            "g",
+            "]"
+        ],
+        "commands": [
+            "editor.action.marker.next"
+        ]
+    },
+    {
+        "before": [
+            "g",
+            "["
+        ],
+        "commands": [
+            "editor.action.marker.prev"
+        ]
+    },
+    {
+        "before": [
+            "K"
+        ],
+        "commands": [
+            "editor.action.showHover"
+        ]
+    },
+    {
+        "after": [
+            "g",
+            "t"
+        ],
+        "before": [
+            "r"
+        ]
+    },
+    {
+        "after": [
+            "g",
+            "T"
+        ],
+        "before": [
+            "R"
+        ],
+        "silent": true
+    },
+    {
+        "after": [],
+        "before": [
+            "<c-b>"
+        ]
+    },
+    {
+        "after": [
+            "<c-w>",
+            "q"
+        ],
+        "before": [
+            "<c-d>"
+        ]
+    },
+    {
+        "after": [
+            "@",
+            "q"
+        ],
+        "before": [
+            "Q"
+        ]
+    },
+    {
+        "after": [
+            "v",
+            "%"
+        ],
+        "before": [
+            "<leader>",
+            "z",
+            "k"
+        ]
+    },
+    {
+        "commands": [
+            "editor.action.goToReferences"
+        ],
+        "before": [
+            "g",
+            "r"
+        ]
+    },
+    {
+        "before": [
+            "<leader>",
+            "k",
+            "l"
+        ],
+        "after": [
+            "v",
+            "i",
+            "i",
+            ":",
+            "s",
+            "o",
+            "r",
+            "t",
+            "<cr>"
+        ]
+    }
+]

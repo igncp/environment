@@ -10,7 +10,6 @@
   ...
 }: let
   gui-content = builtins.readFile (base-config + "/gui");
-  has-vscode = builtins.pathExists (base-config + "/gui-vscode");
   has-minecraft = builtins.pathExists (base-config + "/gui-minecraft");
 
   has-gui-opt = infix: lib.optional (lib.strings.hasInfix infix gui-content);
@@ -44,6 +43,8 @@ in {
       # 具有 root 權限: bash -c '. $HOME/.nix-profile/etc/profile.d/nix.sh &&  $HOME/.nix-profile/bin/nixGL $HOME/.nix-profile/bin/rofi -show combi -font "hack 20" -combi-modi drun,window,ssh run-command "lxqt-sudo {cmd}" -theme-str "window { background-color:#fcc;}"'
       rofi
 
+      paprefs
+
       tigervnc
 
       # Libre Office
@@ -52,6 +53,17 @@ in {
       hunspell
 
       dillo
+
+      # i3
+
+      i3
+      i3blocks
+      i3lock
+      i3status
+      pasystray
+      xdotool
+
+      # hyprland
 
       adw-gtk3
       brightnessctl
@@ -63,7 +75,6 @@ in {
       lxqt.lxqt-sudo
       networkmanagerapplet
       playerctl
-      rofi
       waybar
       wdisplays
       wev
@@ -80,7 +91,6 @@ in {
     ++ ((has-gui-opt "telegram") telegram-desktop)
     ++ ((has-gui-opt "firefox") firefox)
     ++ (lib.optional (system == "x86_64-linux") ghostty.packages.x86_64-linux.default)
-    ++ (lib.optional has-vscode vscode)
     ++ (lib.optional has-minecraft prismlauncher)
     ++ (
       if (system == "x86_64-linux")

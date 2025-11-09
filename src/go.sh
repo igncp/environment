@@ -8,7 +8,7 @@ export PATH="$HOME/.local/go/bin:$PATH"
 if type go >/dev/null 2>&1; then
   export GOPATH="$HOME/.go-workspace"
   export GO15VENDOREXPERIMENT=1
-  export PATH=$PATH:$GOPATH/bin
+  export PATH="$PATH:$GOPATH/bin"
 
   if [ -n "$(find ~/.go-workspace/pkg/mod/golang.org/x/tools/ 2>/dev/null | grep gopls || true)" ]; then
     (cd ~ && go install golang.org/x/tools/gopls@latest)

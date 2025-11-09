@@ -31,7 +31,7 @@ in
   {
     home.username = user;
     home.homeDirectory = home_dir;
-    home.stateVersion = "24.05";
+    home.stateVersion = "25.05";
     home.packages =
       []
       ++ (

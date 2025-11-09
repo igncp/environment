@@ -7,7 +7,7 @@ let mapleader = "\<Space>"
 syntax off " This is removed in update_vim_colors_theme, in case an error in provision
 
 " Save file shortcuts
-nmap <c-s> :update<esc>
+nmap <c-s> :update<cr>
 inoremap <c-s> <esc>:update<cr>
 
 " To display a map: for example `:verbose map <leader>l`

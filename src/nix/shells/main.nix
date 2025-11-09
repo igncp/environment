@@ -5,6 +5,12 @@
     base_config = "";
   };
   lib = pkgs.lib;
+  base-config = ../../../project/.config;
+  cli-pkgs = import ../common/cli.nix {
+    inherit base-config pkgs;
+    lib = pkgs.lib;
+  };
+
   cli-extra-shell = import ./cli-extra.nix {inherit pkgs;};
   python-extra-shell = import ./python.nix {inherit pkgs;};
   docker-extra-shell = import ./docker.nix {inherit pkgs lib;};
@@ -26,6 +32,11 @@
   };
 in
   {
+    # For running in environments without Home Manager (e.g. servers)
+    environment = pkgs.mkShell {
+      packages = [] ++ cli-pkgs.pkgs-list;
+    };
+
     aws = pkgs.mkShell {
       packages = with pkgs; [awscli2];
     };

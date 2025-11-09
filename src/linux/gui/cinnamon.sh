@@ -24,4 +24,10 @@ EOF
 
     mkdir -p ~/.check-files && touch ~/.check-files/cinnamon-gsettings
   fi
+
+  if [ -d ~/.config/autostart/ ]; then
+    cp src/config-files/cinnamon-wallpaper-update.desktop ~/.config/autostart
+    cat ~/.config/autostart/cinnamon-wallpaper-update.desktop |
+      sed "s|__HOME__|$HOME|" | sponge ~/.config/autostart/cinnamon-wallpaper-update.desktop
+  fi
 }

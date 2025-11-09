@@ -52,6 +52,16 @@ main() {
     FULL_PATH="$RESOLVED_PATH"
   fi
 
+  if [ -f "$HOME"/development/environment/project/.config/gui-vscode ]; then
+    code "$FULL_PATH"
+    return
+  fi
+
+  if [ -f "$HOME"/development/environment/project/.config/gui-cursor ]; then
+    cursor "$FULL_PATH"
+    return
+  fi
+
   local CMD_ARGS=("-s" "-c" "tab drop $FULL_PATH")
 
   nvr "${CMD_ARGS[@]}" "${@:2}"

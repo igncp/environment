@@ -17,7 +17,6 @@ alias rm="rm -rf"
 alias rsr="rsync --remove-source-files -av --progress"
 alias s='sd'
 alias scp="scp -r"
-alias ta="tmux attach"
 alias tree="tree -a"
 alias up='up -o /tmp/up-result.sh'
 alias wget="wget -c"
@@ -57,6 +56,11 @@ drb() {
 alias ca="~/.local/bin/canto-cli"
 
 alias Lsblk="lsblk -f | less -S"
+
+for i in $(seq 1 20); do
+  eval "alias AwkPrint$i=$'awk \'{ print $"$i"; }\''"
+done
+
 Diff() { diff --color=always "$@" | less -r; }
 DisplayFilesConcatenated() { xargs tail -n +1 | sed "s|==>|\n\n\n\n\n$1==>|; s|<==|<==\n|" | $EDITOR -; }
 FileSizeCreate() { head -c "$1" /dev/urandom >"$2"; } # For example: FileSizeCreate 1GB /tmp/foo
@@ -230,14 +234,13 @@ WorktreeClone() {
 
 n() {
   NOW=$SECONDS
-  bash ~/development/environment/src/scripts/misc/n.sh $@
+  bash "$HOME"/development/environment/src/scripts/misc/n.sh $@
   AFTER=$SECONDS
   PASSED=$(($AFTER - $NOW))
 
-  if [ $PASSED -lt 2 ]; then
+  if [ $PASSED -lt 2 ] && [ ! -f "$HOME"/development/environment/project/.config/gui-cursor ] &&
+    [ ! -f "$HOME"/development/environment/project/.config/gui-vscode ]; then
     builtin fg
-  else
-    echo "nvim session: $PASSED"
   fi
 }
 
@@ -276,11 +279,13 @@ CargoDevGenerate() {
   echo "Binary '$BIN_NAME' built and moved to current directory"
 }
 
-alias HomeManagerInitFlake='nix run home-manager/release-24.05 -- init'
+alias HomeManagerInitFlake='nix run home-manager/release-25.05 -- init'
 alias HomeManagerDeleteGenerations='home-manager expire-generations "-1 second"'
 
 if type nix >/dev/null 2>&1; then
   alias di='SudoNix dua interactive'
+
+  alias EnvironmentNixShell='nix develop $HOME/development/environment#environment --command zsh'
 
   alias NixFlakeUpdateInput='nix flake update' # NixFlakeUpdateInput ghostty
   alias NixListChannels='nix-channel --list'
@@ -709,3 +714,29 @@ if type mise >/dev/null 2>&1; then
   alias MiseListAvailableTools='mise plugins list-all'
   alias MiseListAvailableVersions='mise ls-remote' # MiseListAvailableVersions ruby
 fi
+
+Encrypt() {
+  if [ -n "$(echo "$1" | grep "\.age" || true)" ]; then
+    echo "檔案已經係 .age"
+    return
+  fi
+  cat "$1" | age -a -p -e >"$1".age
+}
+
+Decrypt() {
+  PATH_WITHOUT_AGE="${1%.age}"
+  cat "$1" | age -d >"$PATH_WITHOUT_AGE"
+}
+
+ta() {
+  SOCKET_NAME="${1:-}"
+  if [ -z "$SOCKET_NAME" ]; then
+    SOCKET_NAME=$(ss -x -l | grep "tmux" | awk '{ print $5; }' | sed "s|/tmp/tmux-$(id -u)/||" | ag -v default | head)
+  fi
+
+  if [ -z "$SOCKET_NAME" ]; then
+    tmux attach
+  else
+    tmux -L "$SOCKET_NAME" attach
+  fi
+}

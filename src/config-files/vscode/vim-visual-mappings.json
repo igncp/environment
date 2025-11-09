@@ -1,0 +1,61 @@
+[
+    {
+        "before": [
+            "<leader>",
+            "k",
+            "l"
+        ],
+        "commands": [
+            "editor.action.sortLinesAscending"
+        ]
+    },
+    {
+        "after": [
+            "%"
+        ],
+        "before": [
+            "<leader>",
+            "z",
+            "k"
+        ]
+    },
+    {
+        "before": [
+            "<leader>",
+            "k",
+            "k"
+        ],
+        "commands": [
+            "igncp-vscode-extension.easyLog"
+        ]
+    },
+    {
+        "before": [
+            "p"
+        ],
+        "after": [
+            "P"
+        ]
+    },
+    {
+        "before": [
+            "<del>"
+        ],
+        "after": [
+            "\"",
+            "_",
+            "d"
+        ]
+    },
+    {
+        "before": [
+            "y"
+        ],
+        "after": [
+            "y",
+            "g",
+            "v",
+            "<esc>"
+        ]
+    }
+]

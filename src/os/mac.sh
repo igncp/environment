@@ -24,6 +24,10 @@ fi
 if [ -d "/Applications/Visual Studio Code.app/Contents/Resources/app/bin" ]; then
   export PATH="/Applications/Visual Studio Code.app/Contents/Resources/app/bin:$PATH"
 fi
+
+if [ -d "/Applications/Cursor.app/Contents/Resources/app/bin" ]; then
+  export PATH="/Applications/Cursor.app/Contents/Resources/app/bin:$PATH"
+fi
 EOF
 
   cat >>~/.shell_aliases <<"EOF"
@@ -31,6 +35,19 @@ MacListServices() { launchctl  list | ag -v '^-' | awk '{ print $3; }' | ag -v ^
 alias MacPowerManagementClearRepeat='sudo pmset repeat cancel'
 alias MacPowerManagementList='sudo pmset -g sched'
 alias MacPowerManagementListAll='sudo pmset -g everything'
+alias MacSSHRestart='sudo launchctl stop com.openssh.sshd; sudo launchctl start com.openssh.sshd'
+
+alias MacSystemStorageInfo='system_profiler SPStorageDataType'
+alias MacSystemBatteryInfo='system_profiler SPPowerDataType'
+alias MacSystemSoftwareInfo='system_profiler SPSoftwareDataType'
+alias MacSystemUpgradesInfo='softwareupdate --list'
+alias MacSystemNetworkServices='networksetup -listallnetworkservices'
+
+MacDNSWiFiSet() {
+  sudo networksetup -setdnsservers Wi-Fi "$@"
+  sudo networksetup -getdnsservers Wi-Fi
+}
+
 # 每個平日凌晨四點停機
 # sudo pmset repeat shutdown MTWRF 04:00:00
 EOF
@@ -43,6 +60,12 @@ EOF
   "§" = ("insertText:", "#");
 }
 EOF
+
+  if [ -f /etc/ssh/sshd_config ]; then
+    if [ -z "$(grep 'ChallengeResponseAuthentication no' /etc/ssh/sshd_config || true)" ]; then
+      echo '您缺少 Mac 的 ssh 配置: ChallengeResponseAuthentication no'
+    fi
+  fi
 
   cat >>~/.shell_aliases <<"EOF"
 alias MacDisks='diskutil list'

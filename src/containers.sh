@@ -13,7 +13,7 @@ provision_setup_containers() {
   fi
 
   cat >>~/.shell_aliases <<"EOF"
-_CONTAINER_PRUNE_ALIAS='docker system prune -fa ; docker volume prune -fa ; docker network prune -f'
+_CONTAINER_PRUNE_ALIAS='docker system prune -fa ; docker volume prune -fa ; docker network prune -f; docker buildx prune -a'
 if type crictl >/dev/null 2>&1; then
   _CONTAINER_PRUNE_ALIAS="$_CONTAINER_PRUNE_ALIAS ; sudo crictl rmi --prune"
 fi

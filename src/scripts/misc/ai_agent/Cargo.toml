@@ -1,0 +1,27 @@
+[package]
+name = "ai_agent"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+async-imap = { version = "0.11.1", features = ["runtime-tokio"], default-features = false }
+async-native-tls = { version = "0.5.0", features = ["runtime-tokio"], default-features = false }
+clap = { version = "4.5.48", features = ["derive"] }
+dotenv = "0.15.0"
+futures = "0.3.31"
+regex = "1.11.3"
+reqwest = "0.12.23"
+serde = "1.0.228"
+serde_json = "1.0.145"
+tokio = { version = "1", features = ["full"] }
+tracing = "0.1.41"
+tracing-appender = "0.2.3"
+tracing-subscriber = { version = "0.3.20", features = ["time"] }
+time = { version = "0.3", features = ["local-offset", "formatting"] }
+
+[profile.release]
+opt-level = 'z'
+codegen-units = 1
+lto = true
+strip = true
+panic = "abort"

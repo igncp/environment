@@ -8,16 +8,15 @@ cd "$SCRIPT_DIR"
 
 mkdir -p ./config
 
-podman run \
+sudo docker run \
   --rm \
   -it \
   --net host \
-  --env WAYLAND_DISPLAY=$WAYLAND_DISPLAY \
-  --volume $XDG_RUNTIME_DIR/$WAYLAND_DISPLAY:$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY \
-  --env XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR \
-  --user $(id -u):$(id -g) \
-  --security-opt label=disable \
-  --userns=keep-id \
-  -w /home/ubuntu \
+  --rm \
+  -v /tmp/.X11-unix:/tmp/.X11-unix \
+  -v "$HOME"/.Xauthority:/home/ubuntu/.Xauthority \
+  -v $PWD:/app \
+  -e DISPLAY=$DISPLAY \
+  -w /app \
   gui-cursor \
   bash

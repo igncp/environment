@@ -27,10 +27,6 @@ nnoremap <leader>; za
 onoremap <leader>; <C-C>za
 vnoremap <leader>; zf
 
-" Quickly move to lines
-nnoremap <Enter> G
-nnoremap <BS> gg
-
 nnoremap <leader>A ggVG$
 cnoremap <c-A> <Home>
 cnoremap <c-E> <End>

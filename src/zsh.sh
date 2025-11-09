@@ -91,6 +91,11 @@ EOF
 
   echo 'fpath=('"$HOME"'/.zsh $fpath)' >>~/.zshrc
 
+  cat >>~/.shell_aliases <<"EOF"
+HistoryGrep () { cat $HISTFILE | ag --color=always "$1"; }
+HistoryGrepDel () { cat $HISTFILE | ag -v "$1" | sponge $HISTFILE ; }
+EOF
+
   provision_setup_zsh_unalias
 
   # Having this at the end to allow setting some aliases that were removed in

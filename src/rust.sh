@@ -56,6 +56,8 @@ _RustUpdateProvisionPackages() {
 }
 EOF
 
+  add_vscode_extension "rust-lang.rust-analyzer"
+
   install_nvim_package cespare/vim-toml
   install_nvim_package rust-lang/rust.vim
 

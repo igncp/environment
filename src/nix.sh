@@ -61,7 +61,7 @@ EOF
 experimental-features = nix-command flakes
 EOF
 
-  add_vscode_extension jnoortheen.nix-ide
+  add_vscode_extension bbenoist.nix
 
   if [ "$IS_NIXOS" == "1" ]; then
     if ! type tmux >/dev/null 2>&1; then
@@ -76,7 +76,7 @@ EOF
       sudo alejandra -q /etc/nixos/hardware-configuration.nix
     fi
   else
-    if ! type home-manager >/dev/null 2>&1; then
+    if ! type home-manager >/dev/null 2>&1 && [ ! -f "$PROVISION_CONFIG"/no-home-manager ]; then
       # The user should be in the sudoers file for this to work
       sudo mkdir -p /nix/var/nix/profiles/per-user/$USER
       sudo mkdir -p /nix/var/nix/db/
@@ -132,8 +132,10 @@ EOF
   fi
 
   cat >>~/.zshrc <<"EOF"
-eval "$(direnv hook zsh)"
-export DIRENV_LOG_FORMAT=""
+if type direnv >/dev/null 2>&1; then
+  eval "$(direnv hook zsh)"
+  export DIRENV_LOG_FORMAT=""
+fi
 EOF
 
   if type git >/dev/null 2>&1 && [ ! -d ~/misc/nixpkgs ]; then

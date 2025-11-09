@@ -36,6 +36,8 @@ in {
         };
       };
 
+      services.vscode-server.enable = true;
+
       networking.firewall.enable = true;
       networking.firewall.allowedTCPPorts =
         [22]
@@ -112,6 +114,7 @@ in {
 
       environment.systemPackages = with pkgs; [
         alsa-utils
+        appimage-run
         cacert
         dbus
         dnsutils

@@ -4,7 +4,7 @@ set -euo pipefail
 
 . src/linux/gui/dunst.sh
 . src/linux/gui/i3.sh
-. src/linux/gui/lxde.sh
+. src/linux/gui/lxqt.sh
 . src/linux/gui/surface.sh
 . src/linux/gui/vnc.sh
 . src/linux/gui/hyprland.sh
@@ -23,17 +23,6 @@ EOF
   if [ ! -f "$PROVISION_CONFIG"/gui ]; then
     return
   fi
-
-  mkdir -p ~/.scripts && cat >~/.scripts/choose_terminal.sh <<'EOF'
-if [ -f ~/.local/bin/ghostty ]; then
-  ~/.local/bin/ghostty
-elif [ -s /run/current-system/sw/bin/ghostty ]; then
-  /run/current-system/sw/bin/ghostty
-else
-  /run/current-system/sw/bin/terminator
-fi
-EOF
-  chmod +x ~/.scripts/choose_terminal.sh
 
   if [ -f "$PROVISION_CONFIG"/gui-xorg ]; then
     if [ ! -f ~/.check-files/gui-xorg ]; then
@@ -140,6 +129,9 @@ EOF
   add_desktop_common \
     "$HOME/development/environment/src/scripts/misc/wallpaper_update.sh" 'wallpaper-update' 'Wallpaper Update'
 
+  add_desktop_common \
+    "$HOME/development/environment/src/scripts/misc/choose_terminal.sh" 'choose-terminal' 'Choose Terminal'
+
   if [ -d ~/.screenlayout ] && type xrandr >/dev/null 2>&1; then
     DESKTOP_PROFILES=$(find ~/.screenlayout -type f -name '*.sh' | xargs -I {} basename {} .sh)
 
@@ -165,7 +157,7 @@ EOF
   provision_setup_gui_surface
   setup_gui_hyprland
   setup_gui_i3
-  setup_gui_lxde
+  setup_gui_lxqt
   setup_gui_dunst
   setup_gui_cinnamon
 }

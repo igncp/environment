@@ -11,13 +11,6 @@ provision_setup_nvim_base() {
     ln -s ~/.vim ~/.config/nvim
     ln -s ~/.vimrc ~/.config/nvim/init.vim
     touch ~/.check-files/neovim
-
-    # 如果沒有這個，打開文件時就會出錯
-    if [ "$IS_DEBIAN" = "1" ]; then
-      sudo apt install -y gcc
-    elif [ "$IS_ARCH" = "1" ]; then
-      sudo pacman -S --noconfirm gcc
-    fi
   fi
 
   cat >>~/.vimrc <<"EOF"

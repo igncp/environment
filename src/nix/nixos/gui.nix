@@ -11,10 +11,11 @@
   base-config = ../../../project/.config;
 
   has-cinnamon = builtins.pathExists (base-config + "/gui-cinnamon");
+  has-lxqt = builtins.pathExists (base-config + "/gui-lxqt");
   has-i3 = builtins.pathExists (base-config + "/gui-i3");
   no-1password = builtins.pathExists (base-config + "/gui-no-1password");
   has-nvidia = builtins.readFile (base-config + "/nvidia") == "yes\n";
-  is-hyprland = !has-cinnamon;
+  is-hyprland = !has-cinnamon && !has-lxqt && !has-i3;
 
   common-gui = import ../common/gui.nix {
     skip-hyprland = true;
@@ -36,7 +37,8 @@ in
         ./gui-rime.nix
         ./gui-virtualization.nix
       ]
-      ++ (lib.optional has-i3 ./gui_i3.nix)
+      ++ (lib.optional has-i3 ./gui-i3.nix)
+      ++ (lib.optional has-lxqt ./gui-lxqt.nix)
       ++ (lib.optional has-nvidia ./gui-nvidia.nix)
       ++ (lib.optional has-cinnamon ./gui-cinnamon.nix);
 

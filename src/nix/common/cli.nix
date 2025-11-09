@@ -11,7 +11,6 @@
   has_shellcheck = builtins.pathExists (base-config + "/shellcheck");
   has_azure = builtins.pathExists (base-config + "/azure");
   has_stripe = builtins.pathExists (base-config + "/stripe");
-  has_tailscale = builtins.pathExists (base-config + "/tailscale");
   has_podman = builtins.pathExists (base-config + "/podman");
   has_mssql = builtins.pathExists (base-config + "/mssql");
   has_qemu = builtins.pathExists (base-config + "/qemu");
@@ -45,6 +44,7 @@ in {
       bash
       bat # https://github.com/sharkdp/bat
       bc
+      bun
       ccls # https://github.com/MaskRay/ccls
       cmus # https://github.com/cmus/cmus
       coreutils-full
@@ -59,6 +59,7 @@ in {
       fzf # https://github.com/junegunn/fzf
       gh # https://github.com/cli/cli
       git
+      git-crypt # https://github.com/AGWA/git-crypt
       git-extras
       git-lfs
       gnugrep
@@ -105,6 +106,7 @@ in {
       tldr # https://github.com/tldr-pages/tldr
       tree
       tree-sitter
+      unison # https://github.com/bcpierce00/unison
       usql
       wget
       which # Arch linux 入面缺乏
@@ -185,7 +187,6 @@ in {
     ++ (lib.optional has_pg pkgs.postgresql)
     ++ (lib.optional has_logdy logdy)
     ++ (lib.optional has_stripe pkgs.stripe-cli) # https://github.com/stripe/stripe-cli
-    ++ (lib.optional has_tailscale pkgs.tailscale)
     ++ (lib.optional has_mssql pkgs.sqlcmd)
     ++ (lib.optional has_qemu pkgs.guestfs-tools)
     ++ (lib.optional has_qemu pkgs.qemu)

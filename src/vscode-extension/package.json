@@ -1,0 +1,44 @@
+{
+  "name": "igncp-vscode-extension",
+  "displayName": "igncp-vscode-extension",
+  "private": true,
+  "description": "",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.50.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "igncp-vscode-extension.easyLog",
+        "title": "Easy Log"
+      }
+    ]
+  },
+  "scripts": {
+    "package": "bun run package:test && bun run package:content",
+    "package:content": "webpack --mode production --devtool hidden-source-map && vsce package --allow-missing-repository",
+    "package:test": "prettier --write 'src/**/*.ts'",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/node": "22.x",
+    "@types/vscode": "^1.50.0",
+    "@typescript-eslint/eslint-plugin": "^8.45.0",
+    "@typescript-eslint/parser": "^8.45.0",
+    "@vscode/test-cli": "^0.0.11",
+    "@vscode/test-electron": "^2.5.2",
+    "eslint": "^9.36.0",
+    "prettier": "^3.6.2",
+    "ts-loader": "^9.5.4",
+    "typescript": "^5.9.3",
+    "vsce": "^2.15.0",
+    "webpack": "^5.102.0",
+    "webpack-cli": "^6.0.1"
+  }
+}

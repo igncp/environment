@@ -3,14 +3,15 @@
 set -euo pipefail
 
 if [ ! -f ~/.scripts/.nix_sync_list_rc ]; then
-  echo "echo 您必須建立包含所有可能的目錄的文件: "~/.scripts/.nix_sync_list_rc""
-  exit 1
+  mkdir -p ~/.scripts
+  touch ~/.scripts/.nix_sync_list_rc
 fi
 
 ALL_DIRS=$(cat ~/.scripts/.nix_sync_list_rc)
 
 ALL_DIRS="$ALL_DIRS
-~/development/environment/src/scripts/specific/deluge_custom_client"
+~/development/environment/src/scripts/specific/deluge_custom_client
+~/development/environment/src/common-config"
 
 if [ -z "${1:-}" ]; then
   echo "ALL" >/tmp/nix_sync_list_rc

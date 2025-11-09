@@ -1,0 +1,34 @@
+{
+  "name": "@igncp/common-config",
+  "version": "0.0.11",
+  "homepage": "https://github.com/igncp/environment/tree/main/src/common-config",
+  "scripts": {
+    "test": "knip && eslint . && prettier --check . && jest --passWithNoTests",
+    "publish_pkg": "npm run test && npm publish --access public"
+  },
+  "dependencies": {
+    "@eslint/js": "^9.15.0",
+    "@stylistic/eslint-plugin": "^2.10.1",
+    "eslint": "^9.14.0",
+    "eslint-import-resolver-alias": "^1.1.2",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-jest": "^29.0.1",
+    "eslint-plugin-perfectionist": "^3.9.1",
+    "eslint-plugin-prettier": "^5.0.1",
+    "eslint-plugin-react": "^7.37.2",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "jest": "^30.0.3",
+    "knip": "^5.64.3",
+    "prettier": "^3.3.3",
+    "prettier-plugin-tailwindcss": "^0.5.14",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.35.0"
+  },
+  "author": "Ignacio Carbajo <icarbajop@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/igncp/environment.git"
+  },
+  "license": "MIT",
+  "description": "Common config files used in my projects"
+}

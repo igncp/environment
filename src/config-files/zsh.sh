@@ -75,10 +75,10 @@ zle -N scriptsFull
 zle -N sourceConfig
 zle -N openTmuxPane
 
-bindkey "\C-q\C-q" nixShells
+bindkey "\C-q\C-s" nixShells
 bindkey "\C-q\C-w" bookmarksFull
 bindkey "\C-q\C-a" openTmuxPane
-bindkey "\C-q\C-s" scriptsFull
+bindkey "\C-q\C-q" scriptsFull
 bindkey "\C-q\C-l" openFzf
 bindkey "\C-q\C-m" openEnvironment
 bindkey "\C-p" sourceConfig
@@ -106,7 +106,7 @@ if [[ "$SOCKET_NAME" == "default" ]] || [ -z "$SOCKET_NAME" ]; then
   tmux -L default set-option status off 2> /dev/null
 else
   echo "tmux socket: $SOCKET_NAME"
-  tmux -L "$SOCKET_NAME" set-option status on
+  # tmux -L "$SOCKET_NAME" set-option status on
 fi
 
 setopt PROMPT_SUBST
@@ -180,7 +180,7 @@ if type mise &> /dev/null; then
   eval "$(mise activate zsh)"
 fi
 
-if type fastfetch &> /dev/null && [ -z "$TMUX" ]; then
+if type fastfetch &> /dev/null && [ -z "$TMUX" ] && [ -z "$VSCODE_SHELL_INTEGRATION" ]; then
   fastfetch -l none || true
 fi
 

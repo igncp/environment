@@ -30,11 +30,7 @@ EOF
 
   if type i3 >/dev/null 2>&1; then
     if [ -d ~/.config/i3 ]; then
-      if [ ! -f $HOME/.local/bin/ghostty ] && [ "$IS_NIXOS" != "1" ]; then
-        echo "唔係複製 i3配置，因為 ghostty 唔係預期路徑入面"
-      else
-        cp ~/development/environment/src/config-files/i3-config ~/.config/i3/config
-      fi
+      cp ~/development/environment/src/config-files/i3-config ~/.config/i3/config
     fi
 
     bash $HOME/development/environment/src/config-files/i3blocks.sh

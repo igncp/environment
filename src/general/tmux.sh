@@ -31,7 +31,7 @@ EOF
 
   cat >~/.tmux.conf <<"EOF"
 set-option -g default-shell $SHELL
-set -s escape-time 0
+set -s escape-time 10
 set-window-option -g xterm-keys on
 EOF
 

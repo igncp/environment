@@ -131,7 +131,7 @@ local nvim_plugins = {
     'github/copilot.vim',
     commit = get_version('neovim.copilot.vim'),
     enabled = function()
-      return M.has_config('copilot')
+      return M.has_config('no-copilot') == false
     end,
   },
 
@@ -406,7 +406,7 @@ vim.api.nvim_set_keymap("i", "<c-f>", "<c-c>:call SpecialMaps()<cr>",
   { noremap = true })
 
 -- This is due to the screen not cleaned when dismissing a suggestion
-if M.has_config("copilot") then
+if M.has_config("no-copilot") == false then
   vim.cmd([[
 hi CopilotSuggestion guifg=#ff8700 ctermfg=208
 

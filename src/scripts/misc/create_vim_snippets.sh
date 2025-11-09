@@ -218,7 +218,7 @@ $1.defaultProps = {};
 export default $1;
 endsnippet
 
-snippet => "Arrow function" i
+snippet af "Arrow function" i
 () => {
   ${0}
 }
