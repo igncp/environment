@@ -81,6 +81,7 @@ provision_setup_vscode() {
   add_vscode_extension "vscodevim.vim"
   add_vscode_extension "jkillian.custom-local-formatters"
   add_vscode_extension "cocopon.iceberg-theme"
+  add_vscode_extension "eamodio.gitlens"
 
   # add_vscode_extension "ms-vscode-remote.remote-ssh" vscode
   # add_vscode_extension "ms-vscode-remote.remote-ssh-edit" vscode
@@ -108,6 +109,9 @@ provision_setup_vscode() {
   fi
 
   VSIX_FILE="$HOME/development/environment/src/vscode-extension/igncp-vscode-extension-0.0.1.vsix"
+  if [ "${PROVISION_REINSTALL_EXTENSIONS:-}" = "1" ]; then
+    rm -f "$VSIX_FILE"
+  fi
   if [ ! -f "$VSIX_FILE" ]; then
     cd ~/development/environment/src/vscode-extension
     bun i && bun run package

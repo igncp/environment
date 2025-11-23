@@ -1,9 +1,16 @@
-import { ExtensionContext, commands, window, Position } from "vscode";
+import * as path from "path";
+import {
+  ExtensionContext,
+  commands,
+  window,
+  Position,
+  env,
+  workspace,
+} from "vscode";
 
 export function activate(context: ExtensionContext): void {
-  let disposable = commands.registerCommand(
-    "igncp-vscode-extension.easyLog",
-    async () => {
+  context.subscriptions.push(
+    commands.registerCommand("igncp-vscode-extension.easyLog", async () => {
       const editor = window.activeTextEditor;
       if (!editor) {
         window.showWarningMessage("No editor instance");
@@ -34,10 +41,67 @@ export function activate(context: ExtensionContext): void {
       if (!success) {
         window.showErrorMessage("Failed to insert debug log");
       }
-    },
+    }),
   );
 
-  context.subscriptions.push(disposable);
+  context.subscriptions.push(
+    commands.registerCommand(
+      "igncp-vscode-extension.copyFileDirPath",
+      async () => {
+        const editor = window.activeTextEditor;
+
+        if (!editor) {
+          window.showWarningMessage("No editor instance");
+          return;
+        }
+
+        const document = editor.document;
+        const filePath = document.uri.fsPath;
+        const dirPath = filePath.substring(0, filePath.lastIndexOf("/"));
+
+        const wsFolder = workspace.getWorkspaceFolder(document.uri);
+        const workspaceFsPath = wsFolder?.uri.fsPath;
+
+        const relativeDirPath = workspaceFsPath
+          ? path.relative(workspaceFsPath, dirPath)
+          : dirPath;
+
+        await env.clipboard.writeText(relativeDirPath);
+        window.showInformationMessage(`Copied directory path: ${dirPath}`);
+      },
+    ),
+  );
+
+  context.subscriptions.push(
+    commands.registerCommand(
+      "igncp-vscode-extension.copyFileRelativePathMonorepo",
+      async () => {
+        const editor = window.activeTextEditor;
+
+        if (!editor) {
+          window.showWarningMessage("No editor instance");
+          return;
+        }
+
+        const document = editor.document;
+        const filePath = document.uri.fsPath;
+
+        const wsFolder = workspace.getWorkspaceFolder(document.uri);
+        const workspaceFsPath = wsFolder?.uri.fsPath;
+
+        const relativeFilePath = workspaceFsPath
+          ? path.relative(workspaceFsPath, filePath)
+          : filePath;
+        const parsedFilePath = relativeFilePath.replace(
+          /^packages\/[^/]+\//,
+          "",
+        );
+
+        await env.clipboard.writeText(parsedFilePath);
+        window.showInformationMessage(`Copied file path: ${relativeFilePath}`);
+      },
+    ),
+  );
 }
 
 export function deactivate(): void {}

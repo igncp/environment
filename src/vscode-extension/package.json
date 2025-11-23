@@ -17,6 +17,14 @@
       {
         "command": "igncp-vscode-extension.easyLog",
         "title": "Easy Log"
+      },
+      {
+        "command": "igncp-vscode-extension.copyFileDirPath",
+        "title": "Copy File Dir Path"
+      },
+      {
+        "command": "igncp-vscode-extension.copyFileRelativePathMonorepo",
+        "title": "Copy File Relative Path Monorepo"
       }
     ]
   },

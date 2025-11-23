@@ -56,5 +56,15 @@
                 "extension.vim_cmd+c"
             ]
         }
+    },
+    {
+        "command": "workbench.action.decreaseViewWidth",
+        "key": "alt+[ArrowRight]",
+        "when": "!editorFocus"
+    },
+    {
+        "command": "workbench.action.increaseViewWidth",
+        "key": "alt+[ArrowLeft]",
+        "when": "!editorFocus"
     }
 ]

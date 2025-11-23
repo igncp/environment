@@ -213,6 +213,9 @@ KillAllTmux() {
   ) >/dev/null 2>&1
   ps aux | grep tmux | grep -v grep | awk '{print $2}' | xargs -I{} kill {}
 }
+TA() {
+  tmux -L "$(basename $PWD)" attach
+}
 
 # 這些別名保留 nix shell 環境
 TW() { tmux new-window -e "IN_NIX_SHELL=$IN_NIX_SHELL"; }

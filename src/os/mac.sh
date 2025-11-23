@@ -99,11 +99,11 @@ EOF
 
   disable_mac_hotkey() {
     NUM=$1
-    CURRENT_VALUE="$(plutil -extract AppleSymbolicHotKeys.$NUM.enabled raw -o - ~/Library/Preferences/com.apple.symbolichotkeys.plist || true)"
+    CURRENT_VALUE="$(plutil -extract AppleSymbolicHotKeys.$NUM.enabled raw -o - ~/Library/Preferences/com.apple.symbolichotkeys.plist 2>&1 || true)"
     if [ "$CURRENT_VALUE" = "true" ]; then
       echo "更新鍵盤快速鍵: $NUM"
-      plutil -replace AppleSymbolicHotKeys.$NUM.enabled -bool NO ~/Library/Preferences/com.apple.symbolichotkeys.plist || true
-      defaults read com.apple.symbolichotkeys.plist >/dev/null || true
+      plutil -replace AppleSymbolicHotKeys.$NUM.enabled -bool NO ~/Library/Preferences/com.apple.symbolichotkeys.plist >/dev/null 2>&1 || true
+      defaults read com.apple.symbolichotkeys.plist >/dev/null 2>&1 || true
       /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u || true
     fi
   }

@@ -105,5 +105,43 @@
             "t",
             "<cr>"
         ]
+    },
+    {
+        "before": [
+            "<leader>",
+            "P"
+        ],
+        "commands": [
+            "igncp-vscode-extension.copyFileDirPath"
+        ]
+    },
+    {
+        "before": [
+            "<leader>",
+            "p",
+            "p"
+        ],
+        "commands": [
+            "igncp-vscode-extension.copyFileRelativePathMonorepo"
+        ]
+    },
+    {
+        "before": [
+            "<leader>",
+            "P"
+        ],
+        "commands": [
+            "igncp-vscode-extension.copyFileDirPath"
+        ]
+    },
+    {
+        "before": [
+            "<leader>",
+            "p",
+            "p"
+        ],
+        "commands": [
+            "igncp-vscode-extension.copyFileRelativePathMonorepo"
+        ]
     }
 ]

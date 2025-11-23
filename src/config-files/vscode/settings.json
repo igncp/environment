@@ -17,7 +17,7 @@
       ]
     },
     {
-      "command": "prettierd --stdin --stdin-filepath ${file}",
+      "command": "cd $(dirname ${file}) && prettierd --stdin --stdin-filepath ${file}",
       "languages": [
         "typescript",
         "typescriptreact"
@@ -48,9 +48,14 @@
   "editor.scrollbar.vertical": "hidden",
   "editor.stickyScroll.enabled": false,
   "editor.suggestSelection": "first",
+  "editor.wordSeparators": "`~!@#$%^&*()=+[{]}\\|;:'\",.<>/?",
   "explorer.decorations.colors": false,
   "extensions.ignoreRecommendations": true,
   "files.enableTrash": false,
+  "gitlens.codeLens.authors.enabled": false,
+  "gitlens.codeLens.enabled": false,
+  "gitlens.codeLens.recentChange.enabled": false,
+  "gitlens.currentLine.enabled": false,
   "less.validate": false,
   "php.validate.enable": false,
   "rust-analyzer.inlayHints.chainingHints.enable": false,
@@ -58,6 +63,11 @@
   "rust-analyzer.inlayHints.genericParameterHints.const.enable": false,
   "rust-analyzer.inlayHints.parameterHints.enable": false,
   "rust-analyzer.inlayHints.typeHints.enable": false,
+  "rust-analyzer.lens.debug.enable": false,
+  "rust-analyzer.lens.enable": false,
+  "rust-analyzer.lens.implementations.enable": false,
+  "rust-analyzer.lens.run.enable": false,
+  "rust-analyzer.lens.updateTest.enable": false,
   "scss.validate": false,
   "search.decorations.colors": false,
   "telemetry.telemetryLevel": "off",
@@ -74,6 +84,9 @@
     "<C-y>": false
   },
   "vim.leader": "<space>",
+  "window.nativeTabs": true,
+  "window.newWindowDimensions": "maximized",
+  "window.restoreFullscreen": true,
   "workbench.colorCustomizations": {
     "editor.selectionBackground": "#ff000055",
     "editor.selectionForeground": "#ffffff",
@@ -85,6 +98,7 @@
   },
   "workbench.colorTheme": "Iceberg",
   "workbench.editor.decorations.colors": false,
+  "workbench.editor.restoreViewState": true,
   "workbench.enableExperiments": false,
   "workbench.startupEditor": "none",
   "workbench.statusBar.visible": true
