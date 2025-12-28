@@ -37,6 +37,12 @@ in
       packages = [] ++ cli-pkgs.pkgs-list;
     };
 
+    ai = pkgs.mkShell {
+      packages = with pkgs; [
+        python313Packages.huggingface-hub
+      ];
+    };
+
     aws = pkgs.mkShell {
       packages = with pkgs; [awscli2];
     };

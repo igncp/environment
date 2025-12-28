@@ -89,7 +89,7 @@ GitBranchOrder() {
     tac | less;
 }
 
-alias GitAddAll='git reset -q && GitAdd "$(git rev-parse --show-toplevel)"'
+alias GitAddAll='GitAdd "$(git rev-parse --show-toplevel)"'
 alias GitBranchesCompare='git log --left-right --graph --cherry-pick --oneline' # e.g. GitBranchesCompare main...feature
 alias GitCleanAll='git clean -fxd' # 包括被忽略的檔案（例如 .env 檔案）
 alias GitConfig='"$EDITOR" .git/config'

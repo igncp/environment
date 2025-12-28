@@ -57,5 +57,14 @@
             "v",
             "<esc>"
         ]
+    },
+    {
+        "before": [
+            "<leader>",
+            "g"
+        ],
+        "commands": [
+            "editor.action.startFindReplaceAction"
+        ]
     }
 ]

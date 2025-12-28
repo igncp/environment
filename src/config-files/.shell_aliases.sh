@@ -205,6 +205,7 @@ fi
 alias NetstatConnections='netstat -nputw'
 alias AnsiColorsRemove="sed 's/\x1b\[[0-9;]*m//g'"
 
+alias TK='tmux kill-server'
 KillAllTmux() {
   (
     killall /usr/bin/tmux || true

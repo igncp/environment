@@ -2,6 +2,15 @@
     {
         "before": [
             "g",
+            "y"
+        ],
+        "commands": [
+            "editor.action.goToTypeDefinition"
+        ]
+    },
+    {
+        "before": [
+            "g",
             "]"
         ],
         "commands": [
@@ -103,7 +112,36 @@
             "o",
             "r",
             "t",
-            "<cr>"
+            "<把cr>"
+        ]
+    },
+    {
+        "before": [
+            "<leader>",
+            "P"
+        ],
+        "commands": [
+            "igncp-vscode-extension.copyFileDirPath"
+        ]
+    },
+    {
+        "before": [
+            "<leader>",
+            "p",
+            "p"
+        ],
+        "commands": [
+            "igncp-vscode-extension.copyFileRelativePathMonorepo"
+        ]
+    },
+    {
+        "before": [
+            "<leader>",
+            "p",
+            "o"
+        ],
+        "commands": [
+            "igncp-vscode-extension.listFilesInDirOrBelow"
         ]
     },
     {

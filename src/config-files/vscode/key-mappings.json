@@ -53,7 +53,21 @@
         "args": {
             "commands": [
                 "workbench.action.files.save",
-                "extension.vim_cmd+c"
+                "extension.vim_cmd+c",
+                "workbench.action.closeSidebar",
+                "workbench.action.closePanel"
+            ]
+        }
+    },
+    {
+        "key": "cmd+s",
+        "command": "runCommands",
+        "args": {
+            "commands": [
+                "workbench.action.files.save",
+                "extension.vim_cmd+c",
+                "workbench.action.closeSidebar",
+                "workbench.action.closePanel"
             ]
         }
     },

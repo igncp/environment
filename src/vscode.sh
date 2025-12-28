@@ -124,4 +124,12 @@ if [ -d /Applications/Cursor.app/Contents/Resources/app/bin ]; then
   export PATH="/Applications/Cursor.app/Contents/Resources/app/bin/:$PATH"
 fi
 EOF
+
+  cat >>~/.shell_aliases <<"EOF"
+if type cursor >/dev/null 2>&1; then
+  alias XargsN='xargs cursor'
+else
+  alias XargsN='xargs code'
+fi
+EOF
 }

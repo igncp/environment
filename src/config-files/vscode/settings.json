@@ -11,7 +11,7 @@
   "cursor.composer.textSizeScale": 1.15,
   "customLocalFormatters.formatters": [
     {
-      "command": "shfmt -i 2",
+      "command": "shfmt",
       "languages": [
         "shellscript"
       ]
@@ -94,7 +94,8 @@
     "editorCursor.foreground": "#a0f7cb88",
     "editorRuler.foreground": "#ff333300",
     "list.activeSelectionBackground": "#ffff0022",
-    "terminal.selectionBackground": "#9999dd99"
+    "terminal.selectionBackground": "#9999dd99",
+    "list.focusBackground": "#00ffff44"
   },
   "workbench.colorTheme": "Iceberg",
   "workbench.editor.decorations.colors": false,

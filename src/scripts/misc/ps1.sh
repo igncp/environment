@@ -47,9 +47,11 @@ provision_get_ps1() {
   }
 
   get_ssh_notice() {
-    SSH_NOTICE_COLOR=$(cat "$HOME/development/environment/project/.config/ssh-notice-color" || true)
-    if [ -z "$SSH_NOTICE_COLOR" ]; then
-      SSH_NOTICE_COLOR="cyan"
+    if [ -f "$HOME/development/environment/project/.config/ssh-notice-color" ]; then
+      SSH_NOTICE_COLOR=$(cat "$HOME/development/environment/project/.config/ssh-notice-color" || true)
+      if [ -z "$SSH_NOTICE_COLOR" ]; then
+        SSH_NOTICE_COLOR="cyan"
+      fi
     fi
 
     SSH_NOTICE=""

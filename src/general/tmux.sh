@@ -58,6 +58,8 @@ EOF
   set -g window-status-current-format ""
   set -g window-status-format ""
   set -g default-terminal "screen-256color"
+  set -g mouse off
+  set -g terminal-features ",*:RGB"
 
   set -g status-bg black
   set -g status-fg red

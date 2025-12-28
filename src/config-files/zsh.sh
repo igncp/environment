@@ -75,9 +75,9 @@ zle -N scriptsFull
 zle -N sourceConfig
 zle -N openTmuxPane
 
-bindkey "\C-q\C-s" nixShells
+bindkey "\C-q\C-s" openTmuxPane
 bindkey "\C-q\C-w" bookmarksFull
-bindkey "\C-q\C-a" openTmuxPane
+bindkey "\C-q\C-a" nixShells
 bindkey "\C-q\C-q" scriptsFull
 bindkey "\C-q\C-l" openFzf
 bindkey "\C-q\C-m" openEnvironment

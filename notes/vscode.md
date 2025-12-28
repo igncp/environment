@@ -21,3 +21,5 @@
 - 循環睇標籤: `Control + num` or `Control + tab`
 - 去定義: `F12`
 - 打開新視窗: `Cmd + shift + n`
+- 切換 AI 聊天視圖: `Cmd + Control + i`
+- 在人工智慧聊天輸入中跳到不同的單字: `Control + Alt + arrow`
