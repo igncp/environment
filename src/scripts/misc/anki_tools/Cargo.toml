@@ -1,0 +1,15 @@
+[package]
+name = "anki_tools"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+clap = { version = "4.5.54", features = ["derive"] }
+dotenvy = "0.15"
+reqwest = { version = "0.13.1", features = ["json"] }
+scraper = "0.25.0"
+serde = "1.0.228"
+serde_json = "1.0.148"
+tokio = { version = "1", features = ["full"] }
+tracing = "0.1.40"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }

@@ -176,9 +176,6 @@ nnoremap <leader>zx 'mzz
 nnoremap <leader>jrw :call setreg("f", "<c-r>=expand("%:t:r")<cr>")<cr>
 nnoremap <leader>jrW :call setreg("g", "<c-r>=expand("%:p")<cr>")<cr>
 
-" use always the same cursor
-  set guicursor=
-
 " wrap quickfix window
   augroup quickfix
     autocmd!

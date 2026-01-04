@@ -118,9 +118,17 @@ EOF
     disable_mac_hotkey 82
   fi
 
-  if [ ! -f ~/.check-files/init-apps ] && [ ! -f "$PROVISION_CONFIG"/minimal ]; then
+  if [ ! -f ~/.check-files/mac-init-apps-v1 ] && [ ! -f "$PROVISION_CONFIG"/minimal ]; then
+    echo "配置 macOS 系統偏好設定..."
+
     # 降低透明度
     defaults write com.apple.universalaccess reduceTransparency -bool true || true
+
+    # 停用熱角
+    defaults write com.apple.dock wvous-tl-corner -int 0
+    defaults write com.apple.dock wvous-tr-corner -int 0
+    defaults write com.apple.dock wvous-bl-corner -int 0
+    defaults write com.apple.dock wvous-br-corner -int 0
 
     # Safari debug
     (defaults write com.apple.Safari IncludeInternalDebugMenu -bool true &&
@@ -136,7 +144,7 @@ EOF
     xcode-select --install || true
 
     # 停用空間的自動排列
-    defaults write com.apple.dock mru-spaces -bool false && killall Dock || true
+    defaults write com.apple.dock mru-spaces -bool false && killall Dock || true
     # 自動隱藏底座
     defaults write com.apple.dock autohide -bool true && killall Dock || true
     # 禁用通知上的圖示彈跳
@@ -160,6 +168,7 @@ EOF
     # 喺頂部欄度顯示音頻圖示
     defaults -currentHost write com.apple.controlcenter Sound -int 18
 
+    killall Dock || true
     touch ~/.check-files/init-apps
   fi
 

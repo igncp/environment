@@ -58,7 +58,6 @@ in {
 
       i3
       i3blocks
-      i3lock
       i3status
       pasystray
       xdotool
@@ -101,6 +100,10 @@ in {
             google-chrome
             pdfsam-basic # https://github.com/torakiki/pdfsam # 需要將語言轉做英文
             realvnc-vnc-viewer
+            librime
+            rime-data
+            (ibus-with-plugins.override
+              {plugins = [ibus-engines.rime];})
           ]
           ++ ((has-gui-opt "discord") discord)
           ++ ((has-gui-opt "steam") steam)

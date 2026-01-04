@@ -75,11 +75,6 @@ EOF
     echo "啟用無人管理嘅升級: sudo dpkg-reconfigure unattended-upgrades"
   fi
 
-  if [ -z "$(systemctl --user list-units | grep pulseaudio | grep running || true)" ]; then
-    sudo apt install pulseaudio-module-bluetooth
-    systemctl --user enable --now pulseaudio
-  fi
-
   # This disables the * when typing a password
   if [ -f /etc/sudoers.d/0pwfeedback ]; then
     sudo mv /etc/sudoers.d/0pwfeedback /etc/sudoers.d/0pwfeedback.disabled

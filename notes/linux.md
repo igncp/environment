@@ -2,7 +2,7 @@
 
 - From mac: Balena Etcher - https://etcher.balena.io/#download-etcher
 
-# 網絡
+# Network
 
 ## 排除緊現有嘅配置故障
 

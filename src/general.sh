@@ -105,10 +105,6 @@ EOF
   #     );
 
   cat >>~/.bashrc <<"EOF"
-export GTK_IM_MODULE="ibus";
-export QT_IM_MODULE="ibus";
-export XMODIFIERS="@im=ibus";
-
 if [ -z "$PS1" ]; then
   # prompt var is not set, so this is *not* an interactive shell (e.g. using scp)
   return

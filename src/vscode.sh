@@ -72,7 +72,7 @@ provision_setup_vscode() {
         "$POSSIBLE_CONFIG_FILE" | sponge "$POSSIBLE_CONFIG_FILE"
 
       MAIN_PATH="$(dirname "$POSSIBLE_CONFIG_FILE")"
-      cp src/config-files/vscode/common.code-snippets \
+      cp $HOME/development/environment/src/config-files/vscode/common.code-snippets \
         "$MAIN_PATH"/snippets
     fi
   done
@@ -82,6 +82,10 @@ provision_setup_vscode() {
   add_vscode_extension "jkillian.custom-local-formatters"
   add_vscode_extension "cocopon.iceberg-theme"
   add_vscode_extension "eamodio.gitlens"
+
+  if type ccls >/dev/null 2>&1; then
+    add_vscode_extension "ccls-project.ccls"
+  fi
 
   # add_vscode_extension "ms-vscode-remote.remote-ssh" vscode
   # add_vscode_extension "ms-vscode-remote.remote-ssh-edit" vscode

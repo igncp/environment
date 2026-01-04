@@ -60,6 +60,10 @@
         }
     },
     {
+        "key": "cmd+w",
+        "command": "workbench.action.closeActiveEditor"
+    },
+    {
         "key": "cmd+s",
         "command": "runCommands",
         "args": {
@@ -68,6 +72,42 @@
                 "extension.vim_cmd+c",
                 "workbench.action.closeSidebar",
                 "workbench.action.closePanel"
+            ]
+        }
+    },
+    {
+        "key": "ctrl+shift+s",
+        "command": "runCommands",
+        "args": {
+            "commands": [
+                "workbench.action.files.save",
+                "extension.vim_cmd+c",
+                "workbench.action.closeSidebar",
+                "workbench.action.closePanel",
+                "workbench.action.closeAuxiliaryBar"
+            ]
+        }
+    },
+    {
+        "key": "cmd+shift+s",
+        "command": "runCommands",
+        "args": {
+            "commands": [
+                "workbench.action.files.save",
+                "extension.vim_cmd+c",
+                "workbench.action.closeSidebar",
+                "workbench.action.closePanel",
+                "workbench.action.closeAuxiliaryBar"
+            ]
+        }
+    },
+    {
+        "key": "cmd+s",
+        "command": "runCommands",
+        "args": {
+            "commands": [
+                "workbench.action.files.save",
+                "extension.vim_cmd+c"
             ]
         }
     },

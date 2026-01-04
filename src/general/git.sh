@@ -71,6 +71,8 @@ alias grh="git reset --hard"
 alias gs="git show"
 alias gss='git commit -v -t $(git rev-parse --show-toplevel)/.git/COMMIT_EDITMSG'
 
+alias GitAutoPush="$HOME/development/environment/src/scripts/git_auto_push.sh"
+
 gx() {
   BRANCH=${1:-main}
   git merge $BRANCH;

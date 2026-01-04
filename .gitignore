@@ -1,5 +1,5 @@
 /project/*
-.vscode
 target
 node_modules
 /result
+.ccls-cache

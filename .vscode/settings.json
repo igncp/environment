@@ -1,0 +1,7 @@
+{
+  "rust-analyzer.linkedProjects": [
+    "src/scripts/misc/anki_tools/Cargo.toml",
+    "src/scripts/misc/ai_agent/Cargo.toml",
+    "src/scripts/misc/provision_choose_config/Cargo.toml"
+  ]
+}

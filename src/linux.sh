@@ -92,24 +92,12 @@ EOF
   # sudo iotop -o -n 2 -t -b
   install_system_package "iotop"
 
-  if [ ! -f ~/.check-files/swappiness ]; then
-    echo "[~/.check-files/swappiness]: Decide whether to use SwappinessUpdate and hide this message"
-  fi
-
   # LVM
   # Creation: lvcreate --size 10G -n home ubuntu-vg # use mkfs.ext4 and mount (for fstab) after
   # For extending: lvextend -L +8G /dev/mapper/lv-foo ; resize2fs /dev/mapper/lv-foo
   # lvdisplay
 
   # Performance
-  if [ -f /proc/sys/kernel/nmi_watchdog ]; then
-    if [ ! -f ~/.check-files/watchdog ]; then
-      if [ -n "$(grep 1 /proc/sys/kernel/nmi_watchdog)" ] && [ -f /boot/grub/grub.cfg ] && [ -z "$(sudo grep watchdog /boot/grub/grub.cfg)" ]; then
-        echo "[~/.check-files/watchdog]: Add 'nmi_watchdog=0' to the kernel params in grub to disable watchdog or hide this message"
-      fi
-    fi
-  fi
-
   if [ ! -f ~/.check-files/noatime ]; then
     if [ -f /etc/fstab ] && [ -n "$(grep relatime /etc/fstab || true)" ]; then
       echo "[~/.check-files/noatime]: Replace relatime with noatime in fstab and hide this message"

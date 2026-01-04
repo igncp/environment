@@ -1,0 +1,13 @@
+[Unit]
+Description=Lock screen before suspend
+Before=sleep.target
+
+[Service]
+Type=forking
+User=__USERNAME__
+Environment=DISPLAY=:0
+Environment=XAUTHORITY=/home/__USERNAME__/.Xauthority
+ExecStart=/usr/bin/i3lock -c 000000
+
+[Install]
+WantedBy=sleep.target
