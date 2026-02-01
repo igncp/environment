@@ -8,7 +8,7 @@ use std::{
 fn get_all_items() -> Vec<ConfigItem> {
     let possible_config_rust = std::process::Command::new("bash")
         .arg("-c")
-        .arg(r#"grep --no-file -rEo '".config/([_a-zA-Z0-9-])*"' ~/development/environment | sort | uniq"#)
+        .arg(r#"grep --exclude-dir=node_modules --exclude-dir=target --no-file -rEo '".config/([_a-zA-Z0-9-])*"' ~/development/environment | sort | uniq"#)
         .output()
         .expect("Failed to execute command")
         .stdout
@@ -23,7 +23,7 @@ fn get_all_items() -> Vec<ConfigItem> {
     let possible_config_bash = std::process::Command::new("bash")
         .arg("-c")
         .arg(
-            r#"grep --no-file -rEo 'PROVISION_CONFIG[^ ]* ' ~/development/environment/src | sort | uniq"#,
+            r#"grep --exclude-dir=node_modules --exclude-dir=target --no-file -rEo 'PROVISION_CONFIG[^ ]* ' ~/development/environment/src | sort | uniq"#,
         )
         .output()
         .expect("Failed to execute command")
@@ -39,7 +39,7 @@ fn get_all_items() -> Vec<ConfigItem> {
     let possible_config_lua = std::process::Command::new("bash")
         .arg("-c")
         .arg(
-            r#"grep --no-file -rEo "(get_config_file_path|has_config)\([^a-z][a-z0-9-]*[^a-z]\)" ~/development/environment/src | sort | uniq"#,
+            r#"grep --exclude-dir=node_modules --exclude-dir=target --no-file -rEo "(get_config_file_path|has_config)\([^a-z][a-z0-9-]*[^a-z]\)" ~/development/environment/src | sort | uniq"#,
         )
         .output()
         .expect("Failed to execute command")
@@ -56,7 +56,7 @@ fn get_all_items() -> Vec<ConfigItem> {
     let possible_config_nix = std::process::Command::new("bash")
         .arg("-c")
         .arg(
-            r#"grep --no-file -rEo 'base.config \+ "[/a-z0-9-]*"' ~/development/environment/src/nix | sort | uniq"#,
+            r#"grep --exclude-dir=node_modules --exclude-dir=target --no-file -rEo 'base.config \+ "[/a-z0-9-]*"' ~/development/environment/src/nix | sort | uniq"#,
         )
         .output()
         .expect("Failed to execute command")
@@ -73,7 +73,7 @@ fn get_all_items() -> Vec<ConfigItem> {
     let gui_contents = std::process::Command::new("bash")
         .arg("-c")
         .arg(
-            r#"grep --no-file -rEo 'has-gui-opt "[/a-z0-9-]*"' ~/development/environment/src/nix | sort | uniq"#,
+            r#"grep --exclude-dir=node_modules --exclude-dir=target --no-file -rEo 'has-gui-opt "[/a-z0-9-]*"' ~/development/environment/src/nix | sort | uniq"#,
         )
         .output()
         .expect("Failed to execute command")

@@ -2,7 +2,8 @@
 
 set -e
 
-. "$HOME/.nix-profile/etc/profile.d/nix.sh" || true
+(. "$HOME/.nix-profile/etc/profile.d/nix.sh" 2>&1 &>/dev/null) || true
+export PATH="$PATH:/run/current-system/sw/bin/"
 
 export LC_ALL=C
 export LANG=C
@@ -108,6 +109,11 @@ install_linux() {
   echo "正在安裝 Linux 嘅 systemd 服務..."
 
   mkdir -p "$LINUX_SYSTEMD_USER_DIR"
+  NIX_PREFIX=""
+
+  if [ -e /etc/NIXOS ]; then
+    NIX_PREFIX="/run/current-system/sw/bin/bash "
+  fi
 
   cat >"$service_path" <<EOF
 [Unit]
@@ -116,7 +122,7 @@ After=network.target
 
 [Service]
 Type=oneshot
-ExecStart=${SCRIPT_PATH} run
+ExecStart=${NIX_PREFIX}${SCRIPT_PATH} run
 
 [Install]
 WantedBy=default.target
@@ -346,7 +352,7 @@ show_status() {
 
 process_repo() {
   local repo_path="$1"
-  local -n seen_paths_ref=$2
+  local seen_paths_ref=${2:-}
 
   if [[ -z "$repo_path" ]] || [[ "$repo_path" =~ ^# ]]; then
     return 0
@@ -388,13 +394,16 @@ process_repo() {
     echo "  ✓ 已提交更改"
   fi
 
-  if ! git pull --no-rebase --no-edit 2>&1 | tee /tmp/git_pull_output.txt; then
-    if git status | grep -q "Unmerged paths\|both modified\|both added"; then
-      echo "  ✗ 合併過程中檢測到衝突"
-      git merge --abort 2>/dev/null || true
-      send_notification "Git 自動推送 - 衝突" "衝突於：$repo_path"
-      return 1
-    fi
+  git pull --no-rebase --no-edit 2>&1 | tee /tmp/git_pull_output.txt
+
+  # 檢查係咪有未合併嘅文件（使用 diff-filter=U）
+  if git diff --diff-filter=U --name-only | grep -q .; then
+    echo "  ✗ 合併過程中檢測到衝突"
+    echo "  未合併嘅文件："
+    git diff --diff-filter=U --name-only | sed 's/^/    /'
+    git merge --abort 2>/dev/null || true
+    send_notification "Git 自動推送 - 衝突" "衝突於：$repo_path"
+    return 1
   fi
 
   if git push 2>&1; then

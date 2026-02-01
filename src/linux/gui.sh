@@ -5,7 +5,6 @@ set -euo pipefail
 . src/linux/gui/dunst.sh
 . src/linux/gui/i3.sh
 . src/linux/gui/lxqt.sh
-. src/linux/gui/surface.sh
 . src/linux/gui/vnc.sh
 . src/linux/gui/hyprland.sh
 . src/linux/gui/cinnamon.sh
@@ -154,7 +153,6 @@ EOF
   fi
 
   setup_gui_vnc
-  provision_setup_gui_surface
   setup_gui_hyprland
   setup_gui_i3
   setup_gui_lxqt

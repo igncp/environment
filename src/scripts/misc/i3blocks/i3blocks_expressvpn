@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+# 檢查 expressvpn 是否可用
+if ! command -v expressvpn &>/dev/null; then
+  echo "❌ 找不到 expressvpn |"
+  exit 1
+fi
+
+# 獲取 VPN 狀態
+status=$(expressvpn status)
+
+# 檢查是否已連接
+if echo "$status" | grep -q "Connected"; then
+  # 提取位置
+  location=$(echo "$status" | grep -oP "Connected to \K.*" | head -n 1)
+
+  if [ -n "$location" ]; then
+    echo "🔒 $location |"
+  else
+    echo "🔒 已連接 |"
+  fi
+else
+  echo "⚠️ VPN 未連接 |"
+fi

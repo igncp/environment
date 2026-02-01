@@ -1,0 +1,82 @@
+#!/usr/bin/env python3
+
+# Copyright (C) 2016 James Murphy
+# Licensed under the GPL version 2 only
+
+from subprocess import check_output
+
+status = check_output(['acpi'], universal_newlines=True)
+
+if not status:
+    # 表示找不到電池
+    fulltext = "<span color='red'><span font='FontAwesome'>\uf00d \uf240</span></span>"
+    percentleft = 100
+# 當無電池（桌面電腦）時，檢查 "rate information unavailable"
+elif "rate information unavailable" in status:
+    fulltext = "<span font='FontAwesome'>\uf1e6</span> <span color='black'> |</span>"
+    percentleft = 100
+else:
+    # 如果一部筆電有多於一個電池，每個電池的剩餘百分比
+    # 係分別可用，但整體區塊的狀態同剩餘時間
+    # 顯示喺第一個電池的狀態
+    batteries = status.split("\n")
+    state_batteries=[]
+    commasplitstatus_batteries=[]
+    percentleft_batteries=[]
+    for battery in batteries:
+        if battery!='':
+            state_batteries.append(battery.split(": ")[1].split(", ")[0])
+            commasplitstatus = battery.split(", ")
+            percentleft_batteries.append(int(commasplitstatus[1].rstrip("%\n")))
+            commasplitstatus_batteries.append(commasplitstatus)
+    state = state_batteries[0]
+    commasplitstatus = commasplitstatus_batteries[0]
+    percentleft = int(sum(percentleft_batteries)/len(percentleft_batteries))
+    # 表示充電中
+    FA_LIGHTNING = "<span color='black'><span font='FontAwesome'>\uf0e7</span></span>"
+
+    # 表示已插電
+    FA_PLUG = "<span font='FontAwesome'>\uf1e6</span>"
+
+    fulltext = ""
+    timeleft = ""
+
+    if state == "Discharging":
+        time = commasplitstatus[-1].split()[0]
+        time = ":".join(time.split(":")[0:2])
+        timeleft = " ({})".format(time)
+    elif state == "Full":
+        fulltext = FA_PLUG + " "
+    elif state == "Unknown":
+        fulltext = "<span font='FontAwesome'>\uf128</span> "
+    else:
+        fulltext = FA_LIGHTNING + " " + FA_PLUG + " "
+
+    def color(percent):
+        if percent < 10:
+            # 退出代碼 33 會將背景變為紅色
+            return "#000000"
+        if percent < 20:
+            return "#FF3300"
+        if percent < 30:
+            return "#FF3300"
+        if percent < 40:
+            return "#000000"
+        if percent < 50:
+            return "#000000"
+        if percent < 60:
+            return "#000000"
+        if percent < 70:
+            return "#000000"
+        if percent < 80:
+            return "#000000"
+        return "#000000"
+
+    form =  '<span color="{}">{}%</span>'
+    fulltext += form.format(color(percentleft), percentleft)
+    fulltext += timeleft
+
+print(fulltext + ' <span color="white"> |</span>')
+
+if percentleft < 10:
+    exit(33)

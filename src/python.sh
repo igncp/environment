@@ -3,7 +3,7 @@
 set -euo pipefail
 
 provision_setup_python() {
-  if [ "$IS_WINDOWS" = "1" ]; then
+  if [ "$IS_WINDOWS" = "1" ] || [ "$IS_NIXOS" = "1" ]; then
     return
   fi
 

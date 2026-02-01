@@ -85,10 +85,22 @@ local nvim_plugins = {
   },
   {
     "nvim-treesitter/nvim-treesitter",
-    build = ":TSUpdate"
+    build = ":TSUpdate",
+    config = function()
+      local ok, configs = pcall(require, "nvim-treesitter.config")
+      if ok and configs then
+        configs.setup {
+          auto_install = true,
+          highlight = {
+            -- 連結顏色不正確
+            disable = { "markdown" },
+            enable = true,
+          },
+        }
+      end
+    end,
   },
   -- https://github.com/nvim-treesitter/nvim-treesitter-textobjects
-  "nvim-treesitter/nvim-treesitter-textobjects",
   "jbyuki/venn.nvim",
   {
     'nvim-telescope/telescope.nvim',
@@ -888,16 +900,6 @@ require("luasnip")
 
 vim.api.nvim_set_keymap("n", "/", "/", {})
 
-require 'nvim-treesitter.configs'.setup {
-  auto_install = true,
-  highlight = {
-    disable = {
-      -- 連結顏色不正確
-      "markdown"
-    },
-    enable = true,
-  },
-}
 
 local hooks = require "ibl.hooks"
 

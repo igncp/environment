@@ -5,6 +5,7 @@ set -euo pipefail
 . src/linux/apk.sh
 . src/linux/gui.sh
 . src/linux/gui_apps.sh
+. src/linux/machines.sh
 
 provision_setup_linux() {
   if [ "$IS_LINUX" != "1" ]; then
@@ -135,4 +136,5 @@ EOF
   provision_setup_linux_apk
   provision_setup_linux_gui
   provision_setup_linux_gui_apps
+  provision_setup_linux_machines
 }

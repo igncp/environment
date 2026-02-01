@@ -34,7 +34,7 @@
   },
   "scripts": {
     "fix": "eslint --fix 'src/**/*.ts' && prettier --write 'src/**/*.ts'",
-    "package": "bun run package:test && bun run package:content",
+    "package": "npm run package:test && npm run package:content",
     "package:content": "webpack --mode production --devtool hidden-source-map && vsce package --allow-missing-repository",
     "package:test": "prettier --write 'src/**/*.ts'",
     "test": "vscode-test"

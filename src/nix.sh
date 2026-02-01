@@ -67,6 +67,7 @@ EOF
     if ! type tmux >/dev/null 2>&1; then
       echo "您需要安裝軟體包"
       echo "在繼續之前運行 RebuildNix"
+      echo "(cd $HOME/development && bash src/os/nixos/install.sh)"
       exit 1
     fi
     if [ -f /etc/nixos/configuration.nix ]; then

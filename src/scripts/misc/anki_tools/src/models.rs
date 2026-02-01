@@ -626,38 +626,49 @@ impl<'a> Deck<'a> {
                 }
             };
 
-            // 將文字同粵拼轉成彩色 HTML；若長度唔對就返回 None
+            // 將文字同粵拼轉成彩色 HTML；保留原來嘅標點符號、不上色
             let make_colored = |text: &str, jyut: &str| -> Option<String> {
-                // 只保留中日韓統一表意文字（基本區），排除字母、數字、標點
                 let is_han = |c: char| -> bool { matches!(c as u32, 0x4E00..=0x9FFF) };
-                let chars: Vec<char> = text.chars().filter(|c| is_han(*c)).collect();
-                // 過濾枚舉（例如 "1.", "2.") 以及非粵拼音節嘅 token（必須以數字結尾）
+                // 濾走枚舉及非音節 token（必須含字母且以數字結尾）
                 let items: Vec<&str> = jyut
                     .split_whitespace()
                     .filter(|tok| {
-                        let has_digit_end = tok.chars().last().map(|c| c.is_ascii_digit()).unwrap_or(false);
+                        let has_digit_end = tok
+                            .chars()
+                            .last()
+                            .map(|c| c.is_ascii_digit())
+                            .unwrap_or(false);
                         let has_letter = tok.chars().any(|c| c.is_ascii_alphabetic());
                         has_digit_end && has_letter
                     })
                     .collect();
-                if chars.len() != items.len() {
+                let mut html = String::new();
+                let mut item_idx = 0usize;
+                let total_han = text.chars().filter(|c| is_han(*c)).count();
+                if items.len() < total_han {
                     return None;
                 }
-                let mut html = String::new();
-                for (ch, syllable) in chars.into_iter().zip(items.into_iter()) {
-                    let tone = syllable
-                        .chars()
-                        .rev()
-                        .find_map(|c| {
-                            if c.is_ascii_digit() {
-                                Some(c.to_digit(10).unwrap_or(0) as u8)
-                            } else {
-                                None
-                            }
-                        })
-                        .unwrap_or(0);
-                    let color = tone_color(tone);
-                    html.push_str(&format!("<span style=\"color:{}\">{}</span>", color, ch));
+                for ch in text.chars() {
+                    if is_han(ch) {
+                        let syllable = items[item_idx];
+                        item_idx += 1;
+                        let tone = syllable
+                            .chars()
+                            .rev()
+                            .find_map(|c| {
+                                if c.is_ascii_digit() {
+                                    Some(c.to_digit(10).unwrap_or(0) as u8)
+                                } else {
+                                    None
+                                }
+                            })
+                            .unwrap_or(0);
+                        let color = tone_color(tone);
+                        html.push_str(&format!("<span style=\"color:{}\">{}</span>", color, ch));
+                    } else {
+                        // 非漢字（包括標點）原樣保留
+                        html.push(ch);
+                    }
                 }
                 Some(html)
             };

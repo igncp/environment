@@ -40,22 +40,13 @@ fi
 EOF
 chmod +x ~/.scripts/i3blocks_docker_containers.sh
 
-cat >~/.scripts/i3blocks_location.sh <<"EOF"
-if [ -f $HOME/development/environment/project/.config/inside ]; then
-  echo "🏡 |"
-else
-  echo "🏢 |"
-fi
-EOF
-chmod +x ~/.scripts/i3blocks_location.sh
-
 cat >~/.config/i3blocks/config <<"EOF"
 separator=false
 separator_block_width=7
 # -- global config end
 
-[location]
-command="__HOME/.scripts/i3blocks_location.sh"
+[expressvpn]
+command="__HOME/development/environment/src/scripts/misc/i3blocks/i3blocks_expressvpn"
 interval=30
 
 [docker_containers]
@@ -80,7 +71,7 @@ command="__HOME/.scripts/i3blocks_ip.sh"
 interval=10
 
 [battery]
-command="__HOME/development/environment/src/scripts/misc/i3blocks_battery"
+command="__HOME/development/environment/src/scripts/misc/i3blocks/i3blocks_battery"
 markup=pango
 interval=10
 

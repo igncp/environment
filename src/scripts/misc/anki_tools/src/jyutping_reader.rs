@@ -10,7 +10,8 @@ impl JyutpingReader {
     }
 
     fn parse_from_str(s: &str) -> HashMap<char, String> {
-        let mut map: HashMap<char, String> = HashMap::new();
+        // 暫存最佳結果：字 -> (jyutping, 百分比)
+        let mut best: HashMap<char, (String, u8)> = HashMap::new();
         let mut in_dict = false;
 
         for raw_line in s.lines() {
@@ -79,11 +80,40 @@ impl JyutpingReader {
                 continue;
             }
 
-            // 寫入映射；重覆鍵以後者覆蓋
-            map.insert(ch, jy.to_string());
-        }
+            // 解析百分比（如有），預設 100%
+            let mut percent: u8 = 100;
+            let tail = &rest[jy_end..];
+            let tail = tail.trim_start();
+            if !tail.is_empty() {
+                // 取第一個 token 嘗試解析，如 "3%"
+                let mut token_end = 0usize;
+                for (i, c) in tail.char_indices() {
+                    if c.is_ascii_whitespace() {
+                        token_end = i;
+                        break;
+                    }
+                }
+                let token = if token_end == 0 {
+                    tail
+                } else {
+                    &tail[..token_end]
+                };
+                if let Some(s) = token.strip_suffix('%') {
+                    if let Ok(v) = s.parse::<u8>() {
+                        percent = v.min(100);
+                    }
+                }
+            }
 
-        map
+            // 更新最佳（高百分比優先；同百分比以後者覆蓋）
+            match best.get(&ch) {
+                Some((_, p)) if *p > percent => {}
+                _ => {
+                    best.insert(ch, (jy.to_string(), percent));
+                }
+            }
+        }
+        best.into_iter().map(|(c, (j, _))| (c, j)).collect()
     }
 }
 
@@ -108,7 +138,7 @@ dict:
 
         let map = JyutpingReader::parse_from_str(input);
         let mut expected: HashMap<char, &str> = HashMap::new();
-        expected.insert('吖', "aa1"); // 後者覆蓋前者
+        expected.insert('吖', "aa1"); // 百分比缺省 100%，比 "3%" 更高
         expected.insert('啊', "a3");
         expected.insert('㝞', "aa1");
         expected.insert('䃁', "aa1");

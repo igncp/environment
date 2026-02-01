@@ -39,6 +39,8 @@ in {
       vlc
       webcamoid
 
+      vscode
+
       # 普通的: bash -c '. $HOME/.nix-profile/etc/profile.d/nix.sh &&  $HOME/.nix-profile/bin/nixGL $HOME/.nix-profile/bin/rofi -show combi -font "hack 20" -combi-modi drun,window,ssh'
       # 具有 root 權限: bash -c '. $HOME/.nix-profile/etc/profile.d/nix.sh &&  $HOME/.nix-profile/bin/nixGL $HOME/.nix-profile/bin/rofi -show combi -font "hack 20" -combi-modi drun,window,ssh run-command "lxqt-sudo {cmd}" -theme-str "window { background-color:#fcc;}"'
       rofi

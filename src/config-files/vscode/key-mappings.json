@@ -44,11 +44,20 @@
         "when": "!panelMaximized"
     },
     {
+        "key": "ctrl+j",
+        "command": "workbench.action.toggleMaximizedPanel",
+        "when": "!panelMaximized"
+    },
+    {
         "key": "cmd+shift+t",
         "command": "workbench.action.terminal.focus"
     },
     {
-        "key": "ctrl+s",
+        "key": "cmd+w",
+        "command": "workbench.action.closeActiveEditor"
+    },
+    {
+        "key": "cmd+s",
         "command": "runCommands",
         "args": {
             "commands": [
@@ -60,11 +69,7 @@
         }
     },
     {
-        "key": "cmd+w",
-        "command": "workbench.action.closeActiveEditor"
-    },
-    {
-        "key": "cmd+s",
+        "key": "ctrl+s",
         "command": "runCommands",
         "args": {
             "commands": [
@@ -100,25 +105,5 @@
                 "workbench.action.closeAuxiliaryBar"
             ]
         }
-    },
-    {
-        "key": "cmd+s",
-        "command": "runCommands",
-        "args": {
-            "commands": [
-                "workbench.action.files.save",
-                "extension.vim_cmd+c"
-            ]
-        }
-    },
-    {
-        "command": "workbench.action.decreaseViewWidth",
-        "key": "alt+[ArrowRight]",
-        "when": "!editorFocus"
-    },
-    {
-        "command": "workbench.action.increaseViewWidth",
-        "key": "alt+[ArrowLeft]",
-        "when": "!editorFocus"
     }
 ]

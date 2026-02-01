@@ -108,16 +108,6 @@ EOF
     fi
   }
 
-  if [ ! -f "$PROVISION_CONFIG"/minimal ]; then
-    # Mission Control: Option + up
-    disable_mac_hotkey 32
-    # Mission Control: left and right
-    disable_mac_hotkey 79
-    disable_mac_hotkey 80
-    disable_mac_hotkey 81
-    disable_mac_hotkey 82
-  fi
-
   if [ ! -f ~/.check-files/mac-init-apps-v1 ] && [ ! -f "$PROVISION_CONFIG"/minimal ]; then
     echo "配置 macOS 系統偏好設定..."
 
@@ -136,12 +126,6 @@ EOF
       defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true &&
       defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled -bool true &&
       defaults write -g WebKitDeveloperExtras -bool true) || true
-
-    # 斷開螢幕分享用戶端後保持螢幕常亮
-    sudo defaults write /Library/Preferences/com.apple.RemoteManagement RestoreMachineState -bool NO || true
-
-    # Xcode command-line tools
-    xcode-select --install || true
 
     # 停用空間的自動排列
     defaults write com.apple.dock mru-spaces -bool false && killall Dock || true
@@ -168,8 +152,29 @@ EOF
     # 喺頂部欄度顯示音頻圖示
     defaults -currentHost write com.apple.controlcenter Sound -int 18
 
+    defaults write com.apple.universalaccess reduceMotion -bool true || true
+    defaults write com.apple.dock expose-animation-duration -float 0.1
+
+    # Mission Control：左同右
+    disable_mac_hotkey 79
+    disable_mac_hotkey 80
+    disable_mac_hotkey 81
+    disable_mac_hotkey 82
+
     killall Dock || true
-    touch ~/.check-files/init-apps
+    touch ~/.check-files/mac-init-apps-v1
+  fi
+
+  if [ ! -f ~/.check-files/mac-init-apps-sudo-v1 ] && [ ! -f "$PROVISION_CONFIG"/minimal ]; then
+    echo "配置 macOS 系統偏好設定..."
+
+    # 斷開螢幕分享用戶端後保持螢幕常亮
+    sudo defaults write /Library/Preferences/com.apple.RemoteManagement RestoreMachineState -bool NO || true
+
+    # Xcode 命令行工具
+    xcode-select --install || true
+
+    touch ~/.check-files/mac-init-apps-sudo-v1
   fi
 
   if [ ! -f ~/.aerospace.toml ] && [ -d /Applications/Aerospace.app ]; then

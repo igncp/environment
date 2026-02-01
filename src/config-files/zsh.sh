@@ -109,6 +109,12 @@ else
   # tmux -L "$SOCKET_NAME" set-option status on
 fi
 
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_SAVE_NO_DUPS
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt HIST_FIND_NO_DUPS
+
 setopt PROMPT_SUBST
 precmd () {
   jobscount=${(M)#${jobstates%%:*}:#running}r/${(M)#${jobstates%%:*}:#suspended}s
@@ -140,6 +146,30 @@ zle -N _zsh_cli_fg
 bindkey '^X' _zsh_cli_fg
 
 alias HistoryDisable='unset HISTFILE'
+HistoryRemove () {
+  if [ -z "$1" ]; then
+    echo "用法：HistoryRemove <pattern>" && return 1
+  fi
+  if [ -z "$HISTFILE" ]; then
+    echo "HISTFILE 未設定。" && return 1
+  fi
+  cat $HISTFILE | ag -v "$1" | sponge $HISTFILE
+}
+HistoryRemoveTryDryRun () {
+  if [ -z "$1" ]; then
+    echo "用法：HistoryRemoveDryRun <pattern>" && return 1
+  fi
+  if [ -z "$HISTFILE" ]; then
+    echo "HISTFILE 未設定。" && return 1
+  fi
+  cat $HISTFILE | ag -v "$1"
+}
+HistoryUpdate () {
+  if [ -z "$HISTFILE" ]; then
+    echo "HISTFILE 未設定。" && return 1
+  fi
+  n "$HISTFILE"
+}
 
 if [ -f ~/.check-files/zsh-history ]; then
   HISTFILE=$(cat ~/.check-files/zsh-history)
@@ -186,4 +216,8 @@ fi
 
 if [ -d $HOME/.nix-profile/bin ]; then
   export PATH="$HOME/.nix-profile/bin:$PATH"
+fi
+
+if type zoxide &> /dev/null; then
+  eval "$(zoxide init zsh --cmd c)"
 fi

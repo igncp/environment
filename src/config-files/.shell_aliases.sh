@@ -23,7 +23,6 @@ alias wget="wget -c"
 
 j() { cat $1 | jq -S "${@:2}" | less; }
 
-alias c='cargo --color always '
 alias W='watch --color -n 1 '
 alias W2='watch --color -n 2 '
 alias W5='watch --color -n 5 '
@@ -467,7 +466,10 @@ if type nix >/dev/null 2>&1; then
     if [ -f /etc/os-release ] && [ -n "$(cat /etc/os-release | grep nixos || true)" ]; then
       # 它需要 --impure 標誌，因為它導入/etc/nixos/configuration.nix配置
       (cd ~/development/environment &&
-        sudo nixos-rebuild switch --show-trace --flake path:$PWD --impure)
+        sudo nixos-rebuild switch \
+          --option extra-substituters https://install.determinate.systems \
+          --option extra-trusted-public-keys cache.flakehub.com-3:hJuILl5sVK4iKm86JzgdXW12Y2Hwd5G07qKtHTOcDCM= \
+          --show-trace --flake path:$PWD --impure)
     fi
 
     if type home-manager >/dev/null 2>&1; then
@@ -744,3 +746,7 @@ ta() {
     tmux -L "$SOCKET_NAME" attach
   fi
 }
+
+if [ -d "$HOME"/go/bin ]; then
+  export PATH="$HOME/go/bin:$PATH"
+fi

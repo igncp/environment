@@ -3,6 +3,7 @@
   lib,
   user,
   base-config,
+  determinate,
   ...
 }: let
   has-k3s = builtins.pathExists (base-config + "/k3s");
@@ -11,6 +12,7 @@
   has-android = builtins.pathExists (base-config + "/android");
   has-tailscale = builtins.pathExists (base-config + "/tailscale");
   has-n8n = builtins.pathExists (base-config + "/n8n");
+  has-expressvpn = builtins.pathExists (base-config + "/expressvpn");
   has-printing = builtins.pathExists (base-config + "/printing");
   has-custom = builtins.pathExists ./custom.nix;
   emojify = import ./emojify.nix {inherit pkgs;};
@@ -19,7 +21,7 @@ in {
     [
       ./default_pkgs.nix
       /etc/nixos/configuration.nix
-      ./home-manager-entry.nix
+      # ./home-manager-entry.nix
     ]
     ++ (lib.optional has-custom ./custom.nix)
     ++ (lib.optional has-k3s ./k3s.nix)
@@ -179,6 +181,16 @@ in {
       if has-n8n
       then {
         services.n8n.enable = true;
+      }
+      else {}
+    )
+    (
+      if has-expressvpn
+      then {
+        environment.systemPackages = with pkgs; [
+          expressvpn
+        ];
+        services.expressvpn.enable = true;
       }
       else {}
     )

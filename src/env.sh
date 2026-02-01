@@ -31,8 +31,13 @@ provision_setup_env() {
   fi
 
   IS_SURFACE="$(uname -a | grep -c 'Linux surface' || true)"
-  if [ -f "$PROVISION_CONFIG"/surface ]; then
+  if [ -f "$PROVISION_CONFIG"/machine-surface ]; then
     IS_SURFACE="1"
+  fi
+
+  IS_ASUS="0"
+  if [ -f "$PROVISION_CONFIG"/machine-asus ]; then
+    IS_ASUS="1"
   fi
 
   if [ "$IS_LINUX" = "1" ] && [ ! -f "$PROVISION_CONFIG"/skip-root-bashrc ]; then

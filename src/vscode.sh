@@ -118,7 +118,11 @@ provision_setup_vscode() {
   fi
   if [ ! -f "$VSIX_FILE" ]; then
     cd ~/development/environment/src/vscode-extension
-    bun i && bun run package
+    if type "bun" >/dev/null 2>&1; then
+      bun i && bun run package
+    else
+      npm i && npm run package
+    fi
     type code >/dev/null 2>&1 && code --install-extension "$VSIX_FILE"
     type cursor >/dev/null 2>&1 && cursor --install-extension "$VSIX_FILE"
   fi

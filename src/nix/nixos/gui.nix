@@ -16,6 +16,7 @@
   no-1password = builtins.pathExists (base-config + "/gui-no-1password");
   has-nvidia = builtins.readFile (base-config + "/nvidia") == "yes\n";
   is-hyprland = !has-cinnamon && !has-lxqt && !has-i3;
+  has-vscode = builtins.pathExists (base-config + "/gui-vscode");
 
   common-gui = import ../common/gui.nix {
     skip-hyprland = true;
@@ -44,7 +45,7 @@ in
 
     services.flatpak.enable = true;
 
-    environment.systemPackages = common-gui.packages;
+    environment.systemPackages = common-gui.packages ++ (lib.optional has-vscode unstable-pkgs.vscode);
 
     fonts.packages = common-gui.fonts;
 

@@ -18,6 +18,8 @@
   has-iredis = builtins.pathExists (base-config + "/iredis");
   has-docker = builtins.pathExists (base-config + "/docker");
 
+  no-bun = builtins.pathExists (base-config + "/no-bun"); # 在某些舊 CPU 上無法運作
+
   logdy = import ../derivations/logdy.nix {inherit pkgs;};
 
   no_watchman = builtins.pathExists (base-config + "/no-watchman");
@@ -44,7 +46,6 @@ in {
       bash
       bat # https://github.com/sharkdp/bat
       bc
-      bun
       ccls # https://github.com/MaskRay/ccls
       cmus # https://github.com/cmus/cmus
       coreutils-full
@@ -84,7 +85,6 @@ in {
       neovim-remote # https://github.com/mhinz/neovim-remote.git
       newsboat # https://github.com/newsboat/newsboat
       nil # https://github.com/oxalica/nil
-      nix
       nodejs
       ollama
       patchelf
@@ -113,6 +113,7 @@ in {
       wireshark # https://gitlab.com/wireshark/wireshark
       yq # https://github.com/mikefarah/yq
       yt-dlp # https://github.com/yt-dlp/yt-dlp
+      zoxide # https://github.com/ajeetdsouza/zoxide
     ]
     ++ lsp-pkgs
     # 正在測試的新增內容
@@ -132,6 +133,11 @@ in {
           docker-compose
         ]
       else []
+    )
+    ++ (
+      if no-bun
+      then []
+      else with pkgs; [bun]
     )
     ++ (
       if has_hashi

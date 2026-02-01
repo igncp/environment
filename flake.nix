@@ -17,6 +17,8 @@
     ghostty.url = "github:ghostty-org/ghostty";
     nixgl.url = "github:nix-community/nixGL";
     vscode-server.url = "github:nix-community/nixos-vscode-server";
+    nixos-raspberry.url = "github:nvmd/nixos-raspberrypi";
+    determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
   };
 
   outputs = {
@@ -30,6 +32,8 @@
     nixos-generators,
     nixgl,
     vscode-server,
+    nixos-raspberry,
+    determinate,
   }: let
     user = builtins.getEnv "USER";
   in
@@ -53,6 +57,8 @@
             system
             unstable
             vscode-server
+            nixos-raspberry
+            determinate
             ;
         };
         nixos-systems = import ./src/nix/systems.nix {

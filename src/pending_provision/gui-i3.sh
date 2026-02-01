@@ -24,15 +24,7 @@ if type dunst >/dev/null 2>&1; then
     'dunstctl set-paused false; notify-send "Time"' 'enable_notifications' 'Enable Notifications'
 fi
 
-# These require `polkit`, which is a dependency for example for `lightdm`
-if [ -f ~/development/environment/project/.config/inside ]; then
-  sed -i -r '/mod\+Shift\+o/ s|exec ".*"|exec "systemctl suspend"|' ~/.config/i3/config
-else
-  sed -i -r '/mod\+Shift\+o/ s|exec ".*"|exec "systemctl poweroff"|' ~/.config/i3/config
-  if [ -n "$HAS_TO_RELOAD_I3" ]; then i3-msg restart; fi
-fi
-
-# Quick VNC shortcut (replace NAME and HOST)
+# 快速 VNC 快捷方式（替換 NAME 同 HOST）
 #   cat > ~/.scripts/quick_vnc_NAME.sh <<"EOF"
 # set -e
 # if [ -n "$(ps aux | ag localhost | ag -v '\bag\b' | ag -v HOST)" ]; then
