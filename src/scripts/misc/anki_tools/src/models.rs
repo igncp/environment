@@ -339,6 +339,7 @@ impl<'a> Deck<'a> {
     /// 實作：用 OpenAI 根據提供嘅兩個欄位產生結構化 JSON，再寫入 Anki。
     pub async fn process_incomplete_notes_generic(
         &'a mut self,
+        auto_confirm: bool,
     ) -> Result<(), Box<dyn std::error::Error>> {
         // 目標欄位（由 AI 生成），易於擴充：喺呢度加就得
         const TARGET_FIELDS: &[ChineseNoteFields] = &[
@@ -388,26 +389,31 @@ impl<'a> Deck<'a> {
             }
 
             // 喺查詢 AI 之前，再次確認（Enter 視為同意）
-            println!(
-                "將會用以下原始內容查詢 AI（{}/{}，剩餘 {}）：",
-                idx + 1,
-                incomplete_notes.len(),
-                incomplete_notes.len().saturating_sub(idx + 1)
-            );
-            println!("  原始內容：\n{}", content);
-            println!("  繼續查詢 AI？(Y/n) — 直接 Enter 視為同意");
-            let mut ai_input = String::new();
-            if std::io::stdin().read_line(&mut ai_input).is_err() {
-                println!("  讀取輸入失敗，已跳過");
-                skipped_notes += 1;
-                continue;
-            }
-            let ai_trimmed = ai_input.trim();
-            let ai_confirm = ai_trimmed.is_empty() || ai_trimmed.eq_ignore_ascii_case("y");
-            if !ai_confirm {
-                println!("  已跳過查詢 AI");
-                skipped_notes += 1;
-                continue;
+            if !auto_confirm {
+                println!(
+                    "將會用以下原始內容查詢 AI（{}/{}，剩餘 {}）：",
+                    idx + 1,
+                    incomplete_notes.len(),
+                    incomplete_notes.len().saturating_sub(idx + 1)
+                );
+                println!("  原始內容：\n{}", content);
+                println!("  繼續查詢 AI？(Y/n) — 直接 Enter 視為同意");
+                let mut ai_input = String::new();
+                if std::io::stdin().read_line(&mut ai_input).is_err() {
+                    println!("  讀取輸入失敗，已跳過");
+                    skipped_notes += 1;
+                    continue;
+                }
+                let ai_trimmed = ai_input.trim();
+                let ai_confirm = ai_trimmed.is_empty() || ai_trimmed.eq_ignore_ascii_case("y");
+                if !ai_confirm {
+                    println!("  已跳過查詢 AI");
+                    skipped_notes += 1;
+                    continue;
+                }
+            } else {
+                print!("\r處理中：{}/{}", idx + 1, incomplete_notes.len());
+                std::io::Write::flush(&mut std::io::stdout()).ok();
             }
 
             // 構造要求 JSON 輸出嘅提示
@@ -500,51 +506,54 @@ impl<'a> Deck<'a> {
             let total = incomplete_notes.len();
             let current_idx = idx + 1;
             let remaining = total.saturating_sub(current_idx);
-            println!(
-                "準備更新 Note {}（{}/{}，剩餘 {}）：",
-                note.id, current_idx, total, remaining
-            );
-            // 顯示原始 content，方便人手確認
-            println!("  原始內容：\n{}", content);
-            println!("  新欄位：");
-            let ordered_keys = [
-                ChineseNoteFields::Definition.as_str(),
-                ChineseNoteFields::Traditional.as_str(),
-                ChineseNoteFields::Simplified.as_str(),
-                ChineseNoteFields::GrammarType.as_str(),
-                ChineseNoteFields::DefinitionsTraditional.as_str(),
-                ChineseNoteFields::DefinitionsEnglish.as_str(),
-            ];
 
-            let mut printed: std::collections::HashSet<&str> = std::collections::HashSet::new();
-            for key in ordered_keys.iter() {
-                if let Some(v) = updates.get(*key) {
-                    println!("    {}: {}", key, v);
-                    printed.insert(*key);
+            if !auto_confirm {
+                println!(
+                    "準備更新 Note {}（{}/{}，剩餘 {}）：",
+                    note.id, current_idx, total, remaining
+                );
+                // 顯示原始 content，方便人手確認
+                println!("  原始內容：\n{}", content);
+                println!("  新欄位：");
+                let ordered_keys = [
+                    ChineseNoteFields::Definition.as_str(),
+                    ChineseNoteFields::Traditional.as_str(),
+                    ChineseNoteFields::Simplified.as_str(),
+                    ChineseNoteFields::GrammarType.as_str(),
+                    ChineseNoteFields::DefinitionsTraditional.as_str(),
+                    ChineseNoteFields::DefinitionsEnglish.as_str(),
+                ];
+
+                let mut printed: std::collections::HashSet<&str> = std::collections::HashSet::new();
+                for key in ordered_keys.iter() {
+                    if let Some(v) = updates.get(*key) {
+                        println!("    {}: {}", key, v);
+                        printed.insert(*key);
+                    }
                 }
-            }
-            // 其餘未列出嘅欄位（例如 Colors Traditional），保持原樣打印
-            for (k, v) in &updates {
-                if printed.contains(k.as_str()) {
+                // 其餘未列出嘅欄位（例如 Colors Traditional），保持原樣打印
+                for (k, v) in &updates {
+                    if printed.contains(k.as_str()) {
+                        continue;
+                    }
+                    println!("    {}: {}", k, v);
+                }
+                println!("  確認更新？(Y/n) — 直接 Enter 視為同意");
+
+                let mut input = String::new();
+                if std::io::stdin().read_line(&mut input).is_err() {
+                    println!("  讀取輸入失敗，已跳過");
+                    skipped_notes += 1;
                     continue;
                 }
-                println!("    {}: {}", k, v);
-            }
-            println!("  確認更新？(Y/n) — 直接 Enter 視為同意");
-
-            let mut input = String::new();
-            if std::io::stdin().read_line(&mut input).is_err() {
-                println!("  讀取輸入失敗，已跳過");
-                skipped_notes += 1;
-                continue;
-            }
-            let trimmed = input.trim();
-            // 預設同意：空字串或者 'y' 視為 yes
-            let confirm = trimmed.is_empty() || trimmed.eq_ignore_ascii_case("y");
-            if !confirm {
-                println!("  已跳過");
-                skipped_notes += 1;
-                continue;
+                let trimmed = input.trim();
+                // 預設同意：空字串或者 'y' 視為 yes
+                let confirm = trimmed.is_empty() || trimmed.eq_ignore_ascii_case("y");
+                if !confirm {
+                    println!("  已跳過");
+                    skipped_notes += 1;
+                    continue;
+                }
             }
 
             // 寫返去 Anki（已確認）
@@ -564,6 +573,11 @@ impl<'a> Deck<'a> {
 
         // 執行完再 sync，保持狀態一致
         self.sync().await?;
+
+        // 如果用咗 auto_confirm 模式，最後打印換行
+        if auto_confirm && (updated_notes > 0 || failed_notes > 0 || skipped_notes > 0) {
+            println!();
+        }
 
         // 輕量輸出結果（有改動先講）
         if updated_notes > 0 || failed_notes > 0 {

@@ -94,6 +94,22 @@
               ];
             specialArgs = specialArgs;
           }));
+    iso-installer = nixpkgs.lib.nixosSystem {
+      inherit system;
+
+      modules = [
+        "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
+        ({pkgs, ...}: {
+          services.openssh.enable = true;
+          users.users.nixos.password = "nixos";
+          environment.systemPackages = with pkgs; [
+            git
+            neovim
+            htop
+          ];
+        })
+      ];
+    };
   };
 in
   final-config

@@ -256,6 +256,25 @@ EOF
     fi
   fi
 
+  cat >>~/.shellrc <<'EOF'
+  if [ -f "$PROVISION_CONFIG"/ssh-keys-request ]; then
+    if [ -f "$SSH_ENV" ]; then
+      . "$SSH_ENV" >/dev/null
+      while read -r SSH_KEY_PATH; do
+        if [ -f "$SSH_KEY_PATH" ]; then
+          KEY_FINGERPRINT=$(ssh-keygen -lf "$SSH_KEY_PATH" 2>/dev/null | awk '{print $2}')
+          if [ -n "$KEY_FINGERPRINT" ] && ! ssh-add -l | grep -q "$KEY_FINGERPRINT"; then
+            echo "添加 SSH 密鑰：$SSH_KEY_PATH"
+            ssh-add "$SSH_KEY_PATH"
+          fi
+        fi
+      done <"$PROVISION_CONFIG"/ssh-keys-request
+    fi
+  fi
+EOF
+
+  cat ~/.shellrc | sed 's|$PROVISION_CONFIG|'"$PROVISION_CONFIG"'|' | sponge ~/.shellrc
+
   # macOS 特定版本: `wget https://release.files.ghostty.org/1.0.1/Ghostty.dmg`
   if type ghostty >/dev/null 2>&1; then
     mkdir -p ~/.config/ghostty

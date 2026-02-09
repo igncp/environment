@@ -21,7 +21,8 @@ in {
     [
       ./default_pkgs.nix
       /etc/nixos/configuration.nix
-      # ./home-manager-entry.nix
+      ./home-manager-entry.nix
+      ./ai.nix
     ]
     ++ (lib.optional has-custom ./custom.nix)
     ++ (lib.optional has-k3s ./k3s.nix)
@@ -40,18 +41,22 @@ in {
 
       services.vscode-server.enable = true;
 
-      networking.firewall.enable = true;
-      networking.firewall.allowedTCPPorts =
-        [22]
-        ++ (
-          if has-gui
-          then [
-            24800 # deskflow
-          ]
-          else []
-        );
+      networking = {
+        firewall = {
+          enable = true;
+          allowedTCPPorts =
+            [22]
+            ++ (
+              if has-gui
+              then [
+                24800 # deskflow
+              ]
+              else []
+            );
+        };
 
-      networking.networkmanager.enable = true;
+        networkmanager.enable = true;
+      };
 
       nixpkgs.config.allowUnfree = true;
       nixpkgs.config.allowUnsupportedSystem = true;

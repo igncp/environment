@@ -6,9 +6,11 @@
     "editor.defaultFormatter": "jkillian.custom-local-formatters"
   },
   "accessibility.verbosity.terminal": false,
+  "chat.mcp.gallery.enabled": true,
   "crashReporting.enabled": "off",
   "css.validate": false,
   "cursor.composer.textSizeScale": 1.15,
+  "cursorBlame.editorDecoration.enabled": false,
   "customLocalFormatters.formatters": [
     {
       "command": "shfmt",
@@ -105,6 +107,5 @@
   "workbench.editor.restoreViewState": true,
   "workbench.enableExperiments": false,
   "workbench.startupEditor": "none",
-  "workbench.statusBar.visible": true,
-  "cursorBlame.editorDecoration.enabled": false
+  "workbench.statusBar.visible": true
 }

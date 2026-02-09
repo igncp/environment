@@ -75,6 +75,11 @@
               modules = [./src/nix/home-manager/home.nix];
               extraSpecialArgs = {inherit pkgs stable-pkgs nixgl-pkgs ghostty;};
             };
+            check = pkgs.writeShellApplication {
+              name = "check-environment";
+              runtimeInputs = [pkgs.statix];
+              text = "statix check src";
+            };
           }
           // nixos-systems;
       }

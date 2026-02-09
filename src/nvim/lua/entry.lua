@@ -153,8 +153,8 @@ local nvim_plugins = {
     commit = get_version("neovim.nvim-lspconfig"),
   },
   { "nvimdev/lspsaga.nvim",           commit = get_version("neovim.lspsaga.neovim") },
-  { "L3MON4D3/LuaSnip",               commit = get_version("neovim.luasnip"), },
-  { "saadparwaiz1/cmp_luasnip",       commit = get_version("neovim.cmp_luasnip") },
+  -- { "L3MON4D3/LuaSnip",               commit = get_version("neovim.luasnip"), },
+  -- { "saadparwaiz1/cmp_luasnip",       commit = get_version("neovim.cmp_luasnip") },
   { "LnL7/vim-nix",                   commit = get_version("neovim.vim-nix") },
   { "NvChad/nvim-colorizer.lua",      commit = get_version("neovim.nvim-colorizer.lua") },
   { "bogado/file-line",               commit = get_version("neovim.file-line") },
@@ -165,7 +165,7 @@ local nvim_plugins = {
   { "elzr/vim-json",                  commit = get_version("neovim.vim-json") },
   { "google/vim-searchindex",         commit = get_version("neovim.vim-searchindex") },
   { "haya14busa/incsearch.vim",       commit = get_version("neovim.incsearch.vim") },
-  { "honza/vim-snippets",             commit = get_version("neovim.vim-snippets") },
+  -- { "honza/vim-snippets",             commit = get_version("neovim.vim-snippets") },
   { "iamcco/markdown-preview.nvim",   commit = get_version("neovim.markdown-preview.nvim") },
   { "jiangmiao/auto-pairs",           commit = get_version("neovim.auto-pairs") },
   { "jparise/vim-graphql",            commit = get_version("neovim.vim-graphql") },
@@ -870,7 +870,7 @@ local cmp = require 'cmp'
 cmp.setup({
   snippet = {
     expand = function(args)
-      require 'luasnip'.lsp_expand(args.body)
+      -- require 'luasnip'.lsp_expand(args.body)
     end,
   },
   window = {
@@ -890,13 +890,13 @@ cmp.setup({
     { name = 'nvim_lsp' },
     { name = 'buffer' },
     { name = 'path' },
-    { name = 'luasnip' },
+    -- { name = 'luasnip' },
     { name = 'crates' }
   })
 })
 
-require("luasnip.loaders.from_snipmate").load({ path = { "~/.vim-snippets" } })
-require("luasnip")
+-- require("luasnip.loaders.from_snipmate").load({ path = { "~/.vim-snippets" } })
+-- require("luasnip")
 
 vim.api.nvim_set_keymap("n", "/", "/", {})
 

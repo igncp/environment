@@ -59,7 +59,8 @@ provision_setup_vscode() {
   fi
 
   for POSSIBLE_CONFIG_FILE in "${IDE_POSSIBLE_CONFIG_FILES[@]}"; do
-    if [ -d "$(dirname "$POSSIBLE_CONFIG_FILE")" ]; then
+    local DIR_PATH="$(dirname "$POSSIBLE_CONFIG_FILE")"
+    if [ -d "$DIR_PATH" ]; then
       cat ~/development/environment/src/config-files/vscode/settings.json |
         jq -S >"$POSSIBLE_CONFIG_FILE"
 
@@ -71,9 +72,11 @@ provision_setup_vscode() {
         '."vim.visualModeKeyBindingsNonRecursive" = $new_data' \
         "$POSSIBLE_CONFIG_FILE" | sponge "$POSSIBLE_CONFIG_FILE"
 
-      MAIN_PATH="$(dirname "$POSSIBLE_CONFIG_FILE")"
       cp $HOME/development/environment/src/config-files/vscode/common.code-snippets \
-        "$MAIN_PATH"/snippets
+        "$DIR_PATH"/snippets
+
+      cp $HOME/development/environment/src/config-files/vscode/prompts/* \
+        "$DIR_PATH"/prompts
     fi
   done
 

@@ -53,7 +53,7 @@ impl OpenAiClient {
         }
 
         let body = serde_json::json!({
-            "model": "gpt-5.2",
+            "model": "gpt-4-turbo",
             "messages": [{
                 "role": "system",
                 "content": prompt
@@ -94,7 +94,7 @@ impl OpenAiClient {
         } else {
             let response_text = response.text().await?;
             debug!("Response: {}", response_text);
-            let message = "An error occurred while trying to retrieve the translation.";
+            let message = "嘗試檢索翻譯時發生錯誤。";
             Err(From::from(message))
         }
     }

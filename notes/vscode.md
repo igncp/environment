@@ -23,3 +23,10 @@
 - 打開新視窗: `Cmd + shift + n`
 - 切換 AI 聊天視圖: `Cmd + Control + i`
 - 在人工智慧聊天輸入中跳到不同的單字: `Control + Alt + arrow`
+
+### Agents
+
+- 打開右側欄: `Cmd + Alt + b`
+- 切換右側欄，聚焦喺聊天輸入: `Cmd + Ctrl + i`
+
+- https://code.visualstudio.com/docs/copilot/reference/copilot-vscode-features

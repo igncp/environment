@@ -299,6 +299,8 @@ if type nix >/dev/null 2>&1; then
   alias NixReplFlake='nix repl --expr "builtins.getFlake \"$PWD\""'
   alias NixDevelopPath='nix develop path:$(pwd)' # 也可以只運行指令: `NixDevelopPath -c cargo build`
 
+  alias NixBuildISO="(cd ~/development/environment && nix build --impure .#nixosConfigurations.iso-installer.config.system.build.isoImage)"
+
   NixFindPointersToFile() {
     ITEM="$1"
     if [ -z "$(echo $ITEM | grep -F /nix/store || true)" ]; then

@@ -24,28 +24,29 @@
 
   common-gui = import ../common/gui.nix {
     inherit lib pkgs user base-config nixgl-pkgs ghostty;
-    system = pkgs.system;
+    inherit (pkgs) system;
     unstable-pkgs = pkgs;
   };
 in
   {
-    home.username = user;
-    home.homeDirectory = home_dir;
-    home.stateVersion = "25.05";
-    home.packages =
-      []
-      ++ (
-        if (has_gui && is_linux)
-        then common-gui.packages ++ common-gui.fonts ++ (with pkgs; [terminator blueman])
-        else []
-      )
-      ++ cli-pkgs.pkgs-list
-      ++ php-pkgs.pkgs-list
-      ++ java-pkgs.pkgs-list
-      ++ lua-pkgs.pkgs-list
-      ++ ruby-pkgs.pkgs-list
-      ++ go-pkgs.pkgs-list;
-    home.enableNixpkgsReleaseCheck = false;
+    home = {
+      username = user;
+      homeDirectory = home_dir;
+      stateVersion = "25.05";
+      packages =
+        (
+          if (has_gui && is_linux)
+          then common-gui.packages ++ common-gui.fonts ++ (with pkgs; [terminator blueman])
+          else []
+        )
+        ++ cli-pkgs.pkgs-list
+        ++ php-pkgs.pkgs-list
+        ++ java-pkgs.pkgs-list
+        ++ lua-pkgs.pkgs-list
+        ++ ruby-pkgs.pkgs-list
+        ++ go-pkgs.pkgs-list;
+      enableNixpkgsReleaseCheck = false;
+    };
     programs.home-manager.enable = true;
   }
   // (

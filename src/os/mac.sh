@@ -4,11 +4,11 @@ set -euo pipefail
 
 provision_setup_os_mac() {
   # Rime - Squirrel
-  #   I can't remember the location, but it may be from:
+  #   我唔記得咗確切嘅位置，但可能係喺：
   #     https://github.com/rime/squirrel/releases
   #     https://github.com/rime/squirrel/issues/471#issuecomment-748751617
-  #   Use `~/Library/Rime/default.custom.yaml``
-  #   The `patch` in the top level, above `schemas`, is necessary
+  #   使用 `~/Library/Rime/default.custom.yaml``
+  #   喺頂層嘅 `patch`，喺 `schemas` 之上，係必需嘅
 
   mkdir -p ~/Library/KeyBindings
 
@@ -37,6 +37,9 @@ alias MacPowerManagementList='sudo pmset -g sched'
 alias MacPowerManagementListAll='sudo pmset -g everything'
 alias MacSSHRestart='sudo launchctl stop com.openssh.sshd; sudo launchctl start com.openssh.sshd'
 
+alias MacSSHEnableDirectly='sudo launchctl load -w /System/Library/LaunchDaemons/ssh.plist'
+alias MacSSHDisableDirectly='sudo launchctl unload -w /System/Library/LaunchDaemons/ssh.plist ; sudo killall sshd'
+
 alias MacSystemStorageInfo='system_profiler SPStorageDataType'
 alias MacSystemBatteryInfo='system_profiler SPPowerDataType'
 alias MacSystemSoftwareInfo='system_profiler SPSoftwareDataType'
@@ -56,7 +59,7 @@ EOF
 
   cat >~/Library/KeyBindings/DefaultKeyBinding.dict <<EOF
 {
-  /* Map # to § key*/
+  /* 將 # 映射到 § 鍵*/
   "§" = ("insertText:", "#");
 }
 EOF
@@ -91,8 +94,8 @@ MacListServices() { launchctl  list | ag -v '^-' | awk '{ print $3; }' | ag -v ^
 # 例如: `pass in proto tcp from any to any port 3000`
 alias MacRestartFirewallConfig='sudo pfctl -f /etc/pf.conf'
 
-# When there is error about signature in custom scripts
-alias MacForceSignature='codesign --force --deep --sign -' # For example: `MacForceSignature $HOME/.local/bin/clipboard_ssh`
+# 當自定義腳本出現簽名錯誤時
+alias MacForceSignature='codesign --force --deep --sign -' # 例如：`MacForceSignature $HOME/.local/bin/clipboard_ssh`
 
 alias SimulatorErase='xcrun simctl shutdown all && xcrun simctl erase all'
 EOF

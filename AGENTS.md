@@ -6,6 +6,14 @@ The scripts should be idempotent whenever possible. They should not log to the t
 
 In the scripts files, when adding print statements and code comments, they should be written using Traditional Chinese characters, preferably using Cantonese grammar and characters. The logic names should be written in English.
 
+When running git commands, always make sure that there is no pager with `GIT_PAGER=''`. Also you are running commands in Zsh with auto-closing quotes. For example, if you want to write a multi-line commit, use a heredoc approach:
+
+```bash
+cat << 'EOF' | git commit --amend -F -
+...
+EOF
+```
+
 ## Code style
 
 Don't write long lines, split in multiple lines when possible. For Bash scripts, run `shfmt -w` after making changes.

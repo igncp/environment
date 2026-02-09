@@ -4,6 +4,8 @@ set -euo pipefail
 
 provision_setup_general_git() {
   cat >>~/.shell_aliases <<"EOF"
+export GIT_PAGER=less
+
 GitAdd() { git add -A $@; git status -u; }
 GitCloneRepo() {
   SOURCE=$1; TARGET=$2;
@@ -89,6 +91,38 @@ GitBranchOrder() {
     grep -v ";HEAD$" |
     column -s ";" -t |
     tac | less;
+}
+
+__gw_get_repo_name() {
+  local repo_name="$(basename "$(git rev-parse --show-toplevel)")"
+  repo_name="${repo_name%%__*}"
+  echo "$repo_name"
+}
+alias gw='git worktree'
+alias gwl='git worktree list'
+gwn() {
+  local branch_name="$1"
+  if [ -z "$branch_name" ]; then
+    echo "用法：gwn <分支名稱>"
+    return 1
+  fi
+  local repo_name="$(__gw_get_repo_name)"
+  local worktree_path="$(mktemp -d "$(git rev-parse --show-toplevel)"/../${repo_name}__XXXXXX)"
+  git worktree add "$worktree_path" -b "$branch_name"
+  cd "$worktree_path"
+}
+gwc() {
+  local cd_path="$(git worktree list | fzf | awk '{print $1}')"
+  if [ -n "$cd_path" ]; then cd "$cd_path"; fi
+}
+gwr() {
+  local worktree_path="$(git worktree list | fzf | awk '{print $1}')"
+  if [ -n "$worktree_path" ]; then
+    local repo_name="$(__gw_get_repo_name)"
+    cd "$(git rev-parse --show-toplevel)"/../${repo_name}
+    git worktree remove "$worktree_path"
+    echo "已移除工作樹：$worktree_path"
+  fi
 }
 
 alias GitAddAll='GitAdd "$(git rev-parse --show-toplevel)"'

@@ -43,6 +43,9 @@ enum Commands {
     ProcessIncompleteFields {
         /// 牌組名稱
         deck_name: String,
+        /// 自動確認所有操作（唔會提示確認）
+        #[arg(short = 'y', long = "yes")]
+        yes: bool,
     },
     /// 為筆記加入顏色（按粵拼聲調）
     AddColors {
@@ -79,9 +82,9 @@ async fn main() {
                 println!("- {}", name);
             }
         }
-        Commands::ProcessIncompleteFields { deck_name } => {
+        Commands::ProcessIncompleteFields { deck_name, yes } => {
             let mut deck = unwrap_or_exit!(Deck::get_from_name(&models_clients, &deck_name).await);
-            unwrap_or_exit!(deck.process_incomplete_notes_generic().await);
+            unwrap_or_exit!(deck.process_incomplete_notes_generic(yes).await);
         }
         Commands::AddColors { deck_name } => {
             let mut deck = unwrap_or_exit!(Deck::get_from_name(&models_clients, &deck_name).await);

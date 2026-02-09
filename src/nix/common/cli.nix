@@ -102,6 +102,7 @@ in {
       sd # https://github.com/chmln/sd
       shfmt # https://github.com/mvdan/sh
       silver-searcher # https://github.com/ggreer/the_silver_searcher
+      statix # https://github.com/oppiliappan/statix.git
       taskwarrior3 # https://github.com/GothenburgBitFactory/taskwarrior
       tldr # https://github.com/tldr-pages/tldr
       tree
