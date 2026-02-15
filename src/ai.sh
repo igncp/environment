@@ -3,6 +3,9 @@
 set -euo pipefail
 
 provision_setup_ai() {
+  # Copilot CLI 家下由 nix 提供
+  uninstall_node_modules @github/copilot copilot
+
   cat >>~/.shellrc <<"EOF"
 if type ollama >/dev/null 2>&1; then
   alias OllamaRun8b="ollama run llama3:8b"

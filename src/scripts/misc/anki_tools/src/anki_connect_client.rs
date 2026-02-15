@@ -140,4 +140,21 @@ impl AnkiConnectClient {
         )
         .await
     }
+
+    pub async fn export_deck(
+        &self,
+        deck_name: &str,
+        path: &str,
+        include_scheduling: bool,
+    ) -> CommonResponse<bool> {
+        self.query::<bool>(
+            "exportPackage",
+            Some(json!({
+                "deck": deck_name,
+                "path": path,
+                "includeSched": include_scheduling
+            })),
+        )
+        .await
+    }
 }

@@ -2,6 +2,7 @@
   base-config,
   pkgs,
   lib,
+  llm-agents,
 }: let
   has_cli_hasura = builtins.pathExists (base-config + "/cli-hasura");
   has_cli_openvpn = builtins.pathExists (base-config + "/cli-openvpn");
@@ -59,6 +60,7 @@ in {
       fd # https://github.com/sharkdp/fd
       fzf # https://github.com/junegunn/fzf
       gh # https://github.com/cli/cli
+      gh-copilot # https://github.com/github/copilot-cli
       git
       git-crypt # https://github.com/AGWA/git-crypt
       git-extras
@@ -116,6 +118,9 @@ in {
       yt-dlp # https://github.com/yt-dlp/yt-dlp
       zoxide # https://github.com/ajeetdsouza/zoxide
     ]
+    ++ (with llm-agents.packages.${pkgs.system}; [
+      copilot-cli
+    ])
     ++ lsp-pkgs
     # 正在測試的新增內容
     ++ [

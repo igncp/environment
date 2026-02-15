@@ -14,6 +14,10 @@ cat << 'EOF' | git commit --amend -F -
 EOF
 ```
 
+To apply the changes in the shell files you can run `Provision` (takes a few seconds). To apply changes in the Nix files, you can run `ProvisionNix` (takes around one minute). These commands are defined in `src/config-files/.shell_aliases`.
+
 ## Code style
 
-Don't write long lines, split in multiple lines when possible. For Bash scripts, run `shfmt -w` after making changes.
+Don't write long lines, split in multiple lines when possible.
+
+For Bash scripts, run `shfmt -w` after making changes. For Nix scripts, run `alejandra` for formatting.

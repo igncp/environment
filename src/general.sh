@@ -118,8 +118,8 @@ export GREEN='\033[0;32m'
 export BLUE='\033[0;34m'
 export NC='\033[0m'
 
-# prevent the terminal from hanging on ctrl+s
-# although it can be recovered with ctrl+q
+# 防止終端機因 ctrl+s 而掛起
+# 雖然可以用 ctrl+q 恢復
 stty -ixon
 
 export HISTCONTROL=ignoreboth:erasedups

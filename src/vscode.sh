@@ -75,6 +75,7 @@ provision_setup_vscode() {
       cp $HOME/development/environment/src/config-files/vscode/common.code-snippets \
         "$DIR_PATH"/snippets
 
+      mkdir -p "$DIR_PATH"/prompts
       cp $HOME/development/environment/src/config-files/vscode/prompts/* \
         "$DIR_PATH"/prompts
     fi

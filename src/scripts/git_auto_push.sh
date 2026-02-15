@@ -11,6 +11,7 @@ export LANG=C
 CONFIG_FILE="$HOME/.config/igncp_git_auto_push.txt"
 INTERVAL_MINUTES=10
 SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]}")"
+PAUSED_MARKER="#PAUSED#"
 
 MACOS_PLIST_NAME="com.igncp.git-auto-push"
 MACOS_LAUNCHAGENTS_DIR="$HOME/Library/LaunchAgents"
@@ -218,6 +219,97 @@ add_current_dir() {
   echo "配置文件：$CONFIG_FILE"
 }
 
+pause_repo() {
+  local target_dir="${1:-$(pwd)}"
+
+  # 展開波浪號
+  target_dir="${target_dir/#\~/$HOME}"
+
+  if [[ ! -f "$CONFIG_FILE" ]]; then
+    echo "未找到配置文件：$CONFIG_FILE"
+    exit 1
+  fi
+
+  # 檢查倉庫係咪存在於配置中
+  local found=false
+  local temp_file=$(mktemp)
+
+  while IFS= read -r line; do
+    local expanded_line="${line/#\~/$HOME}"
+    if [[ "$expanded_line" == "$target_dir" ]]; then
+      found=true
+      echo "${PAUSED_MARKER}$line" >>"$temp_file"
+    elif [[ "$line" == "${PAUSED_MARKER}"* ]] && [[ "${line/#${PAUSED_MARKER}/}" == "$target_dir" || "${line/#${PAUSED_MARKER}/}" == "$target_dir" ]]; then
+      # 已經暫停
+      echo "$line" >>"$temp_file"
+      echo "倉庫已經係暫停狀態：$target_dir"
+      rm "$temp_file"
+      exit 0
+    else
+      echo "$line" >>"$temp_file"
+    fi
+  done <"$CONFIG_FILE"
+
+  if [[ "$found" == "true" ]]; then
+    mv "$temp_file" "$CONFIG_FILE"
+    echo "✓ 已暫停自動推送：$target_dir"
+  else
+    rm "$temp_file"
+    echo "錯誤：倉庫唔存在於配置中：$target_dir"
+    exit 1
+  fi
+}
+
+resume_repo() {
+  local target_dir="${1:-$(pwd)}"
+
+  # 展開波浪號
+  target_dir="${target_dir/#\~/$HOME}"
+
+  if [[ ! -f "$CONFIG_FILE" ]]; then
+    echo "未找到配置文件：$CONFIG_FILE"
+    exit 1
+  fi
+
+  # 檢查倉庫係咪存在於配置中
+  local found=false
+  local temp_file=$(mktemp)
+
+  while IFS= read -r line; do
+    if [[ "$line" == "${PAUSED_MARKER}"* ]]; then
+      local repo_path="${line/#${PAUSED_MARKER}/}"
+      local expanded_repo="${repo_path/#\~/$HOME}"
+
+      if [[ "$expanded_repo" == "$target_dir" ]]; then
+        found=true
+        echo "$repo_path" >>"$temp_file"
+      else
+        echo "$line" >>"$temp_file"
+      fi
+    else
+      local expanded_line="${line/#\~/$HOME}"
+      if [[ "$expanded_line" == "$target_dir" ]]; then
+        # 已經係活動狀態
+        echo "$line" >>"$temp_file"
+        echo "倉庫已經係活動狀態：$target_dir"
+        rm "$temp_file"
+        exit 0
+      else
+        echo "$line" >>"$temp_file"
+      fi
+    fi
+  done <"$CONFIG_FILE"
+
+  if [[ "$found" == "true" ]]; then
+    mv "$temp_file" "$CONFIG_FILE"
+    echo "✓ 已恢復自動推送：$target_dir"
+  else
+    rm "$temp_file"
+    echo "錯誤：倉庫唔存在於配置中或者未被暫停：$target_dir"
+    exit 1
+  fi
+}
+
 list_repos() {
   if [[ ! -f "$CONFIG_FILE" ]]; then
     echo "未找到配置文件：$CONFIG_FILE"
@@ -234,9 +326,16 @@ list_repos() {
 
   local seen_paths=()
   while IFS= read -r repo_path; do
-    # 跳過空行或注釋
-    if [[ -z "$repo_path" ]] || [[ "$repo_path" =~ ^# ]]; then
+    # 跳過空行或注釋（但唔跳過暫停標記）
+    if [[ -z "$repo_path" ]] || [[ "$repo_path" =~ ^# && ! "$repo_path" =~ ^${PAUSED_MARKER} ]]; then
       continue
+    fi
+
+    # 處理暫停嘅倉庫
+    local is_paused=false
+    if [[ "$repo_path" =~ ^${PAUSED_MARKER} ]]; then
+      is_paused=true
+      repo_path="${repo_path/#${PAUSED_MARKER}/}"
     fi
 
     # 展開波浪號
@@ -256,7 +355,11 @@ list_repos() {
     else
       seen_paths+=("$expanded_path")
       if [[ -d "$expanded_path/.git" ]]; then
-        echo "  $repo_path"
+        if [[ "$is_paused" == "true" ]]; then
+          echo "  $repo_path [已暫停]"
+        else
+          echo "  $repo_path"
+        fi
       else
         echo "  $repo_path (唔係 git 倉庫或者唔存在)"
       fi
@@ -354,12 +457,25 @@ process_repo() {
   local repo_path="$1"
   local seen_paths_ref=${2:-}
 
+  # 檢查係咪暫停
+  local is_paused=false
+  if [[ "$repo_path" =~ ^\#PAUSED\# ]]; then
+    is_paused=true
+    repo_path="${repo_path/#\#PAUSED\#/}"
+  fi
+
   if [[ -z "$repo_path" ]] || [[ "$repo_path" =~ ^# ]]; then
     return 0
   fi
 
   # 展開波浪號
   repo_path="${repo_path/#\~/$HOME}"
+
+  # 如果暫停咗，跳過處理
+  if [[ "$is_paused" == "true" ]]; then
+    echo "跳過已暫停：$repo_path"
+    return 0
+  fi
 
   # 檢查重複
   for seen in "${seen_paths_ref[@]}"; do
@@ -456,6 +572,12 @@ main() {
   add)
     add_current_dir
     ;;
+  pause)
+    pause_repo "${2:-}"
+    ;;
+  resume)
+    resume_repo "${2:-}"
+    ;;
   list)
     list_repos
     ;;
@@ -472,6 +594,8 @@ main() {
     echo "  uninstall   卸載服務"
     echo "  run         運行一次自動推送過程"
     echo "  add         將當前目錄加到配置文件"
+    echo "  pause [路徑] 暫停特定倉庫嘅自動推送（默認當前目錄）"
+    echo "  resume [路徑] 恢復特定倉庫嘅自動推送（默認當前目錄）"
     echo "  list        列出配置文件中嘅所有倉庫"
     echo "  status      顯示服務狀態同下次運行時間"
     echo ""

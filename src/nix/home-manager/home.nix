@@ -4,6 +4,7 @@
   pkgs,
   ghostty,
   nixgl-pkgs,
+  llm-agents,
   ...
 }: let
   home_dir = builtins.getEnv "HOME";
@@ -15,7 +16,7 @@
     (pkgs.system == "x86_64-linux")
     || (pkgs.system == "aarch64-linux");
 
-  cli-pkgs = import ../common/cli.nix {inherit base-config lib pkgs;};
+  cli-pkgs = import ../common/cli.nix {inherit base-config lib pkgs llm-agents;};
   ruby-pkgs = import ../common/ruby.nix {inherit base-config pkgs;};
   go-pkgs = import ../common/go.nix {inherit base-config pkgs;};
   php-pkgs = import ../common/php.nix {inherit base-config pkgs;};

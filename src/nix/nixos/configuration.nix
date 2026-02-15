@@ -3,7 +3,6 @@
   lib,
   user,
   base-config,
-  determinate,
   ...
 }: let
   has-k3s = builtins.pathExists (base-config + "/k3s");
@@ -32,14 +31,32 @@ in {
 
   config = lib.mkMerge [
     {
-      hardware.bluetooth.enable = true;
-      hardware.bluetooth.settings = {
-        General = {
-          Enable = "Source,Sink,Media,Socket";
+      hardware.bluetooth = {
+        enable = true;
+        settings = {
+          General = {
+            Enable = "Source,Sink,Media,Socket";
+          };
         };
       };
 
-      services.vscode-server.enable = true;
+      services = {
+        vscode-server.enable = true;
+        journald.extraConfig = "SystemMaxUse=1G";
+        # 呢個假設部機有加密磁碟，如果需要就改
+        displayManager.autoLogin = {
+          user = "${user}";
+          enable = true;
+        };
+        blueman.enable = true;
+        openssh = {
+          enable = true;
+          settings = {
+            PasswordAuthentication = false;
+            PermitRootLogin = "no";
+          };
+        };
+      };
 
       networking = {
         firewall = {
@@ -78,16 +95,7 @@ in {
 
       programs.zsh.enable = true;
 
-      services.blueman.enable = true;
-      services.openssh.enable = true;
-      services.openssh.settings.PasswordAuthentication = false;
-      services.openssh.settings.PermitRootLogin = "no";
-
       time.timeZone = "Asia/Hong_Kong";
-
-      # 呢個假設部機有加密磁碟，如果需要就改
-      services.displayManager.autoLogin.user = "${user}";
-      services.displayManager.autoLogin.enable = true;
 
       users.defaultUserShell = pkgs.zsh;
       users.users."${user}" = {
@@ -104,8 +112,6 @@ in {
       };
 
       system.stateVersion = "25.05";
-
-      services.journald.extraConfig = "SystemMaxUse=1G";
 
       security.sudo.extraRules = [
         {

@@ -18,7 +18,7 @@
     nixgl.url = "github:nix-community/nixGL";
     vscode-server.url = "github:nix-community/nixos-vscode-server";
     nixos-raspberry.url = "github:nvmd/nixos-raspberrypi";
-    determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
+    llm-agents.url = "github:numtide/llm-agents.nix";
   };
 
   outputs = {
@@ -33,7 +33,7 @@
     nixgl,
     vscode-server,
     nixos-raspberry,
-    determinate,
+    llm-agents,
   }: let
     user = builtins.getEnv "USER";
   in
@@ -58,7 +58,7 @@
             unstable
             vscode-server
             nixos-raspberry
-            determinate
+            llm-agents
             ;
         };
         nixos-systems = import ./src/nix/systems.nix {
@@ -73,7 +73,7 @@
             homeConfigurations."${user}" = home-manager.lib.homeManagerConfiguration {
               inherit pkgs;
               modules = [./src/nix/home-manager/home.nix];
-              extraSpecialArgs = {inherit pkgs stable-pkgs nixgl-pkgs ghostty;};
+              extraSpecialArgs = {inherit pkgs stable-pkgs nixgl-pkgs ghostty llm-agents;};
             };
             check = pkgs.writeShellApplication {
               name = "check-environment";

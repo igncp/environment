@@ -469,8 +469,6 @@ if type nix >/dev/null 2>&1; then
       # 它需要 --impure 標誌，因為它導入/etc/nixos/configuration.nix配置
       (cd ~/development/environment &&
         sudo nixos-rebuild switch \
-          --option extra-substituters https://install.determinate.systems \
-          --option extra-trusted-public-keys cache.flakehub.com-3:hJuILl5sVK4iKm86JzgdXW12Y2Hwd5G07qKtHTOcDCM= \
           --show-trace --flake path:$PWD --impure)
     fi
 

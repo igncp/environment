@@ -19,8 +19,6 @@ echo no >~/development/environment/project/.config/nvidia
 sudo cp ~/development/environment/src/nix/nixos/templates/configuration.nix /etc/nixos/configuration.nix
 cd ~/development/environment
 sudo nixos-rebuild switch \
-  --option extra-substituters https://install.determinate.systems \
-  --option extra-trusted-public-keys cache.flakehub.com-3:hJuILl5sVK4iKm86JzgdXW12Y2Hwd5G07qKtHTOcDCM= \
   --show-trace --flake path:"$PWD" --impure && bash src/main.sh # 在環境倉庫中
 
 # Check nmcli notes in [notes/linux.md](notes/linux.md)

@@ -1,82 +1,92 @@
-#!/usr/bin/env python3
+#!/usr/bin/env bash
 
 # Copyright (C) 2016 James Murphy
 # Licensed under the GPL version 2 only
 
-from subprocess import check_output
+status="$(acpi 2>/dev/null)"
 
-status = check_output(['acpi'], universal_newlines=True)
-
-if not status:
-    # 表示找不到電池
-    fulltext = "<span color='red'><span font='FontAwesome'>\uf00d \uf240</span></span>"
-    percentleft = 100
+if [[ -z "$status" ]]; then
+  # 表示找不到電池
+  fulltext="<span color='red'>❌ 🔋</span>"
+  percentleft=100
 # 當無電池（桌面電腦）時，檢查 "rate information unavailable"
-elif "rate information unavailable" in status:
-    fulltext = "<span font='FontAwesome'>\uf1e6</span> <span color='black'> |</span>"
-    percentleft = 100
-else:
-    # 如果一部筆電有多於一個電池，每個電池的剩餘百分比
-    # 係分別可用，但整體區塊的狀態同剩餘時間
-    # 顯示喺第一個電池的狀態
-    batteries = status.split("\n")
-    state_batteries=[]
-    commasplitstatus_batteries=[]
-    percentleft_batteries=[]
-    for battery in batteries:
-        if battery!='':
-            state_batteries.append(battery.split(": ")[1].split(", ")[0])
-            commasplitstatus = battery.split(", ")
-            percentleft_batteries.append(int(commasplitstatus[1].rstrip("%\n")))
-            commasplitstatus_batteries.append(commasplitstatus)
-    state = state_batteries[0]
-    commasplitstatus = commasplitstatus_batteries[0]
-    percentleft = int(sum(percentleft_batteries)/len(percentleft_batteries))
-    # 表示充電中
-    FA_LIGHTNING = "<span color='black'><span font='FontAwesome'>\uf0e7</span></span>"
+elif [[ "$status" == *"rate information unavailable"* ]]; then
+  fulltext="🔌 <span color='black'> |</span>"
+  percentleft=100
+else
+  # 如果一部筆電有多於一個電池，每個電池的剩餘百分比
+  # 係分別可用，但整體區塊的狀態同剩餘時間
+  # 顯示喺第一個電池的狀態
 
-    # 表示已插電
-    FA_PLUG = "<span font='FontAwesome'>\uf1e6</span>"
+  # 表示已插電
+  FA_PLUG="🔌"
 
-    fulltext = ""
-    timeleft = ""
+  # Parse first battery line
+  first_battery=$(echo "$status" | head -n 1)
+  state=$(echo "$first_battery" | awk -F': ' '{print $2}' | awk -F', ' '{print $1}')
 
-    if state == "Discharging":
-        time = commasplitstatus[-1].split()[0]
-        time = ":".join(time.split(":")[0:2])
-        timeleft = " ({})".format(time)
-    elif state == "Full":
-        fulltext = FA_PLUG + " "
-    elif state == "Unknown":
-        fulltext = "<span font='FontAwesome'>\uf128</span> "
-    else:
-        fulltext = FA_LIGHTNING + " " + FA_PLUG + " "
+  # Calculate average percentage across all batteries
+  total_percent=0
+  battery_count=0
+  while IFS= read -r battery; do
+    if [[ -n "$battery" ]]; then
+      percent=$(echo "$battery" | grep -oP '\d+(?=%)')
+      if [[ -n "$percent" ]]; then
+        total_percent=$((total_percent + percent))
+        battery_count=$((battery_count + 1))
+      fi
+    fi
+  done <<<"$status"
 
-    def color(percent):
-        if percent < 10:
-            # 退出代碼 33 會將背景變為紅色
-            return "#000000"
-        if percent < 20:
-            return "#FF3300"
-        if percent < 30:
-            return "#FF3300"
-        if percent < 40:
-            return "#000000"
-        if percent < 50:
-            return "#000000"
-        if percent < 60:
-            return "#000000"
-        if percent < 70:
-            return "#000000"
-        if percent < 80:
-            return "#000000"
-        return "#000000"
+  if [[ $battery_count -gt 0 ]]; then
+    percentleft=$((total_percent / battery_count))
+  else
+    percentleft=0
+  fi
 
-    form =  '<span color="{}">{}%</span>'
-    fulltext += form.format(color(percentleft), percentleft)
-    fulltext += timeleft
+  # 電池圖示
+  if [[ $percentleft -ge 90 ]]; then
+    BATTERY_ICON="🔋"
+  elif [[ $percentleft -ge 60 ]]; then
+    BATTERY_ICON="🔋"
+  elif [[ $percentleft -ge 30 ]]; then
+    BATTERY_ICON="🔋"
+  elif [[ $percentleft -ge 10 ]]; then
+    BATTERY_ICON="🪫"
+  else
+    BATTERY_ICON="🪫"
+  fi
 
-print(fulltext + ' <span color="white"> |</span>')
+  fulltext=""
+  timeleft=""
 
-if percentleft < 10:
-    exit(33)
+  if [[ "$state" == "Discharging" ]]; then
+    time=$(echo "$first_battery" | awk -F', ' '{print $NF}' | awk '{print $1}')
+    time=$(echo "$time" | cut -d':' -f1-2)
+    timeleft=" ($time)"
+    fulltext+="$BATTERY_ICON"
+  elif [[ "$state" == "Full" ]]; then
+    fulltext+="$FA_PLUG "
+  elif [[ "$state" == "Unknown" ]]; then
+    fulltext+="❓ "
+  else
+    fulltext+="$FA_PLUG "
+  fi
+
+  color="#ffffff"
+  if [[ $percentleft -lt 10 ]]; then
+    # 退出代碼 33 會將背景變為紅色
+    color="#ffaaaa"
+  elif [[ $percentleft -lt 20 ]] || [[ $percentleft -lt 30 ]]; then
+    color="#FF3300"
+  fi
+
+  fulltext+="<span color=\"$color\">${percentleft}%</span>"
+  fulltext+="$timeleft"
+fi
+
+echo "$fulltext <span color=\"white\"> |</span>"
+
+if [[ $percentleft -lt 10 ]]; then
+  exit 33
+fi

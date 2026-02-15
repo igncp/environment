@@ -2,12 +2,13 @@
   pkgs,
   lib,
   unstable-pkgs,
+  llm-agents,
   ...
 }: let
   base-config = ../../../project/.config;
 
   cli-pkgs = import ../common/cli.nix {
-    inherit base-config;
+    inherit base-config llm-agents;
     lib = unstable-pkgs.lib;
     pkgs = unstable-pkgs;
   };

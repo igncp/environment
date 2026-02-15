@@ -82,7 +82,7 @@ nnoremap <leader>er :lua dofile(os.getenv("HOME") .. '/development/environment/p
   nnoremap <silent> gx :execute 'silent! !xdg-open ' . shellescape(expand('<cWORD>'), 1)<cr>
 
 " fold by section
-  let g:markdown_folding = 1
+let g:markdown_folding = 1
 
 set nowrap
 set nojoinspaces
@@ -199,14 +199,6 @@ runtime macros/matchit.vim
 nnoremap gs /<c-r>/
 
 set scrolloff=3
-
-" Move lines up and down
-nnoremap <c-j> :m .+1<cr>==
-nnoremap <c-k> :m .-2<cr>==
-inoremap <c-j> <esc>:m .+1<cr>==gi
-inoremap <c-k> <esc>:m .-2<cr>==gi
-vnoremap <c-j> :m '>+1<cr>gv=gv
-vnoremap <c-k> :m '<-2<cr>gv=gv
 
 " improve the 'preview window' behaviour
   autocmd CompleteDone * pclose " close when done

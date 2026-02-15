@@ -17,6 +17,16 @@ install_node_modules() {
   fi
 }
 
+uninstall_node_modules() {
+  local NAME="$1"
+  local BIN="${2:-$NAME}"
+
+  if [ -f "$HOME/.npm-packages/bin/$BIN" ] && type npm >/dev/null 2>&1; then
+    echo "卸載 node 模組: $NAME"
+    npm uninstall -g $NAME
+  fi
+}
+
 provision_setup_js() {
   cat >~/.npmrc <<"EOF"
 prefix = ${HOME}/.npm-packages

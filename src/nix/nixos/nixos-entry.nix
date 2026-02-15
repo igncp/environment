@@ -10,7 +10,7 @@
   unstable,
   vscode-server,
   nixos-raspberry,
-  determinate,
+  llm-agents,
 }: let
   base-config = ../../../project/.config;
   has-user-file = builtins.pathExists "/etc/nixos/user"; # 用呢個指令：`sudo bash -c 'printf USER_NAME > /etc/nixos/user'`
@@ -27,7 +27,6 @@
   current-hostname = builtins.readFile "/etc/hostname";
   modules-list =
     [
-      determinate.nixosModules.default
       ./configuration.nix
       vscode-server.nixosModules.default
     ]
@@ -42,7 +41,7 @@
       else []
     );
   specialArgs = {
-    inherit stable-pkgs home-manager system ghostty nixos-hardware base-config unstable nixgl-pkgs determinate;
+    inherit stable-pkgs home-manager system ghostty nixos-hardware base-config unstable nixgl-pkgs llm-agents;
     nixos-raspberrypi = nixos-raspberry;
     unstable-pkgs = pkgs;
 

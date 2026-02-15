@@ -140,10 +140,10 @@ alias GitStashList='git stash list'
 alias GitStashName='git stash push -m'
 alias GitSubmodulesUpdate='git submodule update --init --recursive' # clones existing submodules
 
-# For example: `GitConfigureRepoSSH ~/.ssh/foo`
+# 例如：`GitConfigureRepoSSH ~/.ssh/foo`
 GitConfigureRepoSSH() {
-  if [ -z "$1" ]; then echo "Missing SSH key path" && return; fi
-  if [ ! -f "$1" ]; then echo "The file path does not exist" && return; fi
+  if [ -z "$1" ]; then echo "缺少 SSH 密鑰路徑" && return; fi
+  if [ ! -f "$1" ]; then echo "檔案路徑唔存在" && return; fi
   git config core.sshCommand "ssh -i $1 -F /dev/null"
 }
 EOF

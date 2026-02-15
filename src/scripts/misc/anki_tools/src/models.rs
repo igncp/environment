@@ -6,6 +6,8 @@ use serde_json::Value;
 use std::{collections::HashMap, fmt::Display};
 
 use crate::jyutping_reader::JyutpingReader;
+use crate::utils::constants::POSSIBLE_GRAMMAR_TYPES;
+use crate::utils::text::normalize_text;
 use crate::{anki_connect_client::AnkiConnectClient, open_ai_client::OpenAiClient};
 
 pub struct ModelsClients {
@@ -96,20 +98,6 @@ pub struct Note<'a> {
     model_clients: &'a ModelsClients,
 }
 
-const POSSIBLE_GRAMMAR_TYPES: &[&str] = &[
-    "動詞 | 名詞",
-    "名詞, 術語",
-    "動詞",
-    "名詞",
-    "形容詞",
-    "副詞",
-    "語素",
-    "術語",
-    "反義",
-    "韻母",
-    "語句",
-];
-
 impl<'a> Note<'a> {
     fn get_processed_field(&self, field: ChineseNoteFields) -> Option<String> {
         if let Some(f) = self.fields.get(field.as_str()) {
@@ -181,8 +169,8 @@ pub struct Card<'a> {
 
 impl<'a> Card<'a> {
     pub fn print(&self) {
-        println!("Card ID: {}", self.id);
-        println!("Deck Name: {}", self.deck_name);
+        println!("卡片 ID：{}", self.id);
+        println!("牌組名稱：{}", self.deck_name);
     }
 }
 
@@ -331,6 +319,534 @@ impl<'a> Deck<'a> {
         }
 
         incomplete_notes
+    }
+
+    /// 檢查欄位，尋找傳統文字出現喺描述入面嘅筆記
+    /// 返回兩組筆記 ID：(傳統文字喺描述入面嘅筆記, 英文釋義同繁體/粵拼相同嘅筆記)
+    pub fn inspect_fields(&self) -> (Vec<u64>, Vec<u64>) {
+        let mut trad_in_desc_notes_full = Vec::new();
+        let mut trad_in_desc_notes_partial = Vec::new();
+        let mut same_english_notes = Vec::new();
+
+        for note in self.note_id_to_note.values() {
+            let traditional = note.get_processed_field(ChineseNoteFields::Traditional);
+            let definition = note.get_processed_field(ChineseNoteFields::Definition);
+            let definitions_english =
+                note.get_processed_field(ChineseNoteFields::DefinitionsEnglish);
+            let definitions_traditional =
+                note.get_processed_field(ChineseNoteFields::DefinitionsTraditional);
+            let definitions_jyutping =
+                note.get_processed_field(ChineseNoteFields::DefinitionsJyutping);
+
+            // 檢查傳統文字係咪出現喺描述入面
+            if let Some(trad) = traditional.as_ref() {
+                let mut found_full = false;
+                let mut found_all_chars = false;
+
+                // 收集所有要檢查嘅文字
+                let mut all_text = String::new();
+                if let Some(def) = definition.as_ref() {
+                    all_text.push_str(def);
+                }
+                if let Some(eng) = definitions_english.as_ref() {
+                    all_text.push_str(eng);
+                }
+                if let Some(def_trad) = definitions_traditional.as_ref() {
+                    all_text.push_str(def_trad);
+                }
+
+                // 檢查係咪包含完整詞語
+                if all_text.contains(trad) {
+                    found_full = true;
+                } else {
+                    // 檢查係咪所有字符都出現咗（即使分散）
+                    found_all_chars = trad.chars().all(|c| all_text.contains(c));
+                }
+
+                if found_full {
+                    trad_in_desc_notes_full.push(note);
+                } else if found_all_chars {
+                    trad_in_desc_notes_partial.push(note);
+                }
+            }
+
+            // 檢查英文釋義係咪同 Definitions Traditional/Jyutping 相同（正規化後）
+            let mut is_same = false;
+
+            // 比較 Definition 同 Definitions Traditional
+            if let (Some(def), Some(def_trad)) =
+                (definition.as_ref(), definitions_traditional.as_ref())
+            {
+                let normalized_def = normalize_text(def);
+                let normalized_def_trad = normalize_text(def_trad);
+                if normalized_def == normalized_def_trad && !normalized_def.is_empty() {
+                    is_same = true;
+                }
+            }
+
+            // 比較 Definition 同 Definitions Jyutping
+            if !is_same {
+                if let (Some(def), Some(def_jyut)) =
+                    (definition.as_ref(), definitions_jyutping.as_ref())
+                {
+                    let normalized_def = normalize_text(def);
+                    let normalized_def_jyut = normalize_text(def_jyut);
+                    if normalized_def == normalized_def_jyut && !normalized_def.is_empty() {
+                        is_same = true;
+                    }
+                }
+            }
+
+            // 比較 Definitions English 同 Definitions Traditional
+            if !is_same {
+                if let (Some(eng), Some(def_trad)) = (
+                    definitions_english.as_ref(),
+                    definitions_traditional.as_ref(),
+                ) {
+                    let normalized_eng = normalize_text(eng);
+                    let normalized_def_trad = normalize_text(def_trad);
+                    if normalized_eng == normalized_def_trad && !normalized_eng.is_empty() {
+                        is_same = true;
+                    }
+                }
+            }
+
+            // 比較 Definitions English 同 Definitions Jyutping
+            if !is_same {
+                if let (Some(eng), Some(def_jyut)) =
+                    (definitions_english.as_ref(), definitions_jyutping.as_ref())
+                {
+                    let normalized_eng = normalize_text(eng);
+                    let normalized_def_jyut = normalize_text(def_jyut);
+                    if normalized_eng == normalized_def_jyut && !normalized_eng.is_empty() {
+                        is_same = true;
+                    }
+                }
+            }
+
+            if is_same {
+                same_english_notes.push(note);
+            }
+        }
+
+        // 合併全字同部分匹配嘅筆記（優先顯示全字匹配）
+        let mut trad_in_desc_notes: Vec<&Note> = Vec::new();
+        trad_in_desc_notes.extend(&trad_in_desc_notes_full);
+        trad_in_desc_notes.extend(&trad_in_desc_notes_partial);
+
+        // 顯示第一組：傳統文字出現喺描述入面嘅筆記
+        if trad_in_desc_notes.is_empty() {
+            println!("\n搵到 0 個筆記嘅傳統文字出現喺描述入面\n");
+        } else {
+            println!(
+                "\n搵到 {} 個筆記嘅傳統文字出現喺描述入面：\n",
+                trad_in_desc_notes.len()
+            );
+            if !trad_in_desc_notes_full.is_empty() {
+                println!("  - {} 個全字匹配", trad_in_desc_notes_full.len());
+            }
+            if !trad_in_desc_notes_partial.is_empty() {
+                println!(
+                    "  - {} 個所有字匹配（分散）",
+                    trad_in_desc_notes_partial.len()
+                );
+            }
+            println!();
+        }
+
+        // 收集用戶確認要更新嘅筆記 ID
+        let mut confirmed_trad_note_ids = Vec::new();
+        let total_trad_notes = trad_in_desc_notes.len();
+
+        for (idx, note) in trad_in_desc_notes.iter().enumerate() {
+            println!("───────────────────────────────────────");
+            let match_type = if idx < trad_in_desc_notes_full.len() {
+                "全字匹配"
+            } else {
+                "所有字匹配"
+            };
+            println!(
+                "筆記 #{}/{} (ID: {}) [{}]",
+                idx + 1,
+                total_trad_notes,
+                note.id,
+                match_type
+            );
+            println!();
+
+            self.print_note_fields(note);
+            println!();
+
+            confirmed_trad_note_ids.push(note.id);
+        }
+
+        if trad_in_desc_notes.is_empty() {
+            println!("冇搵到符合條件嘅筆記。");
+        } else {
+            println!("\n已確認 {} 個筆記進行更新", confirmed_trad_note_ids.len());
+        }
+
+        // 顯示第二組：英文釋義同繁體/粵拼相同嘅筆記
+        if same_english_notes.is_empty() {
+            println!("\n搵到 0 個筆記嘅英文釋義同繁體/粵拼相同\n");
+        } else {
+            println!(
+                "\n搵到 {} 個筆記嘅英文釋義同繁體/粵拼相同：\n",
+                same_english_notes.len()
+            );
+        }
+
+        for (idx, note) in same_english_notes.iter().enumerate() {
+            println!("───────────────────────────────────────");
+            println!("筆記 #{} (ID: {})", idx + 1, note.id);
+            println!();
+
+            self.print_note_fields(note);
+            println!();
+        }
+
+        if same_english_notes.is_empty() {
+            println!("冇搵到符合條件嘅筆記。");
+        }
+
+        let same_note_ids: Vec<u64> = same_english_notes.iter().map(|n| n.id).collect();
+
+        // 返回用戶確認嘅筆記 ID
+        (confirmed_trad_note_ids, same_note_ids)
+    }
+
+    /// 搵出 Traditional 欄位重複嘅筆記
+    /// 返回 HashMap：Traditional 文字 -> 筆記 ID 列表
+    pub fn find_duplicate_traditional(&self) -> HashMap<String, Vec<u64>> {
+        let mut traditional_map: HashMap<String, Vec<u64>> = HashMap::new();
+
+        // 建立 Traditional -> note_ids 映射
+        for note in self.note_id_to_note.values() {
+            if let Some(trad) = note.get_processed_field(ChineseNoteFields::Traditional) {
+                let trimmed = trad.trim();
+                if !trimmed.is_empty() {
+                    traditional_map
+                        .entry(trimmed.to_string())
+                        .or_default()
+                        .push(note.id);
+                }
+            }
+        }
+
+        // 只保留有重複嘅（超過一個筆記）
+        let duplicates: HashMap<String, Vec<u64>> = traditional_map
+            .into_iter()
+            .filter(|(_, ids)| ids.len() > 1)
+            .collect();
+
+        // 顯示結果
+        if duplicates.is_empty() {
+            println!("\n搵到 0 個重複嘅 Traditional 欄位\n");
+        } else {
+            let total_duplicates: usize = duplicates.values().map(|ids| ids.len()).sum();
+            println!(
+                "\n搵到 {} 組重複嘅 Traditional 欄位（共 {} 個筆記）：\n",
+                duplicates.len(),
+                total_duplicates
+            );
+
+            // 按筆記數量排序（最多重複嘅排前面）
+            let mut sorted_duplicates: Vec<_> = duplicates.iter().collect();
+            sorted_duplicates.sort_by(|a, b| b.1.len().cmp(&a.1.len()));
+
+            for (idx, (trad, note_ids)) in sorted_duplicates.iter().enumerate() {
+                println!("═══════════════════════════════════════");
+                println!(
+                    "重複組 #{} - \"{}\" ({} 個筆記)",
+                    idx + 1,
+                    trad,
+                    note_ids.len()
+                );
+                println!();
+
+                for (note_idx, note_id) in note_ids.iter().enumerate() {
+                    if let Some(note) = self.note_id_to_note.get(note_id) {
+                        println!("  筆記 {} (ID: {})", note_idx + 1, note_id);
+
+                        // 只顯示關鍵欄位以節省空間
+                        if let Some(def) = note.get_processed_field(ChineseNoteFields::Definition) {
+                            if !def.is_empty() {
+                                println!("    釋義：{}", def);
+                            }
+                        }
+                        if let Some(def_eng) =
+                            note.get_processed_field(ChineseNoteFields::DefinitionsEnglish)
+                        {
+                            if !def_eng.is_empty() {
+                                println!("    英文釋義：{}", def_eng);
+                            }
+                        }
+                        if let Some(grammar) =
+                            note.get_processed_field(ChineseNoteFields::GrammarType)
+                        {
+                            if !grammar.is_empty() {
+                                println!("    語法類型：{}", grammar);
+                            }
+                        }
+                        println!();
+                    }
+                }
+            }
+        }
+
+        duplicates
+    }
+
+    /// 打印筆記嘅所有欄位
+    fn print_note_fields(&self, note: &Note) {
+        let mut sorted_fields: Vec<_> = note.fields.values().collect();
+        sorted_fields.sort_by_key(|f| f.order);
+
+        for field in sorted_fields {
+            let processed_value = Html::parse_fragment(&field.value)
+                .root_element()
+                .text()
+                .collect::<Vec<_>>()
+                .join(" ")
+                .trim()
+                .to_string();
+
+            if !processed_value.is_empty() {
+                println!("  {}: {}", field.field_type, processed_value);
+            }
+        }
+    }
+
+    /// 更新筆記，將指定欄位設置為英文釋義
+    pub async fn update_notes_with_english_definition(
+        &self,
+        note_ids: &[u64],
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut updated_notes = 0;
+        let mut failed_notes = 0;
+
+        for note_id in note_ids {
+            let Some(note) = self.note_id_to_note.get(note_id) else {
+                failed_notes += 1;
+                continue;
+            };
+
+            let Some(english_def) = note.get_processed_field(ChineseNoteFields::DefinitionsEnglish)
+            else {
+                println!("筆記 {} 冇英文釋義，跳過", note_id);
+                failed_notes += 1;
+                continue;
+            };
+
+            let mut updates = std::collections::HashMap::new();
+            updates.insert(
+                ChineseNoteFields::DefinitionsTraditional
+                    .as_str()
+                    .to_string(),
+                english_def.clone(),
+            );
+            updates.insert(
+                ChineseNoteFields::DefinitionsJyutping.as_str().to_string(),
+                english_def.clone(),
+            );
+            updates.insert(
+                ChineseNoteFields::ColorsDefinitionsTraditional
+                    .as_str()
+                    .to_string(),
+                english_def.clone(),
+            );
+            updates.insert(
+                ChineseNoteFields::DefinitionsEnglish.as_str().to_string(),
+                english_def.clone(),
+            );
+            updates.insert(
+                ChineseNoteFields::Definition.as_str().to_string(),
+                english_def.clone(),
+            );
+
+            if self
+                .models_clients
+                .anki_client
+                .update_note_fields(*note_id, updates)
+                .await
+                .is_err()
+            {
+                println!("筆記 {} 更新失敗", note_id);
+                failed_notes += 1;
+                continue;
+            }
+
+            updated_notes += 1;
+        }
+
+        println!("\n更新完成：");
+        println!("  成功：{}", updated_notes);
+        println!("  失敗：{}", failed_notes);
+
+        Ok(())
+    }
+
+    /// 用 AI 生成新嘅釋義來更新筆記
+    /// 生成不包含繁體欄位內字詞嘅釋義
+    pub async fn update_notes_with_ai_definitions(
+        &self,
+        note_ids: &[u64],
+    ) -> Result<(), Box<dyn std::error::Error>> {
+        let mut updated_notes = 0;
+        let mut failed_notes = 0;
+        let mut skipped_notes = 0;
+
+        for (idx, note_id) in note_ids.iter().enumerate() {
+            let Some(note) = self.note_id_to_note.get(note_id) else {
+                failed_notes += 1;
+                continue;
+            };
+
+            let Some(traditional) = note.get_processed_field(ChineseNoteFields::Traditional) else {
+                println!("筆記 {} 冇傳統文字，跳過", note_id);
+                skipped_notes += 1;
+                continue;
+            };
+
+            // 獲取現有嘅定義（優先順序：Definition > DefinitionsEnglish > DefinitionsTraditional）
+            let existing_definition = note
+                .get_processed_field(ChineseNoteFields::Definition)
+                .or_else(|| note.get_processed_field(ChineseNoteFields::DefinitionsEnglish))
+                .or_else(|| note.get_processed_field(ChineseNoteFields::DefinitionsTraditional));
+
+            print!("\r處理中：{}/{}", idx + 1, note_ids.len());
+            std::io::Write::flush(&mut std::io::stdout()).ok();
+
+            // 構造 AI 提示
+            let prompt = if let Some(existing_def) = existing_definition {
+                format!(
+                    "你係一個粵語同漢字專家。根據以下繁體中文詞語同現有釋義，產生改進嘅 JSON 物件，\n\
+                    鍵必須為：Definitions English, Definitions Traditional\n\n\
+                    規則：\n\
+                    - 唔好加入多餘文字或說明，只輸出 JSON。\n\
+                    - Definitions English：必須用英文，而且係詳細嘅釋義或例句。\n\
+                    - Definitions Traditional：必須用繁體中文，係 Definitions English 嘅翻譯。\n\
+                    - 重要：釋義不可以包含以下繁體中文詞語嘅任何字：'{}'\n\
+                    - 釋義必須用不同嘅詞語來解釋意思，或者提供例句。\n\
+                    - 參考現有釋義但要改進佢，令佢更清晰、更詳細。\n\n\
+                    繁體中文詞語：{}\n\
+                    現有釋義：{}\n\n\
+                    只輸出 JSON。",
+                    traditional, traditional, existing_def
+                )
+            } else {
+                format!(
+                    "你係一個粵語同漢字專家。根據以下繁體中文詞語，產生 JSON 物件，\n\
+                    鍵必須為：Definitions English, Definitions Traditional\n\n\
+                    規則：\n\
+                    - 唔好加入多餘文字或說明，只輸出 JSON。\n\
+                    - Definitions English：必須用英文，而且係詳細嘅釋義或例句。\n\
+                    - Definitions Traditional：必須用繁體中文，係 Definitions English 嘅翻譯。\n\
+                    - 重要：釋義不可以包含以下繁體中文詞語嘅任何字：'{}'\n\
+                    - 釋義必須用不同嘅詞語來解釋意思，或者提供例句。\n\n\
+                    繁體中文詞語：{}\n\n\
+                    只輸出 JSON。",
+                    traditional, traditional
+                )
+            };
+
+            let ai_json = match self
+                .models_clients
+                .open_ai_client
+                .get_prompt_response(&prompt)
+                .await
+            {
+                Ok(resp) => resp,
+                Err(e) => {
+                    println!("\n筆記 {} AI 請求失敗：{}", note_id, e);
+                    failed_notes += 1;
+                    continue;
+                }
+            };
+
+            // 嘗試解析為 JSON
+            let parsed: serde_json::Value = match serde_json::from_str(ai_json.trim()) {
+                Ok(v) => v,
+                Err(e) => {
+                    println!("\n筆記 {} JSON 解析失敗：{}", note_id, e);
+                    failed_notes += 1;
+                    continue;
+                }
+            };
+
+            let definitions_english = parsed
+                .get("Definitions English")
+                .and_then(|v| v.as_str())
+                .unwrap_or("")
+                .trim()
+                .to_string();
+
+            let definitions_traditional = parsed
+                .get("Definitions Traditional")
+                .and_then(|v| v.as_str())
+                .unwrap_or("")
+                .trim()
+                .to_string();
+
+            if definitions_english.is_empty() || definitions_traditional.is_empty() {
+                println!("\n筆記 {} AI 返回空內容，跳過", note_id);
+                skipped_notes += 1;
+                continue;
+            }
+
+            // 更新筆記
+            let mut updates = std::collections::HashMap::new();
+            updates.insert(
+                ChineseNoteFields::DefinitionsEnglish.as_str().to_string(),
+                definitions_english.clone(),
+            );
+            updates.insert(
+                ChineseNoteFields::DefinitionsTraditional
+                    .as_str()
+                    .to_string(),
+                definitions_traditional.clone(),
+            );
+            // 只有當 Definition 欄位為空時先更新
+            let current_definition = note.get_processed_field(ChineseNoteFields::Definition);
+            if current_definition.is_none() || current_definition.as_ref().unwrap().is_empty() {
+                updates.insert(
+                    ChineseNoteFields::Definition.as_str().to_string(),
+                    definitions_english.clone(),
+                );
+            }
+            // 清空呢兩個欄位，之後會用其他指令處理
+            updates.insert(
+                ChineseNoteFields::DefinitionsJyutping.as_str().to_string(),
+                String::new(),
+            );
+            updates.insert(
+                ChineseNoteFields::ColorsDefinitionsTraditional
+                    .as_str()
+                    .to_string(),
+                String::new(),
+            );
+
+            if self
+                .models_clients
+                .anki_client
+                .update_note_fields(*note_id, updates)
+                .await
+                .is_err()
+            {
+                println!("\n筆記 {} 更新失敗", note_id);
+                failed_notes += 1;
+                continue;
+            }
+
+            updated_notes += 1;
+        }
+
+        println!("\n\n更新完成：");
+        println!("  成功：{}", updated_notes);
+        println!("  跳過：{}", skipped_notes);
+        println!("  失敗：{}", failed_notes);
+
+        Ok(())
     }
 
     /// 用更通用嘅方式處理不完整嘅筆記
