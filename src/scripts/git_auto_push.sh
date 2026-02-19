@@ -451,6 +451,9 @@ show_status() {
   else
     echo "未找到配置文件"
   fi
+
+  echo ""
+  list_repos
 }
 
 process_repo() {
@@ -508,6 +511,27 @@ process_repo() {
     git add -A
     git commit -m "Automatic save from git_auto_push.sh" || true
     echo "  ✓ 已提交更改"
+  fi
+
+  # 獲取遠端更新
+  git fetch 2>/dev/null || {
+    echo "  ⚠ 獲取遠端失敗"
+    return 1
+  }
+
+  # 檢查係咪會產生合併提交
+  local upstream_branch=$(git rev-parse --abbrev-ref @{u} 2>/dev/null)
+  if [[ -n "$upstream_branch" ]]; then
+    local commits_behind=$(git rev-list --count HEAD..@{u} 2>/dev/null || echo "0")
+    local commits_ahead=$(git rev-list --count @{u}..HEAD 2>/dev/null || echo "0")
+
+    if [[ "$commits_behind" -gt 0 ]] && [[ "$commits_ahead" -gt 0 ]]; then
+      echo "  ✗ 檢測到分支分歧，會產生合併提交"
+      echo "  本地領先：$commits_ahead 提交"
+      echo "  遠端領先：$commits_behind 提交"
+      send_notification "Git 自動推送 - 需要合併" "分支分歧於：$repo_path"
+      return 1
+    fi
   fi
 
   git pull --no-rebase --no-edit 2>&1 | tee /tmp/git_pull_output.txt

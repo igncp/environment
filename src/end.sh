@@ -70,6 +70,9 @@ EOF
       ~/development/environment/src/scripts/bootstrap/Bootstrap_common.sh
   fi
 
+  cat ~/development/environment/src/config-files/vscode/settings.json | jq -S |
+    sponge ~/development/environment/src/config-files/vscode/settings.json
+
   cat >>~/.zshrc <<"EOF"
 zle -N custom_dir
 custom_dir () {

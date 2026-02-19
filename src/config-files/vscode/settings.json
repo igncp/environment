@@ -6,6 +6,7 @@
     "editor.defaultFormatter": "jkillian.custom-local-formatters"
   },
   "accessibility.verbosity.terminal": false,
+  "chat.editing.autoAcceptDelay": 1,
   "chat.mcp.gallery.enabled": true,
   "crashReporting.enabled": "off",
   "css.validate": false,

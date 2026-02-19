@@ -947,11 +947,15 @@ impl<'a> Deck<'a> {
                 規則：\n\
                 - 唔好加入多餘文字或說明，只輸出 JSON。\n\
                 - 如果資訊不足，該鍵請設為空字串。\n\
-                - Definition：必須用英文，而且係簡短嘅定義（brief definition），唔可包含粵拼或繁體。\n\
-                - Definitions Traditional：只包含繁體中文內容，唔可包含英文或粵拼。\n\
-                - Definitions English：只包含英文內容，必須係 Definitions Traditional 嘅翻譯，唔可包含粵拼或繁體。\n\
+                - Definition：必須用英文，而且只係一個詞或幾個詞，唔可包含粵拼或繁體。\n\
+                - Definitions English：必須用英文，而且係詳細嘅解釋（幾句說話），包括一個例句（唔可以用返個詞本身），唔可包含粵拼或繁體。\n\
+                - Definition 同 Definitions English 必須唔同，Definition 要簡短，Definitions English 要詳細。\n\
+                - Definitions Traditional：只包含繁體中文內容，必須係 Definitions English 嘅翻譯，唔可包含英文或粵拼。\n\
+                - **關鍵限制**：Definitions Traditional 同埋 Definitions English 裏面嘅釋義同例句，絕對唔可以包含 Traditional 欄位嘅任何字符。必須用完全唔同嘅詞語嚟解釋，唔可以出現 Traditional 詞語本身。\n\
+                - 如果 Traditional 係「好」，Definitions Traditional 唔可以有「好」呢個字，要用「表示滿意或者讚賞嘅意思」咁樣嘅說法。\n\
                 - Simplified：必須係 Traditional 欄位內容嘅簡體中文對應（只包含簡體字）。\n\
-                - Grammar type 必須係以下其中一個：{:?}。資訊不足就設為空字串。\n\n\
+                - Grammar type 必須係以下其中一個：{:?}。資訊不足就設為空字串。\n\
+                - 記住：Traditional 詞語嘅每一個字都唔可以出現喺釋義入面！\n\n\
                 內容：\n\
                 {}\n\n\
                 只輸出 JSON。",

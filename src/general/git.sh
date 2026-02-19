@@ -61,6 +61,33 @@ GitFilesByAuthorLatest() {
 GitFilesByAuthorLatestGrep() {
   GitFilesByAuthorLatest "${@:2}" | grep -i "$1" | grep -o '^[^ ]* '
 }
+GitLastFiles() { GIT_PAGER='' git show --name-only "${1:-HEAD}" | tail -n +2; }
+GitDeleteMergedBranches() {
+  MAIN_BRANCH="${1:-main}"
+  echo "刪除已合併到 $MAIN_BRANCH 嘅分支..."
+  git branch --merged "$MAIN_BRANCH" | \
+    grep -v "\* $MAIN_BRANCH" | \
+    grep -v "^\* " | \
+    grep -v "  $MAIN_BRANCH$" | \
+    xargs -r git branch -d
+}
+GitFindCommit() {
+  if [ -z "$1" ]; then echo "用法：GitFindCommit <搜尋詞>" && return; fi
+  GIT_PAGER='' git log \
+    --all \
+    --oneline \
+    --grep="$1" \
+    -i
+}
+GitBlame() {
+  FILE="$1"
+  if [ -z "$FILE" ]; then echo "用法：GitBlame <檔案路徑>" && return; fi
+  git blame \
+    --date=short \
+    -w \
+    "$FILE" \
+    "${@:2}"
+}
 
 alias gbd="git branch -D"
 alias ga='GitAdd'
@@ -72,6 +99,7 @@ alias gr="git remote -v"
 alias grh="git reset --hard"
 alias gs="git show"
 alias gss='git commit -v -t $(git rev-parse --show-toplevel)/.git/COMMIT_EDITMSG'
+alias g-='git checkout -'
 
 alias GitAutoPush="$HOME/development/environment/src/scripts/git_auto_push.sh"
 
@@ -123,6 +151,17 @@ gwr() {
     git worktree remove "$worktree_path"
     echo "已移除工作樹：$worktree_path"
   fi
+}
+gwo() {
+  local branch_name="$1"
+  if [ -z "$branch_name" ]; then
+    echo "用法：gwo <現有分支名稱>"
+    return 1
+  fi
+  local repo_name="$(__gw_get_repo_name)"
+  local worktree_path="$(mktemp -d "$(git rev-parse --show-toplevel)"/../${repo_name}__XXXXXX)"
+  git worktree add "$worktree_path" "$branch_name"
+  cd "$worktree_path"
 }
 
 alias GitAddAll='GitAdd "$(git rev-parse --show-toplevel)"'

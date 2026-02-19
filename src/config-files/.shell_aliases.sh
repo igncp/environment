@@ -1,6 +1,6 @@
 PROVISION_CONFIG="$HOME/development/environment/project/.config"
 
-alias ag="rg -S --hidden --colors='path:fg:0xaa,0xaa,0xff'"
+alias ag="rg -S --hidden --follow --colors='path:fg:0xaa,0xaa,0xff'"
 alias agg='ag --hidden --ignore node_modules --ignore .git'
 alias b='bash'
 alias cp="cp -r"
@@ -43,6 +43,13 @@ dl() {
   fi
 }
 
+dlf() {
+  CONTAINER="$(docker ps -a | grep $1 | awk '{ print $1; }' || true)"
+  if [ -n "$CONTAINER" ]; then
+    docker logs -f $CONTAINER "${@:2}"
+  fi
+}
+
 de() {
   CONTAINER="$(docker ps | grep $1 | awk '{print $1}' || true)"
   if [ -n "$CONTAINER" ]; then docker exec -it $CONTAINER /bin/bash; fi
@@ -53,6 +60,27 @@ drb() {
 }
 
 alias ca="~/.local/bin/canto-cli"
+
+alias PsGrep='ps aux | grep -v grep | grep -i'
+alias KillPort='GetProcessUsingPortAndKill'
+
+alias PingFast='ping -c 5'
+alias DNSLookup='nslookup'
+alias TraceRoute='traceroute -m 15'
+
+alias DiskFree='df -h | grep -v tmpfs | grep -v loop'
+alias MemInfo='free -h'
+
+alias EditHosts='sudo $EDITOR /etc/hosts'
+alias EditAliases='$EDITOR ~/development/environment/src/config-files/.shell_aliases.sh'
+
+alias GitLogGraph='git log --graph --oneline --all --decorate'
+alias GitLogMe='git log --author="$(git config user.name)"'
+alias GitLogToday='git log --since="midnight" --oneline'
+
+alias tl='tmux list-sessions'
+alias ts='tmux new-session -s'
+alias td='tmux detach'
 
 alias Lsblk="lsblk -f | less -S"
 
@@ -81,8 +109,14 @@ RandomStrGenerator() {
 }
 SedLines() { if [ "$#" -eq 1 ]; then sed -n "$1,$1p"; else sed -n "$1,$2p"; fi; }
 SortJSON() { cat "$1" | jq -S | sponge "$1"; }
-TopCPU() { ps aux | sort -nr -k 3 | head "$@" | sed -e 'G;G;'; }    # e.g. TopCPU -n 5 | less -S
-TopMemory() { ps aux | sort -nr -k 4 | head "$@" | sed -e 'G;G;'; } # e.g. TopMemory -n 5 | less -S
+TopCPU() {
+  ps aux | head -1
+  ps aux | sort -nr -k 3 | head ${@:--n 10}
+}
+TopMemory() {
+  ps aux | head -1
+  ps aux | sort -nr -k 4 | head ${@:--n 10}
+}
 USBClone() {
   if [ -z "$I" ] || [ -z "$O" ]; then
     echo "Missing params"
@@ -196,10 +230,14 @@ alias CrontabUser='crontab -e'
 alias CrontabRoot='sudo EDITOR=vim crontab -e'
 
 alias Headers='curl -I' # e.g. Headers google.com
-if [ -n "$(uname -a | ag Darwin || true)" ]; then
-  alias Ports=$"SudoNix netstat -anvp tcp | awk 'NR<3 || /LISTEN/' | awk '{ print \$4 }'"
+if type nix >/dev/null 2>&1; then
+  if [ -n "$(uname -a | ag Darwin || true)" ]; then
+    alias Ports=$"SudoNix netstat -anvp tcp | awk 'NR<3 || /LISTEN/' | awk '{ print \$4 }'"
+  else
+    alias Ports='SudoNix netstat -tulanp | grep LISTEN'
+  fi
 else
-  alias Ports='SudoNix netstat -tulanp'
+  alias Ports='lsof -iTCP -sTCP:LISTEN -n -P'
 fi
 alias NetstatConnections='netstat -nputw'
 alias AnsiColorsRemove="sed 's/\x1b\[[0-9;]*m//g'"
@@ -300,6 +338,10 @@ if type nix >/dev/null 2>&1; then
   alias NixDevelopPath='nix develop path:$(pwd)' # 也可以只運行指令: `NixDevelopPath -c cargo build`
 
   alias NixBuildISO="(cd ~/development/environment && nix build --impure .#nixosConfigurations.iso-installer.config.system.build.isoImage)"
+
+  alias NixWhyDepends='nix why-depends'
+  alias NixSearch='nix search nixpkgs'
+  alias NixRun='nix run nixpkgs#'
 
   NixFindPointersToFile() {
     ITEM="$1"
@@ -634,6 +676,14 @@ fi
 if type mogrify >/dev/null 2>&1; then
   alias ImageResize='mogrify -resize' # e.g. ImageResize 50% image1.jpg
   alias ImageRotate='mogrify -rotate' # e.g. ImageRotate 90 image1.jpg
+fi
+
+if type lscpu >/dev/null 2>&1; then
+  alias CPUInfo='lscpu | less'
+fi
+
+if type yq >/dev/null 2>&1; then
+  alias YQ='yq -C | less -R'
 fi
 
 if type aws >/dev/null 2>&1; then
