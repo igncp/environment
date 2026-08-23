@@ -12,10 +12,10 @@
 
   has-cinnamon = builtins.pathExists (base-config + "/gui-cinnamon");
   has-lxqt = builtins.pathExists (base-config + "/gui-lxqt");
-  has-i3 = builtins.pathExists (base-config + "/gui-i3");
+  has-hyprland = builtins.pathExists (base-config + "/gui-hyprland");
   no-1password = builtins.pathExists (base-config + "/gui-no-1password");
   has-nvidia = builtins.readFile (base-config + "/nvidia") == "yes\n";
-  is-hyprland = !has-cinnamon && !has-lxqt && !has-i3;
+  is-i3 = !has-cinnamon && !has-lxqt && !has-hyprland;
   has-vscode = builtins.pathExists (base-config + "/gui-vscode");
 
   common-gui = import ../common/gui.nix {
@@ -38,7 +38,7 @@ in
         ./gui-rime.nix
         ./gui-virtualization.nix
       ]
-      ++ (lib.optional has-i3 ./gui-i3.nix)
+      ++ (lib.optional is-i3 ./gui-i3.nix)
       ++ (lib.optional has-lxqt ./gui-lxqt.nix)
       ++ (lib.optional has-nvidia ./gui-nvidia.nix)
       ++ (lib.optional has-cinnamon ./gui-cinnamon.nix);
@@ -49,7 +49,7 @@ in
 
     fonts.packages = common-gui.fonts;
 
-    programs.hyprland.enable = true;
+    programs.hyprland.enable = has-hyprland;
 
     xdg.portal.enable = true;
     xdg.portal.extraPortals = [
@@ -60,11 +60,11 @@ in
     services.displayManager.sddm.enable = true;
 
     services.logind.lidSwitch = "ignore";
-    services.logind.extraConfig = ''
-      HandlePowerKey=suspend
-      IdleAction=suspend
-      IdleActionSec=20m
-    '';
+    # services.logind.settings.Login = ''
+    # HandlePowerKey=suspend
+    # IdleAction=suspend
+    # IdleActionSec=20m
+    # '';
 
     # 螢幕鎖
     programs.xss-lock.enable = true;
@@ -124,10 +124,17 @@ in
     }
   )
   // (
-    if is-hyprland
+    if has-hyprland
     then {
       services.displayManager.defaultSession = "hyprland";
       services.displayManager.sddm.wayland.enable = true;
+    }
+    else {}
+  )
+  // (
+    if is-i3
+    then {
+      services.displayManager.defaultSession = "none+i3";
     }
     else {}
   )

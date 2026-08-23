@@ -96,8 +96,11 @@ vim.api.nvim_set_keymap("n", "<leader>mi",
   "<cmd>lua AddStylesImport(false)<CR>", { noremap = true })
 vim.api.nvim_set_keymap("n", "<leader>mI", "<cmd>lua AddStylesImport(true)<CR>",
   { noremap = true })
-vim.api.nvim_set_keymap("n", "<leader>mr",
-  ":CocCommand eslint.executeAutofix<CR>",
-  { noremap = true })
+vim.api.nvim_set_keymap("n", "<leader>mr", "", {
+  noremap = true,
+  callback = function()
+    require("conform").format({ async = false, lsp_fallback = true })
+  end,
+})
 vim.api.nvim_set_keymap("n", "<leader>mj", "vi}S]%a.join(' ')<c-c>F]i, ",
   { noremap = false })

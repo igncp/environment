@@ -1,5 +1,5 @@
 [Unit]
-Description=Lock screen before suspend
+Description=暫停前鎖定螢幕
 Before=sleep.target
 
 [Service]

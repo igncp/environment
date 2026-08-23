@@ -5,7 +5,15 @@
         "command": "workbench.action.openEditorAtIndex1"
     },
     {
+        "key": "cmd+1",
+        "command": "workbench.action.openEditorAtIndex1"
+    },
+    {
         "key": "ctrl+2",
+        "command": "workbench.action.openEditorAtIndex2"
+    },
+    {
+        "key": "cmd+2",
         "command": "workbench.action.openEditorAtIndex2"
     },
     {
@@ -13,11 +21,23 @@
         "command": "workbench.action.openEditorAtIndex3"
     },
     {
+        "key": "cmd+3",
+        "command": "workbench.action.openEditorAtIndex3"
+    },
+    {
         "key": "ctrl+4",
         "command": "workbench.action.openEditorAtIndex4"
     },
     {
+        "key": "cmd+4",
+        "command": "workbench.action.openEditorAtIndex4"
+    },
+    {
         "key": "ctrl+5",
+        "command": "workbench.action.openEditorAtIndex5"
+    },
+    {
+        "key": "cmd+5",
         "command": "workbench.action.openEditorAtIndex5"
     },
     {
@@ -39,18 +59,23 @@
         "command": "-workbench.action.quickOpenView",
     },
     {
-        "key": "cmd+j",
-        "command": "workbench.action.toggleMaximizedPanel",
-        "when": "!panelMaximized"
-    },
-    {
         "key": "ctrl+j",
         "command": "workbench.action.toggleMaximizedPanel",
-        "when": "!panelMaximized"
     },
     {
-        "key": "cmd+shift+t",
-        "command": "workbench.action.terminal.focus"
+        "key": "cmd+j",
+        "command": "workbench.action.openPreviousRecentlyUsedEditorInGroup",
+        "when": "terminalFocus"
+    },
+    {
+        "key": "cmd+j",
+        "command": "workbench.action.terminal.focus",
+        "when": "!terminalFocus"
+    },
+    {
+        "key": "cmd+shift+j",
+        "command": "workbench.action.terminal.moveToEditor",
+        "when": "terminalFocus"
     },
     {
         "key": "cmd+w",
@@ -63,7 +88,6 @@
             "commands": [
                 "workbench.action.files.save",
                 "extension.vim_cmd+c",
-                "workbench.action.closeSidebar",
                 "workbench.action.closePanel"
             ]
         }
@@ -75,7 +99,6 @@
             "commands": [
                 "workbench.action.files.save",
                 "extension.vim_cmd+c",
-                "workbench.action.closeSidebar",
                 "workbench.action.closePanel"
             ]
         }
@@ -87,7 +110,6 @@
             "commands": [
                 "workbench.action.files.save",
                 "extension.vim_cmd+c",
-                "workbench.action.closeSidebar",
                 "workbench.action.closePanel",
                 "workbench.action.closeAuxiliaryBar"
             ]
@@ -100,10 +122,13 @@
             "commands": [
                 "workbench.action.files.save",
                 "extension.vim_cmd+c",
-                "workbench.action.closeSidebar",
                 "workbench.action.closePanel",
                 "workbench.action.closeAuxiliaryBar"
             ]
         }
+    },
+    {
+        "key": "cmd+alt+l",
+        "command": "igncp-vscode-extension.copyGitLogLineRange"
     }
 ]

@@ -1,6 +1,5 @@
 # 編輯此設定檔以定義系統上應安裝的內容。
 # 幫助可以在configuration.nix(5)手冊頁和NixOS手冊中找到
-# （透過執行‘nixos-help’來存取）
 {pkgs, ...}: {
   imports = [
     ./hardware-configuration.nix
@@ -19,7 +18,31 @@
   environment.systemPackages = with pkgs; [
     # 如果冇執行任何條文，就可以用 Hyprland
     kitty
+
+    neovim
+    git
+    alejandra
   ];
+
+  # # 高優先權嘅 ZRAM
+  # zramSwap = {
+  #   enable = true;
+  #   priority = 100; # 優先使用
+  # };
+  # # 低優先權嘅磁碟 Swap
+  # swapDevices = [
+  #   {
+  #     device = "/var/lib/swapfile";
+  #     size = 16 * 1024; # 16 GiB 後備大小
+  #     priority = 1; # 只喺 ZRAM 用盡時使用
+  #   }
+  # ];
+
+  # # 使用適合桌面嘅 zen kernel
+  # boot.kernelPackages = pkgs.linuxPackages_zen;
+
+  # # 改善檔案系統效能
+  # fileSystems."/".options = ["noatime" "defaults"];
 
   # environment.etc."resolv.conf".text = "nameserver 192.168.1.1\n";
 
@@ -41,4 +64,7 @@
   #   }
   # ];
   # nix.distributedBuilds = true;
+
+  # 修正故障硬碟
+  # boot.kernelParams = ["libata.force=5.00:disable"];
 }

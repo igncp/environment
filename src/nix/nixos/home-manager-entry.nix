@@ -37,7 +37,7 @@ in {
           home.username = "${user}";
           home.homeDirectory = "/home/${user}";
           home.packages = [];
-          home.stateVersion = "25.05";
+          home.stateVersion = "26.05";
           programs.home-manager.enable = true;
         }
         // gui-config;

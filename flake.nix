@@ -2,7 +2,7 @@
   description = "Root flake for NixOS, Nix shells and Home Manager";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
     flake-utils.url = "github:numtide/flake-utils";
     unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
@@ -12,7 +12,6 @@
     };
     home-manager = {
       inputs.nixpkgs.follows = "nixpkgs";
-      url = "github:nix-community/home-manager/release-25.05";
     };
     ghostty.url = "github:ghostty-org/ghostty";
     nixgl.url = "github:nix-community/nixGL";
@@ -73,7 +72,7 @@
             homeConfigurations."${user}" = home-manager.lib.homeManagerConfiguration {
               inherit pkgs;
               modules = [./src/nix/home-manager/home.nix];
-              extraSpecialArgs = {inherit pkgs stable-pkgs nixgl-pkgs ghostty llm-agents;};
+              extraSpecialArgs = {inherit pkgs nixgl-pkgs ghostty llm-agents;};
             };
             check = pkgs.writeShellApplication {
               name = "check-environment";

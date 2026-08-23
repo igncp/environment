@@ -7,7 +7,7 @@ if [ -z "${1:-}" ]; then
   exit 0
 fi
 
-ROOTS=$(nix-store --gc --print-roots 2>&1 | ag -v removing | ag -v censored | awk '{ print $1; }')
+ROOTS=$(nix-store --gc --print-roots 2>&1 | rg -v removing | rg -v censored | awk '{ print $1; }')
 
 echo "$ROOTS" >/tmp/nix-gcroots-environment.txt
 

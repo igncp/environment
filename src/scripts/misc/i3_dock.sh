@@ -5,7 +5,7 @@ set -euo pipefail
 IS_RUNNING="$(pgrep -f "$(basename "$0")" | wc -l)"
 
 if [ "$IS_RUNNING" -gt 2 ]; then
-  logger -t i3_dock "i3_dock.sh is already running. IS_RUNNING: $IS_RUNNING. Exiting."
+  logger -t i3_dock "i3_dock.sh 已在運行。IS_RUNNING: $IS_RUNNING。正在退出。"
   exit 0
 fi
 

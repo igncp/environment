@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://apple.com">
+<plist version="1.0">
+  <dict>
+    <!-- Copy into ~/Library/LaunchAgents/ , try to use the same file name as the service name -->
+    <!-- launchctl unload ~/Library/LaunchAgents/com.prometheus-local-machines.plist ; launchctl load ~/Library/LaunchAgents/com.prometheus-local-machines.plist -->
+    <!-- Lint: plutil -lint ~/Library/LaunchAgents/com.prometheus-local-machines.plist -->
+    <key>Label</key>
+    <string>com.prometheus-local-machines.tunnel</string>
+    <key>ProgramArguments</key>
+    <array>
+      <string>/usr/bin/ssh</string>
+      <string>-NT</string>
+      <string>-o</string>
+      <string>ServerAliveInterval=30</string>
+      <string>-o</string>
+      <string>ServerAliveCountMax=3</string>
+      <string>-o</string>
+      <string>ExitOnForwardFailure=yes</string>
+      <string>-o</string>
+      <string>ConnectTimeout=5</string>
+      <string>-i</string>
+      <string>/Users/igncp/.ssh/prometheus</string>
+      <string>-L</string>
+      <string>8090:127.0.0.1:9100</string>
+      <string>igncp@192.168.X.X</string>
+    </array>
+    <key>StandardErrorPath</key>
+    <string>/dev/null</string>
+    <key>KeepAlive</key>
+    <true/>
+    <key>RunAtLoad</key>
+    <true/>
+    <!-- Adds a 30-second delay between reconnection attempts -->
+    <key>ThrottleInterval</key>
+    <integer>30</integer>
+    <!-- Reduce logs -->
+    <key>LogPreferences</key>
+    <dict>
+      <key>LogLevel</key>
+      <string>Notice</string>
+    </dict>
+  </dict>
+</plist>

@@ -22,6 +22,8 @@ in {
       /etc/nixos/configuration.nix
       ./home-manager-entry.nix
       ./ai.nix
+      ./usb-security-luks.nix
+      ./usb-security-pam.nix
     ]
     ++ (lib.optional has-custom ./custom.nix)
     ++ (lib.optional has-k3s ./k3s.nix)
@@ -31,6 +33,8 @@ in {
 
   config = lib.mkMerge [
     {
+      boot.loader.timeout = 2;
+
       hardware.bluetooth = {
         enable = true;
         settings = {
@@ -49,6 +53,10 @@ in {
           enable = true;
         };
         blueman.enable = true;
+        prometheus.exporters.node = {
+          enable = true;
+          enabledCollectors = ["systemd" "processes" "ethtool"];
+        };
         openssh = {
           enable = true;
           settings = {
@@ -111,7 +119,7 @@ in {
         shell = pkgs.zsh;
       };
 
-      system.stateVersion = "25.05";
+      system.stateVersion = "26.05";
 
       security.sudo.extraRules = [
         {
@@ -185,6 +193,7 @@ in {
       if has-docker
       then {
         virtualisation.docker.enable = true;
+        users.users."${user}".extraGroups = ["docker"];
       }
       else {}
     )

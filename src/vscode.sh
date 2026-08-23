@@ -54,6 +54,18 @@ add_vscode_extension() {
 }
 
 provision_setup_vscode() {
+  cat >>~/.shell_aliases <<"EOF"
+if type cursor >/dev/null 2>&1; then
+  alias XargsN='xargs cursor'
+  N() { cd "$1" && cursor .; }
+  alias AgentListModels='agent --list-model'
+  alias A='agent --yolo'
+elif type code >/dev/null 2>&1; then
+  alias XargsN='xargs code'
+  N() { cd "$1" && code .; }
+fi
+EOF
+
   if [ ! -f "$PROVISION_CONFIG"/gui-vscode ] && [ ! -f "$PROVISION_CONFIG"/gui-cursor ]; then
     return
   fi
@@ -76,16 +88,23 @@ provision_setup_vscode() {
         "$DIR_PATH"/snippets
 
       mkdir -p "$DIR_PATH"/prompts
-      cp $HOME/development/environment/src/config-files/vscode/prompts/* \
+      cp $HOME/development/environment/src/config-files/ai-prompts/* \
         "$DIR_PATH"/prompts
     fi
   done
+
+  if [ -d "$HOME/.cursor" ]; then
+    mkdir -p "$HOME/.cursor/commands"
+    cp $HOME/development/environment/src/config-files/ai-prompts/* \
+      "$HOME/.cursor/commands"
+  fi
 
   add_vscode_extension "waderyan.gitblame"
   add_vscode_extension "vscodevim.vim"
   add_vscode_extension "jkillian.custom-local-formatters"
   add_vscode_extension "cocopon.iceberg-theme"
   add_vscode_extension "eamodio.gitlens"
+  add_vscode_extension "hashicorp.terraform"
 
   if type ccls >/dev/null 2>&1; then
     add_vscode_extension "ccls-project.ccls"
@@ -106,10 +125,6 @@ provision_setup_vscode() {
       cp $HOME/development/environment/src/config-files/vscode/key-mappings.json "$KEYBINDINGS_PATH"
     fi
   done
-
-  if [ ! -f "$PROVISION_CONFIG"/no-copilot ]; then
-    add_vscode_extension "github.copilot" vscode
-  fi
 
   if [ "$IS_NIXOS" = "1" ] && [ -f "$PROVISION_CONFIG"/gui-cursor ]; then
     add_desktop_common \
@@ -134,14 +149,6 @@ provision_setup_vscode() {
   cat >>~/.shellrc <<"EOF"
 if [ -d /Applications/Cursor.app/Contents/Resources/app/bin ]; then
   export PATH="/Applications/Cursor.app/Contents/Resources/app/bin/:$PATH"
-fi
-EOF
-
-  cat >>~/.shell_aliases <<"EOF"
-if type cursor >/dev/null 2>&1; then
-  alias XargsN='xargs cursor'
-else
-  alias XargsN='xargs code'
 fi
 EOF
 }

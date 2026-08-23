@@ -49,17 +49,19 @@ local nvim_plugins = {
   {
     'mrcjkb/haskell-tools.nvim',
     version = '^3',
-    lazy = false,
+    ft = { 'haskell', 'lhaskell' },
     enabled = function()
       return vim.fn.executable('runhaskell') == 1
     end,
   },
   {
     "rcarriga/nvim-dap-ui",
-    dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" }
+    dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" },
+    ft = { 'python', 'javascript', 'typescript', 'go', 'rust', 'lua' },
   },
   {
     "leoluz/nvim-dap-go",
+    ft = 'go',
     enabled = function()
       return vim.fn.executable('go') == 1
     end,
@@ -80,11 +82,12 @@ local nvim_plugins = {
   -- https://github.com/chrisgrieser/nvim-various-textobjs
   {
     "chrisgrieser/nvim-various-textobjs",
-    lazy = false,
+    event = { 'BufReadPost', 'BufNewFile' },
     opts = { keymaps = { useDefaults = true } },
   },
   {
     "nvim-treesitter/nvim-treesitter",
+    event = { 'BufReadPost', 'BufNewFile' },
     build = ":TSUpdate",
     config = function()
       local ok, configs = pcall(require, "nvim-treesitter.config")
@@ -107,6 +110,26 @@ local nvim_plugins = {
     dependencies = { 'nvim-lua/plenary.nvim' }
   },
   {
+    "folke/which-key.nvim",
+    event = "VeryLazy",
+    opts = {
+      -- 入 char-wise visual mode 唔即刻彈 popup
+      defer = function(ctx)
+        return ctx.mode == "v"
+            or ctx.mode == "V"
+            or ctx.mode == "<C-V>"
+      end,
+      triggers = {},
+      plugins = {
+        registers = false,
+      },
+    },
+    config = function(_, opts)
+      local wk = require("which-key")
+      wk.setup(opts)
+    end,
+  },
+  {
     "lukas-reineke/indent-blankline.nvim",
     main = "ibl",
     commit = get_version("neovim.indent-blankline.nvim"),
@@ -119,7 +142,24 @@ local nvim_plugins = {
   },
   {
     'Wansmer/treesj',
-    dependencies = { 'nvim-treesitter/nvim-treesitter' }, -- if you install parsers with `nvim-treesitter`
+    dependencies = { 'nvim-treesitter/nvim-treesitter' },
+    keys = {
+      {
+        'gM',
+        function() require('treesj').toggle() end,
+        desc = '切換 Treesj',
+      },
+      {
+        'gS',
+        function() require('treesj').split() end,
+        desc = '拆分 Treesj',
+      },
+      {
+        'gJ',
+        function() require('treesj').join() end,
+        desc = '合併 Treesj',
+      },
+    },
     config = function()
       require('treesj').setup({
         use_default_keymaps = false,
@@ -128,7 +168,7 @@ local nvim_plugins = {
   },
   {
     'nvim-flutter/flutter-tools.nvim',
-    lazy = false,
+    ft = { 'dart', 'yaml' },
     commit = get_version('neovim.flutter-tools.nvim'),
     dependencies = {
       'nvim-lua/plenary.nvim',
@@ -142,47 +182,52 @@ local nvim_plugins = {
   {
     'github/copilot.vim',
     commit = get_version('neovim.copilot.vim'),
+    event = 'InsertEnter',
     enabled = function()
       return M.has_config('no-copilot') == false
     end,
   },
 
-  { "stevearc/conform.nvim",          commit = get_version("neovim.conform.nvim") },
+  { "stevearc/conform.nvim",        commit = get_version("neovim.conform.nvim") },
   {
     "neovim/nvim-lspconfig",
     commit = get_version("neovim.nvim-lspconfig"),
   },
-  { "nvimdev/lspsaga.nvim",           commit = get_version("neovim.lspsaga.neovim") },
+  { "nvimdev/lspsaga.nvim",         commit = get_version("neovim.lspsaga.neovim") },
   -- { "L3MON4D3/LuaSnip",               commit = get_version("neovim.luasnip"), },
   -- { "saadparwaiz1/cmp_luasnip",       commit = get_version("neovim.cmp_luasnip") },
-  { "LnL7/vim-nix",                   commit = get_version("neovim.vim-nix") },
-  { "NvChad/nvim-colorizer.lua",      commit = get_version("neovim.nvim-colorizer.lua") },
-  { "bogado/file-line",               commit = get_version("neovim.file-line") },
-  { "chentoast/marks.nvim",           commit = get_version("neovim.marks.nvim") },
-  { "cocopon/iceberg.vim",            commit = get_version("neovim.iceberg.vim") },
-  { "ctrlpvim/ctrlp.vim",             commit = get_version("neovim.ctrlp.vim") },
-  { "dracula/vim",                    commit = get_version("neovim.vim") },
-  { "elzr/vim-json",                  commit = get_version("neovim.vim-json") },
-  { "google/vim-searchindex",         commit = get_version("neovim.vim-searchindex") },
-  { "haya14busa/incsearch.vim",       commit = get_version("neovim.incsearch.vim") },
+  { "LnL7/vim-nix",                 commit = get_version("neovim.vim-nix") },
+  { "NvChad/nvim-colorizer.lua",    commit = get_version("neovim.nvim-colorizer.lua") },
+  { "bogado/file-line",             commit = get_version("neovim.file-line") },
+  { "chentoast/marks.nvim",         commit = get_version("neovim.marks.nvim") },
+  { "cocopon/iceberg.vim",          commit = get_version("neovim.iceberg.vim") },
+  { "ctrlpvim/ctrlp.vim",           commit = get_version("neovim.ctrlp.vim") },
+  { "dracula/vim",                  commit = get_version("neovim.vim") },
+  { "elzr/vim-json",                commit = get_version("neovim.vim-json") },
+  { "google/vim-searchindex",       commit = get_version("neovim.vim-searchindex") },
+  { "haya14busa/incsearch.vim",     commit = get_version("neovim.incsearch.vim") },
   -- { "honza/vim-snippets",             commit = get_version("neovim.vim-snippets") },
-  { "iamcco/markdown-preview.nvim",   commit = get_version("neovim.markdown-preview.nvim") },
-  { "jiangmiao/auto-pairs",           commit = get_version("neovim.auto-pairs") },
-  { "jparise/vim-graphql",            commit = get_version("neovim.vim-graphql") },
-  { "junegunn/fzf",                   commit = get_version("neovim.fzf_base"),             command = "cd ~/.local/share/nvim/lazy/fzf && ./install --all; cd -" },
-  { "junegunn/fzf.vim",               commit = get_version("neovim.fzf.vim") },
-  { "junegunn/limelight.vim",         commit = get_version("neovim.limelight.vim") },
-  { "junegunn/vim-peekaboo",          commit = get_version("neovim.vim-peekaboo") },
-  { "lbrayner/vim-rzip",              commit = get_version("neovim.vim-rzip") },
-  { "lewis6991/gitsigns.nvim",        commit = get_version("neovim.gitsigns.nvim") },
-  { "liuchengxu/vista.vim",           commit = get_version("neovim.vista.vim") },
-  { "mbbill/undotree",                commit = get_version("neovim.undotree") },
-  { "mfussenegger/nvim-dap",          commit = get_version("neovim.nvim-dap") },
+  { "iamcco/markdown-preview.nvim", commit = get_version("neovim.markdown-preview.nvim") },
+  { "windwp/nvim-autopairs",        commit = get_version("neovim.nvim-autopairs") },
+  { "jparise/vim-graphql",          commit = get_version("neovim.vim-graphql") },
+  { "junegunn/fzf",                 commit = get_version("neovim.fzf_base"),             command = "cd ~/.local/share/nvim/lazy/fzf && ./install --all; cd -" },
+  { "junegunn/fzf.vim",             commit = get_version("neovim.fzf.vim") },
+  { "junegunn/limelight.vim",       commit = get_version("neovim.limelight.vim") },
+  { "junegunn/vim-peekaboo",        commit = get_version("neovim.vim-peekaboo") },
+  { "lbrayner/vim-rzip",            commit = get_version("neovim.vim-rzip") },
+  { "lewis6991/gitsigns.nvim",      commit = get_version("neovim.gitsigns.nvim") },
+  { "liuchengxu/vista.vim",         commit = get_version("neovim.vista.vim") },
+  { "mbbill/undotree",              commit = get_version("neovim.undotree") },
+  {
+    "mfussenegger/nvim-dap",
+    commit = get_version("neovim.nvim-dap"),
+    ft = { 'python', 'javascript', 'typescript', 'go', 'rust', 'lua' },
+  },
   { "morhetz/gruvbox",                commit = get_version("neovim.gruvbox") },
   { "ntpeters/vim-better-whitespace", commit = get_version("neovim.vim-better-whitespace") },
   { "plasticboy/vim-markdown",        commit = get_version("neovim.vim-markdown") },
   { "rhysd/clever-f.vim",             commit = get_version("neovim.clever-f.vim") },
-  { "ryanoasis/vim-devicons",         commit = get_version("neovim.vim-devicons") }, -- 如果不支持，請在custom.sh中添加: rm -rf ~/.local/share/nvim/lazy/vim-devicons/*
+  { "nvim-tree/nvim-web-devicons",    commit = get_version("neovim.nvim-web-devicons") },
   { "scrooloose/nerdcommenter",       commit = get_version("neovim.nerdcommenter") },
   { "sindrets/diffview.nvim",         commit = get_version("neovim.diffview.nvim") },
   { "tommcdo/vim-exchange",           commit = get_version("neovim.vim-exchange") },
@@ -237,10 +282,7 @@ table.insert(nvim_plugins, {
 
 require("lazy").setup(nvim_plugins)
 
-vim.keymap.set('n', 'gM', require('treesj').toggle)
-vim.keymap.set('n', 'gS', require('treesj').split)
-vim.keymap.set('n', 'gJ', require('treesj').join)
-
+require("nvim-web-devicons").setup()
 require('gitsigns').setup()
 
 require('hop').setup({
@@ -264,6 +306,10 @@ vim.api.nvim_set_keymap("n", "<leader>mm", ":UndotreeShow<cr><c-w><left>",
   { noremap = true })
 
 -- fzf maps
+vim.keymap.set("n", "<F1>", "<cmd>Telescope keymaps<cr>", {
+  desc = "顯示所有鍵盤映射",
+  silent = true,
+})
 vim.api.nvim_set_keymap("n", "<leader>ja", ":Ag!<cr>", { noremap = true })
 vim.api.nvim_set_keymap("n", "<leader>jb", ":Buffers!<cr>", { noremap = true })
 vim.api.nvim_set_keymap("n", "<leader>jc", ":Commands!<cr>", { noremap = true })
@@ -286,9 +332,6 @@ vim.api.nvim_set_keymap("n", "<leader>zl", ":Limelight!!<cr>", { noremap = true 
 vim.api.nvim_set_keymap("n", "<leader>zL",
   ":let g:limelight_paragraph_span = <left><right>",
   { noremap = true })
-
--- auto-pairs
-vim.g.AutoPairsMultilineClose = 0
 
 -- incsearch.vim
 vim.api.nvim_set_keymap("n", "/", "<Plug>(incsearch-forward)", {})
@@ -334,6 +377,7 @@ vim.api.nvim_set_keymap("v", "<leader>kz", ":'<,'>JsonTool<cr>",
   { noremap = true })
 
 vim.g.peekaboo_window = 'vert bo new'
+vim.g.peekaboo_prefix = '<leader>ZZZ'
 
 vim.g.gruvbox_contrast_dark = 'hard'
 
@@ -464,17 +508,96 @@ function SaveRegisterIntoClipboard()
 
   if has_config_file then
     vim.cmd([[
-silent call setreg('+', getreg('0', 1, 1))
+silent call setreg('+', getreg('0'), getregtype('0'))
 ]])
 
     return
   end
 
   vim.cmd([[
-silent call writefile(getreg('0', 1, 1), "/tmp/clipboard-ssh")
+silent call writefile(getreg('0', 1, 1), "/tmp/clipboard-ssh", "b")
 silent !cat /tmp/clipboard-ssh | $HOME/.local/bin/clipboard_ssh send && rm /tmp/clipboard-ssh
 ]])
 end
+
+local function get_selected_line_range()
+  local mode = vim.fn.mode()
+
+  if mode ~= "v" and mode ~= "V" and mode ~= "\22" then
+    return nil
+  end
+
+  local first_line = vim.fn.line("v")
+  local last_line = vim.fn.line(".")
+
+  if first_line > last_line then
+    first_line, last_line = last_line, first_line
+  end
+
+  if first_line == last_line then
+    return tostring(first_line)
+  end
+
+  return first_line .. "," .. last_line
+end
+
+function CopyAbsoluteFilePathToClipboard()
+  if vim.fn.expand("%") == "" then
+    print("冇檔案")
+    return
+  end
+
+  local file_path = vim.fn.expand("%:p")
+  vim.fn.setreg("0", file_path)
+  SaveRegisterIntoClipboard()
+  print(file_path)
+end
+
+function CopyRelativeFilePathToClipboard()
+  if vim.fn.expand("%") == "" then
+    print("冇檔案")
+    return
+  end
+
+  local file_path = vim.fn.expand("%")
+  vim.fn.setreg("0", file_path)
+  SaveRegisterIntoClipboard()
+  print(file_path)
+end
+
+local function copy_absolute_file_path_with_selected_lines()
+  local file_path = vim.fn.expand("%:p")
+  local selected_lines = get_selected_line_range()
+
+  if selected_lines then
+    file_path = file_path .. ":" .. selected_lines
+  end
+
+  vim.fn.setreg("0", file_path)
+  SaveRegisterIntoClipboard()
+  print(file_path)
+end
+
+local function copy_selected_lines_with_absolute_file_path()
+  local selected_lines = get_selected_line_range() or tostring(vim.fn.line("."))
+  local file_path = selected_lines .. ":" .. vim.fn.expand("%:p")
+
+  vim.fn.setreg("0", file_path)
+  SaveRegisterIntoClipboard()
+  print(file_path)
+end
+
+vim.keymap.set({ "n", "x" }, "<leader>ml",
+  copy_absolute_file_path_with_selected_lines, {
+    desc = "複製絕對檔案路徑同所揀嘅行號",
+    silent = true,
+  })
+
+vim.keymap.set({ "n", "x" }, "<leader>mL",
+  copy_selected_lines_with_absolute_file_path, {
+    desc = "複製行號先嘅絕對檔案路徑",
+    silent = true,
+  })
 
 vim.api.nvim_set_keymap("n", "<leader>mf", "", {
   callback = function()
@@ -894,6 +1017,10 @@ cmp.setup({
     { name = 'crates' }
   })
 })
+
+require("nvim-autopairs").setup({})
+local cmp_autopairs = require("nvim-autopairs.completion.cmp")
+cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
 
 -- require("luasnip.loaders.from_snipmate").load({ path = { "~/.vim-snippets" } })
 -- require("luasnip")

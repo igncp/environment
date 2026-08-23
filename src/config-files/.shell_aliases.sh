@@ -10,6 +10,7 @@ alias h="sad"
 alias htop="htop --no-color"
 alias khal='LC_ALL= LC_TIME=en_US.UTF-8 khal'
 alias l="less"
+alias L="less -N -S"
 alias ll="ls -lahv --color=always"
 alias lsblk="lsblk -f"
 alias m="mkdir -p"
@@ -285,6 +286,27 @@ n() {
   fi
 }
 
+CursorSessions() {
+  local transcript id name
+
+  for transcript in "$HOME"/.cursor/projects/*/agent-transcripts/*/*.jsonl; do
+    [ -f "$transcript" ] || continue
+
+    id="$(basename "${transcript%.jsonl}")"
+    name="$(
+      jq -r '
+        select(.role == "user")
+        | .message.content[]?
+        | select(.type == "text")
+        | .text
+      ' "$transcript" |
+        awk '/<user_query>/{getline; print; exit} !/^<timestamp>/{print; exit}'
+    )"
+    name="${name:0:70}"
+    printf '%s\t%s\n' "$id" "${name:-<untitled>}"
+  done | column -ts $'\t' | less
+}
+
 ConfigProvisionList() {
   INITIAL_SHA=$(find ~/development/environment/project/.config -type f | sort -V | sha256sum | awk '{print $1}')
   "$HOME"/.local/bin/provision_choose_config $@ || return
@@ -320,7 +342,7 @@ CargoDevGenerate() {
   echo "Binary '$BIN_NAME' built and moved to current directory"
 }
 
-alias HomeManagerInitFlake='nix run home-manager/release-25.05 -- init'
+alias HomeManagerInitFlake='nix run home-manager/release-26.05 -- init'
 alias HomeManagerDeleteGenerations='home-manager expire-generations "-1 second"'
 
 if type nix >/dev/null 2>&1; then
@@ -337,7 +359,21 @@ if type nix >/dev/null 2>&1; then
   alias NixReplFlake='nix repl --expr "builtins.getFlake \"$PWD\""'
   alias NixDevelopPath='nix develop path:$(pwd)' # 也可以只運行指令: `NixDevelopPath -c cargo build`
 
-  alias NixBuildISO="(cd ~/development/environment && nix build --impure .#nixosConfigurations.iso-installer.config.system.build.isoImage)"
+  # 可以用呢個指令快速搵到 Wi-Fi：`nmcli device wifi show-password`
+  # 將 USB 裝置改成兩個分割區（請先將 /dev/sdX 換成正確裝置）：
+  # sudo parted /dev/sdX --script \
+  #   mklabel gpt \
+  #   mkpart primary fat32 1MiB 1025MiB \
+  #   set 1 esp on \
+  #   mkpart primary ext4 1025MiB 100%
+  # sudo mkfs.vfat -F 32 -n BOOT /dev/sdX1
+  # sudo mkfs.ext4 /dev/sdX2
+  # sudo mount /dev/sdX2 /mnt && sudo mkdir -p /mnt/boot && sudo mount /dev/sdX1 /mnt/boot
+  alias NixBuildISO="bash -c '(cd ~/development/environment && sudo --preserve-env nixos-install --impure --root /mnt --flake .#iso-installer-barebones --no-root-passwd)'"
+  # 安裝完成後執行：sudo umount -R /mnt && sync
+
+  # 如果正常安裝程式冇問題，可以使用呢個
+  alias NixBuildISONormal="bash -c '(cd ~/development/environment && nix build --impure .#nixosConfigurations.iso-installer.config.system.build.isoImage)'"
 
   alias NixWhyDepends='nix why-depends'
   alias NixSearch='nix search nixpkgs'
@@ -799,4 +835,8 @@ ta() {
 
 if [ -d "$HOME"/go/bin ]; then
   export PATH="$HOME/go/bin:$PATH"
+fi
+
+if type xmllint >/dev/null 2>&1; then
+  alias XmlFormat='xmllint --format'
 fi

@@ -16,5 +16,5 @@ FILE_PATH=$(git -c color.status=always status --short |
 if [[ ! -z "$FILE_PATH" ]]; then
   $EDITOR "$FILE_PATH"
 else
-  echo "No file selected"
+  echo "冇揀檔案"
 fi

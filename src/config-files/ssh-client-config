@@ -47,3 +47,7 @@ Host foo
 Host 192.168.1.*
   StrictHostKeyChecking no
   UserKnownHostsFile /dev/null
+
+# Authorized keys 範例
+## 只容許轉發兩個連接埠
+## no-pty,no-X11-forwarding,no-agent-forwarding,command="/run/current-system/sw/bin/echo '只限連接埠轉發'",permitopen="127.0.0.1:9100",permitopen="127.0.0.1:9090" ssh-ed25519 AAA... prometheus-key

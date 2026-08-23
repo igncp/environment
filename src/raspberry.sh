@@ -36,6 +36,10 @@ EOF
   # dtoverlay=vc4-kms-v3d,cma-512
   # hdmi_enable_4kp60=1
 
+  # 如果冇咗呢啲，重新開機後 Pi 有時會冇聲
+  # hdmi_force_hotplug=1
+  # hdmi_force_edid_audio=1
+
   # Enable VNC: https://www.pitunnel.com/doc/access-vnc-remote-desktop-raspberry-pi-over-internet
 
   # Retropie: Check in the `gaming.sh`

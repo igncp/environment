@@ -33,7 +33,7 @@ in
     home = {
       username = user;
       homeDirectory = home_dir;
-      stateVersion = "25.05";
+      stateVersion = "26.05";
       packages =
         (
           if (has_gui && is_linux)

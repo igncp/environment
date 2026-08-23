@@ -53,8 +53,9 @@ EOF
   fi
 
   if [ "$IS_LINUX" = "1" ] && [ -f ~/.config/ghostty/config ]; then
-    echo 'font-family = Monofur Nerd Font Mono' >>~/.config/ghostty/config
-    echo 'font-size = 16' >>~/.config/ghostty/config
+    # echo 'font-family = "Iosevka Nerd Font Mono"' >>~/.config/ghostty/config
+    echo 'font-family = "JetBrainsMono Nerd Font"' >>~/.config/ghostty/config
+    echo 'font-size = 12' >>~/.config/ghostty/config
   fi
 
   git config --global core.editor nvim

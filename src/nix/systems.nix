@@ -28,7 +28,7 @@ in {
           rustup
         ];
 
-        system.stateVersion = "25.05";
+        system.stateVersion = "26.05";
         programs.zsh.enable = true;
         users.users."${user}" = {
           extraGroups = ["wheel" "docker" "audio" "video" "networkmanager"];

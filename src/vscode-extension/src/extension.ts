@@ -15,7 +15,7 @@ export function activate(context: ExtensionContext): void {
       const editor = window.activeTextEditor;
 
       if (!editor) {
-        window.showWarningMessage('No editor instance');
+        window.showWarningMessage('冇編輯器實例');
 
         return;
       }
@@ -46,7 +46,7 @@ export function activate(context: ExtensionContext): void {
       });
 
       if (!success) {
-        window.showErrorMessage('Failed to insert debug log');
+        window.showErrorMessage('插入除錯日誌失敗');
       }
     }),
   );
@@ -58,7 +58,7 @@ export function activate(context: ExtensionContext): void {
         const editor = window.activeTextEditor;
 
         if (!editor) {
-          window.showWarningMessage('No editor instance');
+          window.showWarningMessage('冇編輯器實例');
 
           return;
         }
@@ -87,7 +87,7 @@ export function activate(context: ExtensionContext): void {
         const editor = window.activeTextEditor;
 
         if (!editor) {
-          window.showWarningMessage('No editor instance');
+          window.showWarningMessage('冇編輯器實例');
 
           return;
         }
@@ -115,12 +115,42 @@ export function activate(context: ExtensionContext): void {
 
   context.subscriptions.push(
     commands.registerCommand(
+      'igncp-vscode-extension.copyGitLogLineRange',
+      async () => {
+        const editor = window.activeTextEditor;
+
+        if (!editor) {
+          window.showWarningMessage('冇編輯器實例');
+
+          return;
+        }
+
+        const { document, selection } = editor;
+        const filePath = document.uri.fsPath;
+        const startLine = selection.start.line + 1;
+        const finishLine =
+          selection.end.character === 0 &&
+          selection.end.line > selection.start.line
+            ? selection.end.line
+            : selection.end.line + 1;
+        const gitLogLineRange = `${startLine},${finishLine}:${filePath}`;
+
+        await env.clipboard.writeText(gitLogLineRange);
+        window.showInformationMessage(
+          `已複製 Git 日誌範圍：${gitLogLineRange}`,
+        );
+      },
+    ),
+  );
+
+  context.subscriptions.push(
+    commands.registerCommand(
       'igncp-vscode-extension.listFilesInDirOrBelow',
       async () => {
         const editor = window.activeTextEditor;
 
         if (!editor) {
-          window.showWarningMessage('No editor instance');
+          window.showWarningMessage('冇編輯器實例');
 
           return;
         }

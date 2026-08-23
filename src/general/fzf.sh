@@ -3,8 +3,6 @@
 set -euo pipefail
 
 provision_setup_general_fzf() {
-  install_system_package "ag"
-
   cat >>~/.shellrc <<"EOF"
 export FZF_COMPLETION_TRIGGER='['
 export FZF_DEFAULT_OPTS='--bind=pgup:preview-page-up,pgdn:preview-page-down,ctrl-j:preview-down,ctrl-k:preview-up --preview-window right:wrap --color=dark'

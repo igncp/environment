@@ -24,7 +24,15 @@ provision_setup_nvim_special_mappings() {
 
   add_special_vim_map 'renameexisting' ':Rename <c-r>=expand("%:t")<cr>' 'rename existing file'
   add_special_vim_map 'showabsolutepath' ':echo expand("%:p")<cr>' 'show absolute path of file'
+  add_special_vim_map \
+    'copyabsolutepath' \
+    ':lua CopyAbsoluteFilePathToClipboard()<cr>' \
+    'copy absolute path of file to clipboard'
   add_special_vim_map 'showrelativepath' ':echo @%<cr>' 'show relative path of file'
+  add_special_vim_map \
+    'copyrelativepath' \
+    ':lua CopyRelativeFilePathToClipboard()<cr>' \
+    'copy relative path of file to clipboard'
   add_special_vim_map 'addprops' '_f(li{}: Props <c-c>kitype Props = {<cr>}<c-c>jf}i' 'add props type to function component'
   add_special_vim_map \
     'jrct' \

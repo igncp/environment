@@ -19,7 +19,7 @@ in {
       _1password-cli
       acpi
       arandr
-      blueberry
+      blueman
       cairo
       deskflow # https://github.com/deskflow/deskflow
       feh
@@ -70,7 +70,7 @@ in {
       brightnessctl
       dunst
       hypridle # https://wiki.hypr.land/Hypr-Ecosystem/hypridle/
-      hyprlandPlugins.hyprexpo
+      # hyprlandPlugins.hyprexpo
       hyprpaper
       libnotify # For `notify-send`
       lxqt.lxqt-sudo
@@ -101,7 +101,7 @@ in {
             anki-bin
             google-chrome
             pdfsam-basic # https://github.com/torakiki/pdfsam # 需要將語言轉做英文
-            realvnc-vnc-viewer
+            # realvnc-vnc-viewer
             librime
             rime-data
             (ibus-with-plugins.override
@@ -120,8 +120,8 @@ in {
   fonts = with pkgs; [
     noto-fonts
     noto-fonts-cjk-sans
-    noto-fonts-emoji
+    noto-fonts-color-emoji
     liberation_ttf
-    pkgs.nerd-fonts.monofur
+    pkgs.nerd-fonts.jetbrains-mono
   ];
 }

@@ -18,6 +18,7 @@
   is-asus = builtins.pathExists (base-config + "/machine-asus");
   is-rp5 = builtins.pathExists (base-config + "/machine-rp5");
   config = {};
+  lib = nixpkgs.lib;
   hostname =
     (import /etc/nixos/configuration.nix {
       inherit pkgs config;
@@ -51,65 +52,26 @@
       then (builtins.readFile "/etc/nixos/user")
       else "igncp";
   };
-  final-config = {
-    "${hostname}" =
-      if is-rp5 != true
-      then
-        (
-          nixpkgs.lib.nixosSystem {
-            modules = modules-list;
-            specialArgs = specialArgs;
-          }
-        )
-      else
-        (builtins.trace "運行 RP5"
-          (nixos-raspberry.lib.nixosSystemFull {
-            modules = with nixos-raspberry.nixosModules;
-              modules-list
-              ++ [
-                raspberry-pi-5.base
-                (
-                  {pkgs, ...}: {
-                    fileSystems = {
-                      "/boot/firmware" = {
-                        device = "/dev/disk/by-label/FIRMWARE";
-                        fsType = "vfat";
-                        options = [
-                          "noatime"
-                          "noauto"
-                          "x-systemd.automount"
-                          "x-systemd.idle-timeout=1min"
-                        ];
-                      };
-                      "/" = {
-                        device = "/dev/disk/by-label/NIXOS_SD";
-                        fsType = "ext4";
-                        options = ["noatime"];
-                      };
-                    };
-                    networking.hostName = "rp5-poe";
-                  }
-                )
-              ];
-            specialArgs = specialArgs;
-          }));
-    iso-installer = nixpkgs.lib.nixosSystem {
-      inherit system;
-
-      modules = [
-        "${nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
-        ({pkgs, ...}: {
-          services.openssh.enable = true;
-          users.users.nixos.password = "nixos";
-          environment.systemPackages = with pkgs; [
-            git
-            neovim
-            htop
-          ];
-        })
-      ];
-    };
+  rp5-config = import ./rp5.nix {
+    inherit modules-list nixos-raspberry specialArgs;
   };
+  installer-config = import ./installer.nix {
+    inherit base-config lib llm-agents nixpkgs pkgs system;
+  };
+  final-config =
+    {
+      "${hostname}" =
+        if is-rp5 != true
+        then
+          (
+            nixpkgs.lib.nixosSystem {
+              modules = modules-list;
+              specialArgs = specialArgs;
+            }
+          )
+        else rp5-config;
+    }
+    // installer-config;
 in
   final-config
   // (

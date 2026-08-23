@@ -60,7 +60,6 @@ in {
       fd # https://github.com/sharkdp/fd
       fzf # https://github.com/junegunn/fzf
       gh # https://github.com/cli/cli
-      gh-copilot # https://github.com/github/copilot-cli
       git
       git-crypt # https://github.com/AGWA/git-crypt
       git-extras
@@ -80,6 +79,7 @@ in {
       killall
       less
       libiconv
+      libxml2 # For xmllint
       lsof # https://github.com/lsof-org/lsof
       mise # https://github.com/jdx/mise.git
       moreutils
@@ -103,7 +103,6 @@ in {
       scc # https://github.com/boyter/scc
       sd # https://github.com/chmln/sd
       shfmt # https://github.com/mvdan/sh
-      silver-searcher # https://github.com/ggreer/the_silver_searcher
       statix # https://github.com/oppiliappan/statix.git
       taskwarrior3 # https://github.com/GothenburgBitFactory/taskwarrior
       tldr # https://github.com/tldr-pages/tldr
@@ -119,7 +118,7 @@ in {
       zoxide # https://github.com/ajeetdsouza/zoxide
     ]
     ++ (with llm-agents.packages.${pkgs.system}; [
-      copilot-cli
+      copilot-cli # https://github.com/github/copilot-cli
     ])
     ++ lsp-pkgs
     # 正在測試的新增內容

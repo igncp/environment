@@ -1,7 +1,7 @@
 {
   "neovim.AnsiEsc.vim": "d2bb7878622e4c16203acf1c92a0f4bc7ac58003", // https://github.com/vim-scripts/AnsiEsc.vim/commits/master
-  "neovim.CopilotChat.nvim": "f7eb423baccbb27f5b5608fb91acee2d6bc769c7", // https://github.com/CopilotC-Nvim/CopilotChat.nvim/commits/main
-  "neovim.auto-pairs": "39f06b873a8449af8ff6a3eee716d3da14d63a76", // https://github.com/jiangmiao/auto-pairs/commits/master
+  "neovim.CopilotChat.nvim": "f5171b9575279995205fde6a6c06c2632bb0b9d9", // https://github.com/CopilotC-Nvim/CopilotChat.nvim/commits/main
+  "neovim.nvim-autopairs": "7b9923abad60b903ece7c52940e1321d39eccc79", // https://github.com/windwp/nvim-autopairs/commits/master/
   "neovim.clever-f.vim": "6a3ac5e3688598af9411ab741737f98c47370c22", // https://github.com/rhysd/clever-f.vim/commits/master
   "neovim.cmp-buffer": "b74fab3656eea9de20a9b8116afa3cfc4ec09657", // https://github.com/hrsh7th/cmp-buffer/commits/main/
   "neovim.cmp-cmdline": "d126061b624e0af6c3a556428712dd4d4194ec6d", // https://github.com/hrsh7th/cmp-cmdline/commits/main/
@@ -9,7 +9,7 @@
   "neovim.cmp-path": "c642487086dbd9a93160e1679a1327be111cbc25", // https://github.com/hrsh7th/cmp-path/commits/main/
   "neovim.cmp_luasnip": "98d9cb5c2c38532bd9bdb481067b20fea8f32e90", // https://github.com/saadparwaiz1/cmp_luasnip/commits/master/
   "neovim.conform.nvim": "973f3cb73887d510321653044791d7937c7ec0fa", // https://github.com/stevearc/conform.nvim/commits/master/
-  "neovim.copilot.vim": "12995dffe10282b29b8335650bf3e7457f4870e7", // https://github.com/github/copilot.vim/commits/release/
+  "neovim.copilot.vim": "a12fd5672110c8aa7e3c8419e28c96943ca179be", // https://github.com/github/copilot.vim/commits/release/
   "neovim.crates.nvim": "ac9fa498a9edb96dc3056724ff69d5f40b898453", // https://github.com/saecki/crates.nvim/commits/main/
   "neovim.ctrlp.vim": "475a864e7f01dfc5c93965778417cc66e77f3dcc", // https://github.com/ctrlpvim/ctrlp.vim/commits/master/
   "neovim.diffview.nvim": "4516612fe98ff56ae0415a259ff6361a89419b0a", // https://github.com/sindrets/diffview.nvim/commits/master/
@@ -37,7 +37,7 @@
   "neovim.undotree": "28f2f54a34baff90ea6f4a735ef1813ad875c743", // https://github.com/mbbill/undotree/commits/master/
   "neovim.vim": "d4b0823100c702af127cba8dd5595a8f599041ec", // https://github.com/dracula/vim/commits/master/
   "neovim.vim-better-whitespace": "de99b55a6fe8c96a69f9376f16b1d5d627a56e81", // https://github.com/ntpeters/vim-better-whitespace/commits/master/
-  "neovim.vim-devicons": "71f239af28b7214eebb60d4ea5bd040291fb7e33", // https://github.com/ryanoasis/vim-devicons/commits/master/commits/master/
+  "neovim.nvim-web-devicons": "2ae6958df7ced50baac5035cec0c15799eedfbf7", // https://github.com/nvim-tree/nvim-web-devicons/commits/master/
   "neovim.vim-eunuch": "e86bb794a1c10a2edac130feb0ea590a00d03f1e", // https://github.com/tpope/vim-eunuch/commits/master/
   "neovim.vim-exchange": "d6c1e9790bcb8df27c483a37167459bbebe0112e", // https://github.com/tommcdo/vim-exchange/commits/master/
   "neovim.vim-fetch": "db3fd95eb0cf7e7e9effa1338b286db33e4a36c1", // https://github.com/wsdjeg/vim-fetch/commits/master/

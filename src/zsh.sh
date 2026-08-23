@@ -89,8 +89,6 @@ EOF
     fi
   fi
 
-  echo 'fpath=('"$HOME"'/.zsh $fpath)' >>~/.zshrc
-
   provision_setup_zsh_unalias
 
   # Having this at the end to allow setting some aliases that were removed in

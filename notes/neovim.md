@@ -6,3 +6,4 @@
     - https://github.com/neoclide/coc.nvim/issues/1843#issuecomment-623060834
 - nvim 跑時間嘅記錄（佢亦都可以喺 vim 入面運作）
     `nvim -V9myVim.log somefile.txt`
+- `<F1>`：顯示所有鍵盤映射

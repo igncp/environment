@@ -9,15 +9,16 @@ export LC_ALL=zh_TW.UTF-8
 # https://upload.wikimedia.org/wikipedia/commons/1/15/Xterm_256color_chart.svg
 export ZSH="$HOME/.oh-my-zsh"
 export ZSH_COMPDUMP=$HOME/.cache/zsh/.zcompdump-$HOST
+typeset -U path PATH
 CASE_SENSITIVE="true"
 DISABLE_UNTRACKED_FILES_DIRTY="true"
 plugins=(
   git
   ufw
   rust
-  zsh-syntax-highlighting
   zsh-autopair
   zsh-completions
+  zsh-syntax-highlighting
 )
 source $ZSH/oh-my-zsh.sh
 
@@ -131,6 +132,7 @@ RPROMPT="\$(provision_get_ps1_right)"
 setopt AUTO_PUSHD                  # pushes the old directory onto the stack
 setopt PUSHD_MINUS                 # exchange the meanings of '+' and '-'
 setopt CDABLE_VARS                 # expand the expression (allows 'cd -2/tmp')
+fpath=("$HOME/.zsh" $fpath)
 autoload -U compinit && compinit   # load + start completion
 _comp_options+=(globdots)          # include hidden files in completion
 zstyle ':completion:*:directory-stack' list-colors '=(#b) #([0-9]#)*( *)==95=38;5;12'
@@ -221,3 +223,8 @@ fi
 if type zoxide &> /dev/null; then
   eval "$(zoxide init zsh --cmd c)"
 fi
+
+alias ConfirmZsh='read -k 1 "REPLY?你確定嗎？(y/n) "; [[ $REPLY =~ ^[Yy]$ ]]'
+
+# TERM 值係用嚟移除顏色。冇咗 `-c /config` 就無法登入。
+alias DelugeConsole='podman exec -it -e TERM=vt100 deluge deluge-console -c /config/'

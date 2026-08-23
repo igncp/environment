@@ -118,7 +118,7 @@ install_linux() {
 
   cat >"$service_path" <<EOF
 [Unit]
-Description=Auto push git repositories
+Description=自動推送 Git 倉庫
 After=network.target
 
 [Service]
@@ -131,7 +131,7 @@ EOF
 
   cat >"$timer_path" <<EOF
 [Unit]
-Description=Run git auto push every ${INTERVAL_MINUTES} minutes
+Description=每 ${INTERVAL_MINUTES} 分鐘自動推送 Git 倉庫
 
 [Timer]
 OnBootSec=${INTERVAL_MINUTES}min
@@ -509,7 +509,7 @@ process_repo() {
     echo "  無需提交嘅更改"
   else
     git add -A
-    git commit -m "Automatic save from git_auto_push.sh" || true
+    git commit -m "由 git_auto_push.sh 自動儲存 ($(hostname))" || true
     echo "  ✓ 已提交更改"
   fi
 

@@ -146,7 +146,7 @@ client.urgent           #900000 #900000 #ffffff #900000
 
 bindsym --release $mod+Shift+o exec "i3lock -c 000000 && systemctl suspend"
 
-bindsym --release $mod+Shift+n exec ". $HOME/.nix-profile/etc/profile.d/nix.sh || true ; dunstctl set-paused true; notify-send 'Time' &>> /tmp/i3-log"
+bindsym --release $mod+Shift+n exec ". $HOME/.nix-profile/etc/profile.d/nix.sh || true ; dunstctl set-paused true; notify-send '時間' &>> /tmp/i3-log"
 bindsym --release $mod+h exec ". $HOME/.nix-profile/etc/profile.d/nix.sh || true ; dunstctl history-pop"
 bindsym --release $mod+Shift+h exec ". $HOME/.nix-profile/etc/profile.d/nix.sh || true ; dunstctl close"
 

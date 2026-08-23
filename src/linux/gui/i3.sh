@@ -3,7 +3,7 @@
 set -euo pipefail
 
 setup_gui_i3() {
-  if [ ! -f "$PROVISION_CONFIG"/gui-i3 ]; then
+  if [ ! -f "$PROVISION_CONFIG"/gui-i3 ] || [ $IS_NIXOS = "1" ]; then
     return
   fi
 
@@ -35,7 +35,7 @@ EOF
     echo 'export XMODIFIERS="@im=ibus"' >>$HOME/.xsession
     echo 'exec $HOME/.nix-profile/bin/i3' >>$HOME/.xsession
 
-    # i3lock Needs be installed in the system
+    # 系統必須安裝 i3lock
     if ! type i3lock >/dev/null 2>&1; then
       install_system_package_os i3lock
     fi

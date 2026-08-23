@@ -64,7 +64,7 @@ EOF
 }
 EOF
 
-  if [ -f /etc/ssh/sshd_config ]; then
+  if [ -f /etc/ssh/sshd_config ] && [ ! -f "$PROVISION_CONFIG"/job ]; then
     if [ -z "$(grep 'ChallengeResponseAuthentication no' /etc/ssh/sshd_config || true)" ]; then
       echo '您缺少 Mac 的 ssh 配置: ChallengeResponseAuthentication no'
     fi

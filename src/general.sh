@@ -236,7 +236,7 @@ EOF
 SSH_ENV="$HOME/.ssh-agent-environment"
 
 function start_agent {
-  printf "Initialising a new SSH agent... "
+  printf "初始化緊一個新嘅 SSH agent... "
   ssh-agent | sed 's/^echo/#echo/' >"$SSH_ENV"
   printf "succeeded\n"
   chmod 600 "$SSH_ENV"
@@ -246,7 +246,7 @@ function start_agent {
 
 if [ -f "$SSH_ENV" ]; then
   . "$SSH_ENV" >/dev/null
-  ps -ef | grep $SSH_AGENT_PID | grep 'ssh-agent$' >/dev/null && echo "Connecting to the SSH agent" || {
+  ps -ef | grep $SSH_AGENT_PID | grep 'ssh-agent$' >/dev/null && echo "連接緊 SSH agent" || {
     start_agent
   }
 else
@@ -271,6 +271,8 @@ EOF
       done <"$PROVISION_CONFIG"/ssh-keys-request
     fi
   fi
+
+  export RCLONE_PROGRESS=true
 EOF
 
   cat ~/.shellrc | sed 's|$PROVISION_CONFIG|'"$PROVISION_CONFIG"'|' | sponge ~/.shellrc

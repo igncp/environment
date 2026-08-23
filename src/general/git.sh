@@ -89,7 +89,6 @@ GitBlame() {
     "${@:2}"
 }
 
-alias gbd="git branch -D"
 alias ga='GitAdd'
 alias gc="git checkout -B"
 alias gca="git commit --amend"

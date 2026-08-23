@@ -45,9 +45,13 @@ EOF
   }
 
   install_tmux_plugin tmux-plugins/tmux-copycat
+  install_tmux_plugin smacke/tmux-clippy
   install_tmux_plugin tmux-plugins/tmux-sessionist
 
-  # ctrl+ b + j
+  # ctrl+ b + F
+  install_tmux_plugin Morantron/tmux-fingers
+
+  # ctrl+ b + j (requires ruby)
   install_tmux_plugin schasse/tmux-jump
 
   cat >>~/.tmux.conf <<"EOF"
@@ -60,6 +64,7 @@ EOF
   set -g default-terminal "screen-256color"
   set -g mouse off
   set -g terminal-features ",*:RGB"
+  set -g set-clipboard on
 
   set -g status-bg black
   set -g status-fg red
@@ -83,6 +88,8 @@ EOF
   new-session -n $HOST
 
   set -g @copycat_search_C-t '\.test\.js:[0-9]'
+  set -g @fingers-pattern-0 '\((?<match>[^()]*)\)'
+  set -g @open-editor-command 'nvim'
 
   unbind-key -T copy-mode-vi v
 
@@ -101,6 +108,17 @@ EOF
   bind n switch-client -t "notes:0"
   bind-key k split-pane -c "#{pane_current_path}" \; select-pane -t 0 \; kill-pane
 
+  # 窗格焦點 hook 必需
+  set -g focus-events on
+  # 窗格失去焦點時變暗
+  set-hook -g pane-focus-out 'select-pane -P "fg=#aaaaaa,bg=default"'
+  # 將焦點窗格還原為正常顏色
+  set-hook -g pane-focus-in 'select-pane -P "fg=default,bg=default"'
+
+  bind-key -T copy-mode-vi W send -X select-word
+  set -g word-separators ' @()[]{}<>=+?^$#*&%!,;'
+
+  set -g @open O
   run '~/.tmux/plugins/tpm/tpm'
 EOF
 }

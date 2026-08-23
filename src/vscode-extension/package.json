@@ -27,6 +27,10 @@
         "title": "Copy File Relative Path Monorepo"
       },
       {
+        "command": "igncp-vscode-extension.copyGitLogLineRange",
+        "title": "複製 Git 日誌行範圍"
+      },
+      {
         "command": "igncp-vscode-extension.listFilesInDirOrBelow",
         "title": "List Files In Dir Or Below"
       }
