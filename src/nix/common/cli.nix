@@ -50,6 +50,8 @@ in {
       ccls # https://github.com/MaskRay/ccls
       cmus # https://github.com/cmus/cmus
       coreutils-full
+      crystal # 供 tmux-fingers 使用
+      shards # 來自 Crystal，供 tmux-fingers 使用
       curl
       d2 # https://github.com/terrastruct/d2
       difftastic # https://github.com/Wilfred/difftastic
@@ -87,6 +89,7 @@ in {
       neovim-remote # https://github.com/mhinz/neovim-remote.git
       newsboat # https://github.com/newsboat/newsboat
       nil # https://github.com/oxalica/nil
+      nix-output-monitor # https://github.com/maralorn/nix-output-monitor
       nodejs
       ollama
       patchelf

@@ -13,9 +13,12 @@
     home-manager = {
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     ghostty.url = "github:ghostty-org/ghostty";
     nixgl.url = "github:nix-community/nixGL";
-    vscode-server.url = "github:nix-community/nixos-vscode-server";
     nixos-raspberry.url = "github:nvmd/nixos-raspberrypi";
     llm-agents.url = "github:numtide/llm-agents.nix";
   };
@@ -30,13 +33,13 @@
     nixos-hardware,
     nixos-generators,
     nixgl,
-    vscode-server,
+    disko,
     nixos-raspberry,
     llm-agents,
   }: let
     user = builtins.getEnv "USER";
-  in
-    flake-utils.lib.eachDefaultSystem (
+  in let
+    per-system = flake-utils.lib.eachDefaultSystem (
       system: let
         stable-pkgs = nixpkgs.legacyPackages.${system};
         pkgs = import unstable {
@@ -55,9 +58,9 @@
             stable-pkgs
             system
             unstable
-            vscode-server
             nixos-raspberry
             llm-agents
+            disko
             ;
         };
         nixos-systems = import ./src/nix/systems.nix {
@@ -66,9 +69,9 @@
         nixgl-pkgs = import nixgl {};
       in {
         inherit devShells;
+        nixosConfigurations = nixos-entry;
         packages =
           {
-            nixosConfigurations = nixos-entry;
             homeConfigurations."${user}" = home-manager.lib.homeManagerConfiguration {
               inherit pkgs;
               modules = [./src/nix/home-manager/home.nix];
@@ -83,4 +86,9 @@
           // nixos-systems;
       }
     );
+  in
+    per-system
+    // {
+      nixosConfigurations = per-system.nixosConfigurations.${builtins.currentSystem};
+    };
 }

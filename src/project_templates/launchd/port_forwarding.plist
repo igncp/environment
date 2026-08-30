@@ -2,9 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://apple.com">
 <plist version="1.0">
   <dict>
-    <!-- Copy into ~/Library/LaunchAgents/ , try to use the same file name as the service name -->
+    <!-- 複製到 ~/Library/LaunchAgents/，檔案名稱盡量同服務名稱一致 -->
     <!-- launchctl unload ~/Library/LaunchAgents/com.prometheus-local-machines.plist ; launchctl load ~/Library/LaunchAgents/com.prometheus-local-machines.plist -->
-    <!-- Lint: plutil -lint ~/Library/LaunchAgents/com.prometheus-local-machines.plist -->
+    <!-- 列出已安裝單位：launchctl list；移除現有單位：launchctl bootout gui/$(id -u) ~/Library/LaunchAgents/com.prometheus-local-machines.plist -->
+    <!-- 查看即時單位日誌：log stream --predicate 'process == "launchd" AND eventMessage CONTAINS "com.prometheus-local-machines.tunnel"' -->
+    <!-- 查看過去一小時單位日誌：log show --last 1h --predicate 'process == "launchd" AND eventMessage CONTAINS "com.prometheus-local-machines.tunnel"' -->
+    <!-- 檢查格式：plutil -lint ~/Library/LaunchAgents/com.prometheus-local-machines.plist -->
     <key>Label</key>
     <string>com.prometheus-local-machines.tunnel</string>
     <key>ProgramArguments</key>
@@ -31,10 +34,10 @@
     <true/>
     <key>RunAtLoad</key>
     <true/>
-    <!-- Adds a 30-second delay between reconnection attempts -->
+    <!-- 每次重新連線嘗試之間延遲 30 秒 -->
     <key>ThrottleInterval</key>
     <integer>30</integer>
-    <!-- Reduce logs -->
+    <!-- 減少日誌輸出 -->
     <key>LogPreferences</key>
     <dict>
       <key>LogLevel</key>

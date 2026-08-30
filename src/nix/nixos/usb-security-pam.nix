@@ -14,6 +14,8 @@
     if has-usb-pam
     then builtins.elemAt usb-pam-values 0
     else "";
+  # 生成 hash 並寫入 project config：
+  # sudo sha256sum /mnt/usbkey/.nixos-auth/keyfile | awk '{print $1}' >> project/.config/usb-pam
   expected-hash =
     if has-usb-pam
     then builtins.elemAt usb-pam-values 1
@@ -32,12 +34,15 @@
         if [ "$LIVE_HASH" = "$EXPECTED_HASH" ]; then
           exit 0
         fi
+        printf '%s\n' "USB 安全鎖入面嘅 key file 唔啱。" >&2
       else
         ${pkgs.util-linux}/bin/umount "$MNT_DIR"
         ${pkgs.coreutils}/bin/rmdir "$MNT_DIR"
+        printf '%s\n' "USB 安全鎖入面搵唔到 key file。" >&2
       fi
     else
       ${pkgs.coreutils}/bin/rmdir "$MNT_DIR"
+      printf '%s\n' "搵唔到 USB 安全鎖，或者無法掛載佢。" >&2
     fi
     exit 1
   '';
@@ -67,7 +72,7 @@ in {
           enable = true;
           control = "requisite";
           modulePath = "pam_exec.so";
-          args = ["seteuid" "quiet" "${usbKeyAuthScript}"];
+          args = ["seteuid" "${usbKeyAuthScript}"];
           order = 100;
         };
       }

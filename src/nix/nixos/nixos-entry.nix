@@ -8,15 +8,27 @@
   stable-pkgs,
   system,
   unstable,
-  vscode-server,
   nixos-raspberry,
   llm-agents,
+  disko,
 }: let
   base-config = ../../../project/.config;
   has-user-file = builtins.pathExists "/etc/nixos/user"; # 用呢個指令：`sudo bash -c 'printf USER_NAME > /etc/nixos/user'`
   is-surface = builtins.pathExists (base-config + "/machine-surface");
   is-asus = builtins.pathExists (base-config + "/machine-asus");
-  is-rp5 = builtins.pathExists (base-config + "/machine-rp5");
+  is-rp5-install = builtins.getEnv "IS_RP5_INSTALL" == "1";
+  is-rp5 = let
+    detected =
+      builtins.pathExists (base-config + "/machine-rp5")
+      || is-rp5-install;
+  in
+    if detected
+    then builtins.trace "偵測到 RP5 設定" detected
+    else false;
+  configuration-name =
+    if is-rp5
+    then "rp5-poe"
+    else hostname;
   config = {};
   lib = nixpkgs.lib;
   hostname =
@@ -29,7 +41,6 @@
   modules-list =
     [
       ./configuration.nix
-      vscode-server.nixosModules.default
     ]
     ++ (
       if is-surface
@@ -42,7 +53,19 @@
       else []
     );
   specialArgs = {
-    inherit stable-pkgs home-manager system ghostty nixos-hardware base-config unstable nixgl-pkgs llm-agents;
+    inherit
+      stable-pkgs
+      home-manager
+      system
+      ghostty
+      nixos-hardware
+      base-config
+      unstable
+      nixgl-pkgs
+      llm-agents
+      is-rp5
+      is-rp5-install
+      ;
     nixos-raspberrypi = nixos-raspberry;
     unstable-pkgs = pkgs;
 
@@ -53,14 +76,24 @@
       else "igncp";
   };
   rp5-config = import ./rp5.nix {
-    inherit modules-list nixos-raspberry specialArgs;
+    inherit
+      base-config
+      disko
+      lib
+      llm-agents
+      modules-list
+      nixos-raspberry
+      pkgs
+      is-rp5-install
+      specialArgs
+      ;
   };
   installer-config = import ./installer.nix {
-    inherit base-config lib llm-agents nixpkgs pkgs system;
+    inherit base-config lib llm-agents nixpkgs pkgs system disko;
   };
   final-config =
     {
-      "${hostname}" =
+      "${configuration-name}" =
         if is-rp5 != true
         then
           (
@@ -76,7 +109,7 @@ in
   final-config
   // (
     # 這樣做是為了能夠更改“主機名稱”。更改後需重新啟動。
-    if current-hostname != hostname
-    then {"${current-hostname}" = final-config."${hostname}";}
+    if current-hostname != configuration-name
+    then {"${current-hostname}" = final-config."${configuration-name}";}
     else {}
   )

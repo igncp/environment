@@ -7,6 +7,8 @@ provision_setup_os_nixos() {
 alias NixOsProfileHistory='nix profile history --profile /nix/var/nix/profiles/system'
 alias NixOsClearSpace='sudo nix-collect-garbage'
 alias NixOsListSystemGenerations='sudo nix-env --list-generations --profile /nix/var/nix/profiles/system'
+
+alias poweroff='systemctl --system poweroff'
 EOF
 
   cat >>~/.zshrc <<"EOF"

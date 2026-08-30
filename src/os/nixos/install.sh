@@ -18,7 +18,8 @@ touch ~/development/environment/project/.config/gui-no-1password
 echo no >~/development/environment/project/.config/nvidia
 sudo cp ~/development/environment/src/nix/nixos/templates/configuration.nix /etc/nixos/configuration.nix
 cd ~/development/environment
-sudo nixos-rebuild switch \
-  --show-trace --flake path:"$PWD" --impure && bash src/main.sh # 在環境倉庫中
+sudo nix-shell -p nix-output-monitor --run \
+  'nixos-rebuild switch --show-trace --flake path:"$PWD" --impure --log-format internal-json -v |& nom --json' &&
+  bash src/main.sh # 在環境倉庫中
 
-# Check nmcli notes in [notes/linux.md](notes/linux.md)
+# 請參閱 [notes/linux.md](notes/linux.md) 入面嘅 nmcli 筆記

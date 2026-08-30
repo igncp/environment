@@ -545,9 +545,22 @@ if type nix >/dev/null 2>&1; then
   RebuildNix() {
     if [ -f /etc/os-release ] && [ -n "$(cat /etc/os-release | grep nixos || true)" ]; then
       # 它需要 --impure 標誌，因為它導入/etc/nixos/configuration.nix配置
-      (cd ~/development/environment &&
-        sudo nixos-rebuild switch \
-          --show-trace --flake path:$PWD --impure)
+      local NIXOS_REBUILD_ARGS=(
+        switch
+        --show-trace
+        --flake "path:$HOME/development/environment"
+        --impure
+      )
+      sudo echo ''
+      if [ "$NO_NOM" = "1" ]; then
+        (cd ~/development/environment &&
+          sudo nixos-rebuild "${NIXOS_REBUILD_ARGS[@]}")
+      else
+        (cd ~/development/environment &&
+          sudo nixos-rebuild \
+            "${NIXOS_REBUILD_ARGS[@]}" \
+            --log-format internal-json -v |& nom --json)
+      fi
     fi
 
     if type home-manager >/dev/null 2>&1; then
@@ -840,3 +853,20 @@ fi
 if type xmllint >/dev/null 2>&1; then
   alias XmlFormat='xmllint --format'
 fi
+oscopy() {
+  local data
+  if [ -t 0 ]; then
+    data="$*"
+  else
+    data=$(cat)
+  fi
+
+  if [ -n "$TMUX" ]; then
+    printf '%s' "$data" | tmux load-buffer -w -
+  else
+    local b64
+    b64=$(printf '%s' "$data" | base64 | tr -d '\n\r')
+
+    printf '\033]52;c;%s\007' "$b64"
+  fi
+}

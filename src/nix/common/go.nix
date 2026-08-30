@@ -8,8 +8,8 @@
   go_file_content = builtins.readFile go_file;
   go_pkg =
     {
-      "" = pkgs.go_1_23;
-      "\n" = pkgs.go_1_23;
+      "" = pkgs.go;
+      "\n" = pkgs.go;
       "22\n" = pkgs.go_1_22;
       "23\n" = pkgs.go_1_23;
     }

@@ -3,9 +3,10 @@
   lib,
   user,
   base-config,
+  is-rp5,
+  is-rp5-install,
   ...
 }: let
-  has-k3s = builtins.pathExists (base-config + "/k3s");
   has-docker = builtins.pathExists (base-config + "/docker");
   has-gui = builtins.pathExists (base-config + "/gui");
   has-android = builtins.pathExists (base-config + "/android");
@@ -16,20 +17,22 @@
   has-custom = builtins.pathExists ./custom.nix;
   emojify = import ./emojify.nix {inherit pkgs;};
 in {
-  imports =
+  imports = lib.optionals (!is-rp5-install) (
     [
       ./default_pkgs.nix
       /etc/nixos/configuration.nix
-      ./home-manager-entry.nix
       ./ai.nix
       ./usb-security-luks.nix
       ./usb-security-pam.nix
+      ./k3s.nix
+      ./blocky.nix
     ]
     ++ (lib.optional has-custom ./custom.nix)
-    ++ (lib.optional has-k3s ./k3s.nix)
+    ++ (lib.optional (!is-rp5) ./home-manager-entry.nix)
     ++ (lib.optional has-android ./android.nix)
     ++ (lib.optional has-tailscale ./tailscale.nix)
-    ++ (lib.optional has-gui ./gui.nix);
+    ++ (lib.optional has-gui ./gui.nix)
+  );
 
   config = lib.mkMerge [
     {
@@ -45,7 +48,6 @@ in {
       };
 
       services = {
-        vscode-server.enable = true;
         journald.extraConfig = "SystemMaxUse=1G";
         # 呢個假設部機有加密磁碟，如果需要就改
         displayManager.autoLogin = {
@@ -57,6 +59,9 @@ in {
           enable = true;
           enabledCollectors = ["systemd" "processes" "ethtool"];
         };
+        # 可選：
+        # networking.firewall.allowedTCPPorts = [9100];
+        # networking.firewall.trustedInterfaces = ["cni0" "flannel.1"];
         openssh = {
           enable = true;
           settings = {
@@ -135,7 +140,6 @@ in {
 
       environment.systemPackages = with pkgs; [
         alsa-utils
-        appimage-run
         cacert
         dbus
         dnsutils

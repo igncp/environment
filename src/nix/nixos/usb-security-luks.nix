@@ -13,7 +13,8 @@
     if has-usb-luks
     then builtins.elemAt usb-luks-values 0
     else "";
-  luks-device-uuid =
+  # 可以喺 nixos-generate-config 嘅結果 hardware-configuration.nix 入面搵到。
+  luks-device-name =
     if has-usb-luks
     then builtins.elemAt usb-luks-values 1
     else "";
@@ -28,7 +29,7 @@ in {
             message = "USB LUKS 設定入面嘅 USB UUID 唔可以係空白。";
           }
           {
-            assertion = luks-device-uuid != "";
+            assertion = luks-device-name != "";
             message = "USB LUKS 設定入面嘅 LUKS UUID 唔可以係空白。";
           }
         ];
@@ -38,8 +39,8 @@ in {
         # > sudo mkdir -p /mnt/usbkey && sudo mount /dev/sdX1 /mnt/usbkey
         # > sudo dd if=/dev/urandom of=/mnt/usbkey/bootkey.bin bs=512 count=8
         # > sudo chmod 400 /mnt/usbkey/bootkey.bin
-        # > sudo umount /mnt/usbkey
         # > sudo cryptsetup luksAddKey /dev/sdY2 /mnt/usbkey/bootkey.bin
+        # > sudo umount /mnt/usbkey
         boot.initrd = {
           availableKernelModules = [
             "usb_storage"
@@ -59,7 +60,7 @@ in {
               options = "ro";
             }
           ];
-          luks.devices."${luks-device-uuid}" = {
+          luks.devices."${luks-device-name}" = {
             keyFile = "/mnt/key/bootkey.bin";
             # USB 唔存在時，10 秒後會退回手動輸入密碼。
             keyFileTimeout = 10;

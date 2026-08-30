@@ -6,7 +6,7 @@
     };
     # services.open-webui.enable = true;
     environment.systemPackages = with pkgs; [
-      python3Packages.chromadb
+      # python3Packages.chromadb
     ];
   };
 }
