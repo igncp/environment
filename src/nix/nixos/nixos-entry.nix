@@ -27,7 +27,7 @@
     else false;
   configuration-name =
     if is-rp5
-    then "rp5-poe"
+    then "rp5"
     else hostname;
   config = {};
   lib = nixpkgs.lib;

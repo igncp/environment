@@ -21,6 +21,13 @@ EOF
     mkdir -p "$HOME/.config/copilot-restricted/agents"
     cp -r $HOME/development/environment/src/config-files/ai-prompts/* "$HOME/.config/copilot-restricted/agents/"
 
+    mkdir -p "$HOME/.config/opencode/commands"
+    rm -rf "$HOME/.config/opencode/commands"/*
+    for PROMPT_FILE in "$HOME"/development/environment/src/config-files/ai-prompts/*; do
+      PROMPT_DESTINATION="$HOME/.config/opencode/commands/$(basename "$PROMPT_FILE")"
+      cp "$PROMPT_FILE" "$PROMPT_DESTINATION"
+    done
+
     SETTINGS_FILE="$HOME/.config/copilot-restricted/settings.json"
     if [ ! -f "$SETTINGS_FILE" ]; then
       printf '{}\n' >"$SETTINGS_FILE"

@@ -1,11 +1,11 @@
-{pkgs, ...}: {
+{unstable-pkgs, ...}: {
   environment.systemPackages = [
-    pkgs.tailscale
+    unstable-pkgs.tailscale
   ];
 
   # https://nixos.wiki/wiki/Tailscale
   services.tailscale = {
     enable = true;
-    package = pkgs.tailscale;
+    package = unstable-pkgs.tailscale;
   };
 }

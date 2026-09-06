@@ -28,8 +28,14 @@ in
         #   serverAddr = "https://192.168.X.X:6443";
         #   # 伺服器上：sudo cat /var/lib/rancher/k3s/server/node-token | oscopy
         #   token = "...";
-        #   extraFlags = "--node-label foo=bar --node-ip=<tailscale-ip>";
+        #   extraFlags = "--node-label foo=bar --node-ip=<tailscale-ip> --flannel-iface=tailscale0 --node-name=foo";
         # };
+        # environment.etc."rancher/k3s/registries.yaml".text = ''
+        #   mirrors:
+        #     "foo:5000":
+        #       endpoint:
+        #         - "http://foo:5000"
+        # '';
       }
     )
     (lib.mkIf is-rp5 {

@@ -91,19 +91,19 @@ done
 
 Diff() { diff --color=always "$@" | less -r; }
 DisplayFilesConcatenated() { xargs tail -n +1 | sed "s|==>|\n\n\n\n\n$1==>|; s|<==|<==\n|" | $EDITOR -; }
-FileSizeCreate() { head -c "$1" /dev/urandom >"$2"; } # For example: FileSizeCreate 1GB /tmp/foo
+FileSizeCreate() { head -c "$1" /dev/urandom >"$2"; } # 範例：FileSizeCreate 1GB /tmp/foo
 FindLinesJustInFirstFile() { comm -23 <(sort "$1") <(sort "$2"); }
 FindSortDate() { find "$@" -printf "%T@ %Tc %p\n" | sort -nr; }
 GetProcessUsingPort() { fuser $1/tcp 2>&1 | grep -oE '[0-9]*$'; }
 GetProcessUsingPortAndKill() { fuser $1/tcp 2>&1 | grep -oE '[0-9]*$' | xargs -I {} kill {}; }
 KillPsAux() { awk '{ print $2 }' | xargs -I{} kill "$@" {}; }
-LsofDir() { lsof +D $1; } # It uses `+` instead of `-`
+LsofDir() { lsof +D $1; } # 它使用 `+` 而非 `-`
 LsofNetwork() { lsof -i; }
 LsofPort() { lsof -i TCP:$1; }
-LsofProcess() { lsof -p $1; } # It expects the PID
+LsofProcess() { lsof -p $1; } # 它預期接收 PID
 RandomFile() { find "$1" -type f | shuf -n 1; }
 RandomLine() { sort -R "$1" | head -n 1; }
-# will not catch `'` so can wrap generated texts with single quotes
+# 不會包含 `'`，所以可以用單引號包住產生的文字
 RandomStrGenerator() {
   tr -dc 'A-Za-z0-9!"#$%&()*+,-./:;<=>?@[\]^_`{|}~' </dev/urandom | head -c "$1"
   echo
@@ -120,13 +120,13 @@ TopMemory() {
 }
 USBClone() {
   if [ -z "$I" ] || [ -z "$O" ]; then
-    echo "Missing params"
+    echo "缺少參數"
     return
   fi
   dd if=$I of=$O bs=1G count=10 status=progress
-} # Example: I=/dev/sdb O=/dev/sdc USBClone
+} # 範例：I=/dev/sdb O=/dev/sdc USBClone
 
-Vidir() { vidir -v -; } # To remove files, remove the lines
+Vidir() { vidir -v -; } # 要移除檔案就刪除相關行
 VidirFind() { find $@ | sort -V | vidir -v -; }
 VisudoUser() { sudo env EDITOR=vim visudo -f /etc/sudoers.d/$1; }
 alias ClipboardSSHSend="clipboard_ssh send"
@@ -154,7 +154,7 @@ FfmpegAudioMp3() {
   nix-shell -p ffmpeg --run "ffmpeg -i $1 -q:a 0 -map a $1.mp3"
 }
 
-# Cross-platform (including remote VM) function which accepts text from a pipe
+# 接收管道文字的跨平台函式（包括遠端 VM）
 ClipboardCopyPipe() {
   read INPUT
   if [ -z "$INPUT" ]; then return; fi
@@ -171,7 +171,7 @@ ClipboardCopyPipe() {
   fi
 }
 
-# Sample of alias using ClipboardCopyPipe and bitwarden
+# 使用 ClipboardCopyPipe 和 bitwarden 的別名範例
 alias BWAliasExample=$'bw list items --search myapp | jq \'.[0].login.password\' -r | ClipboardCopyPipe'
 
 alias SSHAgent='eval `ssh-agent`'
@@ -185,13 +185,13 @@ SSHGenerateStrongKey() {
 }
 alias SSHListLocalForwardedPorts='ps x -ww -o pid,command | ag ssh | grep --color=never localhost'
 SSHForwardPortLocal() {
-  echo "Forwarding port: $1 for ${@:2}"
+  echo "正為 ${@:2} 轉發連接埠：$1"
   ssh -N -L "$1":localhost:"$1" ${@:2}
 } # SSHForwardPort 1234 192.168.1.40
 alias SSHDConfig='sudo sshd -T'
 SSHListConnections() { sudo netstat -tnpa | grep 'ESTABLISHED.*sshd'; }
 
-# Example to how to manually add a key with a timeout
+# 手動加入有逾時時間的金鑰範例
 SSHExampleConfigure() {
   if [ -n "$(ssh-add -L | grep some_key || true)" ]; then return; fi
 
@@ -216,21 +216,21 @@ alias PathShow='echo $PATH | tr ":" "\n" | sort | uniq | less'
 alias Provision="(cd ~/development/environment && bash src/main.sh)"
 alias ProvisionUpdate="(cd ~/development/environment && IS_PROVISION_UPDATE=1 bash src/main.sh)"
 alias PsTree='pstree -s'
-alias RsyncDelete='rsync -rhv --delete' # remember to add a slash at the end of source (dest doesn't matter)
+alias RsyncDelete='rsync -rhv --delete' # 記得在來源結尾加斜線（目的地無所謂）
 alias ShellChangeToBash='chsh -s /bin/bash; exit'
 alias SocketSearch='sudo ss -lntup'
 alias SyncProvisionCustom='(cd ~/development/environment && bash src/scripts/copy_custom.sh)'
 alias TreeDir='tree -d'
 alias Visudo='sudo env EDITOR=vim visudo'
 alias Xargs='xargs -I{} '
-alias YoutubeChooseResolution='yt-dlp -f ' # e.g. YoutubeChooseResolution 12 https://...
+alias YoutubeChooseResolution='yt-dlp -f ' # 例如：YoutubeChooseResolution 12 https://...
 alias YoutubeResolutions='yt-dlp -F '
 alias YoutubeSubtitles='yt-dlp --all-subs --skip-download'
 
 alias CrontabUser='crontab -e'
 alias CrontabRoot='sudo EDITOR=vim crontab -e'
 
-alias Headers='curl -I' # e.g. Headers google.com
+alias Headers='curl -I' # 例如：Headers google.com
 if type nix >/dev/null 2>&1; then
   if [ -n "$(uname -a | ag Darwin || true)" ]; then
     alias Ports=$"SudoNix netstat -anvp tcp | awk 'NR<3 || /LISTEN/' | awk '{ print \$4 }'"
@@ -303,7 +303,7 @@ CursorSessions() {
         awk '/<user_query>/{getline; print; exit} !/^<timestamp>/{print; exit}'
     )"
     name="${name:0:70}"
-    printf '%s\t%s\n' "$id" "${name:-<untitled>}"
+    printf '%s\t%s\n' "$id" "${name:-<未命名>}"
   done | column -ts $'\t' | less
 }
 
@@ -311,7 +311,7 @@ ConfigProvisionList() {
   INITIAL_SHA=$(find ~/development/environment/project/.config -type f | sort -V | sha256sum | awk '{print $1}')
   "$HOME"/.local/bin/provision_choose_config $@ || return
   AFTER_SHA=$(find ~/development/environment/project/.config -type f | sort -V | sha256sum | awk '{print $1}')
-  # Stop if no changes
+  # 沒有變更就停止
   if [ "$INITIAL_SHA" = "$AFTER_SHA" ]; then return; fi
 
   if type nix >/dev/null 2>&1; then
@@ -326,7 +326,7 @@ alias ConfigProvisionListFzf='ConfigProvisionList fzf'
 CargoGenerateClean() {
   BIN_NAME=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[].targets[] | select( .kind | map(. == "bin") | any ) | .name')
   CARGO_TARGET_DIR=target cargo build --release && mv target/release/"$BIN_NAME" . && rm -rf target
-  echo "Binary '$BIN_NAME' built and moved to current directory"
+  echo "二進制檔案 '$BIN_NAME' 已建置並移至目前目錄"
 }
 
 CargoRunClean() {
@@ -339,7 +339,7 @@ CargoRunClean() {
 CargoDevGenerate() {
   BIN_NAME=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[].targets[] | select( .kind | map(. == "bin") | any ) | .name')
   CARGO_TARGET_DIR=target cargo build && mv target/debug/"$BIN_NAME" .
-  echo "Binary '$BIN_NAME' built and moved to current directory"
+  echo "二進制檔案 '$BIN_NAME' 已建置並移至目前目錄"
 }
 
 alias HomeManagerInitFlake='nix run home-manager/release-26.05 -- init'
@@ -394,7 +394,7 @@ if type nix >/dev/null 2>&1; then
     if type jq >/dev/null 2>&1; then
       UNSTABLE_REV="$(cat ~/development/environment/flake.lock | jq -r '.nodes.unstable.locked.rev')"
       if [ ! -f ~/.check-files/nix-channel ] || [ -z "$(cat ~/.check-files/nix-channel | grep $UNSTABLE_REV || true)" ]; then
-        echo "UNSTABLE_REV: $UNSTABLE_REV"
+        echo "不穩定版修訂：$UNSTABLE_REV"
         nix-channel --remove nixpkgs || true
         nix-channel --add "https://github.com/NixOS/nixpkgs/archive/$UNSTABLE_REV.tar.gz" nixpkgs
         nix-channel --update
@@ -485,7 +485,7 @@ if type nix >/dev/null 2>&1; then
   }
 
   NixListReferrers() {
-    # This is useful when copying from dua result
+    # 從 dua 結果複製時很有用
     ITEM="$1"
     if [ -z "$(echo $ITEM | grep -F /nix/store || true)" ]; then
       ITEM="/nix/store$ITEM"
@@ -494,7 +494,7 @@ if type nix >/dev/null 2>&1; then
   }
 
   NixListClosure() {
-    # This is useful when copying from dua result
+    # 從 dua 結果複製時很有用
     ITEM="$1"
     if [ -z "$(echo $ITEM | grep -F /nix/store || true)" ]; then
       ITEM="/nix/store$ITEM"
@@ -503,7 +503,7 @@ if type nix >/dev/null 2>&1; then
   }
 
   NixPathInfo() {
-    # This is useful when copying from dua result
+    # 從 dua 結果複製時很有用
     ITEM="$1"
     if [ -z "$(echo $ITEM | grep -F /nix/store || true)" ]; then
       ITEM="/nix/store$ITEM"
@@ -559,7 +559,7 @@ if type nix >/dev/null 2>&1; then
         (cd ~/development/environment &&
           sudo nixos-rebuild \
             "${NIXOS_REBUILD_ARGS[@]}" \
-            --log-format internal-json -v |& nom --json)
+            --log-format internal-json -v 2>&1 | nom --json)
       fi
     fi
 
@@ -570,17 +570,17 @@ if type nix >/dev/null 2>&1; then
     fi
   }
 
-  # # To patch a binary interpreter path, for example for 'foo:
+  # # 要修補二進制檔案的直譯器路徑，例如「foo」：
   # patchelf --set-interpreter /usr/lib64/ld-linux-aarch64.so.1 ./foo
-  # # To read the current interpreter:
+  # # 要讀取目前的直譯器：
   # readelf -a ./foo | grep interpreter
-  # # To print the dynamic libraries:
+  # # 要列印動態函式庫：
   # ldd -v ./foo
-  # # To find libraries that need patching
+  # # 要找出需要修補的函式庫
   # ldd ./foo | grep 'not found'
-  # # To find the interpreter in NixOS
+  # # 要在 NixOS 找直譯器
   # cat $NIX_CC/nix-support/dynamic-linker
-  # # To list the required dynamic libraries
+  # # 要列出所需的動態函式庫
   # patchelf --print-needed ./foo
 
   NixFormat() {
@@ -598,7 +598,7 @@ fi
 
 if type vegeta >/dev/null 2>&1; then
   VegetaAttack() {
-    # Example usage: VegetaAttack -rate=100 -duration=10s -targets=targets.txt
+    # 使用範例：VegetaAttack -rate=100 -duration=10s -targets=targets.txt
     vegeta attack $@ | tee /tmp/vegeta-results.bin | vegeta report
   }
   alias VegetaDocs='echo https://www.scaleway.com/en/docs/tutorials/load-testing-vegeta/'
@@ -697,7 +697,7 @@ P12Info() {
   FILE_PASS="$2"
   if [ -z "$FILE_PATH" ] || [ -z "$FILE_PASS" ]; then
     echo "缺少參數"
-    echo "用法: P12Info <file_path> <file_pass>"
+    echo "用法：P12Info <file_path> <file_pass>"
     return
   fi
   openssl pkcs12 -legacy -in "$FILE_PATH" -nodes -passin pass:"$FILE_PASS" |
@@ -723,8 +723,8 @@ if type hyprctl >/dev/null 2>&1; then
 fi
 
 if type mogrify >/dev/null 2>&1; then
-  alias ImageResize='mogrify -resize' # e.g. ImageResize 50% image1.jpg
-  alias ImageRotate='mogrify -rotate' # e.g. ImageRotate 90 image1.jpg
+  alias ImageResize='mogrify -resize' # 例如：ImageResize 50% image1.jpg
+  alias ImageRotate='mogrify -rotate' # 例如：ImageRotate 90 image1.jpg
 fi
 
 if type lscpu >/dev/null 2>&1; then

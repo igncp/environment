@@ -6,7 +6,6 @@
   ];
 
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.loader.systemd-boot.enable = true;
 
   networking.hostName = "nixos";
 
@@ -44,7 +43,9 @@
   # # 改善檔案系統效能
   # fileSystems."/".options = ["noatime" "defaults"];
 
+  # # 網域名稱系統
   # environment.etc."resolv.conf".text = "nameserver 192.168.1.1\n";
+  # networking.resolvconf.enable = false;
 
   # # 你要記得改咗呢個檔案之後執行「 sudo systemctl restart nix-daemon 」
   # # 如果直接改檔案 `/etc/nix/nix.conf`.
@@ -67,4 +68,47 @@
 
   # 修正故障硬碟
   # boot.kernelParams = ["libata.force=5.00:disable"];
+
+  # # 持久 SSH 隧道（需要時取消註解並自訂）
+  # systemd.services = let
+  #   tunnels = [
+  #     {
+  #       port = 9200;
+  #       ip = "192.168.128.135";
+  #     }
+  #     {
+  #       port = 9300;
+  #       ip = "192.168.128.145";
+  #     }
+  #   ];
+  #
+  #   tunnel-services = builtins.listToAttrs (map (tunnel: {
+  #       name = "ssh-tunnel-${toString tunnel.port}";
+  #       value = {
+  #         description = "${toString tunnel.port} 的持久 SSH 隧道";
+  #         after = ["network-online.target"];
+  #         wants = ["network-online.target"];
+  #         wantedBy = ["multi-user.target"];
+  #
+  #         serviceConfig = {
+  #           Type = "simple";
+  #           User = "igncp";
+  #           Environment = ["HOME=/home/igncp"];
+  #           ExecStart =
+  #             "${pkgs.openssh}/bin/ssh -NT"
+  #             + " -i /home/igncp/.ssh/prometheus"
+  #             + " -o ServerAliveInterval=60"
+  #             + " -o ExitOnForwardFailure=yes"
+  #             + " -L 0.0.0.0:${toString tunnel.port}:127.0.0.1:9100"
+  #             + " igncp@${tunnel.ip}";
+  #           Restart = "always";
+  #           RestartSec = "30s";
+  #           ProtectSystem = "full";
+  #           ProtectHome = "read-only";
+  #         };
+  #       };
+  #     })
+  #     tunnels);
+  # in
+  #   tunnel-services;
 }

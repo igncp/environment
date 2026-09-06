@@ -22,7 +22,7 @@ in
     #   --mode disko src/nix/nixos/rp5-disko-config.nix # 請先檢查此腳本
     # IS_RP5_INSTALL=1 WIFI_SSID=... WIFI_PASS=... \
     # sudo --preserve-env nixos-install \
-    #   --flake '.#rp5-poe' --root /mnt --impure
+    #   --flake '.#rp5' --root /mnt --impure
     modules = with nixos-raspberry.nixosModules;
       modules-list
       ++ [
@@ -80,7 +80,7 @@ in
         )
         (
           {lib, ...}: {
-            networking.hostName = lib.mkForce "rp5-poe";
+            networking.hostName = lib.mkForce "rp5";
             boot.initrd.availableKernelModules = ["dm-aes-ce" "dm-crypt"];
           }
         )

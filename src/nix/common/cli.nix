@@ -92,6 +92,7 @@ in {
       nix-output-monitor # https://github.com/maralorn/nix-output-monitor
       nodejs
       ollama
+      opencode # https://github.com/anomalyco/opencode # llm-agents 的版本尚未包含供應商
       patchelf
       pkg-config
       poppler # `pdftotext`
@@ -140,6 +141,14 @@ in {
           docker-buildx
           docker-compose
         ]
+      # virtualisation.docker.daemon.settings."insecure-registries" = [
+      #   "192.168.X.X:5000"
+      # ];
+      # environment.etc."buildkitd.toml".text = ''
+      #   [registry."192.168.X.X:5000"]
+      #     http = true
+      #     insecure = true
+      # '';
       else []
     )
     ++ (

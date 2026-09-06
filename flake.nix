@@ -19,7 +19,10 @@
     };
     ghostty.url = "github:ghostty-org/ghostty";
     nixgl.url = "github:nix-community/nixGL";
-    nixos-raspberry.url = "github:nvmd/nixos-raspberrypi";
+    nixos-raspberry = {
+      url = "github:nvmd/nixos-raspberrypi";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     llm-agents.url = "github:numtide/llm-agents.nix";
   };
 

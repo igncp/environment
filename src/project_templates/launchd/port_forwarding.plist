@@ -3,13 +3,20 @@
 <plist version="1.0">
   <dict>
     <!-- 複製到 ~/Library/LaunchAgents/，檔案名稱盡量同服務名稱一致 -->
-    <!-- launchctl unload ~/Library/LaunchAgents/com.prometheus-local-machines.plist ; launchctl load ~/Library/LaunchAgents/com.prometheus-local-machines.plist -->
-    <!-- 列出已安裝單位：launchctl list；移除現有單位：launchctl bootout gui/$(id -u) ~/Library/LaunchAgents/com.prometheus-local-machines.plist -->
+    <!-- 啟動：launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.prometheus-local-machines.plist -->
+    <!-- 重新啟動：launchctl kickstart -k gui/$(id -u)/com.prometheus-local-machines.tunnel -->
+    <!-- 列出已安裝單位：launchctl list；移除現有單位：launchctl bootout gui/$(id -u)/com.prometheus-local-machines.tunnel -->
     <!-- 查看即時單位日誌：log stream --predicate 'process == "launchd" AND eventMessage CONTAINS "com.prometheus-local-machines.tunnel"' -->
     <!-- 查看過去一小時單位日誌：log show --last 1h --predicate 'process == "launchd" AND eventMessage CONTAINS "com.prometheus-local-machines.tunnel"' -->
     <!-- 檢查格式：plutil -lint ~/Library/LaunchAgents/com.prometheus-local-machines.plist -->
     <key>Label</key>
     <string>com.prometheus-local-machines.tunnel</string>
+    <key>StandardOutPath</key>
+    <!-- **更新此處** -->
+    <string>/tmp/XXX.log</string>
+    <key>StandardErrorPath</key>
+    <!-- **更新此處** -->
+    <string>/tmp/XXX.log</string>
     <key>ProgramArguments</key>
     <array>
       <string>/usr/bin/ssh</string>
@@ -22,6 +29,10 @@
       <string>ExitOnForwardFailure=yes</string>
       <string>-o</string>
       <string>ConnectTimeout=5</string>
+      <string>-o</string>
+      <string>StrictHostKeyChecking=no</string>
+      <string>-o</string>
+      <string>UserKnownHostsFile=/dev/null</string>
       <string>-i</string>
       <string>/Users/igncp/.ssh/prometheus</string>
       <string>-L</string>

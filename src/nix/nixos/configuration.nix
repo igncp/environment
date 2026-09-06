@@ -14,6 +14,7 @@
   has-n8n = builtins.pathExists (base-config + "/n8n");
   has-expressvpn = builtins.pathExists (base-config + "/expressvpn");
   has-printing = builtins.pathExists (base-config + "/printing");
+  has-kodi = builtins.pathExists (base-config + "/kodi");
   has-custom = builtins.pathExists ./custom.nix;
   emojify = import ./emojify.nix {inherit pkgs;};
 in {
@@ -61,7 +62,11 @@ in {
         };
         # 可選：
         # networking.firewall.allowedTCPPorts = [9100];
-        # networking.firewall.trustedInterfaces = ["cni0" "flannel.1"];
+        # networking.firewall.trustedInterfaces = [
+        #   "tailscale0"
+        #   "cni0"
+        #   "flannel.1"
+        # ];
         openssh = {
           enable = true;
           settings = {
@@ -168,6 +173,9 @@ in {
         LC_TIME = "en_HK.UTF-8";
       };
     }
+    (lib.mkIf (!is-rp5) {
+      boot.loader.systemd-boot.enable = true;
+    })
     (
       if has-printing
       then {
@@ -215,6 +223,24 @@ in {
           expressvpn
         ];
         services.expressvpn.enable = true;
+      }
+      else {}
+    )
+    (
+      if has-kodi
+      then {
+        services.xserver = {
+          enable = true;
+          desktopManager.kodi.enable = true;
+          displayManager.lightdm.greeter.enable = false;
+        };
+        services.displayManager.autoLogin = {
+          enable = true;
+          user = "igncp";
+        };
+        users.users.igncp = {
+          extraGroups = ["input" "video" "audio"];
+        };
       }
       else {}
     )

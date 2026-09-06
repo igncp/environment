@@ -32,6 +32,7 @@ in {
     {
       home-manager.useGlobalPkgs = true;
       home-manager.useUserPackages = true;
+      programs.dconf.enable = true;
       home-manager.users."${user}" =
         {
           home.username = "${user}";

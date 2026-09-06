@@ -8,6 +8,7 @@ provision_setup_nix() {
   fi
 
   mkdir -p ~/.config/nix
+  mkdir -p ~/.config/direnv
   mkdir -p ~/.pip
 
   if ! type nix >/dev/null 2>&1; then
@@ -59,6 +60,11 @@ EOF
 
   cat >~/.config/nix/nix.conf <<"EOF"
 experimental-features = nix-command flakes
+EOF
+
+  cat >~/.config/direnv/direnv.toml <<"EOF"
+[global]
+hide_env_diff = true
 EOF
 
   add_vscode_extension bbenoist.nix
