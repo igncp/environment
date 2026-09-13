@@ -26,7 +26,7 @@
     then builtins.trace "偵測到 RP5 設定" detected
     else false;
   configuration-name =
-    if is-rp5
+    if is-rp5-install
     then "rp5"
     else hostname;
   config = {};

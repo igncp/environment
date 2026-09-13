@@ -53,7 +53,15 @@ in
                   networking.useDHCP = true;
                   services.getty.autologinUser = lib.mkForce "root";
                   environment.systemPackages =
-                    cli-pkgs.pkgs-list
+                    # 呢幾個會拉入 SDL，喺 RP5 建構時會失敗。
+                    (builtins.filter
+                      (pkg:
+                        !(builtins.elem (lib.getName pkg) [
+                          "cmus"
+                          "fastfetch"
+                          "wireshark-qt"
+                        ]))
+                      cli-pkgs.pkgs-list)
                     ++ (with pkgs; [
                       git
                       nixos-install-tools

@@ -14,7 +14,6 @@
   has-n8n = builtins.pathExists (base-config + "/n8n");
   has-expressvpn = builtins.pathExists (base-config + "/expressvpn");
   has-printing = builtins.pathExists (base-config + "/printing");
-  has-kodi = builtins.pathExists (base-config + "/kodi");
   has-custom = builtins.pathExists ./custom.nix;
   emojify = import ./emojify.nix {inherit pkgs;};
 in {
@@ -27,6 +26,7 @@ in {
       ./usb-security-pam.nix
       ./k3s.nix
       ./blocky.nix
+      (import ./kodi.nix {inherit lib base-config is-rp5;})
     ]
     ++ (lib.optional has-custom ./custom.nix)
     ++ (lib.optional (!is-rp5) ./home-manager-entry.nix)
@@ -112,6 +112,8 @@ in {
       '';
 
       programs.zsh.enable = true;
+      # Allows NixOS to run generic dynamically linked binaries, such as wasm-pack's downloaded wasm-bindgen CLI.
+      programs.nix-ld.enable = true;
 
       time.timeZone = "Asia/Hong_Kong";
 
@@ -143,23 +145,24 @@ in {
         }
       ];
 
-      environment.systemPackages = with pkgs; [
-        alsa-utils
-        cacert
-        dbus
-        dnsutils
-        emojify
-        file
-        gcc
-        gnupg
-        lshw
-        openssl
-        openssl.dev
-        pciutils # 包括 lspci
-        ps_mem
-        python3
-        vnstat
-      ];
+      environment.systemPackages =
+        lib.optional (!is-rp5) pkgs.alsa-utils
+        ++ (with pkgs; [
+          cacert
+          dbus
+          dnsutils
+          emojify
+          file
+          gcc
+          gnupg
+          lshw
+          openssl
+          openssl.dev
+          pciutils # 包括 lspci
+          ps_mem
+          python3
+          vnstat
+        ]);
 
       i18n.extraLocaleSettings = {
         LC_ADDRESS = "en_HK.UTF-8";
@@ -223,24 +226,6 @@ in {
           expressvpn
         ];
         services.expressvpn.enable = true;
-      }
-      else {}
-    )
-    (
-      if has-kodi
-      then {
-        services.xserver = {
-          enable = true;
-          desktopManager.kodi.enable = true;
-          displayManager.lightdm.greeter.enable = false;
-        };
-        services.displayManager.autoLogin = {
-          enable = true;
-          user = "igncp";
-        };
-        users.users.igncp = {
-          extraGroups = ["input" "video" "audio"];
-        };
       }
       else {}
     )

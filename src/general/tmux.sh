@@ -48,7 +48,7 @@ EOF
   install_tmux_plugin smacke/tmux-clippy
   install_tmux_plugin tmux-plugins/tmux-sessionist
 
-  # ctrl+ b + F
+  # ctrl+ b + f
   install_tmux_plugin Morantron/tmux-fingers
 
   # ctrl+ b + j (requires ruby)
@@ -89,6 +89,8 @@ EOF
 
   set -g @copycat_search_C-t '\.test\.js:[0-9]'
   set -g @fingers-pattern-0 '\((?<match>[^()]*)\)'
+  set -g @fingers-key f
+  set -g @fingers-main-action ':open:'
   set -g @open-editor-command 'nvim'
 
   unbind-key -T copy-mode-vi v
