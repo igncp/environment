@@ -1,8 +1,8 @@
 {pkgs}: let
   is_linux =
-    (pkgs.system == "x86_64-linux")
-    || (pkgs.system == "aarch64-linux")
-    || pkgs.system == "armv7l-linux";
+    (pkgs.stdenv.hostPlatform.system == "x86_64-linux")
+    || (pkgs.stdenv.hostPlatform.system == "aarch64-linux")
+    || pkgs.stdenv.hostPlatform.system == "armv7l-linux";
 in {
   cli-extra = pkgs.mkShell {
     packages = with pkgs;

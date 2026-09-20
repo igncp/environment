@@ -1,19 +1,14 @@
 {
+  config,
   pkgs,
   lib,
   user,
   base-config,
+  env-config,
   is-rp5,
   is-rp5-install,
   ...
 }: let
-  has-docker = builtins.pathExists (base-config + "/docker");
-  has-gui = builtins.pathExists (base-config + "/gui");
-  has-android = builtins.pathExists (base-config + "/android");
-  has-tailscale = builtins.pathExists (base-config + "/tailscale");
-  has-n8n = builtins.pathExists (base-config + "/n8n");
-  has-expressvpn = builtins.pathExists (base-config + "/expressvpn");
-  has-printing = builtins.pathExists (base-config + "/printing");
   has-custom = builtins.pathExists ./custom.nix;
   emojify = import ./emojify.nix {inherit pkgs;};
 in {
@@ -26,13 +21,13 @@ in {
       ./usb-security-pam.nix
       ./k3s.nix
       ./blocky.nix
-      (import ./kodi.nix {inherit lib base-config is-rp5;})
+      (import ./kodi.nix {inherit base-config config env-config is-rp5 lib;})
     ]
     ++ (lib.optional has-custom ./custom.nix)
     ++ (lib.optional (!is-rp5) ./home-manager-entry.nix)
-    ++ (lib.optional has-android ./android.nix)
-    ++ (lib.optional has-tailscale ./tailscale.nix)
-    ++ (lib.optional has-gui ./gui.nix)
+    ++ (lib.optional env-config.has-android ./android.nix)
+    ++ (lib.optional env-config.has-tailscale ./tailscale.nix)
+    ++ (lib.optional env-config.has-gui ./gui.nix)
   );
 
   config = lib.mkMerge [
@@ -82,7 +77,7 @@ in {
           allowedTCPPorts =
             [22]
             ++ (
-              if has-gui
+              if env-config.has-gui
               then [
                 24800 # deskflow
               ]
@@ -107,12 +102,13 @@ in {
       i18n.defaultLocale = "zh_TW.UTF-8";
 
       # Updates: /etc/nix/nix.conf
+      nix.channel.enable = false;
       nix.extraOptions = ''
         experimental-features = nix-command flakes
       '';
 
       programs.zsh.enable = true;
-      # Allows NixOS to run generic dynamically linked binaries, such as wasm-pack's downloaded wasm-bindgen CLI.
+      # 允許 NixOS 執行通用動態連結二進位檔案，例如 wasm-pack 下載的 wasm-bindgen CLI。
       programs.nix-ld.enable = true;
 
       time.timeZone = "Asia/Hong_Kong";
@@ -180,7 +176,7 @@ in {
       boot.loader.systemd-boot.enable = true;
     })
     (
-      if has-printing
+      if env-config.has-printing
       then {
         environment.systemPackages = with pkgs; [
           simple-scan
@@ -205,7 +201,7 @@ in {
       else {}
     )
     (
-      if has-docker
+      if env-config.has-docker
       then {
         virtualisation.docker.enable = true;
         users.users."${user}".extraGroups = ["docker"];
@@ -213,14 +209,14 @@ in {
       else {}
     )
     (
-      if has-n8n
+      if env-config.has-n8n
       then {
         services.n8n.enable = true;
       }
       else {}
     )
     (
-      if has-expressvpn
+      if env-config.has-expressvpn
       then {
         environment.systemPackages = with pkgs; [
           expressvpn

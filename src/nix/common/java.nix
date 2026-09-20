@@ -2,11 +2,9 @@
   pkgs,
   lib,
   base-config,
+  env-config,
 }: let
   java_file = base-config + "/java";
-
-  has_java = builtins.pathExists java_file;
-  has_kotlin = builtins.pathExists (base-config + "/kotlin");
 
   java_file_content = builtins.readFile java_file;
   java_pkg = with pkgs;
@@ -19,9 +17,9 @@
 in {
   pkgs-list =
     []
-    ++ (lib.optional has_kotlin pkgs.kotlin)
+    ++ (lib.optional env-config.has-kotlin pkgs.kotlin)
     ++ (
-      if has_java
+      if env-config.has-java
       then [
         java_pkg
         pkgs.jdt-language-server

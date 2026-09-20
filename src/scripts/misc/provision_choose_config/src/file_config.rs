@@ -56,7 +56,7 @@ fn get_all_items() -> Vec<ConfigItem> {
     let possible_config_nix = std::process::Command::new("bash")
         .arg("-c")
         .arg(
-            r#"grep --exclude-dir=node_modules --exclude-dir=target --no-file -rEo 'base.config \+ "[/a-z0-9-]*"' ~/development/environment/src/nix | sort | uniq"#,
+            r#"grep --no-file -Eo 'is-enabled "[a-z0-9-]*"' ~/development/environment/src/nix/build-env-config.nix | sort | uniq"#,
         )
         .output()
         .expect("Failed to execute command")
@@ -66,8 +66,7 @@ fn get_all_items() -> Vec<ConfigItem> {
         .collect::<String>()
         .split('\n')
         .map(|x| x.to_string())
-        .map(|x| x.replace("base_config +", ""))
-        .map(|x| x.replace("base-config +", ""))
+        .map(|x| x.replace("is-enabled", ""))
         .collect::<Vec<String>>();
 
     let gui_contents = std::process::Command::new("bash")

@@ -53,6 +53,10 @@ MacDNSWiFiSet() {
 
 # 每個平日凌晨四點停機
 # sudo pmset repeat shutdown MTWRF 04:00:00
+
+if [ -f "/Applications/Tailscale.app/Contents/MacOS/Tailscale" ]; then
+  alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
+fi
 EOF
 
   echo 'set backspace=indent,eol,start' >>~/.vimrc

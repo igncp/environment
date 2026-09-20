@@ -11,44 +11,43 @@
   nixos-raspberry,
   llm-agents,
   disko,
+  env-config,
 }: let
   base-config = ../../../project/.config;
   has-user-file = builtins.pathExists "/etc/nixos/user"; # 用呢個指令：`sudo bash -c 'printf USER_NAME > /etc/nixos/user'`
-  is-surface = builtins.pathExists (base-config + "/machine-surface");
-  is-asus = builtins.pathExists (base-config + "/machine-asus");
   is-rp5-install = builtins.getEnv "IS_RP5_INSTALL" == "1";
   is-rp5 = let
     detected =
-      builtins.pathExists (base-config + "/machine-rp5")
+      env-config.is-rp5
       || is-rp5-install;
   in
     if detected
     then builtins.trace "偵測到 RP5 設定" detected
     else false;
-  configuration-name =
-    if is-rp5-install
-    then "rp5"
-    else hostname;
-  config = {};
-  lib = nixpkgs.lib;
   hostname =
     (import /etc/nixos/configuration.nix {
       inherit pkgs config;
     })
     .networking
     .hostName;
+  configuration-name =
+    if is-rp5-install
+    then "rp5"
+    else hostname;
+  config = {};
+  lib = nixpkgs.lib;
   current-hostname = builtins.readFile "/etc/hostname";
   modules-list =
     [
       ./configuration.nix
     ]
     ++ (
-      if is-surface
+      if env-config.is-surface
       then [./nixos-surface.nix]
       else []
     )
     ++ (
-      if is-asus
+      if env-config.is-asus
       then [./nixos-asus.nix]
       else []
     );
@@ -63,6 +62,7 @@
       unstable
       nixgl-pkgs
       llm-agents
+      env-config
       is-rp5
       is-rp5-install
       ;
@@ -79,6 +79,7 @@
     inherit
       base-config
       disko
+      env-config
       lib
       llm-agents
       modules-list
@@ -89,7 +90,7 @@
       ;
   };
   installer-config = import ./installer.nix {
-    inherit base-config lib llm-agents nixpkgs pkgs system disko;
+    inherit base-config disko env-config lib llm-agents nixpkgs pkgs system;
   };
   final-config =
     {

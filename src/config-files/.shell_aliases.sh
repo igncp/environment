@@ -184,10 +184,6 @@ SSHGenerateStrongKey() {
   ssh-keygen -t ed25519 -f "$FILE"
 }
 alias SSHListLocalForwardedPorts='ps x -ww -o pid,command | ag ssh | grep --color=never localhost'
-SSHForwardPortLocal() {
-  echo "正為 ${@:2} 轉發連接埠：$1"
-  ssh -N -L "$1":localhost:"$1" ${@:2}
-} # SSHForwardPort 1234 192.168.1.40
 alias SSHDConfig='sudo sshd -T'
 SSHListConnections() { sudo netstat -tnpa | grep 'ESTABLISHED.*sshd'; }
 
@@ -869,4 +865,38 @@ oscopy() {
 
     printf '\033]52;c;%s\007' "$b64"
   fi
+}
+
+SSHForward() {
+  if [ "$#" -lt 2 ]; then
+    echo "用法：ssh-forward <主機> <連接埠1> <連接埠2範圍> <連接埠3> ..."
+    echo "範例：SSHForward user@remote 8080 9000-9005 3000"
+    return 1
+  fi
+
+  local host="$1"
+  shift         # 從參數列表中移除主機
+  local args=() # 宣告陣列
+
+  for item in "$@"; do
+    # Zsh 原生正則表示式比對（將擷取群組儲存於 $match 陣列）
+    if [[ "$item" =~ ^([0-9]+)-([0-9]+)$ ]]; then
+      # Zsh 陣列從索引 1 開始
+      local start="${match[1]}"
+      local end="${match[2]}"
+
+      for ((port = start; port <= end; port++)); do
+        args+=("-L" "${port}:localhost:${port}")
+      done
+    # 檢查項目是否為單一有效連接埠
+    elif [[ "$item" =~ ^[0-9]+$ ]]; then
+      args+=("-L" "${item}:localhost:${item}")
+    else
+      echo "警告：已略過無效的連接埠或範圍：$item"
+    fi
+  done
+
+  # 安全地展開陣列並執行 SSH 指令
+  echo "正在轉送連接埠至 $host..."
+  ssh -N "${args[@]}" "$host"
 }

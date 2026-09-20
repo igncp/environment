@@ -2,12 +2,12 @@
   config,
   lib,
   base-config,
+  env-config,
   is-rp5,
   ...
 }: let
-  has-kodi = builtins.pathExists (base-config + "/kodi");
 in
-  if has-kodi
+  if env-config.has-kodi
   then
     (lib.mkMerge [
       {
@@ -40,13 +40,13 @@ in
         hardware.raspberry-pi.config = {
           all = {
             options = {
-              # Enables 4K at 60 Hz output over HDMI for smoother high-resolution playback.
+              # 啟用 HDMI 的 4K 60 Hz 輸出，使高解析度播放更流暢。
               hdmi_enable_4kp60 = {
                 enable = true;
                 value = 1;
               };
 
-              # Enables KMS VC4 graphics with 512 MiB contiguous memory, helping 4K video decoding and rendering.
+              # 啟用具備 512 MiB 連續記憶體的 KMS VC4 圖形，加強 4K 影片解碼與渲染。
               dt-overlays.vc4-kms-v3d = {
                 enable = true;
                 params.cma-512.enable = true;

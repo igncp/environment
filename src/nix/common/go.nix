@@ -1,10 +1,10 @@
 {
   pkgs,
   base-config,
+  env-config,
 }: let
-  is_arm_darwin = pkgs.system == "aarch64-darwin";
+  is_arm_darwin = pkgs.stdenv.hostPlatform.system == "aarch64-darwin";
   go_file = base-config + "/go";
-  has_go = builtins.pathExists go_file;
   go_file_content = builtins.readFile go_file;
   go_pkg =
     {
@@ -25,7 +25,7 @@ in {
     ++ extra_deps
   );
   pkgs-list = (
-    if has_go
+    if env-config.has-go
     then
       [go_pkg]
       ++ extra_deps

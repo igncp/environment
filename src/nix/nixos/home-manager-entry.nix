@@ -2,11 +2,11 @@
   user,
   pkgs,
   home-manager,
+  env-config,
   ...
 }: let
-  has_gui = builtins.pathExists ../../../project/.config/gui;
   gui-config =
-    if has_gui
+    if env-config.has-gui
     then {
       dconf.settings = {
         "org/gnome/desktop/background" = {

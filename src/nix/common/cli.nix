@@ -1,34 +1,15 @@
 {
-  base-config,
+  env-config,
   pkgs,
   lib,
   llm-agents,
 }: let
-  has_cli_hasura = builtins.pathExists (base-config + "/cli-hasura");
-  has_cli_openvpn = builtins.pathExists (base-config + "/cli-openvpn");
-  has_hashi = builtins.pathExists (base-config + "/hashi");
-  has_pg = builtins.pathExists (base-config + "/postgres");
-  has_aws = builtins.pathExists (base-config + "/cli-aws");
-  has_shellcheck = builtins.pathExists (base-config + "/shellcheck");
-  has_azure = builtins.pathExists (base-config + "/azure");
-  has_stripe = builtins.pathExists (base-config + "/stripe");
-  has_podman = builtins.pathExists (base-config + "/podman");
-  has_mssql = builtins.pathExists (base-config + "/mssql");
-  has_qemu = builtins.pathExists (base-config + "/qemu");
-  has_logdy = builtins.pathExists (base-config + "/logdy");
-  has-iredis = builtins.pathExists (base-config + "/iredis");
-  has-docker = builtins.pathExists (base-config + "/docker");
-
-  no-bun = builtins.pathExists (base-config + "/no-bun"); # 在某些舊 CPU 上無法運作
-
   logdy = import ../derivations/logdy.nix {inherit pkgs;};
 
-  no_watchman = builtins.pathExists (base-config + "/no-watchman");
-
   is_linux =
-    (pkgs.system == "x86_64-linux")
-    || (pkgs.system == "aarch64-linux")
-    || pkgs.system == "armv7l-linux";
+    (pkgs.stdenv.hostPlatform.system == "x86_64-linux")
+    || (pkgs.stdenv.hostPlatform.system == "aarch64-linux")
+    || pkgs.stdenv.hostPlatform.system == "armv7l-linux";
 
   tmux-pkgs = with pkgs; [
     tmux # https://github.com/tmux/tmux
@@ -92,7 +73,6 @@ in {
       nix-output-monitor # https://github.com/maralorn/nix-output-monitor
       nodejs
       ollama
-      opencode # https://github.com/anomalyco/opencode # llm-agents 的版本尚未包含供應商
       patchelf
       pkg-config
       poppler # `pdftotext`
@@ -121,8 +101,9 @@ in {
       yt-dlp # https://github.com/yt-dlp/yt-dlp
       zoxide # https://github.com/ajeetdsouza/zoxide
     ]
-    ++ (with llm-agents.packages.${pkgs.system}; [
+    ++ (with llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
       copilot-cli # https://github.com/github/copilot-cli
+      opencode # https://github.com/anomalyco/opencode
     ])
     ++ lsp-pkgs
     # 正在測試的新增內容
@@ -134,7 +115,7 @@ in {
     ]
     ++ tmux-pkgs
     ++ (
-      if has-docker
+      if env-config.has-docker
       then
         with pkgs; [
           docker
@@ -152,12 +133,12 @@ in {
       else []
     )
     ++ (
-      if no-bun
+      if env-config.no-bun
       then []
       else with pkgs; [bun]
     )
     ++ (
-      if has_hashi
+      if env-config.has-hashi
       then
         with pkgs; [
           terraform-ls
@@ -167,7 +148,7 @@ in {
       else []
     )
     ++ (
-      if no_watchman
+      if env-config.no_watchman
       then []
       else
         with pkgs; [
@@ -190,11 +171,11 @@ in {
             unixtools.netstat
             xclip
           ]
-          ++ (lib.optional has_cli_openvpn pkgs.update-resolv-conf)
+          ++ (lib.optional env-config.has_cli_openvpn pkgs.update-resolv-conf)
       else []
     )
     ++ (
-      if has_aws
+      if env-config.has_aws
       then
         with pkgs; [
           awscli2
@@ -203,16 +184,16 @@ in {
         ]
       else []
     )
-    ++ (lib.optional has_shellcheck pkgs.shellcheck)
-    ++ (lib.optional has_azure pkgs.azcopy)
-    ++ (lib.optional has_cli_hasura pkgs.hasura-cli)
-    ++ (lib.optional has_cli_openvpn pkgs.openvpn) # https://github.com/OpenVPN/openvpn
-    ++ (lib.optional has_pg pkgs.postgresql)
-    ++ (lib.optional has_logdy logdy)
-    ++ (lib.optional has_stripe pkgs.stripe-cli) # https://github.com/stripe/stripe-cli
-    ++ (lib.optional has_mssql pkgs.sqlcmd)
-    ++ (lib.optional has_qemu pkgs.guestfs-tools)
-    ++ (lib.optional has_qemu pkgs.qemu)
-    ++ (lib.optional has_podman pkgs.podman)
-    ++ (lib.optional has-iredis pkgs.iredis);
+    ++ (lib.optional env-config.has-shellcheck pkgs.shellcheck)
+    ++ (lib.optional env-config.has-azure pkgs.azcopy)
+    ++ (lib.optional env-config.has_cli_hasura pkgs.hasura-cli)
+    ++ (lib.optional env-config.has_cli_openvpn pkgs.openvpn) # https://github.com/OpenVPN/openvpn
+    ++ (lib.optional env-config.has-pg pkgs.postgresql)
+    ++ (lib.optional env-config.has-logdy logdy)
+    ++ (lib.optional env-config.has-stripe pkgs.stripe-cli) # https://github.com/stripe/stripe-cli
+    ++ (lib.optional env-config.has-mssql pkgs.sqlcmd)
+    ++ (lib.optional env-config.has-qemu pkgs.guestfs-tools)
+    ++ (lib.optional env-config.has-qemu pkgs.qemu)
+    ++ (lib.optional env-config.has-podman pkgs.podman)
+    ++ (lib.optional env-config.has-iredis pkgs.iredis);
 }

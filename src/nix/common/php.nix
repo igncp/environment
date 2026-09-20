@@ -1,8 +1,7 @@
 {
   pkgs,
-  base-config,
+  env-config,
 }: let
-  has_php = builtins.pathExists (base-config + "/php");
 in rec {
   pkgs-list-full = with pkgs; [
     nginx
@@ -12,7 +11,7 @@ in rec {
   ];
 
   pkgs-list =
-    if has_php
+    if env-config.has-php
     then pkgs-list-full
     else [];
 }

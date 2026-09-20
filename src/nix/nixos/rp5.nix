@@ -3,6 +3,7 @@
   nixos-raspberry,
   specialArgs,
   disko,
+  env-config,
   base-config,
   lib,
   llm-agents,
@@ -12,10 +13,10 @@
   wifi-ssid = builtins.getEnv "WIFI_SSID";
   wifi-pass = builtins.getEnv "WIFI_PASS";
   cli-pkgs = import ../common/cli.nix {
-    inherit base-config lib llm-agents pkgs;
+    inherit env-config lib llm-agents pkgs;
   };
 in
-  builtins.trace "運行 RP5"
+  lib.traceIf is-rp5-install "運行 RP5 安裝設定"
   (nixos-raspberry.lib.nixosSystemFull {
     # 建構同燒錄 SD 卡：
     # sudo nix run github:nix-community/disko -- \
@@ -44,6 +45,7 @@ in
                     };
                   };
                   networking.networkmanager.enable = lib.mkForce false; # 與 `wireless.networks` 衝突
+                  networking.hostName = lib.mkForce "rp5";
                   networking.wireless.enable = true;
                   networking.wireless.networks = {
                     "${wifi-ssid}" = {
@@ -87,8 +89,7 @@ in
             })
         )
         (
-          {lib, ...}: {
-            networking.hostName = lib.mkForce "rp5";
+          {...}: {
             boot.initrd.availableKernelModules = ["dm-aes-ce" "dm-crypt"];
           }
         )

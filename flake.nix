@@ -41,15 +41,19 @@
     llm-agents,
   }: let
     user = builtins.getEnv "USER";
+    base-config = ./project/.config;
+    env-config = import ./src/nix/build-env-config.nix {inherit base-config;};
   in let
     per-system = flake-utils.lib.eachDefaultSystem (
       system: let
         stable-pkgs = nixpkgs.legacyPackages.${system};
         pkgs = import unstable {
-          system = stable-pkgs.system;
+          system = stable-pkgs.stdenv.hostPlatform.system;
           config.allowUnfree = true;
         };
-        devShells = import ./src/nix/shells/main.nix {inherit pkgs;};
+        devShells = import ./src/nix/shells/main.nix {
+          inherit env-config llm-agents pkgs;
+        };
         nixos-entry = import ./src/nix/nixos/nixos-entry.nix {
           inherit
             ghostty
@@ -64,6 +68,7 @@
             nixos-raspberry
             llm-agents
             disko
+            env-config
             ;
         };
         nixos-systems = import ./src/nix/systems.nix {
@@ -78,7 +83,9 @@
             homeConfigurations."${user}" = home-manager.lib.homeManagerConfiguration {
               inherit pkgs;
               modules = [./src/nix/home-manager/home.nix];
-              extraSpecialArgs = {inherit pkgs nixgl-pkgs ghostty llm-agents;};
+              extraSpecialArgs = {
+                inherit env-config ghostty llm-agents nixgl-pkgs pkgs;
+              };
             };
             check = pkgs.writeShellApplication {
               name = "check-environment";

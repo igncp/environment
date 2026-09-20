@@ -48,7 +48,7 @@ EOF
   install_tmux_plugin smacke/tmux-clippy
   install_tmux_plugin tmux-plugins/tmux-sessionist
 
-  # ctrl+ b + f
+  # 按 Ctrl + b + f
   install_tmux_plugin Morantron/tmux-fingers
 
   # ctrl+ b + j (requires ruby)

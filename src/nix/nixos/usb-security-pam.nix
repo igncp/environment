@@ -2,22 +2,22 @@
   pkgs,
   lib,
   base-config,
+  env-config,
   ...
 }: let
   usb-pam-config = base-config + "/usb-pam";
-  has-usb-pam = builtins.pathExists usb-pam-config;
   usb-pam-values =
-    if has-usb-pam
+    if env-config.has-usb-pam
     then lib.splitString "\n" (builtins.readFile usb-pam-config)
     else [];
   usb-uuid =
-    if has-usb-pam
+    if env-config.has-usb-pam
     then builtins.elemAt usb-pam-values 0
     else "";
   # 生成 hash 並寫入 project config：
   # sudo sha256sum /mnt/usbkey/.nixos-auth/keyfile | awk '{print $1}' >> project/.config/usb-pam
   expected-hash =
-    if has-usb-pam
+    if env-config.has-usb-pam
     then builtins.elemAt usb-pam-values 1
     else "";
   usbKeyAuthScript = pkgs.writeShellScript "usb-keyfile-check" ''
@@ -48,7 +48,7 @@
   '';
 in {
   config =
-    if has-usb-pam
+    if env-config.has-usb-pam
     then
       builtins.trace "套用 USB PAM 規則" {
         assertions = [

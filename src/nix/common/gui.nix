@@ -4,13 +4,13 @@
   system,
   unstable-pkgs,
   base-config,
+  env-config,
   nixgl-pkgs,
   ghostty,
   skip-hyprland ? false,
   ...
 }: let
   gui-content = builtins.readFile (base-config + "/gui");
-  has-minecraft = builtins.pathExists (base-config + "/gui-minecraft");
 
   has-gui-opt = infix: lib.optional (lib.strings.hasInfix infix gui-content);
 in {
@@ -92,7 +92,7 @@ in {
     ++ ((has-gui-opt "telegram") telegram-desktop)
     ++ ((has-gui-opt "firefox") firefox)
     ++ (lib.optional (system == "x86_64-linux") ghostty.packages.x86_64-linux.default)
-    ++ (lib.optional has-minecraft prismlauncher)
+    ++ (lib.optional env-config.has-minecraft prismlauncher)
     ++ (
       if (system == "x86_64-linux")
       then

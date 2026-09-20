@@ -6,17 +6,13 @@
   ghostty,
   user,
   nixgl-pkgs,
+  env-config,
   ...
 }: let
   base-config = ../../../project/.config;
 
-  has-cinnamon = builtins.pathExists (base-config + "/gui-cinnamon");
-  has-lxqt = builtins.pathExists (base-config + "/gui-lxqt");
-  has-hyprland = builtins.pathExists (base-config + "/gui-hyprland");
-  no-1password = builtins.pathExists (base-config + "/gui-no-1password");
   has-nvidia = builtins.readFile (base-config + "/nvidia") == "yes\n";
-  is-i3 = !has-cinnamon && !has-lxqt && !has-hyprland;
-  has-vscode = builtins.pathExists (base-config + "/gui-vscode");
+  is-i3 = !env-config.has-cinnamon && !env-config.has-lxqt && !env-config.has-hyprland;
 
   common-gui = import ../common/gui.nix {
     skip-hyprland = true;
@@ -27,6 +23,7 @@
       unstable-pkgs
       user
       base-config
+      env-config
       nixgl-pkgs
       ghostty
       ;
@@ -39,17 +36,17 @@ in
         ./gui-virtualization.nix
       ]
       ++ (lib.optional is-i3 ./gui-i3.nix)
-      ++ (lib.optional has-lxqt ./gui-lxqt.nix)
+      ++ (lib.optional env-config.has-lxqt ./gui-lxqt.nix)
       ++ (lib.optional has-nvidia ./gui-nvidia.nix)
-      ++ (lib.optional has-cinnamon ./gui-cinnamon.nix);
+      ++ (lib.optional env-config.has-cinnamon ./gui-cinnamon.nix);
 
     services.flatpak.enable = true;
 
-    environment.systemPackages = common-gui.packages ++ (lib.optional has-vscode unstable-pkgs.vscode);
+    environment.systemPackages = common-gui.packages ++ (lib.optional env-config.has-vscode unstable-pkgs.vscode);
 
     fonts.packages = common-gui.fonts;
 
-    programs.hyprland.enable = has-hyprland;
+    programs.hyprland.enable = env-config.has-hyprland;
 
     xdg.portal.enable = true;
     xdg.portal.extraPortals = [
@@ -113,7 +110,7 @@ in
     systemd.targets.hybrid-sleep.enable = false;
   }
   // (
-    if no-1password
+    if env-config.no-1password
     then {}
     else {
       programs._1password.enable = true;
@@ -124,7 +121,7 @@ in
     }
   )
   // (
-    if has-hyprland
+    if env-config.has-hyprland
     then {
       services.displayManager.defaultSession = "hyprland";
       services.displayManager.sddm.wayland.enable = true;

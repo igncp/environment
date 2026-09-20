@@ -1,12 +1,11 @@
 {
   pkgs,
   base-config,
+  env-config,
 }: let
   ruby_file = base-config + "/ruby";
-  has_ruby = builtins.pathExists ruby_file;
-  has_rbenv = builtins.pathExists (base-config + "/rbenv");
   ruby_file_content =
-    if has_ruby
+    if env-config.has-ruby
     then builtins.readFile ruby_file
     else "";
   extra_pkgs = [];
@@ -19,7 +18,7 @@
     ."${ruby_file_content}";
 in {
   pkgs-list = (
-    if has_rbenv
+    if env-config.has-rbenv
     then with pkgs; [rbenv pkgs.libyaml zlib] ++ extra_pkgs
     else [ruby_pkg] ++ extra_pkgs
   );

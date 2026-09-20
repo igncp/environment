@@ -1,5 +1,6 @@
 {
   base-config,
+  env-config,
   lib,
   llm-agents,
   nixpkgs,
@@ -22,7 +23,7 @@
     hardware.enableRedistributableFirmware = true;
   };
   cli-pkgs = import ../common/cli.nix {
-    inherit base-config lib llm-agents pkgs;
+    inherit env-config lib llm-agents pkgs;
   };
 in {
   # 呢個只可以喺 Linux 運行。可以建構其他架構。

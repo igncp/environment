@@ -1,8 +1,7 @@
 {
   pkgs,
-  base-config,
+  env-config,
 }: let
-  has_lua = builtins.pathExists (base-config + "/lua");
 in rec {
   lua_pkgs = with pkgs; [
     lua
@@ -13,7 +12,7 @@ in rec {
   ];
 
   pkgs-list =
-    if has_lua
+    if env-config.has-lua
     then lua_pkgs
     else [];
 }

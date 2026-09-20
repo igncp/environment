@@ -1,14 +1,12 @@
 {
   base-config,
+  env-config,
   is-rp5,
   lib,
   ...
 }: let
-  has-k3s-server = builtins.pathExists (base-config + "/k3s-server");
-  has-k3s-worker = builtins.pathExists (base-config + "/k3s-worker");
-  has-k3s = has-k3s-server || has-k3s-worker;
 in
-  lib.mkIf has-k3s (lib.mkMerge [
+  lib.mkIf (env-config.has-k3s-server || env-config.has-k3s-worker) (lib.mkMerge [
     {
       # https://github.com/NixOS/nixpkgs/blob/master/pkgs/applications/networking/cluster/k3s/docs/USAGE.md
       networking.firewall.allowedTCPPorts = [
@@ -17,7 +15,7 @@ in
       services.k3s.enable = true;
     }
     (
-      if has-k3s-server
+      if env-config.has-k3s-server
       then {
         services.k3s.role = "server";
       }

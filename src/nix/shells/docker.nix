@@ -1,11 +1,13 @@
 {
+  env-config,
   pkgs,
   lib,
+  llm-agents,
 }: let
   base_config = /environment/project/.config; # This requires the --impure flag
-  cli-pkgs = import ../common/cli.nix {inherit pkgs base_config lib;};
-  ruby-pkgs = import ../common/ruby.nix {inherit base_config pkgs;};
-  go-pkgs = import ../common/go.nix {inherit base_config pkgs;};
+  cli-pkgs = import ../common/cli.nix {inherit env-config lib llm-agents pkgs;};
+  ruby-pkgs = import ../common/ruby.nix {inherit base_config env-config pkgs;};
+  go-pkgs = import ../common/go.nix {inherit base_config env-config pkgs;};
 in {
   dockerEnv = pkgs.mkShell {
     TZDIR = "${pkgs.tzdata}/share/zoneinfo";

@@ -1,34 +1,38 @@
 # Shell 別名應在別名檔案中定義，檢查二進位檔案是否可用
-{pkgs}: let
+{
+  env-config,
+  llm-agents,
+  pkgs,
+}: let
   lua-config = import ../common/lua.nix {
-    inherit pkgs;
-    base_config = "";
+    inherit env-config pkgs;
   };
   lib = pkgs.lib;
-  base-config = ../../../project/.config;
   cli-pkgs = import ../common/cli.nix {
-    inherit base-config pkgs;
+    inherit env-config llm-agents pkgs;
     lib = pkgs.lib;
   };
 
   cli-extra-shell = import ./cli-extra.nix {inherit pkgs;};
   python-extra-shell = import ./python.nix {inherit pkgs;};
-  docker-extra-shell = import ./docker.nix {inherit pkgs lib;};
+  docker-extra-shell = import ./docker.nix {
+    inherit env-config lib llm-agents pkgs;
+  };
 
   go-pkgs = import ../common/go.nix {
-    inherit pkgs;
+    inherit env-config pkgs;
     base_config = "";
   };
 
   is_linux =
-    (pkgs.system == "x86_64-linux")
-    || (pkgs.system == "aarch64-linux")
-    || pkgs.system == "armv7l-linux";
+    (pkgs.stdenv.hostPlatform.system == "x86_64-linux")
+    || (pkgs.stdenv.hostPlatform.system == "aarch64-linux")
+    || pkgs.stdenv.hostPlatform.system == "armv7l-linux";
 
   base_config = "";
 
   php-pkgs = import ../common/php.nix {
-    inherit pkgs base_config;
+    inherit env-config pkgs;
   };
 in
   {

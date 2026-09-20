@@ -1,10 +1,8 @@
 {
   pkgs,
-  base-config,
+  env-config,
 }: let
-  is_arm_darwin = pkgs.system == "aarch64-darwin";
-  dart_file = base-config + "/dart";
-  has_dart = builtins.pathExists dart_file;
+  is_arm_darwin = pkgs.stdenv.hostPlatform.system == "aarch64-darwin";
   extra_deps = (
     if is_arm_darwin
     then []
@@ -16,7 +14,7 @@
 in {
   pkgs-shell = [pkgs.go_1_23] ++ extra_deps;
   pkgs-list = (
-    if has_dart
+    if env-config.has-dart
     then
       [
         pkgs.dart
