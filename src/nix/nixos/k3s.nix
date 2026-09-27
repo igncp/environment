@@ -1,5 +1,4 @@
 {
-  base-config,
   env-config,
   is-rp5,
   lib,

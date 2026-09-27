@@ -1,14 +1,12 @@
 {
   pkgs,
   lib,
-  base-config,
   env-config,
   ...
 }: let
-  usb-pam-config = base-config + "/usb-pam";
   usb-pam-values =
     if env-config.has-usb-pam
-    then lib.splitString "\n" (builtins.readFile usb-pam-config)
+    then lib.splitString "\n" env-config.usb-pam
     else [];
   usb-uuid =
     if env-config.has-usb-pam

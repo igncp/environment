@@ -9,9 +9,7 @@
   env-config,
   ...
 }: let
-  base-config = ../../../project/.config;
-
-  has-nvidia = builtins.readFile (base-config + "/nvidia") == "yes\n";
+  has-nvidia = env-config.nvidia == "yes\n";
   is-i3 = !env-config.has-cinnamon && !env-config.has-lxqt && !env-config.has-hyprland;
 
   common-gui = import ../common/gui.nix {
@@ -22,7 +20,6 @@
       system
       unstable-pkgs
       user
-      base-config
       env-config
       nixgl-pkgs
       ghostty

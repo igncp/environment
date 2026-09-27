@@ -1,11 +1,12 @@
 {
   env-config,
   pkgs,
+  colmena,
   lib,
   llm-agents,
 }: let
-  base_config = /environment/project/.config; # This requires the --impure flag
-  cli-pkgs = import ../common/cli.nix {inherit env-config lib llm-agents pkgs;};
+  base_config = /environment/project/.config; # 這需要使用 --impure 旗標
+  cli-pkgs = import ../common/cli.nix {inherit colmena env-config lib llm-agents pkgs;};
   ruby-pkgs = import ../common/ruby.nix {inherit base_config env-config pkgs;};
   go-pkgs = import ../common/go.nix {inherit base_config env-config pkgs;};
 in {

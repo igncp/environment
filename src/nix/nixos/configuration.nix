@@ -3,7 +3,6 @@
   pkgs,
   lib,
   user,
-  base-config,
   env-config,
   is-rp5,
   is-rp5-install,
@@ -15,14 +14,14 @@ in {
   imports = lib.optionals (!is-rp5-install) (
     [
       ./default_pkgs.nix
-      /etc/nixos/configuration.nix
       ./ai.nix
       ./usb-security-luks.nix
       ./usb-security-pam.nix
       ./k3s.nix
       ./blocky.nix
-      (import ./kodi.nix {inherit base-config config env-config is-rp5 lib;})
+      (import ./kodi.nix {inherit config env-config is-rp5 lib;})
     ]
+    ++ lib.optional (env-config.root-config != null) env-config.root-config
     ++ (lib.optional has-custom ./custom.nix)
     ++ (lib.optional (!is-rp5) ./home-manager-entry.nix)
     ++ (lib.optional env-config.has-android ./android.nix)

@@ -6,6 +6,10 @@
     flake-utils.url = "github:numtide/flake-utils";
     unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    colmena = {
+      url = "github:zhaofengli/colmena";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nixos-generators = {
       url = "github:nix-community/nixos-generators";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -28,6 +32,7 @@
 
   outputs = {
     home-manager,
+    colmena,
     flake-utils,
     nixpkgs,
     self,
@@ -41,8 +46,40 @@
     llm-agents,
   }: let
     user = builtins.getEnv "USER";
-    base-config = ./project/.config;
+    base-config = let
+      working-directory = builtins.getEnv "PWD";
+    in
+      if working-directory != ""
+      then "${working-directory}/project/.config"
+      else "";
     env-config = import ./src/nix/build-env-config.nix {inherit base-config;};
+    nixgl-pkgs = import nixgl {};
+    nixos-entry-fn = {
+      pkgs,
+      stable-pkgs,
+      system,
+      as-module ? false,
+      env-config,
+    }:
+      import ./src/nix/nixos/nixos-entry.nix {
+        inherit
+          ghostty
+          home-manager
+          colmena
+          nixos-hardware
+          nixpkgs
+          unstable
+          nixos-raspberry
+          llm-agents
+          disko
+          nixgl-pkgs
+          pkgs
+          stable-pkgs
+          system
+          env-config
+          ;
+        inherit as-module;
+      };
   in let
     per-system = flake-utils.lib.eachDefaultSystem (
       system: let
@@ -52,29 +89,19 @@
           config.allowUnfree = true;
         };
         devShells = import ./src/nix/shells/main.nix {
-          inherit env-config llm-agents pkgs;
+          inherit colmena env-config llm-agents pkgs;
         };
-        nixos-entry = import ./src/nix/nixos/nixos-entry.nix {
+        nixos-entry = nixos-entry-fn {
           inherit
-            ghostty
-            home-manager
-            nixgl-pkgs
-            nixos-hardware
-            nixpkgs
             pkgs
             stable-pkgs
             system
-            unstable
-            nixos-raspberry
-            llm-agents
-            disko
             env-config
             ;
         };
         nixos-systems = import ./src/nix/systems.nix {
           inherit pkgs stable-pkgs nixos-generators system nixpkgs;
         };
-        nixgl-pkgs = import nixgl {};
       in {
         inherit devShells;
         nixosConfigurations = nixos-entry;
@@ -84,7 +111,7 @@
               inherit pkgs;
               modules = [./src/nix/home-manager/home.nix];
               extraSpecialArgs = {
-                inherit env-config ghostty llm-agents nixgl-pkgs pkgs;
+                inherit colmena env-config ghostty llm-agents nixgl-pkgs pkgs;
               };
             };
             check = pkgs.writeShellApplication {
@@ -92,6 +119,7 @@
               runtimeInputs = [pkgs.statix];
               text = "statix check src";
             };
+            colmena = colmena.packages.${system}.colmena;
           }
           // nixos-systems;
       }
@@ -100,5 +128,10 @@
     per-system
     // {
       nixosConfigurations = per-system.nixosConfigurations.${builtins.currentSystem};
+      colmena =
+        if env-config.colmena != ""
+        then import env-config.colmena {inherit colmena env-config nixos-entry-fn nixpkgs;}
+        else {};
+      colmenaHive = colmena.lib.makeHive self.outputs.colmena;
     };
 }

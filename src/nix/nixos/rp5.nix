@@ -4,16 +4,16 @@
   specialArgs,
   disko,
   env-config,
-  base-config,
   lib,
   llm-agents,
   is-rp5-install,
   pkgs,
+  colmena,
 }: let
   wifi-ssid = builtins.getEnv "WIFI_SSID";
   wifi-pass = builtins.getEnv "WIFI_PASS";
   cli-pkgs = import ../common/cli.nix {
-    inherit env-config lib llm-agents pkgs;
+    inherit colmena env-config lib llm-agents pkgs;
   };
 in
   lib.traceIf is-rp5-install "運行 RP5 安裝設定"

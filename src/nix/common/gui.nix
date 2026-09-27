@@ -3,16 +3,13 @@
   pkgs,
   system,
   unstable-pkgs,
-  base-config,
   env-config,
   nixgl-pkgs,
   ghostty,
   skip-hyprland ? false,
   ...
 }: let
-  gui-content = builtins.readFile (base-config + "/gui");
-
-  has-gui-opt = infix: lib.optional (lib.strings.hasInfix infix gui-content);
+  has-gui-opt = infix: lib.optional (lib.strings.hasInfix infix env-config.gui);
 in {
   packages = with pkgs;
     [

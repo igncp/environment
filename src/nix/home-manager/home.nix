@@ -2,6 +2,7 @@
 {
   lib,
   pkgs,
+  colmena,
   ghostty,
   nixgl-pkgs,
   llm-agents,
@@ -11,20 +12,21 @@
   home_dir = builtins.getEnv "HOME";
   user = builtins.getEnv "USER";
 
-  base-config = home_dir + "/development/environment/project/.config";
   is_linux =
     (pkgs.stdenv.hostPlatform.system == "x86_64-linux")
     || (pkgs.stdenv.hostPlatform.system == "aarch64-linux");
 
-  cli-pkgs = import ../common/cli.nix {inherit env-config lib pkgs llm-agents;};
-  ruby-pkgs = import ../common/ruby.nix {inherit base-config env-config pkgs;};
-  go-pkgs = import ../common/go.nix {inherit base-config env-config pkgs;};
+  cli-pkgs = import ../common/cli.nix {
+    inherit colmena env-config lib llm-agents pkgs;
+  };
+  ruby-pkgs = import ../common/ruby.nix {inherit env-config pkgs;};
+  go-pkgs = import ../common/go.nix {inherit env-config pkgs;};
   php-pkgs = import ../common/php.nix {inherit env-config pkgs;};
   lua-pkgs = import ../common/lua.nix {inherit env-config pkgs;};
-  java-pkgs = import ../common/java.nix {inherit base-config env-config lib pkgs;};
+  java-pkgs = import ../common/java.nix {inherit env-config lib pkgs;};
 
   common-gui = import ../common/gui.nix {
-    inherit base-config env-config ghostty lib nixgl-pkgs pkgs user;
+    inherit env-config ghostty lib nixgl-pkgs pkgs user;
     inherit (pkgs) system;
     unstable-pkgs = pkgs;
   };

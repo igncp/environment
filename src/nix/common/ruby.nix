@@ -1,13 +1,7 @@
 {
   pkgs,
-  base-config,
   env-config,
 }: let
-  ruby_file = base-config + "/ruby";
-  ruby_file_content =
-    if env-config.has-ruby
-    then builtins.readFile ruby_file
-    else "";
   extra_pkgs = [];
   ruby_pkg = with pkgs;
     {
@@ -15,7 +9,7 @@
       "\n" = ruby;
       "2_7\n" = ruby_2_7;
     }
-    ."${ruby_file_content}";
+    ."${env-config.ruby}";
 in {
   pkgs-list = (
     if env-config.has-rbenv

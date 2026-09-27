@@ -1,54 +1,127 @@
-{base-config}: let
-  config-files = builtins.attrNames (builtins.readDir base-config);
-  config = builtins.listToAttrs (map (name: {inherit name; value = true;}) config-files);
+{
+  base-config,
+  pkgs ? null,
+  root-config ? null,
+}: let
+  hostname-file = "/etc/hostname";
+  nixos-user-file = "/etc/nixos/user";
+  default-root-config = "/etc/nixos/configuration.nix";
+  config-files =
+    if base-config != "" && builtins.pathExists base-config
+    then builtins.attrNames (builtins.readDir base-config)
+    else [];
+  config = builtins.listToAttrs (map (name: {
+      inherit name;
+      value = true;
+    })
+    config-files);
   is-enabled = name: builtins.hasAttr name config;
-in {
-  has-android = is-enabled "android";
-  has_aws = is-enabled "cli-aws";
-  has-azure = is-enabled "azure";
-  has-blocky = is-enabled "blocky";
-  has-c = is-enabled "c";
-  has-cinnamon = is-enabled "gui-cinnamon";
-  has_cli_hasura = is-enabled "cli-hasura";
-  has_cli_openvpn = is-enabled "cli-openvpn";
-  has-dart = is-enabled "dart";
-  has-docker = is-enabled "docker";
-  has-expressvpn = is-enabled "expressvpn";
-  has-go = is-enabled "go";
-  has-gui = is-enabled "gui";
-  has-hashi = is-enabled "hashi";
-  has-hyprland = is-enabled "gui-hyprland";
-  has-iredis = is-enabled "iredis";
-  has-java = is-enabled "java";
-  has-k3s-server = is-enabled "k3s-server";
-  has-k3s-worker = is-enabled "k3s-worker";
-  has-kodi = is-enabled "kodi";
-  has-kotlin = is-enabled "kotlin";
-  has-logdy = is-enabled "logdy";
-  has-lua = is-enabled "lua";
-  has-lxqt = is-enabled "gui-lxqt";
-  has-minecraft = is-enabled "gui-minecraft";
-  has-mssql = is-enabled "mssql";
-  has-n8n = is-enabled "n8n";
-  has-pg = is-enabled "postgres";
-  has-php = is-enabled "php";
-  has-podman = is-enabled "podman";
-  has-printing = is-enabled "printing";
-  has-qemu = is-enabled "qemu";
-  has-rbenv = is-enabled "rbenv";
-  has-ruby = is-enabled "ruby";
-  has-shellcheck = is-enabled "shellcheck";
-  has-stripe = is-enabled "stripe";
-  has-tailscale = is-enabled "tailscale";
-  has-usb-luks = is-enabled "usb-luks";
-  has-usb-pam = is-enabled "usb-pam";
-  has-vscode = is-enabled "gui-vscode";
-  has_virtmanager = is-enabled "gui-virtmanager";
-  has_virtualbox = is-enabled "gui-virtualbox";
-  is-asus = is-enabled "machine-asus";
-  is-rp5 = is-enabled "machine-rp5";
-  is-surface = is-enabled "machine-surface";
-  no-1password = is-enabled "gui-no-1password";
-  no-bun = is-enabled "no-bun";
-  no_watchman = is-enabled "no-watchman";
-}
+  read-config = name:
+    if is-enabled name
+    then builtins.readFile (base-config + "/${name}")
+    else "";
+  boolean-configs = {
+    has-android = "android";
+    has-aws = "cli-aws";
+    has-azure = "azure";
+    has-blocky = "blocky";
+    has-c = "c";
+    has-cinnamon = "gui-cinnamon";
+    has_cli_hasura = "cli-hasura";
+    has_cli_openvpn = "cli-openvpn";
+    has-dart = "dart";
+    has-docker = "docker";
+    has-expressvpn = "expressvpn";
+    has-go = "go";
+    has-gui = "gui";
+    has-hashi = "hashi";
+    has-hyprland = "gui-hyprland";
+    has-iredis = "iredis";
+    has-java = "java";
+    has-k3s-server = "k3s-server";
+    has-k3s-worker = "k3s-worker";
+    has-kodi = "kodi";
+    has-kotlin = "kotlin";
+    has-logdy = "logdy";
+    has-lua = "lua";
+    has-lxqt = "gui-lxqt";
+    has-minecraft = "gui-minecraft";
+    has-mssql = "mssql";
+    has-n8n = "n8n";
+    has-pg = "postgres";
+    has-php = "php";
+    has-podman = "podman";
+    has-printing = "printing";
+    has-qemu = "qemu";
+    has-rbenv = "rbenv";
+    has-ruby = "ruby";
+    has-shellcheck = "shellcheck";
+    has-stripe = "stripe";
+    has-tailscale = "tailscale";
+    has-usb-luks = "usb-luks";
+    has-usb-pam = "usb-pam";
+    has-vscode = "gui-vscode";
+    has_virtmanager = "gui-virtmanager";
+    has_virtualbox = "gui-virtualbox";
+    is-asus = "machine-asus";
+    is-rp5 = "machine-rp5";
+    is-surface = "machine-surface";
+    no-1password = "gui-no-1password";
+    no-bun = "no-bun";
+    no_watchman = "no-watchman";
+  };
+  text-configs = {
+    go = "go";
+    gui = "gui";
+    java = "java";
+    nvidia = "nvidia";
+    ruby = "ruby";
+    usb-luks = "usb-luks";
+    usb-pam = "usb-pam";
+  };
+  final-root-config =
+    if root-config != null
+    then root-config
+    else if builtins.pathExists default-root-config
+    then default-root-config
+    else null;
+  hostname =
+    if pkgs != null && final-root-config != null
+    then
+      (import final-root-config {
+        config = {};
+        inherit pkgs;
+      }).networking.hostName
+    else "";
+  all-configs =
+    (builtins.mapAttrs (_: _: false) boolean-configs)
+    // (builtins.mapAttrs (_: _: "") text-configs)
+    // {
+      colmena = "";
+      current-hostname = "";
+      hostname = "";
+      nixos-user = "igncp";
+      root-config = null;
+      usb-luks-values = [];
+    };
+in
+  all-configs
+  // (builtins.mapAttrs (_: is-enabled) boolean-configs)
+  // (builtins.mapAttrs (_: read-config) text-configs)
+  // {
+    inherit all-configs hostname;
+    colmena = builtins.replaceStrings ["\n" "\r"] ["" ""] (read-config "colmena");
+    current-hostname =
+      if builtins.pathExists hostname-file
+      then builtins.replaceStrings ["\n"] [""] (builtins.readFile hostname-file)
+      else "";
+    nixos-user =
+      if builtins.pathExists nixos-user-file
+      then builtins.replaceStrings ["\n"] [""] (builtins.readFile nixos-user-file)
+      else "igncp";
+    root-config = final-root-config;
+    usb-luks-values =
+      if is-enabled boolean-configs.has-usb-luks
+      then builtins.splitString "\n" (read-config text-configs.usb-luks)
+      else [];
+  }

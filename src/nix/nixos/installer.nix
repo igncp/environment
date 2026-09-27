@@ -1,10 +1,10 @@
 {
-  base-config,
   env-config,
   lib,
   llm-agents,
   nixpkgs,
   pkgs,
+  colmena,
   system,
   disko,
 }: let
@@ -23,7 +23,7 @@
     hardware.enableRedistributableFirmware = true;
   };
   cli-pkgs = import ../common/cli.nix {
-    inherit env-config lib llm-agents pkgs;
+    inherit colmena env-config lib llm-agents pkgs;
   };
 in {
   # 呢個只可以喺 Linux 運行。可以建構其他架構。

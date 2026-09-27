@@ -1,22 +1,12 @@
-{
-  lib,
-  base-config,
-  env-config,
-  ...
-}: let
-  usb-luks-config = base-config + "/usb-luks";
-  usb-luks-values =
-    if env-config.has-usb-luks
-    then lib.splitString "\n" (builtins.readFile usb-luks-config)
-    else [];
+{env-config, ...}: let
   luks-usb-uuid =
     if env-config.has-usb-luks
-    then builtins.elemAt usb-luks-values 0
+    then builtins.elemAt env-config.usb-luks-values 0
     else "";
   # 可以喺 nixos-generate-config 嘅結果 hardware-configuration.nix 入面搵到。
   luks-device-name =
     if env-config.has-usb-luks
-    then builtins.elemAt usb-luks-values 1
+    then builtins.elemAt env-config.usb-luks-values 1
     else "";
 in {
   config =

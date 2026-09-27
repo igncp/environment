@@ -3,20 +3,21 @@
   env-config,
   llm-agents,
   pkgs,
+  colmena,
 }: let
   lua-config = import ../common/lua.nix {
     inherit env-config pkgs;
   };
   lib = pkgs.lib;
   cli-pkgs = import ../common/cli.nix {
-    inherit env-config llm-agents pkgs;
+    inherit colmena env-config llm-agents pkgs;
     lib = pkgs.lib;
   };
 
   cli-extra-shell = import ./cli-extra.nix {inherit pkgs;};
   python-extra-shell = import ./python.nix {inherit pkgs;};
   docker-extra-shell = import ./docker.nix {
-    inherit env-config lib llm-agents pkgs;
+    inherit colmena env-config lib llm-agents pkgs;
   };
 
   go-pkgs = import ../common/go.nix {
@@ -87,7 +88,6 @@ in
 
     nix = pkgs.mkShell {
       packages = with pkgs; [
-        colmena # https://github.com/zhaofengli/colmena
         nix-du # https://github.com/symphorien/nix-du
         # 首先你必須運行`nix-index`(大約需要30分鐘)
         nix-index # https://github.com/nix-community/nix-index

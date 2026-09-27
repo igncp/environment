@@ -1,6 +1,7 @@
 {
   env-config,
   pkgs,
+  colmena,
   lib,
   llm-agents,
 }: let
@@ -101,6 +102,9 @@ in {
       yt-dlp # https://github.com/yt-dlp/yt-dlp
       zoxide # https://github.com/ajeetdsouza/zoxide
     ]
+    ++ lib.optional (env-config.colmena != "") (
+      colmena.packages.${pkgs.stdenv.hostPlatform.system}.colmena
+    )
     ++ (with llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
       copilot-cli # https://github.com/github/copilot-cli
       opencode # https://github.com/anomalyco/opencode
@@ -175,7 +179,7 @@ in {
       else []
     )
     ++ (
-      if env-config.has_aws
+      if env-config.has-aws
       then
         with pkgs; [
           awscli2

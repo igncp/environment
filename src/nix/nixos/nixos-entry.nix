@@ -1,6 +1,7 @@
 {
   ghostty,
   home-manager,
+  colmena,
   nixgl-pkgs,
   nixos-hardware,
   nixpkgs,
@@ -12,9 +13,8 @@
   llm-agents,
   disko,
   env-config,
+  as-module ? false,
 }: let
-  base-config = ../../../project/.config;
-  has-user-file = builtins.pathExists "/etc/nixos/user"; # 用呢個指令：`sudo bash -c 'printf USER_NAME > /etc/nixos/user'`
   is-rp5-install = builtins.getEnv "IS_RP5_INSTALL" == "1";
   is-rp5 = let
     detected =
@@ -24,19 +24,11 @@
     if detected
     then builtins.trace "偵測到 RP5 設定" detected
     else false;
-  hostname =
-    (import /etc/nixos/configuration.nix {
-      inherit pkgs config;
-    })
-    .networking
-    .hostName;
   configuration-name =
     if is-rp5-install
     then "rp5"
-    else hostname;
-  config = {};
+    else env-config.hostname;
   lib = nixpkgs.lib;
-  current-hostname = builtins.readFile "/etc/hostname";
   modules-list =
     [
       ./configuration.nix
@@ -54,11 +46,11 @@
   specialArgs = {
     inherit
       stable-pkgs
+      colmena
       home-manager
       system
       ghostty
       nixos-hardware
-      base-config
       unstable
       nixgl-pkgs
       llm-agents
@@ -68,16 +60,10 @@
       ;
     nixos-raspberrypi = nixos-raspberry;
     unstable-pkgs = pkgs;
-
-    # 硬編碼這個值，因為它等於 nixos 中的 “root”
-    user =
-      if has-user-file
-      then (builtins.readFile "/etc/nixos/user")
-      else "igncp";
+    user = env-config.nixos-user;
   };
   rp5-config = import ./rp5.nix {
     inherit
-      base-config
       disko
       env-config
       lib
@@ -85,12 +71,21 @@
       modules-list
       nixos-raspberry
       pkgs
+      stable-pkgs
       is-rp5-install
       specialArgs
       ;
   };
   installer-config = import ./installer.nix {
-    inherit base-config disko env-config lib llm-agents nixpkgs pkgs system;
+    inherit colmena disko env-config lib llm-agents nixpkgs pkgs system;
+  };
+  module-config = {
+    imports =
+      modules-list
+      ++ lib.optionals is-rp5 [
+        nixos-raspberry.lib.int.full-nixos-raspberrypi-config
+        nixos-raspberry.nixosModules.raspberry-pi-5.base
+      ];
   };
   final-config =
     {
@@ -107,10 +102,19 @@
     }
     // installer-config;
 in
-  final-config
-  // (
-    # 這樣做是為了能夠更改“主機名稱”。更改後需重新啟動。
-    if current-hostname != configuration-name
-    then {"${current-hostname}" = final-config."${configuration-name}";}
-    else {}
-  )
+  if as-module
+  then {
+    module = module-config;
+    inherit specialArgs;
+  }
+  else
+    final-config
+    // (
+      # 這樣做是為了能夠更改“主機名稱”。更改後需重新啟動。
+      if
+        env-config.current-hostname
+        != ""
+        && env-config.current-hostname != configuration-name
+      then {"${env-config.current-hostname}" = final-config."${configuration-name}";}
+      else {}
+    )
