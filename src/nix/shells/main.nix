@@ -2,22 +2,23 @@
 {
   env-config,
   llm-agents,
+  nixpkgs,
   pkgs,
-  colmena,
+  disko,
 }: let
   lua-config = import ../common/lua.nix {
     inherit env-config pkgs;
   };
   lib = pkgs.lib;
   cli-pkgs = import ../common/cli.nix {
-    inherit colmena env-config llm-agents pkgs;
+    inherit disko env-config llm-agents nixpkgs pkgs;
     lib = pkgs.lib;
   };
 
   cli-extra-shell = import ./cli-extra.nix {inherit pkgs;};
   python-extra-shell = import ./python.nix {inherit pkgs;};
   docker-extra-shell = import ./docker.nix {
-    inherit colmena env-config lib llm-agents pkgs;
+    inherit disko env-config lib llm-agents nixpkgs pkgs;
   };
 
   go-pkgs = import ../common/go.nix {

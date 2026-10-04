@@ -1,11 +1,16 @@
 {
   env-config,
   pkgs,
-  colmena,
+  nixpkgs,
+  disko,
   lib,
   llm-agents,
 }: let
   logdy = import ../derivations/logdy.nix {inherit pkgs;};
+  local-rust-packages = import ./local-rust-packages.nix {
+    inherit nixpkgs;
+    system = pkgs.stdenv.hostPlatform.system;
+  };
 
   is_linux =
     (pkgs.stdenv.hostPlatform.system == "x86_64-linux")
@@ -37,7 +42,6 @@ in {
       curl
       d2 # https://github.com/terrastruct/d2
       difftastic # https://github.com/Wilfred/difftastic
-      direnv # https://github.com/direnv/direnv
       dua # https://github.com/Byron/dua-cli
       entr # https://github.com/eradman/entr
       fastfetch # https://github.com/fastfetch-cli/fastfetch
@@ -70,6 +74,7 @@ in {
       neovim # https://github.com/neovim/neovim
       neovim-remote # https://github.com/mhinz/neovim-remote.git
       newsboat # https://github.com/newsboat/newsboat
+      nh # https://github.com/nix-community/nh
       nil # https://github.com/oxalica/nil
       nix-output-monitor # https://github.com/maralorn/nix-output-monitor
       nodejs
@@ -83,7 +88,6 @@ in {
       ripgrep # https://github.com/BurntSushi/ripgrep
       rrsync
       rsync # https://github.com/WayneD/rsync
-      rustup
       sad # https://github.com/ms-jpq/sad
       scc # https://github.com/boyter/scc
       sd # https://github.com/chmln/sd
@@ -102,14 +106,23 @@ in {
       yt-dlp # https://github.com/yt-dlp/yt-dlp
       zoxide # https://github.com/ajeetdsouza/zoxide
     ]
-    ++ lib.optional (env-config.colmena != "") (
-      colmena.packages.${pkgs.stdenv.hostPlatform.system}.colmena
-    )
+    ++ [disko.packages.${pkgs.stdenv.hostPlatform.system}.disko-install]
     ++ (with llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
       copilot-cli # https://github.com/github/copilot-cli
       opencode # https://github.com/anomalyco/opencode
     ])
     ++ lsp-pkgs
+    ++ [local-rust-packages.provision_choose_config]
+    ++ (
+      if env-config.has-extra-local-rust
+      then [
+        local-rust-packages.ai_agent
+        local-rust-packages.anki_tools
+        local-rust-packages.clipboard_ssh
+        local-rust-packages.keepass_reader
+      ]
+      else []
+    )
     # 正在測試的新增內容
     ++ [
       bitwise # https://github.com/mellowcandle/bitwise

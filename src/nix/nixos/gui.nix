@@ -9,10 +9,11 @@
   env-config,
   ...
 }: let
-  has-nvidia = env-config.nvidia == "yes\n";
+  has-nvidia = lib.strings.trim env-config.nvidia == "yes";
   is-i3 = !env-config.has-cinnamon && !env-config.has-lxqt && !env-config.has-hyprland;
 
   common-gui = import ../common/gui.nix {
+    include-nixgl = false;
     skip-hyprland = true;
     inherit
       lib

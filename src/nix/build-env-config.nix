@@ -31,6 +31,7 @@
     has_cli_openvpn = "cli-openvpn";
     has-dart = "dart";
     has-docker = "docker";
+    has-extra-local-rust = "extra-local-rust";
     has-expressvpn = "expressvpn";
     has-go = "go";
     has-gui = "gui";
@@ -68,11 +69,11 @@
     is-surface = "machine-surface";
     no-1password = "gui-no-1password";
     no-bun = "no-bun";
+    no-smartd = "no-smartd";
     no_watchman = "no-watchman";
   };
   text-configs = {
     go = "go";
-    gui = "gui";
     java = "java";
     nvidia = "nvidia";
     ruby = "ruby";
@@ -97,11 +98,11 @@
     (builtins.mapAttrs (_: _: false) boolean-configs)
     // (builtins.mapAttrs (_: _: "") text-configs)
     // {
-      colmena = "";
       current-hostname = "";
       hostname = "";
       nixos-user = "igncp";
       root-config = null;
+      gui = [];
       usb-luks-values = [];
     };
 in
@@ -110,7 +111,6 @@ in
   // (builtins.mapAttrs (_: read-config) text-configs)
   // {
     inherit all-configs hostname;
-    colmena = builtins.replaceStrings ["\n" "\r"] ["" ""] (read-config "colmena");
     current-hostname =
       if builtins.pathExists hostname-file
       then builtins.replaceStrings ["\n"] [""] (builtins.readFile hostname-file)
@@ -120,6 +120,10 @@ in
       then builtins.replaceStrings ["\n"] [""] (builtins.readFile nixos-user-file)
       else "igncp";
     root-config = final-root-config;
+    gui =
+      if is-enabled boolean-configs.has-gui
+      then builtins.filter (feature: feature != "") (builtins.splitString "\n" (read-config "gui"))
+      else [];
     usb-luks-values =
       if is-enabled boolean-configs.has-usb-luks
       then builtins.splitString "\n" (read-config text-configs.usb-luks)

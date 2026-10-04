@@ -1,12 +1,15 @@
 {
   env-config,
   pkgs,
-  colmena,
+  nixpkgs,
+  disko,
   lib,
   llm-agents,
 }: let
   base_config = /environment/project/.config; # 這需要使用 --impure 旗標
-  cli-pkgs = import ../common/cli.nix {inherit colmena env-config lib llm-agents pkgs;};
+  cli-pkgs = import ../common/cli.nix {
+    inherit disko env-config lib llm-agents nixpkgs pkgs;
+  };
   ruby-pkgs = import ../common/ruby.nix {inherit base_config env-config pkgs;};
   go-pkgs = import ../common/go.nix {inherit base_config env-config pkgs;};
 in {
@@ -28,7 +31,6 @@ in {
         nodejs_22
         openssh # 對於 `sshd`
         openssl
-        rustup
         shadow
         su
         sudo

@@ -56,11 +56,11 @@ provision_get_ps1() {
 
     SSH_NOTICE=""
     if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ] || [ -n "$SSH_CONNECTION" ]; then
-      FILE_VALUE=$(cat "$HOME/development/environment/project/.config/ssh-notice" || true)
+      FILE_VALUE=$(hostname)
       if [ -z "$FILE_VALUE" ]; then
         SSH_NOTICE=" [SSH]"
       else
-        SSH_NOTICE=" [$(echo "$FILE_VALUE" | tr -d '\n')]"
+        SSH_NOTICE=" [$(echo "$FILE_VALUE" | tr -d '\n' | tr '[:lower:]' '[:upper:]')]"
       fi
     elif [ -f ~/.check_files/init_docker ]; then
       SSH_NOTICE=" [DOCKER_ENV]"

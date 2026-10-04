@@ -11,8 +11,19 @@ fi
 
 function run_loop() {
   while true; do
-    local ACTIVE_WINDOW="$(xdotool getactivewindow)"
-    local GEOMERY="$(xdotool getwindowgeometry $ACTIVE_WINDOW)"
+    local ACTIVE_WINDOW
+    local GEOMERY
+
+    if ! ACTIVE_WINDOW="$(xdotool getactivewindow 2>/dev/null)"; then
+      sleep 1
+      continue
+    fi
+
+    if ! GEOMERY="$(xdotool getwindowgeometry "$ACTIVE_WINDOW" 2>/dev/null)"; then
+      sleep 1
+      continue
+    fi
+
     local STARTING_Y="$(echo "$GEOMERY" | grep Position | sed 's|.*Position:.*,\([0-9]*\) .*|\1|')"
     local HEIGHT="$(echo "$GEOMERY" | grep Geometry | sed 's|^.*x||')"
     local MOUSE_Y=$(xdotool getmouselocation --shell | awk -F "=" '/Y/{print $2}')

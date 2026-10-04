@@ -6,24 +6,37 @@
   env-config,
   lib,
   llm-agents,
+  nixpkgs,
   is-rp5-install,
   pkgs,
-  colmena,
 }: let
   wifi-ssid = builtins.getEnv "WIFI_SSID";
   wifi-pass = builtins.getEnv "WIFI_PASS";
   cli-pkgs = import ../common/cli.nix {
-    inherit colmena env-config lib llm-agents pkgs;
+    inherit disko env-config lib llm-agents nixpkgs pkgs;
   };
 in
   lib.traceIf is-rp5-install "運行 RP5 安裝設定"
   (nixos-raspberry.lib.nixosSystemFull {
     # 建構同燒錄 SD 卡：
-    # sudo nix run github:nix-community/disko -- \
-    #   --mode disko src/nix/nixos/rp5-disko-config.nix # 請先檢查此腳本
+    # sudo disko --mode disko src/nix/nixos/rp5-disko-config.nix # 請先檢查此腳本
     # IS_RP5_INSTALL=1 WIFI_SSID=... WIFI_PASS=... \
     # sudo --preserve-env nixos-install \
     #   --flake '.#rp5' --root /mnt --impure
+    # 匯出已安裝系統嘅閉包，避免日後重建自訂核心同韌體：
+    # system=$(readlink -f /mnt/nix/var/nix/profiles/system)
+    # system=/nix/store/${system##*/}
+    # sudo sh -c 'nix-store --store "local?root=/mnt" --export \
+    #   $(nix-store --store "local?root=/mnt" -qR "$1") | \
+    #   zstd -T0 -10 -o "$2"' sh "$system" rp5-closure.nar.zst
+    # 日後安裝前，匯入閉包到建構機嘅 Nix store：
+    # zstd -dc rp5-closure.nar.zst | sudo nix-store --import
+    # 安裝並確認可正常開機後，可在另一部 Linux 電腦備份 SD 卡：
+    # sudo dd if=/dev/mmcblk0 bs=4M status=progress conv=fsync \
+    #   | zstd -T0 -19 -o rp5-nixos.img.zst
+    # 還原時，目標 SD 卡嘅實際容量必須同原卡相同或更大：
+    # zstd -dc rp5-nixos.img.zst \
+    #   | sudo dd of=/dev/mmcblk0 bs=4M status=progress conv=fsync
     modules = with nixos-raspberry.nixosModules;
       modules-list
       ++ [

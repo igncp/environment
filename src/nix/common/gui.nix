@@ -6,10 +6,11 @@
   env-config,
   nixgl-pkgs,
   ghostty,
+  include-nixgl ? true,
   skip-hyprland ? false,
   ...
 }: let
-  has-gui-opt = infix: lib.optional (lib.strings.hasInfix infix env-config.gui);
+  has-gui-opt = feature: lib.optional (builtins.elem feature env-config.gui);
 in {
   packages = with pkgs;
     [
@@ -28,7 +29,6 @@ in {
       lxappearance
       mission-center # https://gitlab.com/mission-center-devs/mission-center
       nextcloud-client
-      nixgl-pkgs.auto.nixGLDefault
       pavucontrol
       powertop
       rpi-imager # 需要暫時將用戶加入'disk'群組: `sudo usermod -aG disk $USER`
@@ -79,6 +79,11 @@ in {
       wl-clipboard
     ]
     ++ (
+      if include-nixgl
+      then [nixgl-pkgs.auto.nixGLDefault]
+      else []
+    )
+    ++ (
       if skip-hyprland
       then []
       else [hyprland]
@@ -88,7 +93,7 @@ in {
     ++ ((has-gui-opt "zoom") zoom-us)
     ++ ((has-gui-opt "telegram") telegram-desktop)
     ++ ((has-gui-opt "firefox") firefox)
-    ++ (lib.optional (system == "x86_64-linux") ghostty.packages.x86_64-linux.default)
+    ++ (lib.optional (system == "x86_64-linux" && !builtins.elem "no-ghostty" env-config.gui) ghostty.packages.x86_64-linux.default)
     ++ (lib.optional env-config.has-minecraft prismlauncher)
     ++ (
       if (system == "x86_64-linux")

@@ -25,7 +25,6 @@ in {
           docker
           git
           nodejs_22
-          rustup
         ];
 
         system.stateVersion = "26.05";

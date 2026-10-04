@@ -48,13 +48,6 @@
     }
   ];
 
-  # 自動清理 Nix store（30 日後刪除舊版本）
-  nix.gc = {
-    automatic = true;
-    dates = "weekly";
-    options = "--delete-older-than 30d";
-  };
-
   # 優化 Nix builds
   nix.settings = {
     auto-optimise-store = true;

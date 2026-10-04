@@ -13,15 +13,8 @@ setup_machines_surface() {
     sudo update-grub
   fi
 
-  if [ ! -f "$PROVISION_CONFIG"/vpn_check ]; then
-    echo yes >"$PROVISION_CONFIG"/vpn_check
-  fi
-
   add_desktop_common \
     "$HOME/development/environment/src/scripts/misc/surface_launch_chrome.sh" 'launch_chrome_surface' '在 Surface 啟動 Chrome'
-
-  add_desktop_common \
-    "$HOME/development/environment/src/scripts/misc/surface_set_touchpad.sh" 'surface_disable_touchpad' '在 Surface 停用觸控板'
 
   cat >>~/.shell_aliases <<'EOF'
 SurfaceDecreaseBrightness() {

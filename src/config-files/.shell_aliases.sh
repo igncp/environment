@@ -198,7 +198,6 @@ SSHExampleConfigure() {
 alias lang='b ~/development/environment/src/scripts/misc/lang.sh'
 
 alias AliasesReload='source ~/.shell_aliases'
-alias EditProvision="(cd ~/development/environment && $EDITOR src/main.sh && cargo run --release)"
 alias FDisk='sudo fdisk /dev/sda'
 alias FilterLeaf=$'sort -r | awk \'a!~"^"$0{a=$0;print}\' | sort'
 alias FlatpackInit='flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo'
@@ -305,7 +304,7 @@ CursorSessions() {
 
 ConfigProvisionList() {
   INITIAL_SHA=$(find ~/development/environment/project/.config -type f | sort -V | sha256sum | awk '{print $1}')
-  "$HOME"/.local/bin/provision_choose_config $@ || return
+  provision_choose_config $@ || return
   AFTER_SHA=$(find ~/development/environment/project/.config -type f | sort -V | sha256sum | awk '{print $1}')
   # 沒有變更就停止
   if [ "$INITIAL_SHA" = "$AFTER_SHA" ]; then return; fi
@@ -318,25 +317,6 @@ ConfigProvisionList() {
 }
 
 alias ConfigProvisionListFzf='ConfigProvisionList fzf'
-
-CargoGenerateClean() {
-  BIN_NAME=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[].targets[] | select( .kind | map(. == "bin") | any ) | .name')
-  CARGO_TARGET_DIR=target cargo build --release && mv target/release/"$BIN_NAME" . && rm -rf target
-  echo "二進制檔案 '$BIN_NAME' 已建置並移至目前目錄"
-}
-
-CargoRunClean() {
-  DIR=$1
-  COMMAND=$(basename $DIR)
-  (cd $DIR && CargoGenerateClean)
-  $DIR/$COMMAND
-}
-
-CargoDevGenerate() {
-  BIN_NAME=$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[].targets[] | select( .kind | map(. == "bin") | any ) | .name')
-  CARGO_TARGET_DIR=target cargo build && mv target/debug/"$BIN_NAME" .
-  echo "二進制檔案 '$BIN_NAME' 已建置並移至目前目錄"
-}
 
 alias HomeManagerInitFlake='nix run home-manager/release-26.05 -- init'
 alias HomeManagerDeleteGenerations='home-manager expire-generations "-1 second"'
@@ -429,14 +409,12 @@ if type nix >/dev/null 2>&1; then
     sudo rm -rf ~/.cache/composer
     sudo rm -rf ~/.cache/go-build
     sudo rm -rf ~/.cache/yarn
-    sudo rm -rf ~/.cargo
     sudo rm -rf ~/.completions
     sudo rm -rf ~/.go-workspace
     sudo rm -rf ~/.gradle
     sudo rm -rf ~/.local/share/nvim
     sudo rm -rf ~/.local/state/nvim
     sudo rm -rf ~/.npm
-    sudo rm -rf ~/.rustup
     sudo rm -rf ~/go
     sudo rm -rf ~/nix-dirs
 
@@ -540,6 +518,10 @@ if type nix >/dev/null 2>&1; then
   # 由於是通用命令而有不同的前綴
   RebuildNix() {
     if [ -f /etc/os-release ] && [ -n "$(cat /etc/os-release | grep nixos || true)" ]; then
+      if [ ! -f /etc/nixos/configuration.nix ]; then
+        echo "略過 nixos-rebuild"
+        return 0
+      fi
       # 它需要 --impure 標誌，因為它導入/etc/nixos/configuration.nix配置
       local NIXOS_REBUILD_ARGS=(
         switch

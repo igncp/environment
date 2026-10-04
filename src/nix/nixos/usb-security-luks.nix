@@ -47,7 +47,8 @@ in {
               what = "/dev/disk/by-uuid/${luks-usb-uuid}";
               where = "/mnt/key";
               type = "vfat";
-              options = "ro";
+              # 不讓缺少的 USB 金鑰無限期阻塞 initrd。
+              options = "ro,x-systemd.device-timeout=10s";
             }
           ];
           luks.devices."${luks-device-name}" = {

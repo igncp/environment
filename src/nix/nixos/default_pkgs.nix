@@ -2,14 +2,15 @@
   pkgs,
   lib,
   unstable-pkgs,
-  colmena,
+  disko,
   llm-agents,
+  nixpkgs,
   env-config,
   ...
 }: let
   cli-pkgs = import ../common/cli.nix {
-    inherit env-config llm-agents;
-    inherit colmena;
+    inherit env-config llm-agents nixpkgs;
+    inherit disko;
     lib = unstable-pkgs.lib;
     pkgs = unstable-pkgs;
   };

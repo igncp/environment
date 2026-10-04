@@ -4,6 +4,7 @@
   lib,
   user,
   env-config,
+  unstable,
   is-rp5,
   is-rp5-install,
   ...
@@ -21,6 +22,7 @@ in {
       ./blocky.nix
       (import ./kodi.nix {inherit config env-config is-rp5 lib;})
     ]
+    ++ (lib.optional (!env-config.no-smartd) ./smartd.nix)
     ++ lib.optional (env-config.root-config != null) env-config.root-config
     ++ (lib.optional has-custom ./custom.nix)
     ++ (lib.optional (!is-rp5) ./home-manager-entry.nix)
@@ -105,8 +107,21 @@ in {
       nix.extraOptions = ''
         experimental-features = nix-command flakes
       '';
+      nix.settings.nix-path = ["nixpkgs=${unstable.outPath}"];
+      nix.registry.nixpkgs.flake = unstable;
+      environment.sessionVariables = {
+        NIX_PATH = pkgs.lib.mkForce "nixpkgs=${unstable.outPath}";
+      };
+
+      # 自動清理 Nix store（5 日後刪除舊版本）
+      nix.gc = {
+        automatic = true;
+        dates = "daily";
+        options = "--delete-older-than 5d";
+      };
 
       programs.zsh.enable = true;
+      programs.direnv.enable = true;
       # 允許 NixOS 執行通用動態連結二進位檔案，例如 wasm-pack 下載的 wasm-bindgen CLI。
       programs.nix-ld.enable = true;
 

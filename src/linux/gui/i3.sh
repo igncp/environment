@@ -3,7 +3,7 @@
 set -euo pipefail
 
 setup_gui_i3() {
-  if [ ! -f "$PROVISION_CONFIG"/gui-i3 ] || [ $IS_NIXOS = "1" ]; then
+  if [ ! -f "$PROVISION_CONFIG"/gui-i3 ] && [ $IS_NIXOS != "1" ]; then
     return
   fi
 

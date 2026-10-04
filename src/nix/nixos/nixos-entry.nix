@@ -1,7 +1,6 @@
 {
   ghostty,
   home-manager,
-  colmena,
   nixgl-pkgs,
   nixos-hardware,
   nixpkgs,
@@ -46,11 +45,12 @@
   specialArgs = {
     inherit
       stable-pkgs
-      colmena
+      disko
       home-manager
       system
       ghostty
       nixos-hardware
+      nixpkgs
       unstable
       nixgl-pkgs
       llm-agents
@@ -68,16 +68,16 @@
       env-config
       lib
       llm-agents
+      nixpkgs
       modules-list
       nixos-raspberry
       pkgs
-      stable-pkgs
       is-rp5-install
       specialArgs
       ;
   };
   installer-config = import ./installer.nix {
-    inherit colmena disko env-config lib llm-agents nixpkgs pkgs system;
+    inherit disko env-config lib llm-agents nixpkgs pkgs system;
   };
   module-config = {
     imports =

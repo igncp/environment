@@ -2,9 +2,10 @@
 {
   lib,
   pkgs,
-  colmena,
+  disko,
   ghostty,
   nixgl-pkgs,
+  nixpkgs,
   llm-agents,
   env-config,
   ...
@@ -17,7 +18,7 @@
     || (pkgs.stdenv.hostPlatform.system == "aarch64-linux");
 
   cli-pkgs = import ../common/cli.nix {
-    inherit colmena env-config lib llm-agents pkgs;
+    inherit disko env-config lib llm-agents nixpkgs pkgs;
   };
   ruby-pkgs = import ../common/ruby.nix {inherit env-config pkgs;};
   go-pkgs = import ../common/go.nix {inherit env-config pkgs;};
@@ -51,6 +52,10 @@ in
       enableNixpkgsReleaseCheck = false;
     };
     programs.home-manager.enable = true;
+    programs.direnv = {
+      enable = true;
+      nix-direnv.enable = true;
+    };
   }
   // (
     if env-config.has-gui && is_linux

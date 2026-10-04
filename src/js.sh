@@ -122,6 +122,7 @@ EOF
 export PATH="$HOME/.npm-packages/bin:$PATH"
 NPMVersions() { npm view $1 versions --json; } # NPMVersions react
 EOF
+  export PATH="$HOME/.npm-packages/bin:$PATH"
   cat >>~/.zshrc <<"EOF"
 export PATH="$HOME/.npm-packages/bin:$PATH"
 EOF
