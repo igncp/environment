@@ -12,7 +12,7 @@ if type rbenv > /dev/null 2>&1 ; then
 fi
 
 # 在 macos 中它有 ruby 但是 v2
-if type ruby > /dev/null 2>&1 && [ "$(ruby -v | sed 's|ruby ||' | head -c 1)" = "3" ]; then
+if type ruby > /dev/null 2>&1 && [ "$(ruby -v | sed 's|ruby ||' | head -c 1)" = "3" ] && [ ! -f $PROVISION_CONFIG/job ]; then
   if type nix-shell > /dev/null 2>&1 ; then
     if [ -z "$IN_NIX_SHELL" ] && [ -n "$(echo $NIX_PATH | grep . || true)" ] && ! type ruby-lsp > /dev/null 2>&1 ; then
       echo "安裝 ruby-lsp"

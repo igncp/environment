@@ -51,6 +51,10 @@ MacDNSWiFiSet() {
   sudo networksetup -getdnsservers Wi-Fi
 }
 
+SimulatorCp() {
+  echo -n "$1" | xcrun simctl pbcopy booted
+}
+
 # 每個平日凌晨四點停機
 # sudo pmset repeat shutdown MTWRF 04:00:00
 

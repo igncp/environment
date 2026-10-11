@@ -6,10 +6,18 @@
   user = "igncp";
   home-directory = "/home/${user}";
   environment-directory = "${home-directory}/development/environment";
-  content = pkgs.runCommand "install-igncp-environment" {} ''
-    mkdir -p $out
-    cp -r ${self}/src $out/src
-  '';
+  src-filtered = builtins.path {
+    name = "igncp-environment-src";
+    path = "${self}/src";
+    filter = path: type: let
+      baseName = baseNameOf path;
+    in
+      baseName
+      != ".git"
+      && baseName != "node_modules"
+      && baseName != "target"
+      && baseName != "result";
+  };
 in {
   security.sudo.extraConfig = ''
     #includedir /etc/sudoers.d
@@ -31,7 +39,7 @@ in {
       rm -rf ${environment-directory}/.git
       chown ${user}:users ${environment-directory} ${environment-directory}/project
       rm -rf ${environment-directory}/src
-      ln -s ${content}/src ${environment-directory}/src
+      ln -s ${src-filtered} ${environment-directory}/src
       cd ${environment-directory}
       (
         sudoers_file=/etc/sudoers.d/install-environment

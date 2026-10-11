@@ -22,7 +22,7 @@ provision_setup_homebrew() {
     brew install coreutils
     brew install diffutils # for diff
     brew install \
-      gnu-sed sponge neovim tmux ripgrep fzf git git-summary \
+      gnu-sed sponge neovim tmux ripgrep 7-zip fzf git git-summary \
       neovim-remote tree wget ag shfmt jq yq bash awscli eksctl
 
     touch ~/.check-files/coreutils

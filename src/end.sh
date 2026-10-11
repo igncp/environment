@@ -38,9 +38,11 @@ EOF
   git config --global user.name 'Ignacio'
   git config --global user.email icarbajop@gmail.com
 
-  jj config set --user user.name "Ignacio"
-  jj config set --user user.email "icarbajop@gmail.com"
-  jj config set --user ui.default-command log
+  if type jj >/dev/null 2>&1; then
+    jj config set --user user.name "Ignacio"
+    jj config set --user user.email "icarbajop@gmail.com"
+    jj config set --user ui.default-command log
+  fi
 
   if [ -f "$PROVISION_CONFIG"/git-ssh ]; then
     git config --global gpg.format ssh
